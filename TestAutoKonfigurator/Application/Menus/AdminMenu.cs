@@ -19,8 +19,8 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
                 Console.WriteLine("1) Kunden verwalten");
                 Console.WriteLine("2) Teile verwalten");
                 Console.WriteLine("3) Fahrzeuge verwalten");
-                PrintReturnMessage();
-                PrintChooseOption();
+                Application.PrintReturnMessage();
+                Application.PrintChooseOption();
                 string eigabe = Console.ReadLine();
                 switch (eigabe)
                 {
@@ -60,7 +60,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
             Console.WriteLine("2) Kunden hinzufügen");
             Console.WriteLine("3) Kunden suchen");
             Console.WriteLine("4) Kundenliste löschen");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
 
             string eingabe = Console.ReadLine() ?? "";
 
@@ -104,7 +104,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
             Console.WriteLine("2) Fahrzeugteil hinzufügen");
             Console.WriteLine("3) Fahrzeugteil suchen");
             Console.WriteLine("4) Fahrzeugteileliste löschen");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
 
             string eingabe = Console.ReadLine() ?? "";
 
@@ -218,12 +218,11 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
         {
             case "1":
                 Console.WriteLine(c.ToString());
-                PrintReturnMessage();
+                Application.PrintReturnMessage();
                 Console.ReadKey();
                 break;
 
             default:
-                PrintReturnMessage();
                 Console.ReadKey();
                 break;
         }
@@ -259,7 +258,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
         
             productInventory.InsertProduct(p);
 
-        PrintReturnMessage();
+            Application.PrintReturnMessage();
         Console.ReadKey();
     }
     
@@ -271,11 +270,10 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
         foreach (Customer c in customerInventory.ListCustomers())
         {
             Console.WriteLine(c.ToString());
-            PrintSplitter();
-            //Console.WriteLine("___________________________________");
+            Application.PrintSplitter();
         }
 
-        PrintReturnMessage();
+        Application.PrintReturnMessage();
         Console.ReadKey();
     }
     
@@ -287,11 +285,10 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
         foreach (Product c in productInventory.ListProducts())
         {
             Console.WriteLine(c.ToString());
-            PrintSplitter();
-            //(Console.WriteLine("___________________________________");
+            Application.PrintSplitter();
         }
 
-        PrintReturnMessage();
+        Application.PrintReturnMessage();
         Console.ReadKey();
     }
     
@@ -309,7 +306,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
             Console.WriteLine("1) Username");
             Console.WriteLine("2) Telefon");
             Console.WriteLine("3) Vor- und Nachname");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
             string eingabe = Console.ReadLine() ?? "";
             switch (eingabe)
             {
@@ -381,7 +378,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
                 }
 
                 PrintCustomerSettingsMenu(c);
-                PrintReturnMessage();
+                Application.PrintReturnMessage();
             
 
             string eingabe2 = Console.ReadLine() ?? "";
@@ -401,7 +398,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
                     break;
 
                 default:
-                    PrintReturnMessage();
+                    Application.PrintReturnMessage();
                     break;
 
 
@@ -426,18 +423,18 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
     {
        PrintHeader();
         Console.Write("Sind Sie sich sicher, dass Sie alle Kundendaten löschen wollen? [Y/N]: ");
-       PrintChooseOption();
+       Application.PrintChooseOption();
         String eingabe = Console.ReadLine() ?? "";
         if (eingabe == "Y" || eingabe == "y")
         {
             customerInventory.DeleteCustomers();
             Console.WriteLine("Kundenliste erfolgreich gelöscht");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
             Console.ReadKey();
         }
         else if (eingabe == "N" || eingabe == "n")
         {
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
             Console.ReadKey();
         }
 
@@ -471,23 +468,16 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
             customerInventory.UpdateCustomer(customer,username, hash, telefon);
             
             Console.WriteLine("Erfolgreich überschrieben");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
             Console.ReadKey();
         }
         else if (eingabe == "N" || eingabe == "n")
         {
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
             Console.ReadKey();
         }
     }
     
-    
-    // Konsolenausgabe zum Zurückkehren
-    private static void PrintReturnMessage()
-    {
-        Console.WriteLine("\nEnter drücken um zurück zu gelangen");
-        Console.WriteLine("Eingabe: ");
-    }
     
     
     // Bearbeitungsmenü eines Kunden
@@ -496,11 +486,11 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
         PrintHeader();
         Console.WriteLine(c.ToString());
         //Console.WriteLine("___________________________________");
-        PrintSplitter();
+        Application.PrintSplitter();
         Console.WriteLine("1) Benutzer löschen");
         Console.WriteLine("2) Benutzer bearbeiten");
         Console.WriteLine("3) Benutzer sperren");
-        PrintReturnMessage();
+        Application.PrintReturnMessage();
     }
     
     
@@ -508,21 +498,21 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
     private void PrintCustomerDeleteMenu(Customer c)
     {
         Console.WriteLine("Benutzer unwiderruflich löschen? [Y/N]");
-        PrintChooseOption();
+        Application.PrintChooseOption();
         String d = Console.ReadLine();
         if (d == "Y" || d == "y")
         {
 
             customerInventory.DeleteCustomer(c);
             Console.WriteLine("Benutzer erfolgreich gelöscht");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();
             Console.ReadKey();
 
         }
         else if (d == "N" || d == "n")
         {
             Console.WriteLine("Erfolgreich abgebrochen. ");
-            PrintReturnMessage();
+            Application.PrintReturnMessage();;
             Console.ReadKey();
         }
     }
@@ -533,7 +523,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
     {
         Console.WriteLine(e.Message);
         Console.WriteLine("1) Erneut versuchen");
-        PrintReturnMessage();
+        Application.PrintReturnMessage();
         string eingabe2 = Console.ReadLine();
         switch (eingabe2)
         {
@@ -542,7 +532,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
 
             default:
 
-                PrintReturnMessage();
+                Application.PrintReturnMessage();
                 runningVar = false;
                 break;
 
@@ -555,21 +545,11 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
     {
         Console.Clear();
         Console.WriteLine("=== Administrator ===");
-        //Console.WriteLine("---------------------");
-        PrintSplitter();
+        Application.PrintSplitter();
          
     }
 
-    public void PrintChooseOption()
-    {
-        Console.WriteLine();
-        Console.Write("Auswahl: ");
-    }
-
-    public void PrintSplitter()
-    {
-        Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    }
+  
 
     
     

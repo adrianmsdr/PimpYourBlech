@@ -30,7 +30,7 @@ public static class ApplicationConfiguration
         var app = new Application(customerInventory, productInventory, carInventory);
 
         // Start der App
-        app.StartMenu();
+        app.Start();
         
         
         
