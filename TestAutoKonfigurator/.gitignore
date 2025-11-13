@@ -1,0 +1,17 @@
+bin/
+obj/
+.idea/
+
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.DotSettings.user
+
+*.tmp
+*.temp
+*.bak
+*.cache
+*.log
+
+.DS_Store
