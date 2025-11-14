@@ -1,4 +1,6 @@
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Database;
+using TestAutoKonfigurator.Interfaces.Inventories;
 
 namespace TestAutoKonfigurator.Admin;
 

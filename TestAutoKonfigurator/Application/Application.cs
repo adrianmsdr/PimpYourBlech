@@ -4,24 +4,28 @@ using System.Text;
 using TestAutoKonfigurator.Exceptions;
 //using TestAutoKonfigurator.Factories;
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Inventories;
 using TestAutoKonfigurator.Menus;
 
 namespace TestAutoKonfigurator;
 
-public class Application(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory carInventory)
+public class Application(
+    ICustomerInventory customerInventory,
+    IProductInventory productInventory,
+    ICarInventory carInventory)
 {
-    
-    private readonly StartMenu _startMenu = new (customerInventory,productInventory,carInventory);
-    
-    
+
+    private readonly StartMenu _startMenu = new(customerInventory, productInventory, carInventory);
+
+
     // Startmenü der App
-   public void Start()
+    public void Start()
     {
-            _startMenu.Start();
-            
+        _startMenu.Start();
+
     }
 
-   
+
     //------------------------------------------- DESIGNELEMENTE ------------------------------------------------
 
     // // Konsolenausgabe zum Zurückkehren
@@ -34,10 +38,10 @@ public class Application(ICustomerInventory customerInventory,IProductInventory 
 
     public static void PrintChooseOption()
     {
-        Console.WriteLine();
+        Application.PrintSplitter();
         Console.Write("Auswahl: ");
-        
-        
+
+
     }
 
     public static void PrintWrongInput()
@@ -45,18 +49,14 @@ public class Application(ICustomerInventory customerInventory,IProductInventory 
         Console.WriteLine();
         Console.WriteLine("Ungültige Eingabe. Drücke eine Taste...");
     }
-    
-    
+
+
     public static void PrintSplitter()
     {
-        Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        Console.WriteLine(
+            "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
-    
 
 
-    
-
-
-    
 }

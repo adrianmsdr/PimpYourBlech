@@ -1,5 +1,7 @@
 using TestAutoKonfigurator.Admin;
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Database;
+using TestAutoKonfigurator.Interfaces.Inventories;
 
 namespace TestAutoKonfigurator.Factories;
 

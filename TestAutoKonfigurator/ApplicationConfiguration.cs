@@ -3,7 +3,7 @@ using TestAutoKonfigurator;
 using TestAutoKonfigurator.Database;
 using TestAutoKonfigurator.Factories;
 using TestAutoKonfigurator.Interfaces;
-
+using TestAutoKonfigurator.Interfaces.Database;
 
 
 public static class ApplicationConfiguration

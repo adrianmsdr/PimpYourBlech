@@ -1,5 +1,6 @@
 using System.Text.Json;
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Database;
 
 namespace TestAutoKonfigurator.Database;
 

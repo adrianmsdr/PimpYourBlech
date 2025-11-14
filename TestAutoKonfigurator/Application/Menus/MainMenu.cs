@@ -1,4 +1,5 @@
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Inventories;
 
 namespace TestAutoKonfigurator.Menus;
 

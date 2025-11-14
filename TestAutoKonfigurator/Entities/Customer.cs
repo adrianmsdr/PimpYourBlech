@@ -1,6 +1,8 @@
+using System.Net.Mail;
+
 namespace TestAutoKonfigurator;
 
-public class Customer (string firstName, string lastName, string username, string passwordHash, string telefon)
+public class Customer (string firstName, string lastName, string username, string passwordHash, string telefon, string mailAddress)
     {
         
         private readonly List<Configuration> configurations;
@@ -18,13 +20,15 @@ public class Customer (string firstName, string lastName, string username, strin
 
     public string Telefon { get; set; } = telefon;
 
+    public string MailAddress { get; set; } = mailAddress;
+
 
     public bool AdminRights { get; set; } = false;
     
 
     public override string ToString()
     {
-        return "Vorname: " + FirstName + "\nNachname: " + LastName + "\nUsername: " + Username + "\nPasswort: " + PasswordHash + "\nTelefon: " + Telefon + "\nAdmin: " +  AdminRights;
+        return "Vorname: " + FirstName + "\nNachname: " + LastName + "\nUsername: " + Username + "\nPasswort: " + PasswordHash + "\nTelefon: " + Telefon + "\nE-Mail: " + MailAddress  + "\nAdmin: " +  AdminRights;
     }
 
     }

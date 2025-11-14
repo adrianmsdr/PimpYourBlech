@@ -1,8 +1,11 @@
 using System.Net.Mime;
 using System.Security.Cryptography;
 using System.Text;
+using TestAutoKonfigurator.CustomerCommunication;
 using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Inventories;
+using TestAutoKonfigurator.ValueObjects;
 
 namespace TestAutoKonfigurator.Menus;
 
@@ -50,8 +53,8 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
 
     private void RegistrationsMenu()
     {
-        bool running = true;
-        while (running)
+        bool runningRegistration = true;
+        while (runningRegistration)
         {
 
             Console.Clear();
@@ -68,63 +71,95 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
             Console.Write("Phone: ");
             string phone = Console.ReadLine() ?? "";
             
-            bool runningAgain = true;
-            string username = "";
-            while (runningAgain)
+            
+            bool runningEmailRegistration = true;
+            string mailAddress = string.Empty;
+            while (runningEmailRegistration)
             {
                 PrintHeader();
-                Console.Write("Username: ");
-                username = Console.ReadLine() ?? "";
+                Console.Write("E-Mail Benutzername: ");
+                string user = (Console.ReadLine() ?? "");
+                
+                PrintHeader();
+                Console.Write("E-Mail Domain (z.B. gmail.com): ");
+                string domain = (Console.ReadLine() ?? "");
+                
+                mailAddress = $"{user}@{domain}";
+
+
                 try
                 {
-                    customerInventory.UsernameAcceptedChecker(username);
-                    runningAgain = false;
+                    EmailServices.IsValid(mailAddress);
+
+                    PrintHeader();
+                    Console.Write("E-Mail Benutzername bestätigen: ");
+                    string user2 = (Console.ReadLine() ?? "").Trim();
+
+                    PrintHeader();
+                    Console.Write("E-Mail Domain bestätigen: ");
+                    string domain2 = (Console.ReadLine() ?? "").Trim();
+
+                    string confirm = $"{user2}@{domain2}";
+                    EmailServices.ConfirmRegistrationChecker(mailAddress, confirm);
+                    runningEmailRegistration = false;
                 }
-                catch (UsernameNotAvailableException e)
+                catch (WrongInputException ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                    if (!PrintRetryMenu())
+                    {
+                        runningRegistration = false;
+                        break;
+                    }
+                    
+
+                }
+            }
+
+            if (runningRegistration)
+            {
+
+
+                bool runningUsernameValidation = true;
+                string username = "";
+                while (runningUsernameValidation)
                 {
                     PrintHeader();
-                    Console.WriteLine(e.Message);
-                    Console.ReadKey();
-
-                    bool registrationRetry = true;
-                    while (registrationRetry)
+                    Console.Write("Username: ");
+                    username = Console.ReadLine() ?? "";
+                    try
+                    {
+                        customerInventory.UsernameAcceptedChecker(username);
+                        runningUsernameValidation = false;
+                    }
+                    catch (UsernameNotAvailableException e)
                     {
                         PrintHeader();
-                        Console.WriteLine("[1] Erneut versuchen");
-                        Console.WriteLine("[2] Abbrechen");
-                        Application.PrintChooseOption();
-
-                        string input = Console.ReadKey().KeyChar.ToString();
-
-                        switch (input)
+                        Console.WriteLine(e.Message);
+                        PrintRetryMenu();
+                        
+                        if (!PrintRetryMenu())
                         {
-                            case "1":
-                                registrationRetry = false;
-                                break;
-
-                            case "2":
-                                running = false;
-                                break;
-
-                            default:
-                                registrationRetry = true;
-                                break;
+                            runningRegistration = false;
+                            break;
                         }
-                        
-                        
                     }
+
+                    PrintHeader();
+                    Console.Write("Passwort: ");
+                    string hash =
+                        Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
+                    Customer c = new Customer(firstName, lastName, username, hash, phone, mailAddress);
+                    customerInventory.InsertCustomer(c);
+                    Console.WriteLine("Registrierung erfolgreich. Bitte melden dich an.");
+
+                    Console.ReadKey();
+                    runningRegistration = false;
+
                 }
 
             }
-
-                PrintHeader();
-                Console.Write("Passwort: ");
-                string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-                Customer c = new Customer(firstName, lastName, username, hash, phone);
-                customerInventory.InsertCustomer(c);
-                Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
-                Console.ReadKey();
-                _mainMenu.Start(c.AdminRights);
         }
         }
 
@@ -150,30 +185,14 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                 }
                 else
                 {
-                    bool loginRetry = true;
-                    while (loginRetry)
+                    PrintHeader();
+                    Console.WriteLine("Anmeldung fehlgeschlagen");
+                    if (!PrintRetryMenu())
                     {
-
-                        PrintHeader();
-                        Console.WriteLine("Anmeldung fehlgeschlagen\n[1] Erneut versuchen\n[2] Abbrechen");
-                        string input = Console.ReadKey().KeyChar.ToString();
-                        switch (input)
-                        {
-                            case "1":
-                                loginRetry = false;
-                                break;
-
-                            case "2":
-                                loginRetry = false;
-                                running = false;
-                                break;
-
-                            default:
-                                loginRetry = true;
-                                break;
-
-                        }
+                        running = false;
                     }
+                    
+                    
                 }
             }
 
@@ -199,6 +218,35 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                 Application.PrintSplitter();
             }
 
+    public bool PrintRetryMenu()
+    {
+        
+        while (true)
+        {
+            Application.PrintSplitter();
+            Console.WriteLine("[1] Erneut versuchen\n[2] Abbrechen");
+            Application.PrintChooseOption();
+
+            string input = Console.ReadKey().KeyChar.ToString();
+
+            switch (input)
+            {
+                case "1":
+                   return true;
+                    
+
+                case "2":
+                    return false;
+                
+                            
+            }
+                        
+                        
+        }
+
+
+    
+    }
 
 
 }

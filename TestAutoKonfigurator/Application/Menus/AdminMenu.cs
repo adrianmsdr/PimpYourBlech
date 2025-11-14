@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.Interfaces;
+using TestAutoKonfigurator.Interfaces.Inventories;
 
 namespace TestAutoKonfigurator.Menus;
 
@@ -152,6 +153,10 @@ public class AdminMenu(
            PrintHeader();
            Console.Write("Phone: ");
            string phone = Console.ReadLine() ?? "";
+           
+           PrintHeader();
+           Console.Write("Email: ");
+           string mailAddress = Console.ReadLine() ?? "";
 
            bool runningAgain = true;
            string username = "";
@@ -205,7 +210,7 @@ public class AdminMenu(
        PrintHeader();
        Console.Write("Passwort: ");
        string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-       Customer c = new Customer(firstName, lastName, username, hash, phone);
+       Customer c = new Customer(firstName, lastName, username, hash, phone, mailAddress);
        PrintHeader();
        Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
        Application.PrintChooseOption();
@@ -372,7 +377,7 @@ public class AdminMenu(
 
         try
         {
-            Customer c = new Customer("","","","","");
+            Customer c = new Customer("","","","","","");
                 if (eingabe == "1")
                 {
                     c = customerInventory.GetCustomerByUsername(un);
@@ -463,8 +468,10 @@ public class AdminMenu(
         String hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
         Console.WriteLine("Telefon: ");
         String telefon = Console.ReadLine()!;
+        Console.WriteLine("Email: ");
+        String mailAddress = Console.ReadLine();
         
-        Customer c = new Customer(customer.FirstName,customer.LastName,username, hash, telefon);
+        Customer c = new Customer(customer.FirstName,customer.LastName,username, hash, telefon, mailAddress);
         
         PrintHeader();
         Console.WriteLine(c.ToString());

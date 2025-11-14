@@ -1,4 +1,4 @@
-namespace TestAutoKonfigurator.Interfaces;
+namespace TestAutoKonfigurator.Interfaces.Inventories;
 
 public interface ICarInventory
 {
