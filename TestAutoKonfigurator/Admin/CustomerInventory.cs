@@ -100,6 +100,24 @@ public sealed class CustomerInventory(IJsonDatabase database):ICustomerInventory
         return temp;
     }
 
+    public bool UsernameAcceptedChecker(string username)
+    {
+        bool usernameAccepted = true;
+
+        if (username.Length < 8)
+        {
+            usernameAccepted = false;
+            throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.1");
+        }
+
+        if (_customerUsernames.Contains(username))
+        {
+            usernameAccepted = false;
+            throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
+        }
+        return usernameAccepted;
+    }
+
     public Customer GetCustomerAccount(String username, String passwordHash)
     {
         Customer temp = null;

@@ -23,6 +23,8 @@ public interface ICustomerInventory
     public Customer GetCustomerByNames(String firstName, String lastName);
     
     public bool LoginBlockedChecker(String username, String password);
+
+    public bool UsernameAcceptedChecker(string username);
     
     
     public Customer GetCustomerAccount(String username, String passwordHash);

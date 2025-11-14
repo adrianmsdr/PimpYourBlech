@@ -5,48 +5,51 @@ using TestAutoKonfigurator.Interfaces;
 
 namespace TestAutoKonfigurator.Menus;
 
-public class AdminMenu(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory  carInventory )
+public class AdminMenu(
+    ICustomerInventory customerInventory,
+    IProductInventory productInventory,
+    ICarInventory carInventory)
 {
-    
+
     // Start des Admin - Menüs (Hauptmenü)
     public void Start()
     {
-       
-            bool _running = true;
-            while (_running)
-            {
-                PrintHeader();
-                Console.WriteLine("1) Kunden verwalten");
-                Console.WriteLine("2) Teile verwalten");
-                Console.WriteLine("3) Fahrzeuge verwalten");
-                Application.PrintReturnMessage();
-                Application.PrintChooseOption();
-                string eigabe = Console.ReadLine();
-                switch (eigabe)
-                {
-                    case "1":
-                        AdminCustomerMenu();
-                        break;
-                    
-                    case "2":
-                        AdminProductMenu();
-                        break;
-                    
-                    /*case "3":
-                        AdminCarMenu();
-                        break;*/
-                    
-                    default:
-                        _running = false;
-                        break;
-                }
 
+        bool _running = true;
+        while (_running)
+        {
+            PrintHeader();
+            Console.WriteLine("[1] Kunden verwalten");
+            Console.WriteLine("[2] Teile verwalten");
+            Console.WriteLine("[3] Fahrzeuge verwalten");
+            Console.WriteLine("[4] <-");
+            Application.PrintChooseOption();
+            string eigabe = Console.ReadKey().KeyChar.ToString();
+            switch (eigabe)
+            {
+                case "1":
+                    AdminCustomerMenu();
+                    break;
+
+                case "2":
+                    AdminProductMenu();
+                    break;
+
+                /*case "3":
+                    AdminCarMenu();
+                    break;*/
+
+                case "4":
+                    _running = false;
+                    break;
             }
-               
-            
+
+        }
+
+
     }
 
-    
+
     // Menü zum Verwalten von Kunden
     private void AdminCustomerMenu()
     {
@@ -56,13 +59,13 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
         {
 
             PrintHeader();
-            Console.WriteLine("1) Kundenliste anzeigen");
-            Console.WriteLine("2) Kunden hinzufügen");
-            Console.WriteLine("3) Kunden suchen");
-            Console.WriteLine("4) Kundenliste löschen");
-            Application.PrintReturnMessage();
+            Console.WriteLine("[1] Kundenliste anzeigen");
+            Console.WriteLine("[2] Kunden hinzufügen");
+            Console.WriteLine("[3] Kunden suchen");
+            Console.WriteLine("[4] Kundenliste löschen");
+            Console.WriteLine("[5] <-");
 
-            string eingabe = Console.ReadLine() ?? "";
+            string eingabe = Console.ReadKey().KeyChar.ToString();
 
             switch (eingabe)
             {
@@ -71,7 +74,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
                     break;
 
                 case "2":
-                    AddCustomerAdmin();
+                    RegistrationsMenuAdmin();
                     break;
 
                 case "3":
@@ -82,8 +85,11 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
                     DeleteCustomersMenu();
                     break;
 
-                default:
+                case "5":
                     _running = false;
+                    break;
+                
+                default:
                     break;
 
 
@@ -91,8 +97,8 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
             }
         }
     }
-    
-    
+
+
     // Menü zum Verwalten von Fahrzeugteilen
     private void AdminProductMenu()
     {
@@ -110,124 +116,124 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
 
             switch (eingabe)
             {
-               case "1":
-                   ListProducts();
-                   break;
-                
+                case "1":
+                    ListProducts();
+                    break;
+
                 case "2":
                     AddProductMenu();
                     break;
-                
+
                 default:
                     _running = false;
                     break;
             }
         }
     }
-    
-    
-    // Hinzufügen von Kunden (Adminseite)
-    private void AddCustomerAdmin()
-    {
-        bool running = true;
-        while (running)
-        {
-
-            PrintHeader();
-            Console.Write("Vorname: ");
-            string firstName = Console.ReadLine() ?? "";
-            Console.Write("Nachname: ");
-            string lastName = Console.ReadLine() ?? "";
-            Console.Write("Username: ");
-            string username = Console.ReadLine() ?? "";
-            //LoginBlockedChecker();
-            Console.Write("Passwort: ");
-            string password = Console.ReadLine() ?? "";
-            string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
-            Console.Write("Phone: ");
-            string phone = Console.ReadLine() ?? "";
 
 
-            Customer c = new Customer(firstName, lastName, username, hash, phone);
-            Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
-            string response = Console.ReadLine() ?? "";
-            if (response == "Y" || response == "y")
-            {
-                c.AdminRights = true;
-                Console.WriteLine("Administrator - Rechte erfolgreich erteilt. Enter drücken um fortzufahren.");
-                Console.ReadKey();
-            }
-            else if (response == "N" || response == "n")
-            {
-                c.AdminRights = false;
-                Console.WriteLine("Keine Administratorrechte erteilt. Enter drücken um fortzufahren.");
-                Console.ReadKey();
-            }
+   
+   private void RegistrationsMenuAdmin()
+   {
+       bool running = true;
+       while (running)
+       {
 
-            try
-            {
-                AddCustomerAdminMenu(c);
-                running = false;
-            }
-            catch (UsernameNotAvailableException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("1) Erneut versuchen");
-                Console.WriteLine("2) Hauptmenü");
-                Console.WriteLine("Eingabe: ");
-                string eingabe = Console.ReadLine()!;
-                if (eingabe == "1")
-                {
-                    running = true;
-                }
-                else if (eingabe == "2")
-                {
-                    running = false;
-                }
+           Console.Clear();
 
-            }
-        }
+           PrintHeader();
+           Console.Write("Vorname: ");
+           string firstName = Console.ReadLine() ?? "";
 
-    }
+           PrintHeader();
+           Console.Write("Nachname: ");
+           string lastName = Console.ReadLine() ?? "";
+
+           PrintHeader();
+           Console.Write("Phone: ");
+           string phone = Console.ReadLine() ?? "";
+
+           bool runningAgain = true;
+           string username = "";
+           while (runningAgain)
+           {
+               PrintHeader();
+               Console.Write("Username: ");
+               username = Console.ReadLine() ?? "";
+               try
+               {
+                   customerInventory.UsernameAcceptedChecker(username);
+                   runningAgain = false;
+               }
+               catch (UsernameNotAvailableException e)
+               {
+                   PrintHeader();
+                   Console.WriteLine(e.Message);
+                   Console.ReadKey();
+
+                   bool registrationRetry = true;
+                   while (registrationRetry)
+                   {
+                       PrintHeader();
+                       Console.WriteLine("[1] Erneut versuchen");
+                       Console.WriteLine("[2] Abbrechen");
+                       Application.PrintChooseOption();
+
+                       string input = Console.ReadKey().KeyChar.ToString();
+
+                       switch (input)
+                       {
+                           case "1":
+                               registrationRetry = false;
+                               break;
+
+                           case "2":
+                               registrationRetry = false;
+                               running = false;
+                               break;
+
+                           default:
+                               registrationRetry = true;
+                               break;
+                       }
 
 
-    public void AddCustomerAdminMenu(Customer c)
-    {
-        bool usernameTaken = false;
+                   }
+               }
+           }
 
-        if (c.Username.Length < 8)
-        {
-            usernameTaken = true;
-            throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
+       PrintHeader();
+       Console.Write("Passwort: ");
+       string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
+       Customer c = new Customer(firstName, lastName, username, hash, phone);
+       PrintHeader();
+       Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
+       Application.PrintChooseOption();
+       string response = Console.ReadKey().KeyChar.ToString();
+       if (response == "Y" || response == "y")
+       {
+           c.AdminRights = true;
+           PrintHeader();
+           Console.WriteLine("Administrator - Rechte erfolgreich erteilt. Enter drücken um fortzufahren.");
+           Console.ReadKey();
+       }
+       else if (response == "N" || response == "n")
+       {
+           c.AdminRights = false;
+           PrintHeader();
+           Console.WriteLine("Keine Administrator - Rechte erteilt. Enter drücken um fortzufahren.");
+           Console.ReadKey();
+       }
+       
+           customerInventory.InsertCustomer(c);
+           PrintHeader();
+           Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
+           Console.ReadKey();
+           running = false;
+   }
+      
+   }
 
-        }
-
-        if (customerInventory.ListCustomerUsernames().Contains(c.Username))
-        {
-            usernameTaken = true;
-            throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
-        }
-
-
-        customerInventory.InsertCustomer(c);
-        Console.WriteLine("Registrierung erfolgreich.");
-        Console.WriteLine("Drücke Enter um fortzufahren oder [1] um deine Daten anzeigen zu lassen");
-
-        string eingabe = Console.ReadLine() ?? "";
-        switch (eingabe)
-        {
-            case "1":
-                Console.WriteLine(c.ToString());
-                Application.PrintReturnMessage();
-                Console.ReadKey();
-                break;
-
-            default:
-                Console.ReadKey();
-                break;
-        }
-    }
-    
     // Hinzufügen von Produkten
     private void AddProductMenu() 
     
@@ -303,11 +309,11 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
             Console.Clear();
             Console.WriteLine("=== Administrator ===");
             Console.WriteLine("Kunden suchen über:");
-            Console.WriteLine("1) Username");
-            Console.WriteLine("2) Telefon");
-            Console.WriteLine("3) Vor- und Nachname");
-            Application.PrintReturnMessage();
-            string eingabe = Console.ReadLine() ?? "";
+            Console.WriteLine("[1] Username");
+            Console.WriteLine("[2] Telefon");
+            Console.WriteLine("[3] Vor- und Nachname");
+            Console.WriteLine("[4] <-");
+            string eingabe = Console.ReadKey().KeyChar.ToString();
             switch (eingabe)
             {
                 case "1":
@@ -320,12 +326,15 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
                     
                 case "3":
                     SearchCustomerSettings(eingabe,runningSearch);
+                   
                     break;
                    
-                default:
+                case "4":
                     runningSearch = false;
                     break;
 
+                default:
+                    break;
 
 
             }
@@ -544,6 +553,7 @@ public class AdminMenu(ICustomerInventory customerInventory,IProductInventory pr
     public void PrintHeader()
     {
         Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("=== Administrator ===");
         Application.PrintSplitter();
          

@@ -17,17 +17,12 @@ public class Application(ICustomerInventory customerInventory,IProductInventory 
     // Startmenü der App
    public void Start()
     {
-        bool _running = true;
-        while (_running)
-        { 
             _startMenu.Start();
             
-            }
-        
     }
 
    
-    
+    //------------------------------------------- DESIGNELEMENTE ------------------------------------------------
 
     // // Konsolenausgabe zum Zurückkehren
     public static void PrintReturnMessage()
@@ -56,6 +51,11 @@ public class Application(ICustomerInventory customerInventory,IProductInventory 
     {
         Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
+
+    
+
+
+    
 
 
     
