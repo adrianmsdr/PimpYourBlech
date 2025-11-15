@@ -95,8 +95,6 @@ public class App
         }
     }
     
-
-
     //------------------------------------------- DESIGNELEMENTE ------------------------------------------------
 
     // // Konsolenausgabe zum Zurückkehren
@@ -119,14 +117,10 @@ public class App
         Console.WriteLine();
         Console.WriteLine("Ungültige Eingabe. Drücke eine Taste...");
     }
-
-
+    
     public static void PrintSplitter()
     {
         Console.WriteLine(
             "---------------------------------------------");
     }
-
-
-
 }

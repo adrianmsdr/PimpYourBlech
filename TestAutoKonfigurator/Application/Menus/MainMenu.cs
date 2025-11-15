@@ -10,8 +10,6 @@ public class MainMenu(
         ICarInventory carInventory,
         IUserSession userSession)
 {
-        
-        
         public Screens Run()
         {
                         bool running = true;
@@ -22,11 +20,12 @@ public class MainMenu(
                                 Console.WriteLine("[2] Konfigurationen laden");
                                 Console.WriteLine("[3] Ersatzteileshop");
                                 Console.WriteLine("[4] Ausloggen");
-                                        if (userSession.CurrentUser.AdminRights)
-                                {
-                                        Console.WriteLine("[5] Administrator");  }
-                                
-                                
+
+                                //if (userSession.CurrentUser.AdminRights)
+                              //  {
+                                        Console.WriteLine("[5] Administrator");
+                              //  }
+                              
 
                                 App.PrintChooseOption();
 
@@ -60,7 +59,6 @@ public class MainMenu(
                         }
                return Screens.ExitMenu;
         }
-        
         
         public static void PrintHeader()
         {
