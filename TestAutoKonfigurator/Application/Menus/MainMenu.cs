@@ -10,8 +10,6 @@ public class MainMenu(
         ICarInventory carInventory,
         IUserSession userSession)
 {
-        
-        
         public Screens Run()
         {
                         bool running = true;
@@ -26,9 +24,7 @@ public class MainMenu(
                               //  {
                                         Console.WriteLine("[5] Administrator");
                               //  }
-                                
-                                
-
+                              
                                 App.PrintChooseOption();
 
                                 string eingabe = Console.ReadKey().KeyChar.ToString();  
@@ -61,7 +57,6 @@ public class MainMenu(
                         }
                return Screens.ExitMenu;
         }
-        
         
         public static void PrintHeader()
         {
