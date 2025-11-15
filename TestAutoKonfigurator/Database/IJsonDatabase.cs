@@ -1,4 +1,4 @@
-namespace TestAutoKonfigurator.Interfaces.Database;
+namespace TestAutoKonfigurator.Database;
 
 public interface IJsonDatabase
 {

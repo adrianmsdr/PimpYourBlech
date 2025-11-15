@@ -1,14 +1,18 @@
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Inventories;
+using TestAutoKonfigurator;
+using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Session;
 
-namespace TestAutoKonfigurator.Menus;
+namespace Application.Screens;
 
-public class MainMenu(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory  carInventory)
+public class MainMenu(
+        ICustomerInventory customerInventory,
+        IProductInventory productInventory,
+        ICarInventory carInventory,
+        IUserSession userSession)
 {
         
-        private readonly AdminMenu _adminMenu = new AdminMenu(customerInventory, productInventory, carInventory);
         
-        public void Start(bool admin)
+        public Screens Run()
         {
                         bool running = true;
                         while (running)
@@ -18,19 +22,20 @@ public class MainMenu(ICustomerInventory customerInventory,IProductInventory pro
                                 Console.WriteLine("[2] Konfigurationen laden");
                                 Console.WriteLine("[3] Ersatzteileshop");
                                 Console.WriteLine("[4] Ausloggen");
-                                if (admin)
+                                if (userSession.CurrentUser.AdminRights)
                                 {
                                         Console.WriteLine("[5] Administrator");
                                 }
+                                
+                                
 
-                                Application.PrintChooseOption();
+                                App.PrintChooseOption();
 
                                 string eingabe = Console.ReadKey().KeyChar.ToString();  
                                 switch (eingabe)
                                 {
                                         case "1":
-                                                // Konfigurator
-                                                break;
+                                                return Screens.ConfigMenu;
 
                                         case "2":
                                                 // Konfigurationen laden
@@ -41,23 +46,20 @@ public class MainMenu(ICustomerInventory customerInventory,IProductInventory pro
                                                 break;
 
                                         case "4":
-                                                running = false;
+                                               return Screens.StartMenu;
                                                 break;
 
 
                                         case "5":
-                                                if (admin)
+                                                if (userSession.CurrentUser.AdminRights)
                                                 {
-                                                        _adminMenu.Start();
-                      
+                                                        return Screens.AdminMenu;
                                                 }
-
                                                 break;
-                                        
 
                                 }
                         }
-                
+               return Screens.ExitMenu;
         }
         
         
@@ -66,6 +68,6 @@ public class MainMenu(ICustomerInventory customerInventory,IProductInventory pro
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("=== PIMP YOUR BLECH ===");
-                Application.PrintSplitter();
+                App.PrintSplitter();
         }
 }

@@ -1,8 +1,6 @@
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Database;
-using TestAutoKonfigurator.Interfaces.Inventories;
+using TestAutoKonfigurator.Database;
 
-namespace TestAutoKonfigurator.Admin;
+namespace TestAutoKonfigurator.Inventories.Implementation;
 
 public sealed class ProductInventory(IJsonDatabase database):IProductInventory
 {

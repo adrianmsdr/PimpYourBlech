@@ -1,4 +1,4 @@
-namespace TestAutoKonfigurator.Interfaces.Inventories;
+namespace TestAutoKonfigurator.Inventories;
 
 public interface ICustomerInventory
 {

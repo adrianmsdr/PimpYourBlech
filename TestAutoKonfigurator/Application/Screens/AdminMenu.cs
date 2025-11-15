@@ -1,19 +1,24 @@
+using System.Runtime.InteropServices.JavaScript;
 using System.Security.Cryptography;
 using System.Text;
+using TestAutoKonfigurator;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Inventories;
+using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Session;
 
-namespace TestAutoKonfigurator.Menus;
+namespace Application.Screens;
 
 public class AdminMenu(
     ICustomerInventory customerInventory,
     IProductInventory productInventory,
-    ICarInventory carInventory)
+    ICarInventory carInventory, IUserSession userSession)
+
 {
 
+    // ---------------------------------------------- Hauptmenü --------------------------------------------------------
+
     // Start des Admin - Menüs (Hauptmenü)
-    public void Start()
+    public Screens Run()
     {
 
         bool _running = true;
@@ -24,7 +29,7 @@ public class AdminMenu(
             Console.WriteLine("[2] Teile verwalten");
             Console.WriteLine("[3] Fahrzeuge verwalten");
             Console.WriteLine("[4] <-");
-            Application.PrintChooseOption();
+            TestAutoKonfigurator.App.PrintChooseOption();
             string eigabe = Console.ReadKey().KeyChar.ToString();
             switch (eigabe)
             {
@@ -36,9 +41,9 @@ public class AdminMenu(
                     AdminProductMenu();
                     break;
 
-                /*case "3":
+                case "3":
                     AdminCarMenu();
-                    break;*/
+                    break;
 
                 case "4":
                     _running = false;
@@ -46,9 +51,11 @@ public class AdminMenu(
             }
 
         }
-
+return Screens.MainMenu;
 
     }
+
+    // -------------------------------------------- Kunden verwalten --------------------------------------------------
 
 
     // Menü zum Verwalten von Kunden
@@ -100,38 +107,7 @@ public class AdminMenu(
     }
 
 
-    // Menü zum Verwalten von Fahrzeugteilen
-    private void AdminProductMenu()
-    {
-        bool _running = true;
-        while (_running)
-        {
-            PrintHeader();
-            Console.WriteLine("1) Fahrzeugteileliste anzeigen");
-            Console.WriteLine("2) Fahrzeugteil hinzufügen");
-            Console.WriteLine("3) Fahrzeugteil suchen");
-            Console.WriteLine("4) Fahrzeugteileliste löschen");
-            Application.PrintReturnMessage();
-
-            string eingabe = Console.ReadLine() ?? "";
-
-            switch (eingabe)
-            {
-                case "1":
-                    ListProducts();
-                    break;
-
-                case "2":
-                    AddProductMenu();
-                    break;
-
-                default:
-                    _running = false;
-                    break;
-            }
-        }
-    }
-
+   
 
    
    private void RegistrationsMenuAdmin()
@@ -182,7 +158,7 @@ public class AdminMenu(
                        PrintHeader();
                        Console.WriteLine("[1] Erneut versuchen");
                        Console.WriteLine("[2] Abbrechen");
-                       Application.PrintChooseOption();
+                       App.PrintChooseOption();
 
                        string input = Console.ReadKey().KeyChar.ToString();
 
@@ -213,7 +189,7 @@ public class AdminMenu(
        Customer c = new Customer(firstName, lastName, username, hash, phone, mailAddress);
        PrintHeader();
        Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
-       Application.PrintChooseOption();
+       App.PrintChooseOption();
        string response = Console.ReadKey().KeyChar.ToString();
        if (response == "Y" || response == "y")
        {
@@ -239,39 +215,7 @@ public class AdminMenu(
       
    }
 
-    // Hinzufügen von Produkten
-    private void AddProductMenu() 
-    
-    {
-        PrintHeader();
-        Console.Write("Artikelnummer: ");
-        string articleNumber = Console.ReadLine()!;
-        Console.Write("Name: ");
-        string name = Console.ReadLine();
-        Console.Write("Hersteller: ");
-        string brand = Console.ReadLine();
-        Console.Write("Häufigkeit: ");
-        int quantity = Convert.ToInt32(Console.ReadLine());
-        Console.Write("Preis: ");
-        double price = Convert.ToDouble(Console.ReadLine());
-        Console.Write("Beschreibung: ");
-        string description = Console.ReadLine();
-        
-
-        Product p = new Product();
-        p.ArticleNumber = articleNumber;
-        p.Name = name;
-        p.Brand = brand;
-        p.Quantity = quantity;
-        p.Description = description;
-        p.Price = price;
-       
-        
-            productInventory.InsertProduct(p);
-
-            Application.PrintReturnMessage();
-        Console.ReadKey();
-    }
+   
     
     
     // Alle Kunden anzeigen lassen
@@ -281,27 +225,13 @@ public class AdminMenu(
         foreach (Customer c in customerInventory.ListCustomers())
         {
             Console.WriteLine(c.ToString());
-            Application.PrintSplitter();
+            App.PrintSplitter();
         }
 
-        Application.PrintReturnMessage();
+        App.PrintContinueMessage();
         Console.ReadKey();
     }
     
-    
-    // Alle Produkte anzeigen lassen
-    private void ListProducts()
-    {
-        PrintHeader();
-        foreach (Product c in productInventory.ListProducts())
-        {
-            Console.WriteLine(c.ToString());
-            Application.PrintSplitter();
-        }
-
-        Application.PrintReturnMessage();
-        Console.ReadKey();
-    }
     
     
     // Kunden suchen Menü
@@ -392,7 +322,7 @@ public class AdminMenu(
                 }
 
                 PrintCustomerSettingsMenu(c);
-                Application.PrintReturnMessage();
+                App.PrintContinueMessage();
             
 
             string eingabe2 = Console.ReadLine() ?? "";
@@ -412,7 +342,7 @@ public class AdminMenu(
                     break;
 
                 default:
-                    Application.PrintReturnMessage();
+                    App.PrintContinueMessage();
                     break;
 
 
@@ -424,37 +354,35 @@ public class AdminMenu(
         }
     }
 
-    
-    // Kunden sperren
-    private void BannCustomerMenu(Customer customer)
-    {
-        
-    }
-
 
     // Alle Kunden löschen
     private void DeleteCustomersMenu()
     {
        PrintHeader();
         Console.Write("Sind Sie sich sicher, dass Sie alle Kundendaten löschen wollen? [Y/N]: ");
-       Application.PrintChooseOption();
+       App.PrintChooseOption();
         String eingabe = Console.ReadLine() ?? "";
         if (eingabe == "Y" || eingabe == "y")
         {
             customerInventory.DeleteCustomers();
             Console.WriteLine("Kundenliste erfolgreich gelöscht");
-            Application.PrintReturnMessage();
+            App.PrintContinueMessage();
             Console.ReadKey();
         }
         else if (eingabe == "N" || eingabe == "n")
         {
-            Application.PrintReturnMessage();
+            App.PrintContinueMessage();
             Console.ReadKey();
         }
 
 
     }
     
+    // Kunden sperren
+    private void BannCustomerMenu(Customer customer)
+    {
+        
+    }
     
     // Kundendaten anpassen
     private void UpdateCustomerMenu(Customer customer)
@@ -484,12 +412,12 @@ public class AdminMenu(
             customerInventory.UpdateCustomer(customer,username, hash, telefon);
             
             Console.WriteLine("Erfolgreich überschrieben");
-            Application.PrintReturnMessage();
+            App.PrintContinueMessage();
             Console.ReadKey();
         }
         else if (eingabe == "N" || eingabe == "n")
         {
-            Application.PrintReturnMessage();
+            App.PrintContinueMessage();
             Console.ReadKey();
         }
     }
@@ -502,11 +430,11 @@ public class AdminMenu(
         PrintHeader();
         Console.WriteLine(c.ToString());
         //Console.WriteLine("___________________________________");
-        Application.PrintSplitter();
+        App.PrintSplitter();
         Console.WriteLine("1) Benutzer löschen");
         Console.WriteLine("2) Benutzer bearbeiten");
         Console.WriteLine("3) Benutzer sperren");
-        Application.PrintReturnMessage();
+        App.PrintContinueMessage();
     }
     
     
@@ -514,32 +442,220 @@ public class AdminMenu(
     private void PrintCustomerDeleteMenu(Customer c)
     {
         Console.WriteLine("Benutzer unwiderruflich löschen? [Y/N]");
-        Application.PrintChooseOption();
+        App.PrintChooseOption();
         String d = Console.ReadLine();
         if (d == "Y" || d == "y")
         {
 
             customerInventory.DeleteCustomer(c);
             Console.WriteLine("Benutzer erfolgreich gelöscht");
-            Application.PrintReturnMessage();
+            App.PrintContinueMessage();
             Console.ReadKey();
 
         }
         else if (d == "N" || d == "n")
         {
             Console.WriteLine("Erfolgreich abgebrochen. ");
-            Application.PrintReturnMessage();;
+            App.PrintContinueMessage();;
             Console.ReadKey();
         }
-    }
+    }   
+    // --------------------------------------- Fahrzeugteile verwalten -------------------------------------------------
 
+    // Menü zum Verwalten von Fahrzeugteilen
+    private void AdminProductMenu()
+    {
+        bool _running = true;
+        while (_running)
+        {
+            PrintHeader();
+            Console.WriteLine("1) Fahrzeugteileliste anzeigen");
+            Console.WriteLine("2) Fahrzeugteil hinzufügen");
+            Console.WriteLine("3) Fahrzeugteil suchen");
+            Console.WriteLine("4) Fahrzeugteileliste löschen");
+            TestAutoKonfigurator.App.PrintContinueMessage();
+
+            string eingabe = Console.ReadLine() ?? "";
+
+            switch (eingabe)
+            {
+                case "1":
+                    ListProducts();
+                    break;
+
+                case "2":
+                    AddProductMenu();
+                    break;
+
+                default:
+                    _running = false;
+                    break;
+            }
+        }
+    }
+    
+    
+    // Alle Produkte anzeigen lassen
+    private void ListProducts()
+    {
+        PrintHeader();
+        foreach (Product c in productInventory.ListProducts())
+        {
+            Console.WriteLine(c.ToString());
+            App.PrintSplitter();
+        }
+
+        App.PrintContinueMessage();
+        Console.ReadKey();
+    }
+    
+    // Hinzufügen von Produkten
+    private void AddProductMenu() 
+    
+    {
+        PrintHeader();
+        Console.Write("Artikelnummer: ");
+        string articleNumber = Console.ReadLine()!;
+        Console.Write("Name: ");
+        string name = Console.ReadLine();
+        Console.Write("Hersteller: ");
+        string brand = Console.ReadLine();
+        Console.Write("Häufigkeit: ");
+        int quantity = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Preis: ");
+        double price = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Beschreibung: ");
+        string description = Console.ReadLine();
+        
+
+        Product p = new Product();
+        p.ArticleNumber = articleNumber;
+        p.Name = name;
+        p.Brand = brand;
+        p.Quantity = quantity;
+        p.Description = description;
+        p.Price = price;
+       
+        
+        productInventory.InsertProduct(p);
+
+        App.PrintContinueMessage();
+        Console.ReadKey();
+    }
+    
+    
+    
+
+    // ---------------------------------------- Fahrzeuge verwalten -------------------------------------------------
+    
+    // Fahrzeuge verwalten - Hauptmenü
+    private void AdminCarMenu()
+    {
+        bool _running = true;
+
+        while (_running)
+        {
+
+            PrintHeader();
+            Console.WriteLine("[1] Fahrzeugliste anzeigen");
+            Console.WriteLine("[2] Fahrzeug hinzufügen");
+            Console.WriteLine("[3] Fahrzeug suchen");
+            Console.WriteLine("[4] Fahrzeug löschen");
+            Console.WriteLine("[5] <-");
+
+            string eingabe = Console.ReadKey().KeyChar.ToString();
+
+            switch (eingabe)
+            {
+                case "1":
+                    ListCarsMenu();
+                    break;
+
+                case "2":
+                    AddCarMenu();
+                    break;
+
+                case "3":
+                    SearchCustomerMenu();
+                    break;
+
+                case "4":
+                    DeleteCustomersMenu();
+                    break;
+
+                case "5":
+                    _running = false;
+                    break;
+                
+                default:
+                    break;
+
+
+
+            }
+        }
+    }
+    
+    // Alle Autos anzeiegen lassen
+    private void ListCarsMenu()
+    {
+        PrintHeader();
+        foreach (Car c in carInventory.ListCars())
+        {
+            Console.WriteLine(c.ToString());
+            App.PrintSplitter();
+        }
+
+        App.PrintContinueMessage();
+        Console.ReadKey();
+    }
+    
+    // Autos hinzufügen
+    private void AddCarMenu() 
+    
+    {
+        PrintHeader();
+        Console.Write("Name ");
+        string name = Console.ReadLine() ?? "";
+        
+        Console.Write("Hersteller: ");
+        string brand = Console.ReadLine() ?? "";
+        
+        Console.Write("Modell: ");
+        string model = Console.ReadLine() ?? "";
+        
+        Console.Write("Baujahr: ");
+        string dateProduction = Console.ReadLine() ?? "";
+        
+        Console.Write("Erstzulassung: ");
+        string datePermit = Console.ReadLine() ?? "";
+        
+        Console.Write("Leistung (PS): ");
+        int ps= Convert.ToInt32(Console.ReadLine() ?? "");
+        
+        Console.Write("Häufigkeit: ");
+        int quantity = Convert.ToInt32(Console.ReadLine());
+        
+        Console.Write("Preis: ");
+        double price = Convert.ToDouble(Console.ReadLine());
+        Car c = new Car(name, dateProduction, datePermit, brand, model, ps, quantity, price);
+        carInventory.InsertCar(c);
+        
+        App.PrintContinueMessage();
+        Console.ReadKey();
+    }
+    
+    
+    
+
+    // -------------------------------------------- Optikelemente -----------------------------------------------------
     
     // Exception + beenden der aktellen Schleife durch bool Übergabe
     private void PrintNoCustomerFoundException(NoCustomerFoundException e,bool runningVar)
     {
         Console.WriteLine(e.Message);
         Console.WriteLine("1) Erneut versuchen");
-        Application.PrintReturnMessage();
+        App.PrintContinueMessage();
         string eingabe2 = Console.ReadLine();
         switch (eingabe2)
         {
@@ -548,13 +664,12 @@ public class AdminMenu(
 
             default:
 
-                Application.PrintReturnMessage();
+                App.PrintContinueMessage();
                 runningVar = false;
                 break;
 
         }
     }
-
     
     // === Administrator=== printen
     public void PrintHeader()
@@ -562,12 +677,8 @@ public class AdminMenu(
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("=== Administrator ===");
-        Application.PrintSplitter();
-         
+        App.PrintSplitter();
+
     }
-
-  
-
-    
     
 }

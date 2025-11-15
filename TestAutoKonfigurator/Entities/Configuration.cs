@@ -1,6 +1,6 @@
 namespace TestAutoKonfigurator;
 
-public class Configuration
+public class Configuration(Car car)
 {
     private readonly List<Product> _products;
         

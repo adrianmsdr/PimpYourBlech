@@ -1,20 +1,17 @@
-using System.Net.Mime;
 using System.Security.Cryptography;
 using System.Text;
+using TestAutoKonfigurator;
 using TestAutoKonfigurator.CustomerCommunication;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Inventories;
-using TestAutoKonfigurator.ValueObjects;
+using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Session;
 
-namespace TestAutoKonfigurator.Menus;
+namespace Application.Screens;
 
-public class StartMenu(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory  carInventory )
+public class StartMenu(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory  carInventory, IUserSession  userSession )
 {
-    
-    private readonly MainMenu _mainMenu = new (customerInventory, productInventory, carInventory);
    
-    public void Start()
+    public Screens Run()
     {
         bool running = true;
         while (running)
@@ -24,7 +21,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
             Console.WriteLine("[1] Registrieren");
             Console.WriteLine("[2] Anmelden");
             Console.WriteLine("[3] Beenden");
-            Application.PrintChooseOption();
+            App.PrintChooseOption();
 
             string eingabe = Console.ReadKey().KeyChar.ToString();
 
@@ -35,23 +32,23 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                     break;
 
                 case "2":
-                    LoginMenu();
-                    break;
+                    return LoginMenu();
 
                 case "3":
-                    running = false;
+                    return Screens.ExitMenu;
                     break;
 
 
                 default:
-                    Application.PrintWrongInput(); 
+                    App.PrintWrongInput(); 
                     break;  
             }
         }
+        return Screens.MainMenu;
     }
 
 
-    private void RegistrationsMenu()
+    private Screens RegistrationsMenu()
     {
         bool runningRegistration = true;
         while (runningRegistration)
@@ -141,8 +138,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                         
                         if (!PrintRetryMenu())
                         {
-                            runningRegistration = false;
-                            break;
+                            return Screens.StartMenu;
                         }
                     }
 
@@ -155,15 +151,16 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                     Console.WriteLine("Registrierung erfolgreich. Bitte melden dich an.");
 
                     Console.ReadKey();
-                    runningRegistration = false;
+                    return Screens.StartMenu;
 
                 }
 
             }
         }
+        return Screens.StartMenu;
         }
 
-        private void LoginMenu()
+        private Screens LoginMenu()
         {
 
             
@@ -177,24 +174,22 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                 string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
                 if (!customerInventory.LoginBlockedChecker(username, hash))
                 {
-                    customerInventory.GetCustomerAccount(username, hash);
+                    userSession.CurrentUser   = customerInventory.GetCustomerAccount(username, hash);
                     Console.WriteLine("Anmeldung erfolgreich. Enter drücken um fortzufahren.");
                     Console.ReadKey();
-                    _mainMenu.Start(customerInventory.GetCustomerAccount(username, hash).AdminRights);
+                    return Screens.MainMenu;
 
                 }
-                else
+                
+                PrintHeader();
+                Console.WriteLine("Anmeldung fehlgeschlagen");
+                if (!PrintRetryMenu())
                 {
-                    PrintHeader();
-                    Console.WriteLine("Anmeldung fehlgeschlagen");
-                    if (!PrintRetryMenu())
-                    {
-                        running = false;
-                    }
-                    
-                    
+                    return Screens.StartMenu;
                 }
             }
+
+            return Screens.StartMenu;
 
 
 
@@ -215,7 +210,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                 Console.ForegroundColor = ConsoleColor.Blue;
                 
                 Console.WriteLine("=== PIMP YOUR BLECH ===");
-                Application.PrintSplitter();
+                App.PrintSplitter();
             }
 
     public bool PrintRetryMenu()
@@ -223,9 +218,9 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
         
         while (true)
         {
-            Application.PrintSplitter();
+            App.PrintSplitter();
             Console.WriteLine("[1] Erneut versuchen\n[2] Abbrechen");
-            Application.PrintChooseOption();
+            App.PrintChooseOption();
 
             string input = Console.ReadKey().KeyChar.ToString();
 

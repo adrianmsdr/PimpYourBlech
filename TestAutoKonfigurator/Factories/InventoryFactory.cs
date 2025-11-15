@@ -1,7 +1,6 @@
-using TestAutoKonfigurator.Admin;
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Database;
-using TestAutoKonfigurator.Interfaces.Inventories;
+using TestAutoKonfigurator.Database;
+using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Inventories.Implementation;
 
 namespace TestAutoKonfigurator.Factories;
 

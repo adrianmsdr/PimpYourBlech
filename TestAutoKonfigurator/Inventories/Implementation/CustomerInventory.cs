@@ -1,9 +1,7 @@
+using TestAutoKonfigurator.Database;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Database;
-using TestAutoKonfigurator.Interfaces.Inventories;
 
-namespace TestAutoKonfigurator.Admin;
+namespace TestAutoKonfigurator.Inventories.Implementation;
 
 public sealed class CustomerInventory(IJsonDatabase database):ICustomerInventory
 {

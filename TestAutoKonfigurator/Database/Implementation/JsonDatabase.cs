@@ -1,8 +1,6 @@
 using System.Text.Json;
-using TestAutoKonfigurator.Interfaces;
-using TestAutoKonfigurator.Interfaces.Database;
 
-namespace TestAutoKonfigurator.Database;
+namespace TestAutoKonfigurator.Database.Implementation;
 
 public class JsonDatabase : IJsonDatabase
 {
