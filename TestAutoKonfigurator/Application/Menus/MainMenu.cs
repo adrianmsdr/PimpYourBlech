@@ -53,7 +53,7 @@ public class MainMenu(
                                         case "5":
                                                // if (userSession.CurrentUser.AdminRights)
                                                         //  {
-                                                        Console.WriteLine("[5] Administrator");
+                                                        return Screens.AdminMenu;
                                                 //  }
                                                 break;
 
