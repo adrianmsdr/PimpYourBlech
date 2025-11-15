@@ -9,5 +9,7 @@ public enum Screens
     ConfigStart,
     ConfigMain,
     ConfigEngine,
+    ConfigDelete,
     ConfigShow,
+    
 }

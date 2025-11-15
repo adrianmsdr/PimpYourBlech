@@ -22,10 +22,9 @@ public class MainMenu(
                                 Console.WriteLine("[2] Konfigurationen laden");
                                 Console.WriteLine("[3] Ersatzteileshop");
                                 Console.WriteLine("[4] Ausloggen");
-                                //if (userSession.CurrentUser.AdminRights)
-                              //  {
-                                        Console.WriteLine("[5] Administrator");
-                              //  }
+                                        if (userSession.CurrentUser.AdminRights)
+                                {
+                                        Console.WriteLine("[5] Administrator");  }
                                 
                                 
 
@@ -51,10 +50,10 @@ public class MainMenu(
 
 
                                         case "5":
-                                               // if (userSession.CurrentUser.AdminRights)
-                                                        //  {
+                                                if (userSession.CurrentUser.AdminRights)
+                                                          {
                                                         return Screens.AdminMenu;
-                                                //  }
+                                                  }
                                                 break;
 
                                 }
