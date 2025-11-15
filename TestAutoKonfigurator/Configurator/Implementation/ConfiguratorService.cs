@@ -29,4 +29,15 @@ public class ConfiguratorService:IConfiguratorService
     {
         throw new NotImplementedException();
     }
+
+    public void DeleteConfiguration(Configuration configuration, Customer customer)
+    {
+        foreach (var config in customer.Configurations)
+        {
+            if (config == configuration)
+            {
+                customer.Configurations.Remove(configuration);
+            }
+        }
+    }
 }

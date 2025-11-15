@@ -38,10 +38,10 @@ IConfiguratorService  configuratorService)
                         break;
                     
                     case "3":
-                        break;
+                        
                     
                     case "4":
-                        break;
+                        return Screens.ConfigDelete;
                     
                     case "5":
                         return Screens.ConfigShow;

@@ -78,6 +78,13 @@ public class App
                     break;
                 }
 
+                case Screens.ConfigDelete:
+                {
+                    var menu = new ConfigDelete(_products,_userSession, _configuratorService);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
+
                 case Screens.ConfigShow:
                 {
                     var menu = new ConfigShow(_customers, _products, _cars, _userSession, _configuratorService);
