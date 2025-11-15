@@ -4,7 +4,7 @@ public interface IConfiguratorService
 {
     
     // Konfiguration starten
-    Configuration StartNewConfiguration(Customer customer, Car car);
+    Configuration StartNewConfiguration(Customer customer, Car car,string name);
     
     // Fahrzeugteil zur Konfiguration hinzufügen
     void AddProduct(Configuration configuration, Product product);

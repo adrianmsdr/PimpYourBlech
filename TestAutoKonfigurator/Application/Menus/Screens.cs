@@ -1,4 +1,4 @@
-namespace Application.Screens;
+namespace Application.Menus;
 
 public enum Screens
 {
@@ -6,6 +6,8 @@ public enum Screens
     MainMenu,
     AdminMenu,
     ExitMenu,
-    ConfigMenu,
+    ConfigStart,
+    ConfigMain,
     ConfigEngine,
+    ConfigShow,
 }

@@ -6,7 +6,7 @@ using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
 
-namespace Application.Screens;
+namespace Application.Menus;
 
 public class StartMenu(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory  carInventory, IUserSession  userSession )
 {
@@ -175,6 +175,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                 if (!customerInventory.LoginBlockedChecker(username, hash))
                 {
                     userSession.CurrentUser   = customerInventory.GetCustomerAccount(username, hash);
+                    App.PrintSplitter();
                     Console.WriteLine("Anmeldung erfolgreich. Enter drücken um fortzufahren.");
                     Console.ReadKey();
                     return Screens.MainMenu;
@@ -216,12 +217,12 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
     public bool PrintRetryMenu()
     {
         
-        while (true)
-        {
+       
             App.PrintSplitter();
             Console.WriteLine("[1] Erneut versuchen\n[2] Abbrechen");
             App.PrintChooseOption();
-
+            while (true)
+            {
             string input = Console.ReadKey().KeyChar.ToString();
 
             switch (input)
@@ -232,6 +233,9 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
 
                 case "2":
                     return false;
+                
+                
+                    
                 
                             
             }

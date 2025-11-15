@@ -2,7 +2,7 @@ using TestAutoKonfigurator;
 using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
 
-namespace Application.Screens;
+namespace Application.Menus;
 
 public class MainMenu(
         ICustomerInventory customerInventory,
@@ -35,7 +35,7 @@ public class MainMenu(
                                 switch (eingabe)
                                 {
                                         case "1":
-                                                return Screens.ConfigMenu;
+                                                return Screens.ConfigStart;
 
                                         case "2":
                                                 // Konfigurationen laden

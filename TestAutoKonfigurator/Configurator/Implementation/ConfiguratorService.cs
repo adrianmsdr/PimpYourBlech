@@ -2,10 +2,10 @@ namespace TestAutoKonfigurator.Configorator.Implementation;
 
 public class ConfiguratorService:IConfiguratorService
 {
-    public Configuration StartNewConfiguration(Customer customer, Car car)
+    public Configuration StartNewConfiguration(Customer customer, Car car,string name)
     {
         Car copy = new Car(car.Name,car.DateProduction,car.DatePermit,car.Brand,car.Model,car.PS,car.Quantity,car.Price);
-        Configuration config = new Configuration(copy);
+        Configuration config = new Configuration(copy, name);
         customer.Configurations.Add(config);
         return config;
     }

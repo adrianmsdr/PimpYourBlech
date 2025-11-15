@@ -6,7 +6,7 @@ using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
 
-namespace Application.Screens;
+namespace Application.Menus;
 
 public class AdminMenu(
     ICustomerInventory customerInventory,

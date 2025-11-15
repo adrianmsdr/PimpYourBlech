@@ -1,4 +1,7 @@
-using Application.Screens;
+using Application.Menus;
+using Application.Menus;
+using TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
+using TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
@@ -27,47 +30,60 @@ public class App
 
     public void Start()
     {
-        var current = Screens.StartMenu;
+        _userSession.CurrentScreen = Screens.StartMenu;
 
-        while (current != Screens.ExitMenu)
+        while (_userSession.CurrentScreen != Screens.ExitMenu)
         {
-            switch (current)
+            switch (_userSession.CurrentScreen)
             {
                 case Screens.StartMenu:
                 {
                     var menu = new StartMenu(_customers, _products, _cars, _userSession);
-                    current = menu.Run();   // gibt Screen zurück damit weiß die app wo es nach dem jeweiligen menü weitergeht
+                    _userSession.CurrentScreen = menu.Run();   // gibt Screen zurück damit weiß die app wo es nach dem jeweiligen menü weitergeht
                     break;
                 }
 
                 case Screens.MainMenu:
                 {
                     var menu = new MainMenu(_customers, _products, _cars, _userSession);
-                    current = menu.Run();
+                    _userSession.CurrentScreen = menu.Run();
                     break;
                 }
 
                 case Screens.AdminMenu:
                 {
                     var menu = new AdminMenu(_customers, _products, _cars, _userSession);
-                    current = menu.Run();
+                    _userSession.CurrentScreen = menu.Run();
                     break;
                 }
 
-                case Screens.ConfigMenu:
+                case Screens.ConfigStart:
                 {
-                    var menu = new ConfiguratorMenu(_customers, _products, _cars, _userSession, _configuratorService);
-                    current = menu.Run();
+                    var menu = new ConfigStart(_customers, _products, _cars, _userSession, _configuratorService);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
+
+                case Screens.ConfigMain:
+                {
+                    var menu = new ConfigMain(_customers, _products, _cars, _userSession, _configuratorService);
+                    _userSession.CurrentScreen = menu.Run();
                     break;
                 }
 
                 case Screens.ConfigEngine:
                 {
-                    var menu = new ConfigEngine(_products);
-                    current = menu.Run();
+                    var menu = new ConfigEngine(_products,_userSession, _configuratorService);
+                    _userSession.CurrentScreen = menu.Run();
                     break;
                 }
-                
+
+                case Screens.ConfigShow:
+                {
+                    var menu = new ConfigShow(_customers, _products, _cars, _userSession, _configuratorService);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
             }
         }
     }
@@ -79,9 +95,8 @@ public class App
     // // Konsolenausgabe zum Zurückkehren
     public static void PrintContinueMessage()
     {
-        Console.WriteLine("Enter drücken um fortzufahren");
-        Console.WriteLine();
-        Console.Write("Auswahl: ");
+        PrintSplitter();
+        Console.Write("Enter drücken um fortzufahren"); ;
     }
 
     public static void PrintChooseOption()
@@ -102,7 +117,7 @@ public class App
     public static void PrintSplitter()
     {
         Console.WriteLine(
-            "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            "---------------------------------------------");
     }
 
 

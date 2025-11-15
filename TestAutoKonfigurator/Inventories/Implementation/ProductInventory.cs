@@ -17,6 +17,9 @@ public sealed class ProductInventory(IJsonDatabase database):IProductInventory
     {
         return _products;
     }
-    
-    
+
+    public List<Engine> ListEngines()
+    {
+        return _products.OfType<Engine>().ToList();
+    }
 }
