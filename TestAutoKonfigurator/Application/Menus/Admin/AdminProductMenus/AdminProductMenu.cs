@@ -1,11 +1,7 @@
-﻿namespace Application.Menus;
-using System.Runtime.InteropServices.JavaScript;
-using System.Security.Cryptography;
-using System.Text;
-using TestAutoKonfigurator;
-using TestAutoKonfigurator.Exceptions;
+﻿using Application.Menus;
 using TestAutoKonfigurator.Inventories;
-using TestAutoKonfigurator.Session;
+
+namespace TestAutoKonfigurator.Application.Menus.Admin.AdminProductMenus;
 
 public class AdminProductMenu(IProductInventory productInventory)
 {
@@ -58,9 +54,30 @@ public class AdminProductMenu(IProductInventory productInventory)
     }
     
     // Hinzufügen von Produkten
-    private void AddProductMenu() 
+    private Screens AddProductMenu() 
     
     {
+        
+        PrintHeader();
+        Console.WriteLine("[1] Motor hinzufügen");
+        Console.WriteLine("[2] Felge hinzufügen");
+        Console.WriteLine("[3] Lackfarbe hinzufügen");
+        Console.WriteLine("[4] Spoiler hinzufügen");
+        Console.WriteLine("[5] Scheinwerfer hinzufügen");
+        Console.WriteLine("[6] Auspuff hinzufügen");
+        Console.WriteLine("[7] Bremse hinzufügen");
+        App.PrintChooseOption();
+        
+        string eingabe = Console.ReadKey().KeyChar.ToString() ?? "";
+
+        if (eingabe == "1")
+        {
+            return Screens.AddEngineMenu;
+        }
+            
+        
+
+
         PrintHeader();
         Console.Write("Artikelnummer: ");
         string articleNumber = Console.ReadLine()!;
@@ -89,6 +106,7 @@ public class AdminProductMenu(IProductInventory productInventory)
 
         App.PrintContinueMessage();
         Console.ReadKey();
+        return Screens.AdminMenu;
     }
     
     public void PrintHeader()
