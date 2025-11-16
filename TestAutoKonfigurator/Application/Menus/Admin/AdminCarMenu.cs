@@ -11,7 +11,7 @@ public class AdminCarMenu(ICarInventory carInventory)
 {
 
     // Fahrzeuge verwalten - Hauptmenü
-    public void Run()
+    public Screens Run()
     {
         bool running = true;
 
@@ -41,10 +41,10 @@ public class AdminCarMenu(ICarInventory carInventory)
 
                 case "5":
                     running = false; break;
-
-                default: break;
+                
             }
         }
+        return Screens.AdminMenu;
     }
     
     // Autos hinzufügen

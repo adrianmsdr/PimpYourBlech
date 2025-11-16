@@ -8,28 +8,17 @@ using TestAutoKonfigurator.Session;
 
 namespace Application.Menus;
 
-public class AdminMenu
-{
-    private readonly AdminCustomerMenu _customerMenu;
-    private readonly AdminProductMenu _productMenu;
-    private readonly AdminCarMenu _carMenu;
-
-    public AdminMenu(
+public class AdminMenu(
         ICustomerInventory customerInventory,
         IProductInventory productInventory,
         ICarInventory carInventory,
         IUserSession userSession)
     {
-        _customerMenu = new AdminCustomerMenu(customerInventory, userSession);
-        _productMenu = new AdminProductMenu(productInventory);
-        _carMenu = new AdminCarMenu(carInventory);
-    }
     
     public Screens Run()
     {
-
-        bool running = true;
-        while (running)
+        
+        while (true)
         {
             PrintHeader();
             Console.WriteLine("[1] Kunden verwalten");
@@ -41,16 +30,16 @@ public class AdminMenu
             switch (eigabe)
             {
                 case "1":
-                    _customerMenu.Run(); break;
+                    return Screens.AdminCustomerMenu;
                 case "2":
-                    _productMenu.Run(); break;
+                    return Screens.AdminProductMenu;
                 case "3":
-                    _carMenu.Run(); break;
+                    return Screens.AdminCarMenu;
+                
                 case "4":
-                    running = false; break;
+                    return Screens.MainMenu;
             }
         }
-        return Screens.MainMenu;
     }
     public void PrintHeader()
     {
