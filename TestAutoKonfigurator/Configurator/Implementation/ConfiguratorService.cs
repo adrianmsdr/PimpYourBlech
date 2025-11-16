@@ -32,12 +32,7 @@ public class ConfiguratorService:IConfiguratorService
 
     public void DeleteConfiguration(Configuration configuration, Customer customer)
     {
-        foreach (var config in customer.Configurations)
-        {
-            if (config == configuration)
-            {
-                customer.Configurations.Remove(configuration);
-            }
-        }
+            customer.Configurations.Remove(configuration);
+        
     }
 }

@@ -12,7 +12,9 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
     {
         while (true)
         {
+            
             PrintHeader();
+            Console.WriteLine("[0] <-");
             for (int i = 0; i < productInventory.ListEngines().Count; i++)
             {
                 Console.WriteLine("[" + (i+1) + "] " + productInventory.ListEngines()[i].Name);
@@ -24,9 +26,10 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
             
             if (!int.TryParse(input, out var index))
             {
+                App.PrintSplitter();
                 Console.WriteLine("Bitte eine gültige Zahl eingeben.");
                 Console.ReadKey();
-                return Screens.ConfigEngine;
+                break;
             }
             
             
@@ -38,14 +41,21 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
 
             if (index < 1 || index > productInventory.ListEngines().Count)
             {
+                App.PrintSplitter();
                 Console.WriteLine("Bitte eine Zahl aus der Liste wählen.");
                 Console.ReadKey();
-                return Screens.ConfigEngine;
+                break;
             }
             Engine selectedEngine = productInventory.ListEngines()[index - 1];
             userSession.CurrentConfiguration.Engine = selectedEngine;
+            App.PrintSplitter();
+            Console.WriteLine("Motor erfolgreich hinzugefügt. ");
+            App.PrintContinueMessage();
+            Console.ReadKey();
+            return Screens.ConfigMain;
 
         }
+        return Screens.ConfigMain;
     }
 
     void PrintHeader()

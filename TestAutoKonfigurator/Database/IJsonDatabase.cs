@@ -5,7 +5,7 @@ public interface IJsonDatabase
    
         List<Customer> LoadCustomers();
 
-        List<String> LoadCustomerUsernames();
+       
    
         List<Product> LoadProducts();
         
@@ -13,7 +13,7 @@ public interface IJsonDatabase
         
         void SaveCustomers(List<Customer> di);
         
-        void SaveCustomerUsernames(List<Customer> di);
+    
         
         void SaveProducts(List<Product> di);
         

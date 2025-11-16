@@ -4,11 +4,12 @@ using TestAutoKonfigurator;
 using TestAutoKonfigurator.CustomerCommunication;
 using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Inventories.InventoryService;
 using TestAutoKonfigurator.Session;
 
 namespace Application.Menus;
 
-public class StartMenu(ICustomerInventory customerInventory,IProductInventory productInventory,ICarInventory  carInventory, IUserSession  userSession )
+public class StartMenu(ICustomerService service, IUserSession  userSession )
 {
    
     public Screens Run()
@@ -127,7 +128,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                     username = Console.ReadLine() ?? "";
                     try
                     {
-                        customerInventory.UsernameAcceptedChecker(username);
+                        service.isUsernameAvailable(username);
                         runningUsernameValidation = false;
                     }
                     catch (UsernameNotAvailableException e)
@@ -146,8 +147,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                     Console.Write("Passwort: ");
                     string hash =
                         Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-                    Customer c = new Customer(firstName, lastName, username, hash, phone, mailAddress);
-                    customerInventory.InsertCustomer(c);
+                    service.Register(firstName, lastName, phone, hash,phone, mailAddress);
                     Console.WriteLine("Registrierung erfolgreich. Bitte melden dich an.");
 
                     Console.ReadKey();
@@ -172,9 +172,9 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
                 string username = Console.ReadLine() ?? "";
                 Console.Write("Passwort: ");
                 string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-                if (!customerInventory.LoginBlockedChecker(username, hash))
+                if (service.LoginChecker(username, hash))
                 {
-                    userSession.CurrentUser   = customerInventory.GetCustomerAccount(username, hash);
+                    userSession.CurrentUser   = service.GetCustomer(username, hash);
                     App.PrintSplitter();
                     Console.WriteLine("Anmeldung erfolgreich. Enter drücken um fortzufahren.");
                     Console.ReadKey();
@@ -195,14 +195,7 @@ public class StartMenu(ICustomerInventory customerInventory,IProductInventory pr
 
 
         }
-
-    private void RegisterCustomer(Customer c)
-    {
-            customerInventory.InsertCustomer(c);
-            Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
-            Console.ReadKey();
-
-        }
+        
     
 
     public static void PrintHeader()

@@ -6,8 +6,6 @@ using TestAutoKonfigurator.Session;
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 
 public class ConfigStart(
-    ICustomerInventory customerInventory,
-    IProductInventory productInventory,
     ICarInventory carInventory,
     IUserSession userSession,
     IConfiguratorService configuratorService)

@@ -8,11 +8,7 @@ using TestAutoKonfigurator.Session;
 
 namespace Application.Menus;
 
-public class AdminMenu(
-        ICustomerInventory customerInventory,
-        IProductInventory productInventory,
-        ICarInventory carInventory,
-        IUserSession userSession)
+public class AdminMenu()
     {
     
     public Screens Run()

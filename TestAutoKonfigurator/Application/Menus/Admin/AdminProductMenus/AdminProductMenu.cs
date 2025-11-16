@@ -57,25 +57,53 @@ public class AdminProductMenu(IProductInventory productInventory)
     private Screens AddProductMenu() 
     
     {
-        
-        PrintHeader();
-        Console.WriteLine("[1] Motor hinzufügen");
-        Console.WriteLine("[2] Felge hinzufügen");
-        Console.WriteLine("[3] Lackfarbe hinzufügen");
-        Console.WriteLine("[4] Spoiler hinzufügen");
-        Console.WriteLine("[5] Scheinwerfer hinzufügen");
-        Console.WriteLine("[6] Auspuff hinzufügen");
-        Console.WriteLine("[7] Bremse hinzufügen");
-        App.PrintChooseOption();
-        
-        string eingabe = Console.ReadKey().KeyChar.ToString() ?? "";
-
-        if (eingabe == "1")
+        while (true)
         {
-            return Screens.AddEngineMenu;
+
+
+            PrintHeader();
+            Console.WriteLine("[1] Motor hinzufügen");
+            Console.WriteLine("[2] Felge hinzufügen");
+            Console.WriteLine("[3] Lackfarbe hinzufügen");
+            Console.WriteLine("[4] Spoiler hinzufügen");
+            Console.WriteLine("[5] Scheinwerfer hinzufügen");
+            Console.WriteLine("[6] Auspuff hinzufügen");
+            Console.WriteLine("[7] Bremse hinzufügen");
+            Console.WriteLine("[8] <-");
+            App.PrintChooseOption();
+
+            string eingabe = Console.ReadKey().KeyChar.ToString() ?? "";
+
+            switch (eingabe)
+            {
+                case "1":
+                    return Screens.AddEngineMenu;
+
+                case "2":
+                //return Screens.AddRimMenu;
+
+                case "3":
+                //return Screens.AddColorMenu;
+
+                case "4":
+                //return Screens.AddSpoilerMenu;
+
+                case "5":
+                //return Screens.AddLightsMenu;
+
+                case "6":
+                //return Screens.AddExhaustMenu;
+
+                case "7":
+                //return Screens.AddBrakes;
+
+                case "8":
+                    return Screens.AdminProductMenu;
+            }
         }
-            
-        
+
+
+
 
 
         PrintHeader();

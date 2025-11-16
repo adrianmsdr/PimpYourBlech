@@ -4,8 +4,7 @@ namespace TestAutoKonfigurator.Database.Implementation;
 
 public class JsonDatabase : IJsonDatabase
 {
-    private const string FileUrlCustomers = "customers.json";
-    private const string FileUrlCustomerUsernames = "customerUsernames.json";
+    private const string FileUrlCustomers = "customers.json"; 
     private const string FileUrlProducts = "products.json";
     private const string FileUrlCars = "cars.json";
 
@@ -21,17 +20,6 @@ public class JsonDatabase : IJsonDatabase
         return customers;
     }
     
-    public List<String> LoadCustomerUsernames()
-    {
-        if (!File.Exists(FileUrlCustomerUsernames))
-        {
-            return new List<String>();
-        }
-        
-        var json = File.ReadAllText(FileUrlCustomerUsernames);
-        var customerUsernames = JsonSerializer.Deserialize<List<String>>(json);
-        return customerUsernames;
-    }
 
     public List<Product> LoadProducts()
     {
@@ -65,16 +53,7 @@ public class JsonDatabase : IJsonDatabase
 
     
 
-    public void SaveCustomerUsernames(List<Customer> customers)
-    {
-        List<String> customerUsernames = new List<string>();
-        foreach (var customer in customers)
-        {
-            customerUsernames.Add(customer.Username);
-        }
-        var json = JsonSerializer.Serialize(customerUsernames, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(FileUrlCustomerUsernames, json);
-    }
+   
 
 
     public void SaveProducts(List<Product> products)
