@@ -13,6 +13,7 @@ public enum Screens
     AdminCustomerMenu,
     AdminProductMenu,
     AdminCarMenu,
+    AddEngineMenu,
     
     // Konfigurator
     ConfigStart,
