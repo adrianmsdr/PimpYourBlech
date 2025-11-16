@@ -5,12 +5,11 @@ namespace TestAutoKonfigurator;
 public class Customer (string firstName, string lastName, string username, string passwordHash, string telefon, string mailAddress)
     {
         
-        private readonly List<Configuration> configurations=new List<Configuration>();
         
     
     //Getter/Setter
     
-    public List<Configuration> Configurations => configurations;
+    public List<Configuration> Configurations { get; set; } 
     public string FirstName { get; set; } = firstName;
 
     public string LastName { get; set; } = lastName;

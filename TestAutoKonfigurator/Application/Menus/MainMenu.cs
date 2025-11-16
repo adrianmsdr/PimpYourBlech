@@ -5,9 +5,6 @@ using TestAutoKonfigurator.Session;
 namespace Application.Menus;
 
 public class MainMenu(
-        ICustomerInventory customerInventory,
-        IProductInventory productInventory,
-        ICarInventory carInventory,
         IUserSession userSession)
 {
         public Screens Run()

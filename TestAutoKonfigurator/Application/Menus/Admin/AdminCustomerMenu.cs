@@ -1,4 +1,6 @@
-﻿namespace Application.Menus;
+﻿using TestAutoKonfigurator.Inventories.InventoryService;
+
+namespace Application.Menus;
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,7 +10,7 @@ using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
 
 public class AdminCustomerMenu(
-    ICustomerInventory customerInventory)
+    ICustomerService customerService)
 {
     
     // Menü zum verwalten der Kunden
@@ -57,7 +59,7 @@ public class AdminCustomerMenu(
     private void ListCustomersAdmin()
     {
         PrintHeader();
-        foreach (Customer c in customerInventory.ListCustomers())
+        foreach (Customer c in customerService.GetListCustomers())
         {
             Console.WriteLine(c.ToString());
             App.PrintSplitter();
@@ -100,7 +102,7 @@ public class AdminCustomerMenu(
                username = Console.ReadLine() ?? "";
                try
                {
-                   customerInventory.UsernameAcceptedChecker(username);
+                   customerService.isUsernameAvailable(username);
                    runningAgain = false;
                }
                catch (UsernameNotAvailableException e)
@@ -138,7 +140,6 @@ public class AdminCustomerMenu(
        
        Console.Write("Passwort: ");
        string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-       Customer c = new Customer(firstName, lastName, username, hash, phone, mailAddress);
        
        PrintHeader();
        Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
@@ -146,9 +147,10 @@ public class AdminCustomerMenu(
        App.PrintChooseOption();
        
        string response = Console.ReadKey().KeyChar.ToString();
-       
+       Customer c = customerService.Register(firstName, lastName, username, hash, phone, mailAddress);
        if (response == "Y" || response == "y")
        {
+           customerService.isUsernameAvailable(username);
            c.AdminRights = true;
            PrintHeader();
            Console.WriteLine("Administrator - Rechte erfolgreich erteilt. Enter drücken um fortzufahren.");
@@ -161,8 +163,7 @@ public class AdminCustomerMenu(
            Console.WriteLine("Keine Administrator - Rechte erteilt. Enter drücken um fortzufahren.");
            Console.ReadKey();
        }
-       
-           customerInventory.InsertCustomer(c);
+       customerService.Register(firstName, lastName, username, hash, phone, mailAddress);
            PrintHeader();
            Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
            Console.ReadKey();
@@ -209,7 +210,7 @@ public class AdminCustomerMenu(
         String eingabe = Console.ReadLine() ?? "";
         if (eingabe == "Y" || eingabe == "y")
         {
-            customerInventory.DeleteCustomers();
+            customerService.DeleteAllCustomers();
             Console.WriteLine("Kundenliste erfolgreich gelöscht");
             App.PrintContinueMessage();
             Console.ReadKey();
@@ -254,15 +255,15 @@ public class AdminCustomerMenu(
             Customer c = new Customer("","","","","","");
             if (eingabe == "1")
             {
-                c = customerInventory.GetCustomerByUsername(un);
+                c = customerService.GetCustomerByUsername(un);
             }
             else if (eingabe == "2")
             {
-                c = customerInventory.GetCustomerByTelefon(te);
+                c = customerService.GetCustomerByTelefon(te);
             }
             else if (eingabe == "3")
             {
-                c = customerInventory.GetCustomerByNames(fn, ln);
+                c = customerService.GetCustomerByNames(fn, ln);
             }
 
             PrintCustomerSettingsMenu(c);
@@ -317,7 +318,7 @@ public class AdminCustomerMenu(
         {
             
             
-            customerInventory.UpdateCustomer(customer,username, hash, telefon);
+            customerService.UpdateCustomer(customer,username, hash, telefon);
             
             Console.WriteLine("Erfolgreich überschrieben");
             App.PrintContinueMessage();
@@ -352,7 +353,7 @@ public class AdminCustomerMenu(
         if (d == "Y" || d == "y")
         {
 
-            customerInventory.DeleteCustomer(c);
+            customerService.DeleteCustomer(c);
             Console.WriteLine("Benutzer erfolgreich gelöscht");
             App.PrintContinueMessage();
             Console.ReadKey();

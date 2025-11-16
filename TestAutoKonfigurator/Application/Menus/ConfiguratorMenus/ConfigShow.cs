@@ -6,11 +6,7 @@ using TestAutoKonfigurator.Session;
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 
 public class ConfigShow(
-ICustomerInventory customerInventory,
-    IProductInventory productInventory,
-ICarInventory carInventory,
-    IUserSession userSession,
-IConfiguratorService  configuratorService)
+    IUserSession userSession)
 {
     public Screens Run()
     {

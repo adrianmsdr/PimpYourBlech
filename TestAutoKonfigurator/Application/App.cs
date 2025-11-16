@@ -5,6 +5,7 @@ using TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 using TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Inventories.InventoryService;
 using TestAutoKonfigurator.Session;
 
 
@@ -12,17 +13,19 @@ namespace TestAutoKonfigurator;
 
 public class App
 {
-    private readonly ICustomerInventory _customers;
+    //private readonly ICustomerInventory _customers;
+    private readonly ICustomerService _customerService;
     private readonly IProductInventory _products;
     private readonly ICarInventory _cars;
     private readonly IUserSession  _userSession;
     private readonly IConfiguratorService _configuratorService;
 
-    public App(ICustomerInventory customerInventory,
+    public App(/*ICustomerInventory customerInventory*/ICustomerService customerService,
         IProductInventory productInventory,
         ICarInventory carInventory,IUserSession  userSession, IConfiguratorService configuratorService)
     {
-        _customers = customerInventory;
+        //_customers = customerInventory;
+        _customerService = customerService;
         _products  = productInventory;
         _cars      = carInventory;
         _userSession = userSession;
@@ -39,28 +42,28 @@ public class App
             {
                 case Screens.StartMenu:
                 {
-                    var menu = new StartMenu(_customers, _products, _cars, _userSession);
+                    var menu = new StartMenu(_customerService, _userSession);
                     _userSession.CurrentScreen = menu.Run();   // gibt Screen zurück damit weiß die app wo es nach dem jeweiligen menü weitergeht
                     break;
                 }
 
                 case Screens.MainMenu:
                 {
-                    var menu = new MainMenu(_customers, _products, _cars, _userSession);
+                    var menu = new MainMenu( _userSession);
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
 
                 case Screens.AdminMenu:
                 {
-                    var menu = new AdminMenu(_customers, _products, _cars, _userSession);
+                    var menu = new AdminMenu();
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
 
                 case Screens.AdminCustomerMenu:
                 {
-                    var menu = new AdminCustomerMenu(_customers);
+                    var menu = new AdminCustomerMenu(_customerService);
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
@@ -81,14 +84,14 @@ public class App
 
                 case Screens.ConfigStart:
                 {
-                    var menu = new ConfigStart(_customers, _products, _cars, _userSession, _configuratorService);
+                    var menu = new ConfigStart( _cars, _userSession, _configuratorService);
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
 
                 case Screens.ConfigMain:
                 {
-                    var menu = new ConfigMain(_customers, _products, _cars, _userSession, _configuratorService);
+                    var menu = new ConfigMain( _userSession);
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
@@ -109,7 +112,7 @@ public class App
 
                 case Screens.ConfigShow:
                 {
-                    var menu = new ConfigShow(_customers, _products, _cars, _userSession, _configuratorService);
+                    var menu = new ConfigShow( _userSession);
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
