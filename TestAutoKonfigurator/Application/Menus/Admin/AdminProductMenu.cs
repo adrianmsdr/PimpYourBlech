@@ -10,7 +10,7 @@ using TestAutoKonfigurator.Session;
 public class AdminProductMenu(IProductInventory productInventory)
 {
     // Menü zum Verwalten von Fahrzeugteilen
-    public void Run()
+    public Screens Run()
     {
         bool running = true;
         while (running)
@@ -34,11 +34,13 @@ public class AdminProductMenu(IProductInventory productInventory)
                     AddProductMenu();
                     break;
 
-                default:
+                default: 
                     running = false;
                     break;
             }
         }
+
+        return Screens.AdminMenu;
     }
     
     // Alle Produkte anzeigen

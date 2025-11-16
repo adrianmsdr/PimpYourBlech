@@ -8,12 +8,11 @@ using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
 
 public class AdminCustomerMenu(
-    ICustomerInventory customerInventory,
-    IUserSession userSession)
+    ICustomerInventory customerInventory)
 {
     
     // Menü zum verwalten der Kunden
-    public void Run()
+    public Screens Run()
     {
         bool running = true;
 
@@ -26,14 +25,17 @@ public class AdminCustomerMenu(
             Console.WriteLine("[3] Kunden suchen");
             Console.WriteLine("[4] Kundenliste löschen");
             Console.WriteLine("[5] <- Zurück ");
+            App.PrintChooseOption();
 
-            switch (Console.ReadKey().KeyChar.ToString())
+            string input = Console.ReadKey().KeyChar.ToString();
+
+            switch (input)
             {
                 case "1":
                     ListCustomersAdmin(); break;
 
                 case "2":
-                    RegistrationsMenuAdmin(); break;
+                    return RegistrationsMenuAdmin(); break;
 
                 case "3":
                     SearchCustomerMenu(); break;
@@ -48,6 +50,8 @@ public class AdminCustomerMenu(
                 
             }
         }
+
+        return Screens.AdminMenu;
     }
     // Alle Kunden anzeigen
     private void ListCustomersAdmin()
@@ -63,7 +67,7 @@ public class AdminCustomerMenu(
         Console.ReadKey();
     }
     // Menü zum registrieren eines neuen Kunden
-    private void RegistrationsMenuAdmin()
+    private Screens RegistrationsMenuAdmin()
    {
        bool running = true;
        while (running)
@@ -115,20 +119,14 @@ public class AdminCustomerMenu(
 
                        string input = Console.ReadKey().KeyChar.ToString();
 
-                       switch (input)
+                       if (input == "1")
                        {
-                           case "1":
-                               registrationRetry = false;
-                               break;
+                           registrationRetry = false;
+                       }
 
-                           case "2":
-                               registrationRetry = false;
-                               running = false;
-                               break;
-
-                           default:
-                               registrationRetry = true;
-                               break;
+                       if (input == "2")
+                       {
+                           return Screens.AdminCustomerMenu;
                        }
 
 
@@ -170,6 +168,7 @@ public class AdminCustomerMenu(
            Console.ReadKey();
            running = false;
         }
+       return Screens.AdminCustomerMenu;
    }
     // Nach Kunden suchen
     private void SearchCustomerMenu()

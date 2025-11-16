@@ -57,6 +57,27 @@ public class App
                     break;
                 }
 
+                case Screens.AdminCustomerMenu:
+                {
+                    var menu = new AdminCustomerMenu(_customers);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
+
+                case Screens.AdminProductMenu:
+                {
+                    var menu = new AdminProductMenu(_products);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
+
+                case Screens.AdminCarMenu:
+                {
+                    var menu = new AdminCarMenu(_cars);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
+
                 case Screens.ConfigStart:
                 {
                     var menu = new ConfigStart(_customers, _products, _cars, _userSession, _configuratorService);
