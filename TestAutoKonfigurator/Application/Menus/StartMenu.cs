@@ -19,6 +19,7 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
         {
 
             PrintHeader();
+
             Console.WriteLine("[1] Registrieren");
             Console.WriteLine("[2] Anmelden");
             Console.WriteLine("[3] Beenden");
@@ -105,10 +106,9 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
                 {
                     Console.WriteLine(ex.Message);
 
-                    if (!PrintRetryMenu())
+                    if (!Retry())
                     {
-                        runningRegistration = false;
-                        break;
+                        return Screens.StartMenu;
                     }
                     
 
@@ -135,20 +135,21 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
                     {
                         PrintHeader();
                         Console.WriteLine(e.Message);
-                        PrintRetryMenu();
                         
-                        if (!PrintRetryMenu())
+                        if (!Retry())
                         {
                             return Screens.StartMenu;
                         }
+                        break;
                     }
 
                     PrintHeader();
                     Console.Write("Passwort: ");
-                    string hash =
-                        Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-                    service.Register(firstName, lastName, phone, hash,phone, mailAddress);
-                    Console.WriteLine("Registrierung erfolgreich. Bitte melden dich an.");
+                    string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
+                    PrintHeader();
+                   Customer c = service.Register(firstName, lastName, username, hash, phone, mailAddress);
+                   c.ToString();
+                    Console.WriteLine("Registrierung erfolgreich. Bitte melde dich an.");
 
                     Console.ReadKey();
                     return Screens.StartMenu;
@@ -174,7 +175,10 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
                 string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
                 if (service.LoginChecker(username, hash))
                 {
-                    userSession.CurrentUser   = service.GetCustomer(username, hash);
+                    
+                    Customer c = service.GetCustomer(username, hash);
+                    userSession.CurrentUser = c;
+                    userSession.LogIn(c);
                     App.PrintSplitter();
                     Console.WriteLine("Anmeldung erfolgreich. Enter drücken um fortzufahren.");
                     Console.ReadKey();
@@ -184,7 +188,7 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
                 
                 PrintHeader();
                 Console.WriteLine("Anmeldung fehlgeschlagen");
-                if (!PrintRetryMenu())
+                if (!Retry())
                 {
                     return Screens.StartMenu;
                 }
@@ -207,7 +211,7 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
                 App.PrintSplitter();
             }
 
-    public bool PrintRetryMenu()
+    public bool Retry()
     {
         
        

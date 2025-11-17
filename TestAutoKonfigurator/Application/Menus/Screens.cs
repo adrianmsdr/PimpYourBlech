@@ -22,6 +22,9 @@ public enum Screens
     ConfigDelete,
     ConfigShow,
     
+    // Konfigurationen laden
+    ConfigLoad,
+    
     // Programm beenden
     ExitMenu,
     

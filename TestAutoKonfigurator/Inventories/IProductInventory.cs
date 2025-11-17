@@ -1,3 +1,5 @@
+using TestAutoKonfigurator.Enums;
+
 namespace TestAutoKonfigurator.Inventories;
 
 public interface IProductInventory
@@ -6,5 +8,18 @@ public interface IProductInventory
     
     public List<Product> ListProducts();
 
-    public List<Engine> ListEngines();
+    // _____________________________________ nur für die konsole erstmal __________________________________________
+
+    public List<Product> ListEngines();
+    
+    public void InsertEngine(string name,
+        string articleNumber,
+        string brand,
+        string description,
+        int quantity,
+        double price,
+        int _ps,
+        int _kw,
+        string _displacement,
+        Gear _gear);
 }

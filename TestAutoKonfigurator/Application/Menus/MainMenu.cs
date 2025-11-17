@@ -33,7 +33,7 @@ public class MainMenu(
                                                 return Screens.ConfigStart;
 
                                         case "2":
-                                                // Konfigurationen laden
+                                                return Screens.ConfigLoad;
                                                 break;
 
                                         case "3":
@@ -41,6 +41,7 @@ public class MainMenu(
                                                 break;
 
                                         case "4":
+                                                userSession.LogOut();
                                                return Screens.StartMenu;
                                                 break;
 

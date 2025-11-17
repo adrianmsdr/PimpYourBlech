@@ -20,11 +20,14 @@ public class Car
     public string DatePermit { get; set; }
     public string Brand { get; set; }
     public string Model { get; set; }
-    public int PS {get; set;}
+    public int PS { get; set; }
     
     public int Quantity {get; set;}
     
     public double Price {get; set;}
+    
+    //public Engine Engine {get; set;}
+    
 
     public override string ToString()
     {
@@ -35,6 +38,6 @@ public class Car
                     + "\nErstzulassung: " +  DatePermit
                     + "\nPS: " + PS
                     + "\nQuantity: " +  Quantity
-                    + "\nPrice" + Price;
+                    + "\nPreis: " + Price;
     }
 }

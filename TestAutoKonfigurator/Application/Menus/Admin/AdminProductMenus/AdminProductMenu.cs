@@ -12,11 +12,13 @@ public class AdminProductMenu(IProductInventory productInventory)
         while (running)
         {
             PrintHeader();
-            Console.WriteLine("1) Fahrzeugteileliste anzeigen");
-            Console.WriteLine("2) Fahrzeugteil hinzufügen");
-            Console.WriteLine("3) Fahrzeugteil suchen");
-            Console.WriteLine("4) Fahrzeugteileliste löschen");
-            TestAutoKonfigurator.App.PrintContinueMessage();
+            Console.WriteLine("[1] Fahrzeugteileliste anzeigen");
+            Console.WriteLine("[2] Fahrzeugteil hinzufügen");
+            Console.WriteLine("[3] Fahrzeugteil suchen");
+            Console.WriteLine("[4] Fahrzeugteileliste löschen");
+            Console.WriteLine("[5] <- zurück");
+            
+            App.PrintChooseOption();
 
             string eingabe = Console.ReadLine() ?? "";
 
@@ -27,8 +29,15 @@ public class AdminProductMenu(IProductInventory productInventory)
                     break;
 
                 case "2":
-                    AddProductMenu();
+                    return AddProductMenu();
                     break;
+                
+                case "3":
+                    
+                case "4":
+                        
+                case "5":
+                    return Screens.AdminMenu;
 
                 default: 
                     running = false;
@@ -69,7 +78,7 @@ public class AdminProductMenu(IProductInventory productInventory)
             Console.WriteLine("[5] Scheinwerfer hinzufügen");
             Console.WriteLine("[6] Auspuff hinzufügen");
             Console.WriteLine("[7] Bremse hinzufügen");
-            Console.WriteLine("[8] <-");
+            Console.WriteLine("[8] <- zurück");
             App.PrintChooseOption();
 
             string eingabe = Console.ReadKey().KeyChar.ToString() ?? "";
@@ -106,7 +115,7 @@ public class AdminProductMenu(IProductInventory productInventory)
 
 
 
-        PrintHeader();
+       /* PrintHeader();
         Console.Write("Artikelnummer: ");
         string articleNumber = Console.ReadLine()!;
         Console.Write("Name: ");
@@ -131,10 +140,10 @@ public class AdminProductMenu(IProductInventory productInventory)
        
         
         productInventory.InsertProduct(p);
-
+*/
         App.PrintContinueMessage();
         Console.ReadKey();
-        return Screens.AdminMenu;
+       // return Screens.AdminMenu;
     }
     
     public void PrintHeader()
