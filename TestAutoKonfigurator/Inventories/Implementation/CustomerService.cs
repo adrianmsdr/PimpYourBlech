@@ -60,7 +60,6 @@ public class CustomerService:ICustomerService
             {
                 return true;
             }
-            Console.WriteLine(c.ToString());
 
         }
 
@@ -152,5 +151,11 @@ public class CustomerService:ICustomerService
     public void DeleteCustomer(Customer c)
     {
         customerRepository.DeleteCustomer(c);
+    }
+    
+    public void UpdateCustomers()
+    {
+        customerRepository.UpdateCustomers();
+
     }
 }

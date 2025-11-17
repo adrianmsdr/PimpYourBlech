@@ -23,6 +23,8 @@ public class AdminCarMenu(ICarInventory carInventory)
             Console.WriteLine("[3] Fahrzeug suchen");
             Console.WriteLine("[4] Fahrzeug löschen");
             Console.WriteLine("[5] <- Zurück ");
+            
+            App.PrintChooseOption();
 
 
             switch (Console.ReadKey().KeyChar.ToString())
@@ -76,7 +78,8 @@ public class AdminCarMenu(ICarInventory carInventory)
         double price = Convert.ToDouble(Console.ReadLine());
         Car c = new Car(name, dateProduction, datePermit, brand, model, ps, quantity, price);
         carInventory.InsertCar(c);
-
+        PrintHeader();
+        Console.WriteLine("Fahrzeug erfolgreich hinzugefügt");
         App.PrintContinueMessage();
         Console.ReadKey();
     }

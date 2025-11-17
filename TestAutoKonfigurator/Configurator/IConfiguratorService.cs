@@ -20,4 +20,10 @@ public interface IConfiguratorService
     
     void DeleteConfiguration(Configuration configuration, Customer customer);
     
+    
+    List<Configuration> GetAllConfigurations(Customer customer);
+    
+    // im ConfiguratorService
+    public void SaveConfiguration(Configuration configuration, Customer customer);
+
 }

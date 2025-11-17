@@ -13,6 +13,8 @@ public interface ICustomerInventory
     
     public void UpdateCustomer(Customer customer,string username,string passwordHash,string telefon);
     
+    public void UpdateCustomers();
+    
     public void DeleteCustomer(Customer customer);
     
     

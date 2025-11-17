@@ -7,10 +7,10 @@ public class Configuration(Car car, string name)
     public string Name {get; set;} = name;
 
     public Car Car { get; set; } = car;
-    public Engine Engine {get; set;}
+    //public Engine Engine {get; set;}
 
     public override string ToString()
     {
-       return  "Auto: " + Car.Name; 
+        return "Name: " + Name;
     }
 }

@@ -15,6 +15,7 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
             
             PrintHeader();
             Console.WriteLine("[0] <-");
+            Console.WriteLine("Products im Inventory: " + productInventory.ListEngines().Count);
             for (int i = 0; i < productInventory.ListEngines().Count; i++)
             {
                 Console.WriteLine("[" + (i+1) + "] " + productInventory.ListEngines()[i].Name);
@@ -46,8 +47,8 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
                 Console.ReadKey();
                 break;
             }
-            Engine selectedEngine = productInventory.ListEngines()[index - 1];
-            userSession.CurrentConfiguration.Engine = selectedEngine;
+            Product selectedEngine = productInventory.ListEngines()[index - 1];
+            //userSession.CurrentConfiguration.Engine = selectedEngine;
             App.PrintSplitter();
             Console.WriteLine("Motor erfolgreich hinzugefügt. ");
             App.PrintContinueMessage();

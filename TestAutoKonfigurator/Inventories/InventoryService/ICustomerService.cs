@@ -26,4 +26,7 @@ public interface ICustomerService
     public Customer GetCustomerByNames(String firstName, String lastName);
 
     public void UpdateCustomer(Customer customer, String username, String passwordHash, String telefon);
+
+    void UpdateCustomers();
+    
 }

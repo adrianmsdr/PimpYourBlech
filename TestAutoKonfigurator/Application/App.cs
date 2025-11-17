@@ -74,6 +74,13 @@ public class App
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
+                
+                case Screens.AddEngineMenu:
+                {
+                    var menu = new AddEngineMenu(_products);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
 
                 case Screens.AdminCarMenu:
                 {
@@ -113,6 +120,13 @@ public class App
                 case Screens.ConfigShow:
                 {
                     var menu = new ConfigShow( _userSession);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                }
+                
+                case Screens.ConfigLoad:
+                {
+                    var menu = new ConfigLoad( _userSession, _configuratorService);
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }

@@ -14,4 +14,9 @@ public interface IUserSession
     bool IsAdmin { get; }
     
     public Configuration CurrentConfiguration { get; set; }
+    
+    void LogOut();
+    void LogIn(Customer customer);
+
+    string ToString();
 }

@@ -37,7 +37,7 @@ public static class ApplicationConfiguration
         IUserSession userSession = new UserSession();
         
         // Configurator Schnittstelle wird erzeugt
-        IConfiguratorService configuratorService = new ConfiguratorService();
+        IConfiguratorService configuratorService = new ConfiguratorService(customerService);
         
         // App an sich wird erstellt und die Inventare, sowie Benutzersession werden übergeben
         var app = new App(customerService, productInventory, carInventory, userSession, configuratorService);
