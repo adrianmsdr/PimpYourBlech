@@ -1,8 +1,8 @@
 using System.Text.Json;
 
-namespace TestAutoKonfigurator.Database.Implementation;
+namespace TestAutoKonfigurator.Persistence.DatabaseJson;
 
-public class JsonDatabase : IJsonDatabase
+public class JsonDatabase : IDatabase
 {
     private const string FileUrlCustomers = "customers.json"; 
     private const string FileUrlProducts = "products.json";

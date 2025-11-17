@@ -2,11 +2,11 @@
 using TestAutoKonfigurator;
 using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Configorator.Implementation;
-using TestAutoKonfigurator.Database;
-using TestAutoKonfigurator.Database.Implementation;
 using TestAutoKonfigurator.Factories;
 using TestAutoKonfigurator.Inventories.Implementation;
 using TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Persistence;
+using TestAutoKonfigurator.Persistence.DatabaseJson;
 using TestAutoKonfigurator.Session;
 using TestAutoKonfigurator.Session.Implementation;
 
@@ -17,7 +17,7 @@ public static class ApplicationConfiguration
     {
 
         // Instanz der Json - Datenbankklasse wird erstellt mit Zugriff über das Interface "IJsonDatabase"
-        IJsonDatabase database = new JsonDatabase();
+        IDatabase database = new JsonDatabase();
         
         // Factory wird erstellt & Datenbankschnittstelle wird übergehen
         var fac = new InventoryFactory(database);
@@ -37,7 +37,7 @@ public static class ApplicationConfiguration
         IUserSession userSession = new UserSession();
         
         // Configurator Schnittstelle wird erzeugt
-        IConfiguratorService configuratorService = new ConfiguratorService(customerService);
+        IConfiguratorService configuratorService = new ConfiguratorService( customerService);
         
         // App an sich wird erstellt und die Inventare, sowie Benutzersession werden übergeben
         var app = new App(customerService, productInventory, carInventory, userSession, configuratorService);

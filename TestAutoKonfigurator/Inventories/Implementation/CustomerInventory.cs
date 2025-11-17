@@ -1,9 +1,9 @@
-using TestAutoKonfigurator.Database;
 using TestAutoKonfigurator.Exceptions;
+using TestAutoKonfigurator.Persistence;
 
 namespace TestAutoKonfigurator.Inventories.Implementation;
 
-public sealed class CustomerInventory(IJsonDatabase database):ICustomerInventory
+public sealed class CustomerInventory(IDatabase database):ICustomerInventory
 {
     private readonly List<Customer> _customers = database.LoadCustomers(); // Laden der Daten
 

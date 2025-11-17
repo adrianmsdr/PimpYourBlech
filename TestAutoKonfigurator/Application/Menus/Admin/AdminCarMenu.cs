@@ -76,8 +76,8 @@ public class AdminCarMenu(ICarInventory carInventory)
 
         Console.Write("Preis: ");
         double price = Convert.ToDouble(Console.ReadLine());
-        Car c = new Car(name, dateProduction, datePermit, brand, model, ps, quantity, price);
-        carInventory.InsertCar(c);
+        
+        carInventory.InsertCar(name, dateProduction, datePermit, brand, model, ps, quantity, price);
         PrintHeader();
         Console.WriteLine("Fahrzeug erfolgreich hinzugefügt");
         App.PrintContinueMessage();

@@ -8,7 +8,7 @@ public class Customer (string firstName, string lastName, string username, strin
         
     
     //Getter/Setter
-    
+    public int Id { get; set; }
     public List<Configuration> Configurations { get; set; } 
     public string FirstName { get; set; } = firstName;
 

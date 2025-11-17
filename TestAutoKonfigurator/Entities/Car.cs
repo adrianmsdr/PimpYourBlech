@@ -2,7 +2,11 @@ namespace TestAutoKonfigurator;
 
 public class Car
 {
-    public Car(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity, double price)
+    public Car()
+    {
+        
+    }
+    /*public Car(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity, double price)
     {
         Name = name;
         DateProduction = dateProduction;
@@ -12,8 +16,9 @@ public class Car
         PS = ps;
         Quantity = quantity;
         Price = price;
-    }
+    }*/
 
+    public int Id { get; set; }
     public string Name { get; set; }
     public string DateProduction { get; set; }
     

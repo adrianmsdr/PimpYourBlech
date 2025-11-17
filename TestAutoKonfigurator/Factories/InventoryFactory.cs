@@ -1,10 +1,10 @@
-using TestAutoKonfigurator.Database;
 using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Inventories.Implementation;
+using TestAutoKonfigurator.Persistence;
 
 namespace TestAutoKonfigurator.Factories;
 
-public sealed class InventoryFactory(IJsonDatabase database)
+public sealed class InventoryFactory(IDatabase database)
 {
     private readonly CustomerInventory _customerInventory = new(database);
     private readonly ProductInventory _productInventory = new(database);

@@ -1,6 +1,6 @@
-namespace TestAutoKonfigurator.Database;
+namespace TestAutoKonfigurator.Persistence;
 
-public interface IJsonDatabase
+public interface IDatabase
 {
    
         List<Customer> LoadCustomers();

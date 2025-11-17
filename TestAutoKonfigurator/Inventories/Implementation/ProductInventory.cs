@@ -1,9 +1,9 @@
-using TestAutoKonfigurator.Database;
 using TestAutoKonfigurator.Enums;
+using TestAutoKonfigurator.Persistence;
 
 namespace TestAutoKonfigurator.Inventories.Implementation;
 
-public sealed class ProductInventory(IJsonDatabase database):IProductInventory
+public sealed class ProductInventory(IDatabase database):IProductInventory
 {
     
     private readonly List<Product> _products = database.LoadProducts();

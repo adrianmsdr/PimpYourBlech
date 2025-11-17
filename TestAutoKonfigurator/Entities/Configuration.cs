@@ -1,12 +1,14 @@
 namespace TestAutoKonfigurator;
 
-public class Configuration(Car car, string name)
+public class Configuration()
 {
+    public int Id { get; set; }
+    
     private readonly List<Product> _products;
     
-    public string Name {get; set;} = name;
+    public string Name {get; set;}
 
-    public Car Car { get; set; } = car;
+    public Car Car { get; set; }
     //public Engine Engine {get; set;}
 
     public override string ToString()

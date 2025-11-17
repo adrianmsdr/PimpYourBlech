@@ -8,8 +8,18 @@ public class ConfiguratorService(ICustomerService service):IConfiguratorService
     private readonly ICustomerService service = service;
     public Configuration StartNewConfiguration(Customer customer, Car car,string name)
     {
-        Car copy = new Car(car.Name,car.DateProduction,car.DatePermit,car.Brand,car.Model,car.PS,car.Quantity,car.Price);
-        Configuration config = new Configuration(copy, name);
+        Car copy = new Car();
+        copy.Name = car.Name;
+        copy.DateProduction = car.DateProduction;
+        copy.DatePermit = car.DatePermit;
+        copy.Brand = car.Brand;
+        copy.Model = car.Model;
+        copy.PS = car.PS;
+        copy.Quantity = car.Quantity;
+        copy.Price = car.Price;
+        Configuration config = new Configuration();
+        config.Name = name;
+        config.Car = car;
         customer.Configurations.Add(config);
         SaveConfigurations();
         return config;

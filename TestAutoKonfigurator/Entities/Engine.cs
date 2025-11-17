@@ -1,6 +1,10 @@
+using TestAutoKonfigurator.Enums;
+
 namespace TestAutoKonfigurator;
-/*
-public class Engine(string name,
+
+public class Engine:Product{
+    
+    /*(string name,
         string articleNumber,
         string brand,
         string description,
@@ -10,20 +14,19 @@ public class Engine(string name,
         int _kw,
         string _displacement,
         Gear _gear
-    )
-        : Product(name, articleNumber, brand, description, quantity, price)
-{
-
-
-    public int Ps { get; set; } = _ps;
-    public int Kw { get; set; } = _kw;
+    )*/
     
-    public string Displacement{get;set;} = _displacement;
-    
-    public Gear Gear { get; set; }  = _gear;
 
-    public override string ToString()
-    {
-        return "Name: " + Name + "Artikelnummer: " + ArticleNumber + "\nPs: " + Ps + "\nKw: " + Kw + "\nHersteller: " + Brand + "\nBeschreibung: " +  Description;
-    }
-}*/
+
+
+
+   
+    public int Ps { get; set; } 
+    public int Kw { get; set; } 
+    
+    public string Displacement{get;set;} 
+    
+    public Gear Gear { get; set; }
+
+    
+}

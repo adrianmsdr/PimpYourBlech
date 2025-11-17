@@ -4,7 +4,7 @@ namespace TestAutoKonfigurator;
 
 public class Product
 {
-
+    public int Id { get; set; }
 // Allgemeine Eigenschaften
     public string Name { get; set; }
     public string ArticleNumber { get; set; }
