@@ -132,9 +132,6 @@ namespace TestAutoKonfigurator.Migrations
                     b.Property<string>("ArticleNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("BrakeType")
-                        .HasColumnType("text");
-
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("text");
@@ -143,30 +140,12 @@ namespace TestAutoKonfigurator.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("Diameter")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(8)
                         .HasColumnType("character varying(8)");
 
-                    b.Property<string>("Displacement")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("Gear")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Kw")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("LightTechnology")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("Lumen")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -176,13 +155,7 @@ namespace TestAutoKonfigurator.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<int?>("Ps")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("ArticleNumber");
@@ -197,6 +170,19 @@ namespace TestAutoKonfigurator.Migrations
             modelBuilder.Entity("TestAutoKonfigurator.Engine", b =>
                 {
                     b.HasBaseType("TestAutoKonfigurator.Product");
+
+                    b.Property<string>("Displacement")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Gear")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Kw")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Ps")
+                        .HasColumnType("integer");
 
                     b.HasDiscriminator().HasValue("Engine");
                 });

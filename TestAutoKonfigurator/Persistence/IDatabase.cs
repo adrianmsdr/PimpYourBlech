@@ -2,10 +2,17 @@ namespace TestAutoKonfigurator.Persistence;
 
 public interface IDatabase
 {
-   
+    public void CreateCustomer(Customer customer);   
+    
         List<Customer> LoadCustomers();
 
-       
+        public void DeleteCustomer(Customer customer);
+
+        void DeleteCustomers();
+        
+    void UpdateCustomer(Customer customer);
+    
+    void UpdateCustomers();
    
         List<Product> LoadProducts();
         
@@ -19,6 +26,9 @@ public interface IDatabase
         
         void SaveCars(List<Car> di);
         
+        void CreateCar(Car car);
+        
+        void CreateProduct(Product product);
         
         
         

@@ -60,16 +60,11 @@ namespace TestAutoKonfigurator.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
                     Ps = table.Column<int>(type: "integer", nullable: true),
                     Kw = table.Column<int>(type: "integer", nullable: true),
                     Displacement = table.Column<string>(type: "text", nullable: true),
-                    Gear = table.Column<int>(type: "integer", nullable: true),
-                    LightTechnology = table.Column<string>(type: "text", nullable: true),
-                    Lumen = table.Column<int>(type: "integer", nullable: true),
-                    Diameter = table.Column<int>(type: "integer", nullable: true),
-                    BrakeType = table.Column<string>(type: "text", nullable: true),
-                    Discriminator = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false)
+                    Gear = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {

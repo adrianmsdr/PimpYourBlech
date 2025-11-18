@@ -116,7 +116,7 @@ public class App
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
-
+                
                 case Screens.ConfigShow:
                 {
                     var menu = new ConfigShow( _userSession);

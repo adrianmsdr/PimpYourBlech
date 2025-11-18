@@ -6,17 +6,18 @@ namespace TestAutoKonfigurator.Inventories.Implementation;
 public sealed class ProductInventory(IDatabase database):IProductInventory
 {
     
-    private readonly List<Product> _products = database.LoadProducts();
+    //private readonly List<Product> _products = database.LoadProducts();
     
     public void InsertProduct(Product p)
     {
-        _products.Add(p);
-        database.SaveProducts(_products);
+       // _products.Add(p);
+      //  database.SaveProducts(_products);
+      database.CreateProduct(p);
     }
 
     public List<Product> ListProducts()
     {
-        return _products;
+        return database.LoadProducts();
     }
     
     // _____________________________________ nur für die konsole erstmal __________________________________________
@@ -25,9 +26,9 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     public List<Product> ListEngines()
     {
         var engines = new List<Product>();
-        foreach (Product product in _products)
+        foreach (Product product in database.LoadProducts())
         {
-            if (product.Type == ProductCategory.Engine)
+            if (product is Engine)
             {
                 engines.Add(product);
             }
@@ -46,18 +47,16 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         string _displacement,
         Gear _gear)
     {
-        Product product = new Product();
-        product.Name = name;
-        product.ArticleNumber = articleNumber;
-        product.Brand = brand;
-        product.Description = description;
-        product.Quantity = quantity;
-        product.Price = price; 
-        product.Ps = _ps;
-        product.Kw = _kw;
-        product.Displacement  = _displacement;
-        product.Gear = _gear;
-        product.Type = ProductCategory.Engine;
-        InsertProduct(product);
+        Engine engine = new Engine();
+        engine.Name = name;
+        engine.ArticleNumber = articleNumber;
+        engine.Brand = brand;
+        engine.Description = description;
+        engine.Quantity = quantity;
+        engine.Price = price; 
+        engine.Ps = _ps;
+        engine.Kw = _kw;
+        engine.Displacement = _displacement;
+        database.CreateProduct(engine);
     }
 }

@@ -8,6 +8,11 @@ public class JsonDatabase : IDatabase
     private const string FileUrlProducts = "products.json";
     private const string FileUrlCars = "cars.json";
 
+    public void CreateCustomer(Customer customer)
+    {
+        //throw new NotImplementedException();
+    }
+
     public List<Customer> LoadCustomers()
     {
         if (!File.Exists(FileUrlCustomers))
@@ -19,7 +24,27 @@ public class JsonDatabase : IDatabase
         var customers = JsonSerializer.Deserialize<List<Customer>>(json);
         return customers;
     }
-    
+
+    public void DeleteCustomer(Customer customer)
+    {
+       // throw new NotImplementedException();
+    }
+
+    public void DeleteCustomers()
+    {
+        File.Delete(FileUrlCustomers);
+    }
+
+    public void UpdateCustomer(Customer customer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateCustomers()
+    {
+        throw new NotImplementedException();
+    }
+
 
     public List<Product> LoadProducts()
     {
@@ -66,5 +91,15 @@ public class JsonDatabase : IDatabase
     {
         var json = JsonSerializer.Serialize(cars, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(FileUrlCars, json);
+    }
+
+    public void CreateCar(Car car)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CreateProduct(Product product)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -2,33 +2,90 @@ namespace TestAutoKonfigurator.Persistence.EFDatabase;
 
 public sealed class DatabaseEF : IDatabase
 {
+
+    public void CreateCustomer(Customer customer)
+    {
+        using var db = new ConfiguratorContext();
+        db.Customers.Add(customer);
+        db.SaveChanges();
+    }
+    
+    public void DeleteCustomer(Customer customer)
+    {
+        using var db = new ConfiguratorContext();
+        db.Customers.Remove(customer);
+        db.SaveChanges();
+    }
+
+    public void DeleteCustomers()
+    {
+        using var db = new ConfiguratorContext();
+        db.Customers.RemoveRange(db.Customers);
+        db.SaveChanges();
+    }
+
+    public void UpdateCustomer(Customer customer)
+    {
+        using var db = new ConfiguratorContext();
+        db.Customers.Update(customer);
+        db.SaveChanges();
+    }
+
+    public void UpdateCustomers()
+    {
+        using var db = new ConfiguratorContext();
+        db.Customers.UpdateRange(db.Customers);
+        db.SaveChanges();
+    }
+
     public List<Customer> LoadCustomers()
     {
-        throw new NotImplementedException();
+        using var db = new ConfiguratorContext();
+        return db.Customers.ToList();
     }
 
     public List<Product> LoadProducts()
     {
-        throw new NotImplementedException();
+        using var db = new ConfiguratorContext();
+        return db.Products.ToList();
     }
 
     public List<Car> LoadCars()
     {
-        throw new NotImplementedException();
+        using var db = new ConfiguratorContext();
+        return db.Cars.ToList();
     }
 
     public void SaveCustomers(List<Customer> di)
     {
-        throw new NotImplementedException();
+        using var db = new ConfiguratorContext();
+        db.Customers.AddRange(di);
     }
 
     public void SaveProducts(List<Product> di)
     {
-        throw new NotImplementedException();
+        using var db = new ConfiguratorContext();
+        db.Products.AddRange(di);
     }
 
     public void SaveCars(List<Car> di)
     {
-        throw new NotImplementedException();
+       using var db = new ConfiguratorContext();
+       db.Cars.AddRange(di);
+       
+    }
+
+    public void CreateCar(Car car)
+    {
+        using var db = new ConfiguratorContext();
+        db.Cars.Add(car);
+        db.SaveChanges();
+    }
+
+    public void CreateProduct(Product product)
+    {
+        using var db = new ConfiguratorContext();
+        db.Products.Add(product);
+        db.SaveChanges();
     }
 }

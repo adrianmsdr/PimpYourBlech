@@ -19,14 +19,14 @@ public class MainMenu(
                                 Console.WriteLine("[4] Ausloggen");
 
                                 //if (userSession.CurrentUser.AdminRights)
-                              //  {
-                                        Console.WriteLine("[5] Administrator");
-                              //  }
-                              
+                                //  {
+                                Console.WriteLine("[5] Administrator");
+                                //  }
+
 
                                 App.PrintChooseOption();
 
-                                string eingabe = Console.ReadKey().KeyChar.ToString();  
+                                string eingabe = Console.ReadKey().KeyChar.ToString();
                                 switch (eingabe)
                                 {
                                         case "1":
@@ -42,18 +42,19 @@ public class MainMenu(
 
                                         case "4":
                                                 userSession.LogOut();
-                                               return Screens.StartMenu;
+                                                return Screens.StartMenu;
                                                 break;
 
 
                                         case "5":
-                                                if (userSession.CurrentUser.AdminRights)
-                                                          {
-                                                        return Screens.AdminMenu;
-                                                  }
+                                                //if (userSession.CurrentUser.AdminRights)
+                                                //         {
+                                                return Screens.AdminMenu;
                                                 break;
-
                                 }
+
+                        
+        
                         }
                return Screens.ExitMenu;
         }

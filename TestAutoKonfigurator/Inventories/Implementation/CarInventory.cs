@@ -4,7 +4,7 @@ namespace TestAutoKonfigurator.Inventories.Implementation;
 
 public sealed class CarInventory(IDatabase database):ICarInventory
 {
-    private readonly List<Car> _cars = database.LoadCars(); // Laden der Daten
+   // private readonly List<Car> _cars = database.LoadCars(); // Laden der Daten
     
     public void InsertCar(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price)
     {
@@ -18,13 +18,15 @@ public sealed class CarInventory(IDatabase database):ICarInventory
         c.Quantity = quantity;
         c.Price = price;
         
-        _cars.Add(c);
-        database.SaveCars(_cars);
+     //   _cars.Add(c);
+     database.CreateCar(c);
+       // database.SaveCars(_cars);
     }
     
     public List<Car> ListCars()
     {
-        
-        return _cars;
+        return database.LoadCars();
+
+        //  return _cars;
     }
 }
