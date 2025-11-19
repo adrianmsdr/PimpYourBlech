@@ -1,12 +1,13 @@
 ﻿
 using TestAutoKonfigurator;
-using TestAutoKonfigurator.Configorator;
-using TestAutoKonfigurator.Configorator.Implementation;
 using TestAutoKonfigurator.Factories;
 using TestAutoKonfigurator.Inventories.Implementation;
-using TestAutoKonfigurator.Inventories.InventoryService;
 using TestAutoKonfigurator.Persistence;
 using TestAutoKonfigurator.Persistence.EFDatabase;
+using TestAutoKonfigurator.Services;
+using TestAutoKonfigurator.Services.Admin;
+using TestAutoKonfigurator.Services.Configurator;
+using TestAutoKonfigurator.Services.Configurator.Implementation;
 using TestAutoKonfigurator.Session;
 using TestAutoKonfigurator.Session.Implementation;
 
@@ -32,16 +33,16 @@ public static class ApplicationConfiguration
         // Fahrzeuginventar wird erstellt (geladen), Zugriff erfolgt über Schnittstelle ICarInventory die wir durch den getter aus der Factory erhalten 
         var carInventory = fac.GetCarInventory(); 
         
-        ICustomerService customerService = new CustomerService(customerInventory);
+        IAdminService adminService = new AdminService(customerInventory, productInventory, carInventory);
         
         //Benutzer Session wird erzeugt
         IUserSession userSession = new UserSession();
         
         // Configurator Schnittstelle wird erzeugt
-        IConfiguratorService configuratorService = new ConfiguratorService( customerService);
+        IConfiguratorService configuratorService = new ConfiguratorService( customerInventory, productInventory, carInventory);
         
         // App an sich wird erstellt und die Inventare, sowie Benutzersession werden übergeben
-        var app = new App(customerService, productInventory, carInventory, userSession, configuratorService);
+        var app = new App(adminService, userSession, configuratorService);
 
         
         // Start der App

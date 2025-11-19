@@ -5,7 +5,7 @@ namespace TestAutoKonfigurator.Persistence.EFDatabase;
 
 public sealed class DatabaseEF : IDatabase
 {
-private readonly ConfiguratorContext db;
+
 
 private readonly ConfiguratorContext _ctx;
 

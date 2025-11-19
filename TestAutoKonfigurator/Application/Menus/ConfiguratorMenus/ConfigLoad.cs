@@ -1,5 +1,5 @@
 using Application.Menus;
-using TestAutoKonfigurator.Configorator;
+using TestAutoKonfigurator.Services.Configurator;
 using TestAutoKonfigurator.Session;
 
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;

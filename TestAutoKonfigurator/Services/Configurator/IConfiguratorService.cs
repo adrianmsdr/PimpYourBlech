@@ -1,4 +1,4 @@
-namespace TestAutoKonfigurator.Configorator;
+namespace TestAutoKonfigurator.Services.Configurator;
 
 public interface IConfiguratorService
 {
@@ -25,5 +25,9 @@ public interface IConfiguratorService
     
     // im ConfiguratorService
     public void SaveConfiguration(Configuration configuration, Customer customer);
+    
+    public List<Product> ListEngines();
+    
+    public List<Car> ListCars();
 
 }

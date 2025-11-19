@@ -1,14 +1,15 @@
 using System.Security.Cryptography;
 using System.Text;
 using Application.Menus;
-using TestAutoKonfigurator.CustomerCommunication;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Services;
+using TestAutoKonfigurator.Services.Admin;
+using TestAutoKonfigurator.Services.CustomerCommunication;
 
 namespace TestAutoKonfigurator.Application.Menus.Admin.AdminCustomerMenus;
 
 public class AddCustomerMenu(
-    ICustomerService service)
+    IAdminService service)
 {
     public Screens Run()
     {

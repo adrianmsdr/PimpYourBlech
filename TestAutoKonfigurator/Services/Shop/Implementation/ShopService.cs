@@ -1,6 +1,6 @@
 using TestAutoKonfigurator.Inventories;
 
-namespace TestAutoKonfigurator.Shop.Implementation;
+namespace TestAutoKonfigurator.Services.Shop.Implementation;
 
 public class ShopService(IProductInventory productInventory):IShopService
 {

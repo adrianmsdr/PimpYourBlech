@@ -1,8 +1,7 @@
-using System.Net.Mail;
 using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.ValueObjects;
 
-namespace TestAutoKonfigurator.CustomerCommunication;
+namespace TestAutoKonfigurator.Services.CustomerCommunication;
 
 public static class EmailServices
 {

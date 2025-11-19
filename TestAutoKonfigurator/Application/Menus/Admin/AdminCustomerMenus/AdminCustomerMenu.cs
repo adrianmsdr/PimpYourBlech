@@ -2,12 +2,13 @@
 using System.Text;
 using Application.Menus;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Services;
+using TestAutoKonfigurator.Services.Admin;
 
 namespace TestAutoKonfigurator.Application.Menus.Admin.AdminCustomerMenus;
 
 public class AdminCustomerMenu(
-    ICustomerService customerService)
+    IAdminService adminService)
 {
     
     // Menü zum verwalten der Kunden
@@ -56,7 +57,7 @@ public class AdminCustomerMenu(
     private void ListCustomersAdmin()
     {
         PrintHeader();
-        foreach (Customer c in customerService.GetListCustomers())
+        foreach (Customer c in adminService.GetListCustomers())
         {
             Console.WriteLine(c.ToString());
             App.PrintSplitter();
@@ -99,7 +100,7 @@ public class AdminCustomerMenu(
                 username = Console.ReadLine() ?? "";
                 try
                 {
-                    customerService.isUsernameAvailable(username);
+                    adminService.isUsernameAvailable(username);
                     runningAgain = false;
                 }
                 catch (UsernameNotAvailableException e)
@@ -137,7 +138,7 @@ public class AdminCustomerMenu(
 
             Console.Write("Passwort: ");
             string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-            Customer c = customerService.Register(firstName, lastName, username, hash, phone, mailAddress);
+            Customer c = adminService.Register(firstName, lastName, username, hash, phone, mailAddress);
             while (true)
             {
                 PrintHeader();
@@ -229,7 +230,7 @@ public class AdminCustomerMenu(
         String eingabe = Console.ReadLine() ?? "";
         if (eingabe == "Y" || eingabe == "y")
         {
-            customerService.DeleteAllCustomers();
+            adminService.DeleteAllCustomers();
             Console.WriteLine("Kundenliste erfolgreich gelöscht");
             App.PrintContinueMessage();
             Console.ReadKey();
@@ -274,15 +275,15 @@ public class AdminCustomerMenu(
             Customer c = new Customer();
             if (eingabe == "1")
             {
-                c = customerService.GetCustomerByUsername(un);
+                c = adminService.GetCustomerByUsername(un);
             }
             else if (eingabe == "2")
             {
-                c = customerService.GetCustomerByTelefon(te);
+                c = adminService.GetCustomerByTelefon(te);
             }
             else if (eingabe == "3")
             {
-                c = customerService.GetCustomerByNames(fn, ln);
+                c = adminService.GetCustomerByNames(fn, ln);
             }
 
             PrintCustomerSettingsMenu(c);
@@ -343,7 +344,7 @@ public class AdminCustomerMenu(
         {
             
             
-            customerService.UpdateCustomer(customer,username, hash, telefon);
+            adminService.UpdateCustomer(customer,username, hash, telefon);
             
             Console.WriteLine("Erfolgreich überschrieben");
             App.PrintContinueMessage();
@@ -378,7 +379,7 @@ public class AdminCustomerMenu(
         if (d == "Y" || d == "y")
         {
 
-            customerService.DeleteCustomer(c);
+            adminService.DeleteCustomer(c);
             Console.WriteLine("Benutzer erfolgreich gelöscht");
             App.PrintContinueMessage();
             Console.ReadKey();

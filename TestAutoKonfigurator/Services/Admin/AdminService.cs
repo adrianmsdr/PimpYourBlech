@@ -1,16 +1,21 @@
+using TestAutoKonfigurator.Enums;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Inventories;
 
-namespace TestAutoKonfigurator.Inventories.Implementation;
+namespace TestAutoKonfigurator.Services.Admin;
 
-public class CustomerService:ICustomerService
+public class AdminService:IAdminService
 {
     
     private readonly ICustomerInventory customerRepository;
+    private readonly IProductInventory productRepository;
+    private readonly ICarInventory carRepository;
    
-    public CustomerService(ICustomerInventory repo)
+    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car)
     {
-        customerRepository  = repo;
+        customerRepository  = costumers;
+        productRepository = products;
+        carRepository = car;
     }
 
     public List<Customer> GetListCustomers()
@@ -163,5 +168,66 @@ public class CustomerService:ICustomerService
     {
         customerRepository.UpdateCustomers();
 
+    }
+
+    
+    // ___________________________________Poducts____________________________________
+    public Product RegisterProduct(Product product)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Product> GetProducts()
+    {
+        return productRepository.ListProducts();
+    }
+
+    
+
+    public Engine RegisterEngine(string name,
+        string articleNumber,
+        string brand,
+        string description,
+        int quantity,
+        double price,
+        int _ps,
+        int _kw,
+        string _displacement,
+        Gear _gear)
+    {
+        Engine engine = new Engine();
+        engine.Name = name;
+        engine.ArticleNumber = articleNumber;
+        engine.Brand = brand;
+        engine.Description = description;
+        engine.Quantity = quantity;
+        engine.Price = price;
+        engine.Ps = _ps;
+        engine.Kw = _kw;
+        engine.Displacement = _displacement;
+        engine.Gear = _gear;
+        productRepository.InsertEngine(engine);
+        
+        return engine;
+    }
+
+    
+
+    // ___________________________________Cars____________________________________
+    
+    public Car RegisterCar(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity,
+        double price)
+    {
+        Car c = new Car();
+        c.Name = name;
+        c.DateProduction = dateProduction;
+        c.DatePermit = datePermit;
+        c.Brand = brand;
+        c.Model = model;
+        c.PS = ps;
+        c.Quantity = quantity;
+        c.Price = price;
+        carRepository.InsertCar(c);
+        return c;
     }
 }

@@ -1,11 +1,14 @@
-using TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Services.Admin;
 
-namespace TestAutoKonfigurator.Configorator.Implementation;
+namespace TestAutoKonfigurator.Services.Configurator.Implementation;
 
-public class ConfiguratorService(ICustomerService service):IConfiguratorService
+public class ConfiguratorService(ICustomerInventory customers, IProductInventory products, ICarInventory cars):IConfiguratorService
 {
 
-    private readonly ICustomerService service = service;
+    private readonly ICustomerInventory _customerInventory = customers;
+    private readonly IProductInventory productInventory = products;
+    private readonly ICarInventory carInventory = cars;
     public Configuration StartNewConfiguration(Customer customer, Car car,string name)
     {
         Car copy = new Car();
@@ -63,6 +66,17 @@ public class ConfiguratorService(ICustomerService service):IConfiguratorService
 
     public void SaveConfigurations()
     {
-        service.UpdateCustomers();
+        _customerInventory.UpdateCustomers();
     }
+
+    public List<Product> ListEngines()
+    {
+        return productInventory.ListEngines();
+    }
+
+    public List<Car> ListCars()
+    {
+        return carInventory.ListCars();
+    }
+    
 }

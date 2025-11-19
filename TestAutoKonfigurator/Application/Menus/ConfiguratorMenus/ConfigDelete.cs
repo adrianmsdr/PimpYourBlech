@@ -1,12 +1,11 @@
 using Application.Menus;
-using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Services.Configurator;
 using TestAutoKonfigurator.Session;
 
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 
 public class ConfigDelete(
-    IProductInventory productInventory,
     IUserSession userSession,
     IConfiguratorService configuratorService)
 {

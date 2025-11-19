@@ -1,10 +1,11 @@
 using Application.Menus;
 using TestAutoKonfigurator.Enums;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Services.Admin;
 
 namespace TestAutoKonfigurator.Application.Menus.Admin.AdminProductMenus;
 
-public class AddEngineMenu(IProductInventory productInventory)
+public class AddEngineMenu(IAdminService adminService)
 {
     public Screens Run()
     {
@@ -90,11 +91,9 @@ public class AddEngineMenu(IProductInventory productInventory)
                         break;
                 }
             }
-
-            //Product engine = new Product(name, articleNumber, brand, description, quantity, price, ps, kw, displacement,
-           //     gear);
-           productInventory.InsertEngine(name, articleNumber, brand, description, quantity, price, ps, kw, displacement,gear);
-            //productInventory.InsertProduct(engine);
+            
+           adminService.RegisterEngine(name, articleNumber, brand, description, quantity, price, ps, kw, displacement,
+               gear);
             PrintHeader();
             Console.WriteLine("Motor erfolgreich hinzugefügt.");
             App.PrintContinueMessage();

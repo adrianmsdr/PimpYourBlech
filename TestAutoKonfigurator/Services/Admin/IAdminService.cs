@@ -1,6 +1,8 @@
-namespace TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Enums;
 
-public interface ICustomerService
+namespace TestAutoKonfigurator.Services.Admin;
+
+public interface IAdminService
 {
     
     
@@ -28,5 +30,21 @@ public interface ICustomerService
     public void UpdateCustomer(Customer customer, String username, String passwordHash, String telefon);
 
     void UpdateCustomers();
-    
+     // ___________________________________Poducts____________________________________
+    List<Product> GetProducts();
+     Product RegisterProduct(Product product);
+    Engine RegisterEngine(string name,
+        string articleNumber,
+        string brand,
+        string description,
+        int quantity,
+        double price,
+        int _ps,
+        int _kw,
+        string _displacement,
+        Gear _gear);
+
+   
+   // ___________________________________Cars____________________________________
+   Car RegisterCar(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price);
 }

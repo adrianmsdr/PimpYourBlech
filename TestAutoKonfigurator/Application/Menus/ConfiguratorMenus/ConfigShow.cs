@@ -1,5 +1,4 @@
 using Application.Menus;
-using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Inventories;
 using TestAutoKonfigurator.Session;
 

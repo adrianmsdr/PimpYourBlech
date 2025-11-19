@@ -1,13 +1,11 @@
-﻿namespace Application.Menus;
-using System.Runtime.InteropServices.JavaScript;
-using System.Security.Cryptography;
-using System.Text;
-using TestAutoKonfigurator;
-using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Inventories;
-using TestAutoKonfigurator.Session;
+﻿using TestAutoKonfigurator.Services.Admin;
 
-public class AdminCarMenu(ICarInventory carInventory)
+namespace Application.Menus;
+
+using TestAutoKonfigurator;
+
+
+public class AdminCarMenu(IAdminService adminService)
 {
 
     // Fahrzeuge verwalten - Hauptmenü
@@ -77,7 +75,7 @@ public class AdminCarMenu(ICarInventory carInventory)
         Console.Write("Preis: ");
         double price = Convert.ToDouble(Console.ReadLine());
         
-        carInventory.InsertCar(name, dateProduction, datePermit, brand, model, ps, quantity, price);
+        adminService.RegisterCar(name, dateProduction, datePermit, brand, model, ps, quantity, price);
         PrintHeader();
         Console.WriteLine("Fahrzeug erfolgreich hinzugefügt");
         App.PrintContinueMessage();

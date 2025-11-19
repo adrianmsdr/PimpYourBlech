@@ -6,17 +6,9 @@ public sealed class CarInventory(IDatabase database):ICarInventory
 {
    // private readonly List<Car> _cars = database.LoadCars(); // Laden der Daten
     
-    public void InsertCar(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price)
+    public void InsertCar(Car c)
     {
-        Car c = new Car();
-        c.Name = name;
-        c.DateProduction = dateProduction;
-        c.DatePermit = datePermit;
-        c.Brand = brand;
-        c.Model = model;
-        c.PS = ps;
-        c.Quantity = quantity;
-        c.Price = price;
+       
         database.Cars.Add(c);
         database.SaveChanges();
      //   _cars.Add(c);

@@ -1,4 +1,4 @@
-namespace TestAutoKonfigurator.Shop;
+namespace TestAutoKonfigurator.Services.Shop;
 
 public interface IShopService
 {

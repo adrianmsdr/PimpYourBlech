@@ -1,12 +1,12 @@
 using Application.Menus;
-using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Services.Configurator;
 using TestAutoKonfigurator.Session;
 using TestAutoKonfigurator.Session.Implementation;
 
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 
-public class ConfigEngine(IProductInventory productInventory,IUserSession userSession, IConfiguratorService configuratorService)
+public class ConfigEngine(IUserSession userSession, IConfiguratorService configuratorService)
 {
     public Screens Run()
     {
@@ -15,10 +15,10 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
             
             PrintHeader();
             Console.WriteLine("[0] <-");
-            Console.WriteLine("Products im Inventory: " + productInventory.ListEngines().Count);
-            for (int i = 0; i < productInventory.ListEngines().Count; i++)
+            Console.WriteLine("Products im Inventory: " + configuratorService.ListEngines().Count);
+            for (int i = 0; i < configuratorService.ListEngines().Count; i++)
             {
-                Console.WriteLine("[" + (i+1) + "] " + productInventory.ListEngines()[i].Name);
+                Console.WriteLine("[" + (i+1) + "] " + configuratorService.ListEngines()[i].Name);
             }
             
             App.PrintChooseOption();
@@ -40,14 +40,14 @@ public class ConfigEngine(IProductInventory productInventory,IUserSession userSe
                 return Screens.ConfigMain;
             }
 
-            if (index < 1 || index > productInventory.ListEngines().Count)
+            if (index < 1 || index > configuratorService.ListEngines().Count)
             {
                 App.PrintSplitter();
                 Console.WriteLine("Bitte eine Zahl aus der Liste wählen.");
                 Console.ReadKey();
                 break;
             }
-            Product selectedEngine = productInventory.ListEngines()[index - 1];
+            Product selectedEngine = configuratorService.ListEngines()[index - 1];
             //userSession.CurrentConfiguration.Engine = selectedEngine;
             App.PrintSplitter();
             Console.WriteLine("Motor erfolgreich hinzugefügt. ");

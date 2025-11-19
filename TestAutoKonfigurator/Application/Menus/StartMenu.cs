@@ -1,15 +1,16 @@
 using System.Security.Cryptography;
 using System.Text;
 using TestAutoKonfigurator;
-using TestAutoKonfigurator.CustomerCommunication;
 using TestAutoKonfigurator.Exceptions;
 using TestAutoKonfigurator.Inventories;
-using TestAutoKonfigurator.Inventories.InventoryService;
+using TestAutoKonfigurator.Services;
+using TestAutoKonfigurator.Services.Admin;
+using TestAutoKonfigurator.Services.CustomerCommunication;
 using TestAutoKonfigurator.Session;
 
 namespace Application.Menus;
 
-public class StartMenu(ICustomerService service, IUserSession  userSession )
+public class StartMenu(IAdminService service, IUserSession  userSession )
 {
    
     public Screens Run()

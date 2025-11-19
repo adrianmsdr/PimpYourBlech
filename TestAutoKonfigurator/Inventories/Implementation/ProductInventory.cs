@@ -38,28 +38,9 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         return engines;
     }
 
-    public void InsertEngine(string name,
-        string articleNumber,
-        string brand,
-        string description,
-        int quantity,
-        double price,
-        int _ps,
-        int _kw,
-        string _displacement,
-        Gear _gear)
+    public void InsertEngine(Engine engine)
     {
-        Engine engine = new Engine();
-        engine.Name = name;
-        engine.ArticleNumber = articleNumber;
-        engine.Brand = brand;
-        engine.Description = description;
-        engine.Quantity = quantity;
-        engine.Price = price; 
-        engine.Ps = _ps;
-        engine.Kw = _kw;
-        engine.Displacement = _displacement;
-        engine.Gear = _gear;
+        
         database.Products.Add(engine);
        database.SaveChanges();
     }

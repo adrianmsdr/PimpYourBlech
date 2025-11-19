@@ -1,9 +1,10 @@
 ﻿using Application.Menus;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Services.Admin;
 
 namespace TestAutoKonfigurator.Application.Menus.Admin.AdminProductMenus;
 
-public class AdminProductMenu(IProductInventory productInventory)
+public class AdminProductMenu(IAdminService adminService)
 {
     // Menü zum Verwalten von Fahrzeugteilen
     public Screens Run()
@@ -52,7 +53,7 @@ public class AdminProductMenu(IProductInventory productInventory)
     private void ListProducts()
     {
         PrintHeader();
-        foreach (Product c in productInventory.ListProducts())
+        foreach (Product c in adminService.GetProducts())
         {
             Console.WriteLine(c.ToString());
             App.PrintSplitter();

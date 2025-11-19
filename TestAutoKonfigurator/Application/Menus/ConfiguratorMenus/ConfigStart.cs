@@ -1,12 +1,11 @@
 using Application.Menus;
-using TestAutoKonfigurator.Configorator;
 using TestAutoKonfigurator.Inventories;
+using TestAutoKonfigurator.Services.Configurator;
 using TestAutoKonfigurator.Session;
 
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 
 public class ConfigStart(
-    ICarInventory carInventory,
     IUserSession userSession,
     IConfiguratorService configuratorService)
 
@@ -20,9 +19,9 @@ public class ConfigStart(
             Console.WriteLine("=== Fahrzeug wählen ===");
             App.PrintSplitter();
             Console.WriteLine("[0] <-");
-            for (int i = 0; i < carInventory.ListCars().Count; i++)
+            for (int i = 0; i < configuratorService.ListCars().Count; i++)
             {
-                Console.WriteLine("[" + (i + 1) + "] " + carInventory.ListCars()[i].Name);
+                Console.WriteLine("[" + (i + 1) + "] " + configuratorService.ListCars()[i].Name);
             }
 
             App.PrintChooseOption();
@@ -41,7 +40,7 @@ public class ConfigStart(
                 return Screens.ConfigStart;
             }
 
-            if (index < 1 || index > carInventory.ListCars().Count)
+            if (index < 1 || index > configuratorService.ListCars().Count)
             {
                 Console.WriteLine("Bitte eine Zahl aus der Liste wählen.");
                 Console.ReadKey();
@@ -51,7 +50,7 @@ public class ConfigStart(
 
             
 
-            Car selectedCar = carInventory.ListCars()[index - 1];
+            Car selectedCar = configuratorService.ListCars()[index - 1];
             PrintHeader();
             Console.Write("Name der Konfiguration: ");
             string name = Console.ReadLine() ?? "";
