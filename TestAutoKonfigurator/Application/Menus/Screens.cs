@@ -10,7 +10,9 @@ public enum Screens
     
     // Admin
     AdminMenu,
+    
     AdminCustomerMenu,
+    AddCustomerMenu,
     AdminProductMenu,
     AdminCarMenu,
     AddEngineMenu,

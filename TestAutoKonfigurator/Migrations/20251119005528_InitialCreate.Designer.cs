@@ -11,7 +11,7 @@ using TestAutoKonfigurator.Persistence.EFDatabase;
 namespace TestAutoKonfigurator.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    [Migration("20251118005125_InitialCreate")]
+    [Migration("20251119005528_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,8 +26,11 @@ namespace TestAutoKonfigurator.Migrations
 
             modelBuilder.Entity("TestAutoKonfigurator.Car", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -41,10 +44,11 @@ namespace TestAutoKonfigurator.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -57,7 +61,7 @@ namespace TestAutoKonfigurator.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.HasKey("Name");
+                    b.HasKey("Id");
 
                     b.ToTable("Cars");
                 });
@@ -70,20 +74,18 @@ namespace TestAutoKonfigurator.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CarName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int?>("CarId")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CarName");
+                    b.HasIndex("CarId");
 
                     b.HasIndex("CustomerId");
 
@@ -98,19 +100,16 @@ namespace TestAutoKonfigurator.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AdminRights")
+                    b.Property<bool?>("AdminRights")
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("MailAddress")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
@@ -118,7 +117,6 @@ namespace TestAutoKonfigurator.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Telefon")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Username")
@@ -194,9 +192,7 @@ namespace TestAutoKonfigurator.Migrations
                 {
                     b.HasOne("TestAutoKonfigurator.Car", "Car")
                         .WithMany()
-                        .HasForeignKey("CarName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CarId");
 
                     b.HasOne("TestAutoKonfigurator.Customer", null)
                         .WithMany("Configurations")

@@ -15,8 +15,9 @@ namespace TestAutoKonfigurator.Migrations
                 name: "Cars",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false),
                     DateProduction = table.Column<string>(type: "text", nullable: false),
                     DatePermit = table.Column<string>(type: "text", nullable: false),
                     Brand = table.Column<string>(type: "text", nullable: false),
@@ -27,7 +28,7 @@ namespace TestAutoKonfigurator.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cars", x => x.Name);
+                    table.PrimaryKey("PK_Cars", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,13 +37,13 @@ namespace TestAutoKonfigurator.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
                     Username = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    Telefon = table.Column<string>(type: "text", nullable: false),
-                    MailAddress = table.Column<string>(type: "text", nullable: false),
-                    AdminRights = table.Column<bool>(type: "boolean", nullable: false)
+                    Telefon = table.Column<string>(type: "text", nullable: true),
+                    MailAddress = table.Column<string>(type: "text", nullable: true),
+                    AdminRights = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,19 +78,18 @@ namespace TestAutoKonfigurator.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    CarName = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    CarId = table.Column<int>(type: "integer", nullable: true),
                     CustomerId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Configurations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Configurations_Cars_CarName",
-                        column: x => x.CarName,
+                        name: "FK_Configurations_Cars_CarId",
+                        column: x => x.CarId,
                         principalTable: "Cars",
-                        principalColumn: "Name",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Configurations_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -98,9 +98,9 @@ namespace TestAutoKonfigurator.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Configurations_CarName",
+                name: "IX_Configurations_CarId",
                 table: "Configurations",
-                column: "CarName");
+                column: "CarId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Configurations_CustomerId",

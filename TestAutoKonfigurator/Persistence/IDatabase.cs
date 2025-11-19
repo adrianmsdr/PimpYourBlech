@@ -1,8 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace TestAutoKonfigurator.Persistence;
 
 public interface IDatabase
 {
-    public void CreateCustomer(Customer customer);   
+    DbSet<Customer> Customers { get; }
+    DbSet<Product> Products { get; }
+    DbSet<Car> Cars { get; }
+    DbSet<Configuration> Configurations { get; }
+
+    int SaveChanges();
+    /*public void CreateCustomer(Customer customer);   
     
         List<Customer> LoadCustomers();
 
@@ -28,7 +36,7 @@ public interface IDatabase
         
         void CreateCar(Car car);
         
-        void CreateProduct(Product product);
+        void CreateProduct(Product product);*/
         
         
         

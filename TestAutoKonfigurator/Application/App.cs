@@ -1,5 +1,6 @@
 using Application.Menus;
 using Application.Menus;
+using TestAutoKonfigurator.Application.Menus.Admin.AdminCustomerMenus;
 using TestAutoKonfigurator.Application.Menus.Admin.AdminProductMenus;
 using TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 using TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
@@ -130,6 +131,13 @@ public class App
                     _userSession.CurrentScreen = menu.Run();
                     break;
                 }
+                
+                case Screens.AddCustomerMenu:
+                    {
+                    var menu = new AddCustomerMenu(_customerService);
+                    _userSession.CurrentScreen = menu.Run();
+                    break;
+                    }
             }
         }
     }

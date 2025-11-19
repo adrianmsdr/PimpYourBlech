@@ -6,7 +6,6 @@ using TestAutoKonfigurator.Factories;
 using TestAutoKonfigurator.Inventories.Implementation;
 using TestAutoKonfigurator.Inventories.InventoryService;
 using TestAutoKonfigurator.Persistence;
-using TestAutoKonfigurator.Persistence.DatabaseJson;
 using TestAutoKonfigurator.Persistence.EFDatabase;
 using TestAutoKonfigurator.Session;
 using TestAutoKonfigurator.Session.Implementation;
@@ -19,7 +18,8 @@ public static class ApplicationConfiguration
 
         // Instanz der Json - Datenbankklasse wird erstellt mit Zugriff über das Interface "IJsonDatabase"
        // IDatabase database = new JsonDatabase();
-       IDatabase database = new DatabaseEF();
+       var dbContext = new ConfiguratorContext();
+       IDatabase database = new DatabaseEF(dbContext);
         // Factory wird erstellt & Datenbankschnittstelle wird übergehen
         var fac = new InventoryFactory(database);
         

@@ -9,22 +9,23 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
 
     public void InsertCustomer(Customer c)
     {
-        
-        database.CreateCustomer(c);
+        database.Customers.Add(c);
+        database.SaveChanges();
+        //database.CreateCustomer(c);
         //_customers.Add(c);
        // database.SaveCustomers(_customers);
     }
     public List<Customer> ListCustomers()
     {
 
-        return database.LoadCustomers();
+        return database.Customers.ToList();
     }
 
     
 
     public void DeleteCustomers()
     {
-        database.DeleteCustomers();
+        database.Customers.RemoveRange(database.Customers);
         // _customers.Clear();
         //database.SaveCustomers(_customers);
     }
@@ -32,7 +33,7 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
 
     public void DeleteCustomer(Customer c)
     {
-        database.DeleteCustomer(c);
+        database.Customers.Remove(c);
     }
 
     public void UpdateCustomer(Customer c,String username, String passwordHash, String telefon)
@@ -41,13 +42,13 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         c.PasswordHash = passwordHash;
         c.Telefon = telefon;
         //database.SaveCustomers(_customers);
-        database.UpdateCustomer(c);
+        database.SaveChanges();
 
         
     }
     public void UpdateCustomers()
     {
-        database.UpdateCustomers();
+        database.SaveChanges();
 
     }
 

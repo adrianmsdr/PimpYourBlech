@@ -2,7 +2,7 @@ using System.Net.Mail;
 
 namespace TestAutoKonfigurator;
 
-public class Customer (string firstName, string lastName, string username, string passwordHash, string telefon, string mailAddress)
+public class Customer ()
     {
         
         
@@ -10,21 +10,21 @@ public class Customer (string firstName, string lastName, string username, strin
     //Getter/Setter
     public int Id { get; set; }
     public List<Configuration> Configurations { get; set; } 
-    public string FirstName { get; set; } = firstName;
+    public string? FirstName { get; set; }
 
-    public string LastName { get; set; } = lastName;
+    public string? LastName { get; set; }
 
-    public string Username { get; set; } = username;
+    public string Username { get; set; }
 
-    public string PasswordHash { get; set; } = passwordHash;
-
-
-    public string Telefon { get; set; } = telefon;
-
-    public string MailAddress { get; set; } = mailAddress;
+    public string PasswordHash { get; set; }
 
 
-    public bool AdminRights { get; set; } = false;
+    public string? Telefon { get; set; }
+
+    public string? MailAddress { get; set; }
+
+
+    public bool? AdminRights { get; set; } 
     
 
     public override string ToString()

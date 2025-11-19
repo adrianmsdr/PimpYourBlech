@@ -22,7 +22,13 @@ public class CustomerService:ICustomerService
     public Customer Register(string firstName, string lastName, string username, string passwordHash, string telefon,
         string mailAddress)
     {
-        Customer customer = new Customer(firstName, lastName, username, passwordHash, telefon, mailAddress);
+        Customer customer = new Customer();
+        customer.FirstName = firstName;
+        customer.LastName = lastName;
+        customer.Username = username;
+        customer.PasswordHash = passwordHash;
+        customer.Telefon = telefon;
+        customer.MailAddress = mailAddress;
         customerRepository.InsertCustomer(customer);
         return customer;
     }

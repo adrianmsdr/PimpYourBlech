@@ -1,13 +1,10 @@
-﻿using TestAutoKonfigurator.Inventories.InventoryService;
-
-namespace Application.Menus;
-using System.Runtime.InteropServices.JavaScript;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using TestAutoKonfigurator;
+using Application.Menus;
 using TestAutoKonfigurator.Exceptions;
-using TestAutoKonfigurator.Inventories;
-using TestAutoKonfigurator.Session;
+using TestAutoKonfigurator.Inventories.InventoryService;
+
+namespace TestAutoKonfigurator.Application.Menus.Admin.AdminCustomerMenus;
 
 public class AdminCustomerMenu(
     ICustomerService customerService)
@@ -37,7 +34,7 @@ public class AdminCustomerMenu(
                     ListCustomersAdmin(); break;
 
                 case "2":
-                    return RegistrationsMenuAdmin(); break;
+                    return Screens.AddCustomerMenu;
 
                 case "3":
                     SearchCustomerMenu(); break;
@@ -70,107 +67,129 @@ public class AdminCustomerMenu(
     }
     // Menü zum registrieren eines neuen Kunden
     private Screens RegistrationsMenuAdmin()
-   {
-       bool running = true;
-       while (running)
-       {
+    {
+        bool running = true;
+        while (running)
+        {
 
-           Console.Clear();
+            Console.Clear();
 
-           PrintHeader();
-           Console.Write("Vorname: ");
-           string firstName = Console.ReadLine() ?? "";
+            PrintHeader();
+            Console.Write("Vorname: ");
+            string firstName = Console.ReadLine() ?? "";
 
-           PrintHeader();
-           Console.Write("Nachname: ");
-           string lastName = Console.ReadLine() ?? "";
+            PrintHeader();
+            Console.Write("Nachname: ");
+            string lastName = Console.ReadLine() ?? "";
 
-           PrintHeader();
-           Console.Write("Phone: ");
-           string phone = Console.ReadLine() ?? "";
-           
-           PrintHeader();
-           Console.Write("Email: ");
-           string mailAddress = Console.ReadLine() ?? "";
+            PrintHeader();
+            Console.Write("Phone: ");
+            string phone = Console.ReadLine() ?? "";
 
-           bool runningAgain = true;
-           string username = "";
-           while (runningAgain)
-           {
-               PrintHeader();
-               Console.Write("Username: ");
-               username = Console.ReadLine() ?? "";
-               try
-               {
-                   customerService.isUsernameAvailable(username);
-                   runningAgain = false;
-               }
-               catch (UsernameNotAvailableException e)
-               {
-                   PrintHeader();
-                   Console.WriteLine(e.Message);
-                   Console.ReadKey();
+            PrintHeader();
+            Console.Write("Email: ");
+            string mailAddress = Console.ReadLine() ?? "";
 
-                   bool registrationRetry = true;
-                   while (registrationRetry)
-                   {
-                       PrintHeader();
-                       Console.WriteLine("[1] Erneut versuchen");
-                       Console.WriteLine("[2] Abbrechen");
-                       App.PrintChooseOption();
+            bool runningAgain = true;
+            string username = "";
+            while (runningAgain)
+            {
+                PrintHeader();
+                Console.Write("Username: ");
+                username = Console.ReadLine() ?? "";
+                try
+                {
+                    customerService.isUsernameAvailable(username);
+                    runningAgain = false;
+                }
+                catch (UsernameNotAvailableException e)
+                {
+                    PrintHeader();
+                    Console.WriteLine(e.Message);
+                    Console.ReadKey();
 
-                       string input = Console.ReadKey().KeyChar.ToString();
+                    bool registrationRetry = true;
+                    while (registrationRetry)
+                    {
+                        PrintHeader();
+                        Console.WriteLine("[1] Erneut versuchen");
+                        Console.WriteLine("[2] Abbrechen");
+                        App.PrintChooseOption();
 
-                       if (input == "1")
-                       {
-                           registrationRetry = false;
-                       }
+                        string input = Console.ReadKey().KeyChar.ToString();
 
-                       if (input == "2")
-                       {
-                           return Screens.AdminCustomerMenu;
-                       }
+                        if (input == "1")
+                        {
+                            registrationRetry = false;
+                        }
+
+                        if (input == "2")
+                        {
+                            return Screens.AdminCustomerMenu;
+                        }
 
 
-                   }
-               }
-           }
+                    }
+                }
+            }
 
-       PrintHeader();
-       
-       Console.Write("Passwort: ");
-       string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
-       
-       PrintHeader();
-       Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
-       
-       App.PrintChooseOption();
-       
-       string response = Console.ReadKey().KeyChar.ToString();
-       Customer c = customerService.Register(firstName, lastName, username, hash, phone, mailAddress);
-       if (response == "Y" || response == "y")
-       {
-           customerService.isUsernameAvailable(username);
-           c.AdminRights = true;
-           PrintHeader();
-           Console.WriteLine("Administrator - Rechte erfolgreich erteilt. Enter drücken um fortzufahren.");
-           Console.ReadKey();
-       }
-       else if (response == "N" || response == "n")
-       {
-           c.AdminRights = false;
-           PrintHeader();
-           Console.WriteLine("Keine Administrator - Rechte erteilt. Enter drücken um fortzufahren.");
-           Console.ReadKey();
-       }
-       customerService.Register(firstName, lastName, username, hash, phone, mailAddress);
-           PrintHeader();
-           Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
-           Console.ReadKey();
-           running = false;
+            PrintHeader();
+
+            Console.Write("Passwort: ");
+            string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
+            Customer c = customerService.Register(firstName, lastName, username, hash, phone, mailAddress);
+            while (true)
+            {
+                PrintHeader();
+                Console.WriteLine("Wollen sie Administrator - Rechte zuweisen? [Y/N]");
+
+                App.PrintChooseOption();
+
+                string response = Console.ReadKey().KeyChar.ToString();
+
+                if (response == "Y" || response == "y")
+                {
+                    c.AdminRights = true;
+                    PrintHeader();
+                    Console.WriteLine("Administrator - Rechte erfolgreich erteilt. Enter drücken um fortzufahren.");
+                    Console.ReadKey();
+                    PrintHeader();
+                    Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
+                    Console.ReadKey();
+                    runningAgain = false;
+                    running = false;
+                    return Screens.AdminCustomerMenu;
+
+
+                }
+                else if (response == "N" || response == "n")
+                {
+                    c.AdminRights = false;
+                    PrintHeader();
+                    Console.WriteLine("Keine Administrator - Rechte erteilt. Enter drücken um fortzufahren.");
+                    Console.ReadKey();
+                    PrintHeader();
+                    Console.WriteLine("Registrierung erfolgreich. Enter drücken um fortzufahren.");
+                    Console.ReadKey();
+                    runningAgain = false;
+                    running = false;
+                    return Screens.AdminCustomerMenu;
+                }
+                else
+                {
+                    App.PrintWrongInput();
+                    Console.ReadKey();
+                }
+
+
+                running = false;
+            }
+
+            return Screens.AdminCustomerMenu;
         }
-       return Screens.AdminCustomerMenu;
-   }
+        return Screens.AdminMenu;
+    }
+
     // Nach Kunden suchen
     private void SearchCustomerMenu()
     {
@@ -252,7 +271,7 @@ public class AdminCustomerMenu(
 
         try
         {
-            Customer c = new Customer("","","","","","");
+            Customer c = new Customer();
             if (eingabe == "1")
             {
                 c = customerService.GetCustomerByUsername(un);
@@ -308,7 +327,13 @@ public class AdminCustomerMenu(
         Console.WriteLine("Email: ");
         String mailAddress = Console.ReadLine();
         
-        Customer c = new Customer(customer.FirstName,customer.LastName,username, hash, telefon, mailAddress);
+        Customer c = new Customer();
+        c.FirstName = customer.FirstName;
+        c.LastName = customer.LastName;
+        c.Username = customer.Username;
+        c.PasswordHash = hash;
+        c.Telefon = telefon;
+        c.MailAddress = mailAddress;
         
         PrintHeader();
         Console.WriteLine(c.ToString());

@@ -17,15 +17,16 @@ public sealed class CarInventory(IDatabase database):ICarInventory
         c.PS = ps;
         c.Quantity = quantity;
         c.Price = price;
-        
+        database.Cars.Add(c);
+        database.SaveChanges();
      //   _cars.Add(c);
-     database.CreateCar(c);
+    // database.CreateCar(c);
        // database.SaveCars(_cars);
     }
     
     public List<Car> ListCars()
     {
-        return database.LoadCars();
+        return database.Cars.ToList();
 
         //  return _cars;
     }

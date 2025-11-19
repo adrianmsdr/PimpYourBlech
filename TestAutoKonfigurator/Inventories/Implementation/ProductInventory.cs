@@ -12,12 +12,14 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     {
        // _products.Add(p);
       //  database.SaveProducts(_products);
-      database.CreateProduct(p);
+      //database.CreateProduct(p);
+      database.Products.Add(p);
+      database.SaveChanges();
     }
 
     public List<Product> ListProducts()
     {
-        return database.LoadProducts();
+       return database.Products.ToList();
     }
     
     // _____________________________________ nur für die konsole erstmal __________________________________________
@@ -26,7 +28,7 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     public List<Product> ListEngines()
     {
         var engines = new List<Product>();
-        foreach (Product product in database.LoadProducts())
+        foreach (Product product in database.Products)
         {
             if (product is Engine)
             {
@@ -57,6 +59,8 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         engine.Ps = _ps;
         engine.Kw = _kw;
         engine.Displacement = _displacement;
-        database.CreateProduct(engine);
+        engine.Gear = _gear;
+        database.Products.Add(engine);
+       database.SaveChanges();
     }
 }

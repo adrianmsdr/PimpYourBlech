@@ -147,8 +147,7 @@ public class StartMenu(ICustomerService service, IUserSession  userSession )
                     Console.Write("Passwort: ");
                     string hash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Console.ReadLine() ?? "")));
                     PrintHeader();
-                   Customer c = service.Register(firstName, lastName, username, hash, phone, mailAddress);
-                   c.ToString();
+                    service.Register(firstName, lastName, username, hash, phone, mailAddress);
                     Console.WriteLine("Registrierung erfolgreich. Bitte melde dich an.");
 
                     Console.ReadKey();

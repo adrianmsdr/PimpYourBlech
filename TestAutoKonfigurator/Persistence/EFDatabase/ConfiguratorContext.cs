@@ -31,7 +31,7 @@ public sealed class ConfiguratorContext : DbContext
       
 //Später vielleicht auch eine eigne id ider wir machen nen datentyp Artikelnumnmer
         modelBuilder.Entity<Car>()
-            .HasKey(a => a.Name);
+            .HasKey(a => a.Id);
 
         modelBuilder.Entity<Configuration>()
             .HasKey(a => a.Id);
