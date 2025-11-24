@@ -1,0 +1,70 @@
+@page "/login"
+@rendermode InteractiveServer
+
+@using System.Security.Cryptography
+@using System.Text
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@using TestAutoKonfigurator.Session
+@inject IAdminService AdminService
+@inject IUserSession UserSession
+@inject NavigationManager Nav
+
+<h2>Anmelden</h2>
+<hr />
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(DebugInfo))
+{
+    <p style="color: orange;">DEBUG: @DebugInfo</p>
+}
+<div>
+    <label>Username:</label>
+    <input @bind="username" />
+</div>
+<div>
+    <label>Passwort:</label>
+    <input type="password" @bind="password" />
+</div>
+
+<br />
+<button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
+<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+
+@code {
+    private string DebugInfo = "";
+    private string username = "";
+    private string password = "";
+    private string ErrorMessage = "";
+
+    private void LoginCustomer()
+    {
+
+
+        var hash = Convert.ToBase64String(
+            SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
+        );
+
+        if (AdminService.LoginAccepted(username, hash))
+        {
+            var c = AdminService.GetCustomer(username, hash);
+            DebugInfo = $"LoginChecker OK. Gefundener User: {c?.FirstName} {c?.LastName}";
+            ErrorMessage = c.FirstName;
+            UserSession.LogIn(c);
+            Nav.NavigateTo("/mainMenu"); // entspricht Screens.MainMenu
+        }
+        else
+        {
+            ErrorMessage = "Anmeldung fehlgeschlagen.";
+        }
+
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/");
+    }
+
+}

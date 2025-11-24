@@ -1,0 +1,46 @@
+@page "/mainMenu"
+@using TestAutoKonfigurator.Session
+@inject NavigationManager Nav
+@inject IUserSession UserSession
+
+
+<h3>PimpYourBlech</h3>
+
+<PageTitle>PimpYourBlech</PageTitle>
+<p>Aktueller User: @UserSession.CurrentUser?.Username</p>
+<button class="btn btn-primary" @onclick="GoToConfigurator">Konfiguration starten</button>
+<button class="btn btn-secondary" @onclick="GoToConfigurations">Konfigurationen laden</button>
+<button class="btn btn-secondary" @onclick="GoToShop">Ersatzteile Shop</button>
+<button class="btn btn-secondary" @onclick="Logout">Abmelden</button>
+<button class="btn btn-secondary" @onclick="GoToAdmin">Administrator</button>
+
+
+@code
+{
+    private void GoToConfigurator()
+    {
+        Nav.NavigateTo("/configurator");
+    }
+
+    private void GoToConfigurations()
+    {
+        Nav.NavigateTo("/configurations");
+    }
+    
+    private void GoToShop()
+    {
+        Nav.NavigateTo("/shop");
+    }
+    
+    private void Logout()
+    {
+        UserSession.LogOut();
+        Nav.NavigateTo("/");
+    }
+    
+    private void GoToAdmin()
+    {
+        
+        Nav.NavigateTo("/admin");
+    }
+}

@@ -63,7 +63,7 @@ public class AdminService:IAdminService
         
     }
     
-    public bool LoginChecker(string username, string passwordHash)
+    public bool LoginAccepted(string username, string passwordHash)
     {
         bool login = false;
         foreach (Customer c in customerRepository.ListCustomers())

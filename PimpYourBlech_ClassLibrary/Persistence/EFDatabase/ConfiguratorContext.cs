@@ -5,6 +5,13 @@ namespace PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 
 public sealed class ConfiguratorContext : DbContext
 {
+    public ConfiguratorContext() { }
+
+    public ConfiguratorContext(DbContextOptions<ConfiguratorContext> options)
+        : base(options)
+    {
+    }
+    
     // definition der Datenbank Tabellen
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -16,7 +23,9 @@ public sealed class ConfiguratorContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Connection String zur Datenbank
-        var cs ="Host=localhost;Port=5432;Database=configuratordb;Username=postgres;Password=postgres";
+      var cs ="Host=localhost;Port=5432;Database=configuratordb;Username=postgres;Password=postgres";
+        // var cs = "Host=100.91.239.72;Port=5432;Database=configuratordb;Username=postgres;Password=postgres";
+
         optionsBuilder.UseNpgsql(cs);
     }
 

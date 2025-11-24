@@ -14,7 +14,7 @@ public interface IAdminService
     Customer Login(string username, string passwordHash);
     bool isUsernameAvailable(string username);
     
-    bool LoginChecker(string username, string passwordHash);
+    bool LoginAccepted(string username, string passwordHash);
     
     Customer GetCustomer(string username, string passwordHash);
     

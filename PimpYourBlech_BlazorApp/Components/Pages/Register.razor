@@ -1,0 +1,120 @@
+@page "/register";
+@rendermode InteractiveServer
+
+@using System.Security.Cryptography
+@using System.Text
+@using PimpYourBlech_ClassLibrary.Exceptions
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
+@using TestAutoKonfigurator.Session
+@inject IAdminService AdminService
+@inject IUserSession UserSession
+@inject NavigationManager Nav
+
+
+<h2>Registrieren</h2>
+<hr />
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success">@SuccessMessage</div>
+}
+
+<div>
+    <label>Vorname:</label>
+    <input @bind="firstName" />
+</div>
+<div>
+    <label>Nachname:</label>
+    <input @bind="lastName" />
+</div>
+<div>
+    <label>Telefon:</label>
+    <input @bind="phone" />
+</div>
+
+<h4>E-Mail</h4>
+<div>
+    <label>E-Mail Adresse:</label>
+    <input @bind="email" />
+</div>
+
+<div>
+    <label>E-Mail Adresse bestätigen:</label>
+    <input @bind="emailConfirm" />
+</div>
+
+<h4>Account-Daten</h4>
+<div>
+    <label>Username:</label>
+    <input @bind="username" />
+</div>
+<div>
+    <label>Passwort:</label>
+    <input type="password" @bind="password" />
+</div>
+
+<br />
+<button class="btn btn-primary" @onclick="RegisterCustomer">Registrieren</button>
+<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+
+@code {
+    // Felder statt lokale Variablen in Schleifen
+    private string firstName = "";
+    private string lastName = "";
+    private string phone = "";
+    private string email = "";
+    private string emailConfirm = "";
+    private string username = "";
+    private string password = "";
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    private void RegisterCustomer()
+    {
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        
+        try
+        {
+            EmailServices.IsValid(email);
+            EmailServices.ConfirmRegistrationChecker(email, emailConfirm);
+        }
+        catch (WrongInputException ex)
+        {
+            ErrorMessage = ex.Message;
+            return;
+        }
+
+        try
+        {
+            AdminService.isUsernameAvailable(username);
+        }
+        catch (UsernameNotAvailableException ex)
+        {
+            ErrorMessage = ex.Message;
+            return;
+        }
+
+        var hash = Convert.ToBase64String(
+            SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
+        );
+
+        AdminService.Register(firstName, lastName, username, hash, phone, email);
+        SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
+
+        // Optional nach kurzer Zeit oder direkt:
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/");
+    }
+}
+    

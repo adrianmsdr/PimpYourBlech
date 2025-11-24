@@ -9,8 +9,7 @@ public interface IUserSession
 
     public Customer  CurrentUser { get; set; }
     
-    bool IsAuthenticated { get; }
-
+  public bool IsLoggedIn { get; }
     bool IsAdmin { get; }
     
     public Configuration CurrentConfiguration { get; set; }
