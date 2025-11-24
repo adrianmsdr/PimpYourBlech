@@ -9,29 +9,29 @@
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 
-<h2>Anmelden</h2>
-<hr />
+<div class="registration-container">
 
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <div class="alert alert-danger">@ErrorMessage</div>
-}
-@if (!string.IsNullOrEmpty(DebugInfo))
-{
-    <p style="color: orange;">DEBUG: @DebugInfo</p>
-}
-<div>
-    <label>Username:</label>
-    <input @bind="username" />
-</div>
-<div>
-    <label>Passwort:</label>
-    <input type="password" @bind="password" />
-</div>
+    <h3 class="headline">Login</h3>
 
-<br />
-<button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
-<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+    <img src="benutzer.png" alt="UserImage" class="user-image" />
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+
+    @if (!string.IsNullOrEmpty(DebugInfo))
+    {
+        <p style="color: orange;">DEBUG: @DebugInfo</p>
+    }
+
+    <input type="text" class="text-input" placeholder="Benutzername" @bind="username" />
+    <input type="password" class="text-input" placeholder="Passwort" @bind="password" />
+
+    <button type="button" class="registration-button" @onclick="LoginCustomer">Anmelden</button>
+    <button type="button" class="registration-button" @onclick="Cancel">Abbrechen</button>
+
+</div>
 
 @code {
     private string DebugInfo = "";
@@ -41,8 +41,6 @@
 
     private void LoginCustomer()
     {
-
-
         var hash = Convert.ToBase64String(
             SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
         );
@@ -53,18 +51,107 @@
             DebugInfo = $"LoginChecker OK. Gefundener User: {c?.FirstName} {c?.LastName}";
             ErrorMessage = c.FirstName;
             UserSession.LogIn(c);
-            Nav.NavigateTo("/mainMenu"); // entspricht Screens.MainMenu
+            Nav.NavigateTo("/mainMenu");
         }
         else
         {
             ErrorMessage = "Anmeldung fehlgeschlagen.";
         }
-
     }
 
     private void Cancel()
     {
         Nav.NavigateTo("/");
     }
-
 }
+
+<style>
+    body {
+        background-image: url("/Wallpaper.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 0;
+        backdrop-filter: blur(10px);
+    }
+
+    .headline {
+        font-family: Bahnschrift;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .registration-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px); 
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .user-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .text-input {
+        width: 240px;
+        height: 38px;
+        padding: 6px;
+        font-family: Bahnschrift;
+        text-align: center;
+        background-color: rgba(20, 0, 0, 0.65); 
+        color: white;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        outline: none;
+        transition: 0.25s ease;
+    }
+    
+    .text-input:hover {
+        transform:scale(1.1);
+    }
+
+    .text-input:focus {
+        border-color: #ff3333;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    }
+
+    .registration-button {
+        width: 140px;
+        height: 45px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .registration-button:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .registration-button:active {
+        transform: scale(1.2);
+    }
+</style>
