@@ -11,27 +11,33 @@
 
 <div class="registration-container">
 
-    <h3 class="headline">Login</h3>
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(DebugInfo))
+{
+    <p style="color: orange;">DEBUG: @DebugInfo</p>
+}
+<EditForm Model="@this">
+    
+    <div class="mb-3">
+        <label class="form-label">Username:</label>
+        <input class="form-control" @bind="username"/>
+    </div>
 
-    <img src="benutzer.png" alt="UserImage" class="user-image" />
+    <div class="mb-3">
+        <label class="form-label">Password:</label>
+        <input class="form-control" type="password" @bind="password"/>
+    </div>
 
-    @if (!string.IsNullOrEmpty(ErrorMessage))
-    {
-        <div class="alert alert-danger">@ErrorMessage</div>
-    }
 
-    @if (!string.IsNullOrEmpty(DebugInfo))
-    {
-        <p style="color: orange;">DEBUG: @DebugInfo</p>
-    }
-
-    <input type="text" class="text-input" placeholder="Benutzername" @bind="username" />
-    <input type="password" class="text-input" placeholder="Passwort" @bind="password" />
-
-    <button type="button" class="registration-button" @onclick="LoginCustomer">Anmelden</button>
-    <button type="button" class="registration-button" @onclick="Cancel">Abbrechen</button>
-
-</div>
+    <br/>
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+    </div>
+</EditForm>
 
 @code {
     private string DebugInfo = "";

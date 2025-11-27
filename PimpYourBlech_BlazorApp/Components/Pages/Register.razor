@@ -17,28 +17,51 @@
 
     <img src="benutzer.png" alt="HomeBild" class="user-image" />
 
-    @if (!string.IsNullOrEmpty(ErrorMessage))
-    {
-        <div class="alert alert-danger">@ErrorMessage</div>
-    }
-    @if (!string.IsNullOrEmpty(SuccessMessage))
-    {
-        <div class="alert alert-success">@SuccessMessage</div>
-    }
-    
-    <input type="text" class="text-input" placeholder="Benutzername" @bind="username" />
-    <input type="text" class="text-input" placeholder="Vorname" @bind="firstName" />
-    <input type="text" class="text-input" placeholder="Nachname" @bind="lastName" />
-    <input type="text" class="text-input" placeholder="Telefon" @bind="phone" />
+<div class="mb-3">
+    <label class="form-label">Vorname:</label>
+    <input class="form-control" @bind="firstName"/>
+</div>
 
-    <input type="text" class="text-input" placeholder="E-Mail" @bind="email" />
-    <input type="text" class="text-input" placeholder="E-Mail bestätigen" @bind="emailConfirm" />
-    
-    <input type="password" class="text-input" placeholder="Passwort" @bind="password" />
+<div class="mb-3">
+    <label class="form-label">Nachname:</label>
+    <input class="form-control" @bind="lastName"/>
+</div>
 
-    <button type="button" class="registration-button" @onclick="RegisterCustomer">Registrieren</button>
-    <button type="button" class="registration-button" @onclick="Cancel">Abbrechen</button>
+<div class="mb-3">
+    <label class="form-label">Telefon:</label>
+    <input class="form-control" @bind="phone"/>
+</div>
 
+<h4>E-Mail</h4>
+
+<div class="mb-3">
+    <label class="form-label">E-Mail Adresse:</label>
+    <input class="form-control" @bind="email"/>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">E-Mail Adresse bestätigen:</label>
+    <input class="form-control" @bind="emailConfirm"/>
+</div>
+
+<h4>Account-Daten</h4>
+
+<div class="mb-3">
+    <label class="form-label">Username:</label>
+    <input class="form-control" @bind="username"/>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Passwort:</label>
+    <input class="form-control" type = "password" @bind="email"/>
+</div>
+
+
+
+<br />
+<div class="d-flex gap-2">
+<button class="btn btn-primary" @onclick="RegisterCustomer">Registrieren</button>
+<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
 </div>
 
 @code {
