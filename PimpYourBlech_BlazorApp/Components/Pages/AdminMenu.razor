@@ -1,0 +1,35 @@
+@page "/adminMenu"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+<h3>Administrator</h3>
+
+<PageTitle>Administrator</PageTitle>
+
+<button class="btn btn-primary" @onclick="GoToAdminCustomers">Kunden verwalten</button>
+<button class="btn btn-primary" @onclick="GoToAdminProducts">Produkte verwalten</button>
+<button class="btn btn-primary" @onclick="GoToAdminCars">Fahrzeuge verwalten</button>
+<button class="btn btn-primary" @onclick="GoToAdminOrders">Bestellungen verwalten</button>
+
+
+@code
+{
+    private void GoToAdminCustomers()
+    {
+        Nav.NavigateTo("/adminCustomers");
+    }
+
+    private void GoToAdminProducts()
+    {
+        Nav.NavigateTo("/adminProducts");
+    }
+    
+    private void GoToAdminCars()
+    {
+        Nav.NavigateTo("/adminCars");
+    }
+    
+    private void GoToAdminOrders()
+    {
+        Nav.NavigateTo("/adminOrders");
+    }
+}

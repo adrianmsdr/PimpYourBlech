@@ -1,0 +1,54 @@
+@page "/shop"
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Inventories
+@inject NavigationManager Nav
+
+@inject IProductInventory ProductInventory
+
+<h3>Ersatzteile - Shop</h3>
+
+@if (products == null)
+{
+    <p>Lade Produkte...</p>
+}
+else if (!products.Any())
+{
+    <p>Keine Produkte vorhanden.</p>
+}
+else
+{
+    <div class="product-grid">
+        @foreach (var product in products)
+        {
+            <div class="product-card">
+                <img src="@GetImage(product)" alt="@product.Name" class="product-image" />
+                <div class="product-info">
+                    <h4>@product.Name</h4>
+                    <p>@product.Description</p>
+                    <p class="product-price">@product.Price.ToString("C")</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Product> products;
+
+    public void LoadProducts()
+    {
+        products = ProductInventory.ListProducts();
+    }
+
+    private string GetImage(Product p)
+    {
+        return string.IsNullOrWhiteSpace(p.ImageUrl)
+            ? "/images/placeholder.png"
+            : p.ImageUrl;
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/mainMenu");
+    }
+}
