@@ -2,6 +2,7 @@
 @using TestAutoKonfigurator.Session
 @inject NavigationManager Nav
 @inject IUserSession UserSession
+@rendermode InteractiveServer
 
 
 <h3>PimpYourBlech</h3>
@@ -40,7 +41,6 @@
     
     private void GoToAdmin()
     {
-        
-        Nav.NavigateTo("/admin");
+        Nav.NavigateTo("/adminMenu");
     }
 }
