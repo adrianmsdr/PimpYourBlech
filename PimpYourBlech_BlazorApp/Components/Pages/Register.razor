@@ -24,43 +24,52 @@
     <div class="alert alert-success">@SuccessMessage</div>
 }
 
-<div>
-    <label>Vorname:</label>
-    <input @bind="firstName" />
+<div class="mb-3">
+    <label class="form-label">Vorname:</label>
+    <input class="form-control" @bind="firstName"/>
 </div>
-<div>
-    <label>Nachname:</label>
-    <input @bind="lastName" />
+
+<div class="mb-3">
+    <label class="form-label">Nachname:</label>
+    <input class="form-control" @bind="lastName"/>
 </div>
-<div>
-    <label>Telefon:</label>
-    <input @bind="phone" />
+
+<div class="mb-3">
+    <label class="form-label">Telefon:</label>
+    <input class="form-control" @bind="phone"/>
 </div>
 
 <h4>E-Mail</h4>
-<div>
-    <label>E-Mail Adresse:</label>
-    <input @bind="email" />
+
+<div class="mb-3">
+    <label class="form-label">E-Mail Adresse:</label>
+    <input class="form-control" @bind="email"/>
 </div>
 
-<div>
-    <label>E-Mail Adresse bestätigen:</label>
-    <input @bind="emailConfirm" />
+<div class="mb-3">
+    <label class="form-label">E-Mail Adresse bestätigen:</label>
+    <input class="form-control" @bind="emailConfirm"/>
 </div>
 
 <h4>Account-Daten</h4>
-<div>
-    <label>Username:</label>
-    <input @bind="username" />
-</div>
-<div>
-    <label>Passwort:</label>
-    <input type="password" @bind="password" />
+
+<div class="mb-3">
+    <label class="form-label">Username:</label>
+    <input class="form-control" @bind="username"/>
 </div>
 
+<div class="mb-3">
+    <label class="form-label">Passwort:</label>
+    <input class="form-control" type = "password" @bind="email"/>
+</div>
+
+
+
 <br />
+<div class="d-flex gap-2">
 <button class="btn btn-primary" @onclick="RegisterCustomer">Registrieren</button>
 <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+</div>
 
 @code {
     // Felder statt lokale Variablen in Schleifen

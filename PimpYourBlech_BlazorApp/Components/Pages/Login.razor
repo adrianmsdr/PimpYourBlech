@@ -20,18 +20,25 @@
 {
     <p style="color: orange;">DEBUG: @DebugInfo</p>
 }
-<div>
-    <label>Username:</label>
-    <input @bind="username" />
-</div>
-<div>
-    <label>Passwort:</label>
-    <input type="password" @bind="password" />
-</div>
+<EditForm Model="@this">
+    
+    <div class="mb-3">
+        <label class="form-label">Username:</label>
+        <input class="form-control" @bind="username"/>
+    </div>
 
-<br />
-<button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
-<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+    <div class="mb-3">
+        <label class="form-label">Password:</label>
+        <input class="form-control" type="password" @bind="password"/>
+    </div>
+
+
+    <br/>
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+    </div>
+</EditForm>
 
 @code {
     private string DebugInfo = "";
