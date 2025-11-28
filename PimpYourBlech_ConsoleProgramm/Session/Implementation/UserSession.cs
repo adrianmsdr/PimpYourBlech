@@ -7,7 +7,7 @@ public class UserSession:IUserSession
 {
     public Screens CurrentScreen { get; set; }
     public Customer CurrentUser { get; set; }
-    public bool IsLoggedIn { get; }
+    public bool IsLoggedIn => CurrentUser != null;
     public bool IsAdmin { get; }
 
     public Configuration CurrentConfiguration { get; set; }

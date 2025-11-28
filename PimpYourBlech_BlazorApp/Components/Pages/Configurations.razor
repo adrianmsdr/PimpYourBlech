@@ -1,6 +1,22 @@
 @page "/configurations"
+@using PimpYourBlech_ClassLibrary.Entities
+@using TestAutoKonfigurator.Session
+@inject IUserSession UserSession
 <h3>Deine Konfigurationen:</h3>
 
+
+<ul>
+    @foreach (var c in configurations)
+    {
+        <li>@c.ToString()</li>
+    }
+</ul>
 @code {
-    
+    private List<Configuration> configurations = new();
+
+    protected override void OnInitialized()
+    {
+        configurations = UserSession.CurrentUser.Configurations;
+    }
+
 }

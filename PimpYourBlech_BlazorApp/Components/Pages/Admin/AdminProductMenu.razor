@@ -1,0 +1,40 @@
+@page "/adminProducts"
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+<h3>Fahrzeugteile verwalten:</h3>
+
+
+<table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+        <th>Artikelnummer</th>
+        <th>Name</th>
+        <th>Hersteller</th>
+        <th>Bestand</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var c in products)
+    {
+        <tr>
+            <td>@c.ArticleNumber</td>
+            <td>@c.Name</td>
+            <td>@c.Brand</td>
+            <td>@c.Quantity</td>
+        </tr>
+    }
+    </tbody>
+        </table>
+
+        @code {
+    private List<Product> products = new ();
+
+    protected override void OnInitialized()
+    {
+        products = AdminService.GetProducts();
+    }
+
+    
+}
