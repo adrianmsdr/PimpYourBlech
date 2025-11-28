@@ -1,0 +1,38 @@
+@page "/adminCustomers"
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+<h3>Kunden verwalten</h3>
+
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Username</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var c in customers)
+    {
+        <tr>
+            <td>@c.FirstName</td>
+            <td>@c.LastName</td>
+            <td>@c.Username</td>
+            <td>@c.MailAddress</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    private List<Customer> customers = new List<Customer>();
+
+    protected override void OnInitialized()
+    {
+        customers = AdminService.GetListCustomers();
+    }
+
+}

@@ -60,7 +60,7 @@
             DebugInfo = $"LoginChecker OK. Gefundener User: {c?.FirstName} {c?.LastName}";
             ErrorMessage = c.FirstName;
             UserSession.LogIn(c);
-            Nav.NavigateTo("/mainMenu"); // entspricht Screens.MainMenu
+            Nav.NavigateTo("/mainMenu", forceLoad: true); // entspricht Screens.MainMenu
         }
         else
         {
