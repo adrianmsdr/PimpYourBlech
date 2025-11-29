@@ -1,55 +1,131 @@
 @page "/mainMenu"
+@using PimpYourBlech_BlazorApp.Components.Icons
 @using TestAutoKonfigurator.Session
 @inject NavigationManager Nav
 @inject IUserSession UserSession
 @rendermode InteractiveServer
 
-
-<h3>PimpYourBlech</h3>
-
 <PageTitle>PimpYourBlech</PageTitle>
 
-@*Erstmal nur als Info für uns ob der User auch immer eingeloggt wird*@
-<p>Aktueller User: @UserSession.CurrentUser?.Username</p>
+<div class="menu-container">
+    <h2 class="headline">Willkommen, @UserSession.CurrentUser.Username!</h2>
 
-@*Buttons für die verschiedenen Funktionen unserer App*@
-<button class="btn btn-primary" @onclick="GoToConfigurator">Konfiguration starten</button>
-<button class="btn btn-secondary" @onclick="GoToConfigurations">Konfigurationen laden</button>
-<button class="btn btn-secondary" @onclick="GoToShop">Ersatzteile Shop</button>
-<button class="btn btn-secondary" @onclick="Logout">Abmelden</button>
-<button class="btn btn-secondary" @onclick="GoToAdmin">Administrator</button>
+    <img src="benutzer.png" class="user-image">
+
+    <div class="button-column">
+        <button class="buttons" @onclick="GoToConfigurator">Konfiguration starten<CarIcon></CarIcon></button>
+        <button class="buttons" @onclick="GoToConfigurations">Konfigurationen laden<CarIcon2></CarIcon2></button>
+        <button class="buttons" @onclick="GoToShop">Ersatzteile Shop<ShopIcon></ShopIcon></button>
+        <button class="buttons" @onclick="GoToAdmin">Administrator<AdminIcon></AdminIcon></button>
+        <button class="buttons logout" @onclick="Logout">Abmelden</button>
+    </div>
+</div>
 
 
 @code
 {
-    // Führt zum Konfigurator
-    private void GoToConfigurator()
-    {
-        Nav.NavigateTo("/configurator");
-    }
+    private void GoToConfigurator() => Nav.NavigateTo("/configurator");
 
-    // Führt zu den eigenen Konfigurationen
-    private void GoToConfigurations()
-    {
-        Nav.NavigateTo("/configurations");
-    }
-    
-    // Führt zum Shop
-    private void GoToShop()
-    {
-        Nav.NavigateTo("/shop");
-    }
-    
-    // Führt zum Start - Screen
+    private void GoToConfigurations() => Nav.NavigateTo("/configurations");
+
+    private void GoToShop() => Nav.NavigateTo("/shop");
+
     private void Logout()
     {
         UserSession.LogOut();
         Nav.NavigateTo("/");
     }
-    
-    // Führt zum Administrator - Menü
-    private void GoToAdmin()
-    {
-        Nav.NavigateTo("/adminMenu");
-    }
+
+    private void GoToAdmin() => Nav.NavigateTo("/adminMenu");
 }
+
+<style>
+    body {
+        background-image: url("Wallpaper.png");
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+    }
+
+    .menu-container {
+        margin: 0 auto;
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        width: 55%;
+        padding: 30px;
+
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .headline {
+        font-family: Bahnschrift;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        margin-bottom: 10px;
+    }
+
+    .user-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .button-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .buttons {
+        width: 220px;
+        height: 48px;
+        font-family: Bahnschrift;
+        font-size: 18px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+        transition: transform 0.25s ease, background-color 0.25s ease, 
+                    box-shadow 0.25s ease, border-color 0.25s ease;
+        cursor: pointer;
+    }
+
+    .buttons:hover {
+        transform: scale(1.08);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+    }
+
+    .buttons:active {
+        transform: scale(1.15);
+    }
+
+    .logout {
+        background-color: #500000;
+        border-color: #ff4444;
+    }
+
+    .logout:hover {
+        background-color: #770000;
+    }
+
+    .buttons svg {
+        margin-left: 2px;
+        margin-bottom: 3px;
+    }
+
+</style>
