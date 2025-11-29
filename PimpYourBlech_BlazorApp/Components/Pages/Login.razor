@@ -41,9 +41,8 @@
                    placeholder="Passwort"
                    @bind="password"/>
         </div>
-        <h4 class="no-account-yet">Noch kein Account? <span class="registrate-now">Jetzt registrieren</span></h4>
-
-        <br/>
+        <p class="no-account-yet">Noch kein Account? 
+            <span class="registrate-now" @onclick="NavigateToRegister">Jetzt registrieren</span></p>
 
         @*Buttons um sich anzumelden oder um zum Start - Screen zurückzukehren*@
         <div class="d-flex gap-2">
@@ -87,11 +86,15 @@
     {
         Nav.NavigateTo("/");
     }
+
+    private void NavigateToRegister()
+    {
+        Nav.NavigateTo("/register");
+    }
 }
 
 <style>
     body {
-       
         background-image: url("Wallpaper.png");
         background-size: cover;
         background-position: center;
@@ -182,8 +185,13 @@
     }
     
     .registrate-now {
-        color: #252323;
+        color: darkslateblue;
         font-family: Bahnschrift;
         font-weight: bold;
+    }
+    .registrate-now:hover {
+        text-decoration: underline;
+        color: #ba3a25;
+        cursor: pointer;
     }
 </style>
