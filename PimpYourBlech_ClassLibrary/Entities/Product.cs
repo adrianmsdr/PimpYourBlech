@@ -1,17 +1,25 @@
+using PimpYourBlech_ClassLibrary.Enums;
+
 namespace PimpYourBlech_ClassLibrary.Entities;
 
 public class Product
 {
-    public int Id { get; set; }
+    public int ProductId { get; set; }
 // Allgemeine Eigenschaften
     public string Name { get; set; }
     public string ArticleNumber { get; set; }
     public string Brand { get; set; }
-    public string Description { get; set; }
+    //public string Description { get; set; }
     public int Quantity { get; set; }
     public double Price { get; set; }
     
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
+    
+    public ProductType ProductType { get; set; }
+    
+    public EngineDetail?  EngineDetail { get; set; }
+    public RimDetail?  RimDetail { get; set; }
+    public LightsDetail? LightsDetail { get; set; }
 }
 /*(string name, string articleNumber, string brand, string description, int quantity, double price)
 {

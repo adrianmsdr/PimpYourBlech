@@ -11,7 +11,7 @@
 
 <h2>Anmelden</h2>
 <hr />
-
+@*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div class="alert alert-danger">@ErrorMessage</div>
@@ -20,20 +20,28 @@
 {
     <p style="color: orange;">DEBUG: @DebugInfo</p>
 }
+
+
+@*EditForm um Enter drücken zum Anmelden zu ermöglichen*@
 <EditForm Model="@this">
     
+    @*Eingabefelder für Username und Passwort*@
     <div class="mb-3">
-        <label class="form-label">Username:</label>
-        <input class="form-control" @bind="username"/>
+        <input class="form-control"
+               placeholder="Username..."
+               @bind="username"/>
     </div>
-
+    
     <div class="mb-3">
-        <label class="form-label">Password:</label>
-        <input class="form-control" type="password" @bind="password"/>
+        <input class="form-control"
+               type="password"
+               placeholder="Passwort..."
+               @bind="password"/>
     </div>
-
 
     <br/>
+    
+    @*Buttons um sich anzumelden oder um zum Start - Screen zurückzukehren*@
     <div class="d-flex gap-2">
         <button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
         <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
@@ -41,6 +49,7 @@
 </EditForm>
 
 @code {
+    // Felder für die benötigten Werte und Fehlermeldungen etc.
     private string DebugInfo = "";
     private string username = "";
     private string password = "";
@@ -48,27 +57,28 @@
 
     private void LoginCustomer()
     {
-
-
+        // Passwort wird in Hashcode konvertiert für DB - Abgleich
         var hash = Convert.ToBase64String(
             SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
         );
 
+        // AdminService führt den LoginCheck mit den Userdaten aus
         if (AdminService.LoginAccepted(username, hash))
         {
+            // Bei Erfolg: User wird als eingeloggt gesetzt + Hauptmenü erscheint
             var c = AdminService.GetCustomer(username, hash);
-            DebugInfo = $"LoginChecker OK. Gefundener User: {c?.FirstName} {c?.LastName}";
-            ErrorMessage = c.FirstName;
             UserSession.LogIn(c);
             Nav.NavigateTo("/mainMenu", forceLoad: true); // entspricht Screens.MainMenu
         }
         else
         {
+            // Bei Fehler: Fehlermeldung wird gesetzt
             ErrorMessage = "Anmeldung fehlgeschlagen.";
         }
 
     }
 
+    // Führt zum Start - Screen
     private void Cancel()
     {
         Nav.NavigateTo("/");

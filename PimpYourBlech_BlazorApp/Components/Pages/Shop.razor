@@ -1,12 +1,19 @@
 @page "/shop"
 @using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Inventories
+
+@using PimpYourBlech_ClassLibrary.Services.Shop
+
 @inject NavigationManager Nav
 
-@inject IProductInventory ProductInventory
+@inject IShopService ShopService
 
 <h3>Ersatzteile - Shop</h3>
 
+@*
+Machen wir noch schön Bleibt nicht so aber im Prinzip holt der sich alle Produkte erstmal und zeigt sie mit
+ausgewählten infos + bild in so nem Kästchen wär noch schön
+- sollte man später auch anklicken können + warenkorb und alles drum und dran
+*@
 @if (products == null)
 {
     <p>Lade Produkte...</p>
@@ -24,7 +31,7 @@ else
                 <img src="@GetImage(product)" alt="@product.Name" class="product-image" />
                 <div class="product-info">
                     <h4>@product.Name</h4>
-                    <p>@product.Description</p>
+                    <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
                 </div>
             </div>
@@ -35,11 +42,19 @@ else
 @code {
     private List<Product> products;
 
+    // Damit wird die methode automatisch aufgerufen beim laden der seite (also alle produkte geholt)
+    protected override void OnInitialized()
+    {
+        LoadProducts();
+    }
+    //  |
+    //  v
     public void LoadProducts()
     {
-        products = ProductInventory.ListProducts();
+        products = ShopService.GetProducts();
     }
 
+    // Hier soll er sich später das Bild holen
     private string GetImage(Product p)
     {
         return string.IsNullOrWhiteSpace(p.ImageUrl)
@@ -47,6 +62,7 @@ else
             : p.ImageUrl;
     }
 
+    // Führt zum Hauptmenü
     private void Cancel()
     {
         Nav.NavigateTo("/mainMenu");

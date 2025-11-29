@@ -17,7 +17,9 @@ public sealed class ConfiguratorContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Car> Cars { get; set; }
     public DbSet<Configuration> Configurations { get; set; }
-    public DbSet<Engine> Engines { get; set; }
+    public DbSet<EngineDetail> Engines { get; set; }
+    public DbSet<RimDetail> Rims { get; set; }
+    public DbSet<LightsDetail> Lights { get; set; }
     
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -35,9 +37,21 @@ public sealed class ConfiguratorContext : DbContext
         modelBuilder.Entity<Customer>()
             .HasKey(b => b.Id);
           
-          // Prudukte mit Artikelnummern als pk?
+          
           modelBuilder.Entity<Product>()
-              .HasKey(a => a.ArticleNumber);
+              .HasOne(p => p.EngineDetail)
+              .WithOne(d => d.Product)
+              .HasForeignKey<EngineDetail>(d => d.ProductId);
+
+          modelBuilder.Entity<Product>()
+              .HasOne(p => p.RimDetail)
+              .WithOne(d => d.Product)
+              .HasForeignKey<RimDetail>(d => d.ProductId);
+
+          modelBuilder.Entity<Product>()
+              .HasOne(p => p.LightsDetail)
+              .WithOne(d => d.Product)
+              .HasForeignKey<LightsDetail>(d => d.ProductId);
       
 //Später vielleicht auch eine eigne id ider wir machen nen datentyp Artikelnumnmer
         modelBuilder.Entity<Car>()
@@ -46,7 +60,7 @@ public sealed class ConfiguratorContext : DbContext
         modelBuilder.Entity<Configuration>()
             .HasKey(a => a.Id);
 
-        modelBuilder.Entity<Engine>();
+        modelBuilder.Entity<EngineDetail>();
     }
 
 

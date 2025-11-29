@@ -5,6 +5,7 @@
 
 <PageTitle>Administrator</PageTitle>
 
+@*Buttons um Kundem, Produkte, Fahrzeuge und Bestellungen zu verwalten*@
 <button class="btn btn-primary" @onclick="GoToAdminCustomers">Kunden verwalten</button>
 <button class="btn btn-primary" @onclick="GoToAdminProducts">Produkte verwalten</button>
 <button class="btn btn-primary" @onclick="GoToAdminCars">Fahrzeuge verwalten</button>
@@ -13,21 +14,25 @@
 
 @code
 {
+    // Führt zum Menü um Kunden zu verwalten
     private void GoToAdminCustomers()
     {
         Nav.NavigateTo("/adminCustomers");
     }
 
+    // Führt zum Menü um Produkte zu verwalten
     private void GoToAdminProducts()
     {
         Nav.NavigateTo("/adminProducts");
     }
     
+    // Führt zum Menü um Fahrzeuge zu verwalten
     private void GoToAdminCars()
     {
         Nav.NavigateTo("/adminCars");
     }
     
+    // Führt zum Menü um Bestellungen zu verwalten
     private void GoToAdminOrders()
     {
         Nav.NavigateTo("/adminOrders");
