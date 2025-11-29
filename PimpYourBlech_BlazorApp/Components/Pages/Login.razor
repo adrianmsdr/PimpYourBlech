@@ -75,7 +75,6 @@
             // Bei Fehler: Fehlermeldung wird gesetzt
             ErrorMessage = "Anmeldung fehlgeschlagen.";
         }
-
     }
 
     // Führt zum Start - Screen
@@ -83,5 +82,95 @@
     {
         Nav.NavigateTo("/");
     }
-
 }
+
+<style>
+    body {
+        background-image: url("/Wallpaper.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 0;
+        backdrop-filter: blur(10px);
+    }
+
+    .headline {
+        font-family: Bahnschrift;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .registration-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px); 
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .user-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .text-input {
+        width: 240px;
+        height: 38px;
+        padding: 6px;
+        font-family: Bahnschrift;
+        text-align: center;
+        background-color: rgba(20, 0, 0, 0.65); 
+        color: white;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        outline: none;
+        transition: 0.25s ease;
+    }
+    
+    .text-input:hover {
+        transform:scale(1.1);
+    }
+
+    .text-input:focus {
+        border-color: #ff3333;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    }
+
+    .registration-button {
+        width: 140px;
+        height: 45px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .registration-button:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .registration-button:active {
+        transform: scale(1.2);
+    }
+</style>
