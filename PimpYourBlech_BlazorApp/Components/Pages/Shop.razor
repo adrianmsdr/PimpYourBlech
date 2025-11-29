@@ -1,4 +1,5 @@
 @page "/shop"
+@rendermode InteractiveServer
 @using PimpYourBlech_ClassLibrary.Entities
 
 @using PimpYourBlech_ClassLibrary.Services.Shop
@@ -14,6 +15,46 @@ Machen wir noch schön Bleibt nicht so aber im Prinzip holt der sich alle Produk
 ausgewählten infos + bild in so nem Kästchen wär noch schön
 - sollte man später auch anklicken können + warenkorb und alles drum und dran
 *@
+
+<div class="input-group mb-3">
+    <input class="form-control"
+           placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
+           @bind="searchText" />
+
+    <button class="btn btn-primary" @onclick="ApplySearch">
+        Suchen
+    </button>
+    
+</div>
+<div class="d-flex align-items-center mb-3 gap-3">
+
+    @*Filter: Kategorie*@
+    <div class="d-flex align-items-center">
+        <label class="me-2 mb-0">Kategorie:</label>
+        <select class="form-select" style="width: 200px"
+                @bind="selectedCategory">
+            <option value="All">Alle</option>
+            <option value="Engine">Motor</option>
+            <option value="Rim">Felge</option>
+            <option value="Lights">Lichtanlage</option>
+            <!-- weitere Kategorien später -->
+        </select>
+    </div>
+    
+
+    @*Sortierung*@
+    <div class="d-flex align-items-center ms-auto">
+        <label class="me-2 mb-0">Sortieren nach:</label>
+        <select class="form-select" style="width: 220px"
+                @bind="selectedSortOption">
+            <option value="NameAscending">Name (A–Z)</option>
+            <option value="NameDescending">Name (Z–A)</option>
+            <option value="PriceAscending">Preis (aufsteigend)</option>
+            <option value="PriceDescending">Preis (absteigend)</option>
+        </select>
+    </div>
+</div>
+
 @if (products == null)
 {
     <p>Lade Produkte...</p>
@@ -41,7 +82,9 @@ else
 
 @code {
     private List<Product> products;
-
+    private string selectedCategory = "Alle";
+    private string selectedSortOption = "NameAufsteigend";
+    private string searchText = string.Empty;
     // Damit wird die methode automatisch aufgerufen beim laden der seite (also alle produkte geholt)
     protected override void OnInitialized()
     {
@@ -52,6 +95,14 @@ else
     public void LoadProducts()
     {
         products = ShopService.GetProducts();
+    }
+    
+    
+
+    private void ApplySearch()
+    {
+       products = ShopService.SearchProducts(searchText);
+        
     }
 
     // Hier soll er sich später das Bild holen

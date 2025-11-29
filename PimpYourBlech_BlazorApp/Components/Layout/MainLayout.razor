@@ -10,9 +10,10 @@
     </div>
 
     <div class="navbar-right">
-        <button class="nav-btn" type="button" @onclick="NavigateToAboutUs">Über uns</button>
-        <button class="nav-btn" type="button" @onclick="NavigateToHome">Startseite</button>
-        <button class="nav-btn" type="button" @onclick="NavigateToLogin">Login</button>
+        
+        <NavLink href="/aboutUs" class="nav-btn">Über uns</NavLink>
+        <NavLink href="/" class="nav-btn">Startseite</NavLink>
+        <NavLink href="/login" class="nav-btn">Login</NavLink>
     </div>
 </nav>
 
@@ -31,12 +32,17 @@
 </div>
 
 @code {
-    private void NavigateToAboutUs() => Nav.NavigateTo("/aboutUs");
-    private void NavigateToHome() => Nav.NavigateTo("/");
-    private void NavigateToLogin() => Nav.NavigateTo("/login");
+    
 }
 
 <style>
+
+    body {
+
+        background-image: url("Wallpaper.png");
+        background-size: cover;
+        background-position: center;
+    }
     /* NAVBAR */
     .navbar {
         position: fixed;
@@ -58,6 +64,8 @@
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
         z-index: 1000;
     }
+
+   
 
     .navbar-logo {
         font-family: Bahnschrift;
