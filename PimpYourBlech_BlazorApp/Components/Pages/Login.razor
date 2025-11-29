@@ -9,8 +9,8 @@
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 
-<h2>Anmelden</h2>
-<hr />
+<PageTitle>LogIn</PageTitle>
+
 @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -25,26 +25,31 @@
 @*EditForm um Enter drücken zum Anmelden zu ermöglichen*@
 <EditForm Model="@this">
     
-    @*Eingabefelder für Username und Passwort*@
-    <div class="mb-3">
-        <input class="form-control"
-               placeholder="Username..."
-               @bind="username"/>
-    </div>
-    
-    <div class="mb-3">
-        <input class="form-control"
-               type="password"
-               placeholder="Passwort..."
-               @bind="password"/>
-    </div>
+    <div class="registration-container">
+        <h2 class="headline">Anmelden</h2>
+        <img src="benutzer.png" class="user-image">
+        @*Eingabefelder für Username und Passwort*@
+        <div class="mb-3">
+            <input class="text-input"
+                   placeholder="Username"
+                   @bind="username"/>
+        </div>
 
-    <br/>
-    
-    @*Buttons um sich anzumelden oder um zum Start - Screen zurückzukehren*@
-    <div class="d-flex gap-2">
-        <button class="btn btn-primary" @onclick="LoginCustomer">Anmelden</button>
-        <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+        <div class="mb-3">
+            <input class="text-input"
+                   type="password"
+                   placeholder="Passwort"
+                   @bind="password"/>
+        </div>
+        <h4 class="no-account-yet">Noch kein Account? <span class="registrate-now">Jetzt registrieren</span></h4>
+
+        <br/>
+
+        @*Buttons um sich anzumelden oder um zum Start - Screen zurückzukehren*@
+        <div class="d-flex gap-2">
+            <button class="buttons" @onclick="LoginCustomer">Anmelden</button>
+            <button class="buttons" @onclick="Cancel">Abbrechen</button>
+        </div>
     </div>
 </EditForm>
 
@@ -86,13 +91,10 @@
 
 <style>
     body {
-        background-image: url("/Wallpaper.png");
+       
+        background-image: url("Wallpaper.png");
         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
-        margin: 0;
-        padding: 0;
-        backdrop-filter: blur(10px);
     }
 
     .headline {
@@ -150,7 +152,7 @@
         box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
     }
 
-    .registration-button {
+    .buttons {
         width: 140px;
         height: 45px;
         font-family: Bahnschrift;
@@ -164,13 +166,24 @@
         cursor: pointer;
     }
 
-    .registration-button:hover {
+    .buttons:hover {
         transform: scale(1.1);
         background-color: #b30000;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
     }
 
-    .registration-button:active {
+    .buttons:active {
         transform: scale(1.2);
+    }
+    
+    .no-account-yet {
+        color: white;
+        font-family: Bahnschrift;
+    }
+    
+    .registrate-now {
+        color: #252323;
+        font-family: Bahnschrift;
+        font-weight: bold;
     }
 </style>

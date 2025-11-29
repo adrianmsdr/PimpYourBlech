@@ -9,9 +9,10 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 
-<div class="registration-container">
+<PageTitle>Registration</PageTitle>
 
-    <h3 class="headline">Registrierung</h3>
+<div class="registration-container">
+<h3 class="headline">Registrierung</h3>
 
 @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
 @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -68,7 +69,7 @@
            placeholder="Passwort..."
            @bind="password"/>
 </div>
-
+    </div>
 
 
 
