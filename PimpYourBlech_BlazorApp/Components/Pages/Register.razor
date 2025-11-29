@@ -3,6 +3,7 @@
 
 @using System.Security.Cryptography
 @using System.Text
+@using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_ClassLibrary.Exceptions
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
@@ -13,7 +14,16 @@
 
 <div class="registration-container">
     <h3 class="headline">Registrierung</h3>
-    <img src="benutzer.png" class="user-image">
+    <img src="benutzer.png" class="user-image" @onclick="SelectAvatar">
+    @if (ShowAvatarMenu)
+    {
+        <div class="avatar-dropdown">
+            <img src="Car1.png" class="avatar-option"/>
+            <img src="Car2.png" class="avatar-option"/>
+            <img src="Car3.png" class="avatar-option" />
+        </div>
+    }
+
 
     @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
     @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -39,8 +49,7 @@
            placeholder="Nachname"
            @bind="lastName"/>
 
-
-
+    
     <input class="text-input"
            placeholder="Telefonnummer"
            @bind="phone"/>
@@ -144,6 +153,21 @@
     {
         Nav.NavigateTo("/");
     }
+
+    private bool ShowAvatarMenu = false;
+    private string SelectedAvatar = "benutzer.png";
+
+    private void SelectAvatar()
+    {
+        ShowAvatarMenu = !ShowAvatarMenu;
+    }
+
+    private void ChooseAvatar(string avatar)
+    {
+        SelectedAvatar = avatar;
+        ShowAvatarMenu = false;
+    }
+
 }
 
 <style>
@@ -187,6 +211,7 @@
         border-radius: 50%;
         border: 2px solid rgba(255, 0, 0, 0.5);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+        cursor: pointer;
     }
 
     .text-input {
@@ -234,4 +259,36 @@
     .buttons:active {
         transform: scale(1.2);
     }
+
+    .avatar-dropdown {
+        margin-top: 10px;
+        padding: 10px;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 0, 0, 0.4);
+
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    .avatar-option {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.2s ease;
+        border: 2px solid transparent;
+    }
+
+    .avatar-option:hover {
+        transform: scale(1.1);
+        border-color: #ff3333;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+
 </style>
