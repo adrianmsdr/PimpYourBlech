@@ -1,0 +1,263 @@
+@page "/adminProducts/new"
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Enums
+@using PimpYourBlech_ClassLibrary.Services.Admin
+
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject IAdminService AdminService
+
+
+
+<h3>Neues Fahrzeugteil hinzufügen:</h3>
+
+<div class="mt-3 border-top pt-3">
+    <div class="d-flex align-items-center">
+        <span class="me-2">Produkttyp:</span>
+       
+        <select class="form-select me-2" style="width:auto"
+                @bind="selectedProductType">
+            <option value="Motor">Motor</option>
+            <option value="Felge">Felge</option>
+            <option value="Lichtanlage">Lichtanlage</option>
+        </select>
+       
+    </div>
+</div>
+
+@*Basic Details*@
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Name..."
+           @bind="name"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Artikelnummer..."
+           @bind="articleNumber"/>
+</div>
+
+
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Hersteller..."
+           @bind="brand"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Bestand..."
+           @bind="quantity"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Preis..."
+           @bind="price"/>
+</div>
+
+@*Engine Details*@
+@if (selectedProductType == "Motor")
+{
+    <div class="mb-3">
+        <input class="form-control"
+               placeholder="PS..."
+               @bind="ps"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="form-control"
+               placeholder="KW..."
+               @bind="kw"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="form-control"
+               placeholder="Hubraum..."
+               @bind="displacement"/>
+    </div>
+
+    <div class="mb-3">
+        <span class="me-2">Getriebeart:</span>
+
+        <select class="form-select me-2" style="width:auto"
+                @bind="selectedGear">
+            <option value="5-Gang Manuell">5-Gang Manuell</option>
+            <option value="6-Gang Manuell">6-Gang Manuell</option>
+            <option value="6-Gang Automatik">6-Gang Automatik</option>
+            <option value="8-Gang Automatik">8-Gang Automatik</option>
+        </select>
+
+    </div>
+
+}
+
+
+
+<br />
+<div class="d-flex gap-2">
+<button class="btn btn-primary" @onclick="RegisterProduct">Produkt hinzufügen</button>
+<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+</div>
+
+@code {
+
+    // Felder statt lokale Variablen in Schleifen
+    private string selectedProductType = "Motor";
+    private string selectedGear = "6-Gang Manuell";
+    private string searchValue = string.Empty;
+
+    private string name = "";
+    private string articleNumber = "";
+    private string brand = "";
+    private string quantity = "";
+    private string price = "";
+
+    private string ps = "";
+    private string kw = "";
+    private string displacement = "";
+
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    private void RegisterProduct()
+    {
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        ProductType productType = ProductType.Engine;
+        
+        if (string.IsNullOrWhiteSpace(name) ||
+            string.IsNullOrWhiteSpace(articleNumber))
+        {
+            ErrorMessage = "Name und Artikelnummer dürfen nicht leer sein.";
+            return;
+        }
+
+        if (!int.TryParse(quantity, out var quantityValue) || quantityValue < 0)
+        {
+            ErrorMessage = "Bestand muss eine positive Ganzzahl sein.";
+            return;
+        }
+
+        if (!double.TryParse(price, out var priceValue) || priceValue < 0)
+        {
+            ErrorMessage = "Preis muss eine positive Zahl sein.";
+            return;
+        }
+
+        switch (selectedProductType)
+        {
+            case "Motor":
+                productType = ProductType.Engine;
+                break;
+
+            case "Felge":
+                productType = ProductType.Rim;
+                break;
+
+            case "Lichtanlage":
+                productType = ProductType.Lights;
+                break;
+                
+        }
+        
+
+        switch (productType)
+        {
+            case ProductType.Engine:
+                Gear gear = Gear.SixManual;
+                if (ps == null || kw == null || string.IsNullOrWhiteSpace(selectedGear))
+                {
+                    ErrorMessage = "Bitte alle Motor-Details ausfüllen (PS, kW, Getriebeart).";
+                    return;
+                }
+                if (!int.TryParse(ps, out var psValue) || psValue < 0)
+                {
+                    ErrorMessage = "PS muss eine positive Ganzzahl sein.";
+                    return;
+                }
+                if (!int.TryParse(kw, out var kwValue) || kwValue < 0)
+                {
+                    ErrorMessage = "KW muss eine positive Ganzzahl sein.";
+                    return;
+                }
+
+                switch (selectedGear)
+                {
+                    case "5-Gang Manuell":
+                        gear = Gear.FifeManual;
+                        break;
+                        
+                        case "6-Gang Manuell":
+                        gear = Gear.SixManual;
+                        break;
+                        
+                    case "6-Gang Automatik":
+                        gear = Gear.SixAutomatic;
+                        break;
+                        
+                    case "8-Gang Automatik":
+                        gear = Gear.EightAutomatic;
+                        break;
+                }
+                Product p = AdminService.CreateProduct(name, articleNumber, brand, quantityValue, priceValue,productType);
+                p = AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear);
+                SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
+                break;
+
+           /* case ProductType.Rim:
+                if (rimDiameter == null || rimWidth == null)
+                {
+                    ErrorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
+                    return;
+                }
+
+                product.RimDetails = new RimDetails
+                {
+                    DiameterInInch = rimDiameter.Value,
+                    WidthInInch = rimWidth.Value
+                };
+                break;
+
+            case ProductType.Light:
+                if (lightLumen == null)
+                {
+                    ErrorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
+                    return;
+                }
+
+                product.LightDetails = new LightDetails
+                {
+                    Lumen = lightLumen.Value,
+                    IsLed = lightIsLed
+                };
+                break;*/
+        }
+       
+        SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
+
+     
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/");
+    }
+
+    private void ApplyFilter()
+    {
+        if (string.IsNullOrWhiteSpace(searchValue))
+        {
+            return;
+        }
+
+        var term = searchValue.Trim().ToLower();
+    }
+
+
+}

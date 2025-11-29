@@ -1,70 +1,88 @@
-@page "/register"
-@rendermode InteractiveServer
+@page "/register";
+@rendermode InteractiveServer 
 
 @using System.Security.Cryptography
 @using System.Text
 @using PimpYourBlech_ClassLibrary.Exceptions
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
-@using TestAutoKonfigurator.Session
 @inject IAdminService AdminService
-@inject IUserSession UserSession
 @inject NavigationManager Nav
 
 <div class="registration-container">
 
     <h3 class="headline">Registrierung</h3>
 
-    <img src="benutzer.png" alt="HomeBild" class="user-image" />
+@*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success">@SuccessMessage</div>
+}
 
+
+@*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
 <div class="mb-3">
-    <label class="form-label">Vorname:</label>
-    <input class="form-control" @bind="firstName"/>
+    <input class="form-control"
+           placeholder="Vorname..."
+           @bind="firstName"/>
 </div>
 
 <div class="mb-3">
-    <label class="form-label">Nachname:</label>
-    <input class="form-control" @bind="lastName"/>
+    <input class="form-control"
+           placeholder="Nachname..."
+           @bind="lastName"/>
+</div>
+
+
+
+<div class="mb-3">
+<input class="form-control"
+       placeholder="Telefonnummer..."
+       @bind="phone"/>
 </div>
 
 <div class="mb-3">
-    <label class="form-label">Telefon:</label>
-    <input class="form-control" @bind="phone"/>
-</div>
-
-<h4>E-Mail</h4>
-
-<div class="mb-3">
-    <label class="form-label">E-Mail Adresse:</label>
-    <input class="form-control" @bind="email"/>
+    <input class="form-control"
+           placeholder="Email-Adresse..."
+           @bind="email"/>
 </div>
 
 <div class="mb-3">
-    <label class="form-label">E-Mail Adresse bestätigen:</label>
-    <input class="form-control" @bind="emailConfirm"/>
-</div>
-
-<h4>Account-Daten</h4>
-
-<div class="mb-3">
-    <label class="form-label">Username:</label>
-    <input class="form-control" @bind="username"/>
+    <input class="form-control"
+           placeholder="Email-Adresse bestätigen..."
+           @bind="emailConfirm"/>
 </div>
 
 <div class="mb-3">
-    <label class="form-label">Passwort:</label>
-    <input class="form-control" type = "password" @bind="password"/>
+    <input class="form-control"
+           placeholder="Username..."
+           @bind="username"/>
 </div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Passwort..."
+           @bind="password"/>
+</div>
+
+
 
 
 
 <br />
+
+@*Buttons zum Registrieren oder Abbrechen (Mit Methoden dahinter die in @code definiert werden)*@
 <div class="d-flex gap-2">
-<button class="btn btn-primary" @onclick="RegisterCustomer">Registrieren</button>
-<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+    <button class="btn btn-primary" @onclick="RegisterCustomer">Registrieren</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
 </div>
 
 @code {
+    // Felder für die benötigten Werte eines Customers
     private string firstName = "";
     private string lastName = "";
     private string phone = "";
@@ -73,14 +91,14 @@
     private string username = "";
     private string password = "";
 
+    // Felder für die Fehler-/Erfolgsmeldungen
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
+    // Registrieren eines Kunden
     private void RegisterCustomer()
     {
-        ErrorMessage = "";
-        SuccessMessage = "";
-
+        // Email wird auf Korrektheit geprüft
         try
         {
             EmailServices.IsValid(email);
@@ -92,6 +110,7 @@
             return;
         }
 
+        // Prüfung ob der Username verfügbar ist
         try
         {
             AdminService.isUsernameAvailable(username);
@@ -102,14 +121,19 @@
             return;
         }
 
+        // Hash - Code des Passworts wird generiert
         var hash = Convert.ToBase64String(
             SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
         );
 
+        // Mittels des AdminService wird der Benutzer registriert und die Erfolgsmeldung gesetzt + angezeigt
         AdminService.Register(firstName, lastName, username, hash, phone, email);
         SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
+
+       
     }
 
+    // Kehrt zurück zum Start - Screen
     private void Cancel()
     {
         Nav.NavigateTo("/");

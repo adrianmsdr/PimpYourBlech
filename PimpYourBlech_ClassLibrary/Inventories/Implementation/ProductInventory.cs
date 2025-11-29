@@ -30,7 +30,7 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         var engines = new List<Product>();
         foreach (Product product in database.Products)
         {
-            if (product is Engine)
+            if (product is EngineDetail)
             {
                 engines.Add(product);
             }
@@ -38,10 +38,5 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         return engines;
     }
 
-    public void InsertEngine(Engine engine)
-    {
-        
-        database.Products.Add(engine);
-       database.SaveChanges();
-    }
+    
 }

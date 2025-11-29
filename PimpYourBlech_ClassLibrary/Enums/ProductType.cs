@@ -1,6 +1,6 @@
 namespace PimpYourBlech_ClassLibrary.Enums;
 
-public enum ProductCategory
+public enum ProductType
 {
     Engine,
     Rim,

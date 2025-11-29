@@ -1,0 +1,24 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+
+<PageTitle>Pimp Your Blech</PageTitle>
+
+<h1>Pimp Your Blech</h1>
+
+Willkommen bei Pimp Your Blech, deinem persönlichen Fahrzeugkonfigurator.
+
+@*Start - Knopf*@
+<div class="d-flex gap-2">
+    <button class="btn btn-primary" @onclick="StartProgramm">Start</button>
+</div>
+
+@code
+{
+    // Führt zum Startmenü
+    public void StartProgramm()
+    {
+        Nav.NavigateTo("/startMenu");
+    }
+}

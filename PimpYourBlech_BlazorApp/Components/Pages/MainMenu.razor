@@ -8,7 +8,11 @@
 <h3>PimpYourBlech</h3>
 
 <PageTitle>PimpYourBlech</PageTitle>
+
+@*Erstmal nur als Info für uns ob der User auch immer eingeloggt wird*@
 <p>Aktueller User: @UserSession.CurrentUser?.Username</p>
+
+@*Buttons für die verschiedenen Funktionen unserer App*@
 <button class="btn btn-primary" @onclick="GoToConfigurator">Konfiguration starten</button>
 <button class="btn btn-secondary" @onclick="GoToConfigurations">Konfigurationen laden</button>
 <button class="btn btn-secondary" @onclick="GoToShop">Ersatzteile Shop</button>
@@ -18,27 +22,32 @@
 
 @code
 {
+    // Führt zum Konfigurator
     private void GoToConfigurator()
     {
         Nav.NavigateTo("/configurator");
     }
 
+    // Führt zu den eigenen Konfigurationen
     private void GoToConfigurations()
     {
         Nav.NavigateTo("/configurations");
     }
     
+    // Führt zum Shop
     private void GoToShop()
     {
         Nav.NavigateTo("/shop");
     }
     
+    // Führt zum Start - Screen
     private void Logout()
     {
         UserSession.LogOut();
         Nav.NavigateTo("/");
     }
     
+    // Führt zum Administrator - Menü
     private void GoToAdmin()
     {
         Nav.NavigateTo("/adminMenu");

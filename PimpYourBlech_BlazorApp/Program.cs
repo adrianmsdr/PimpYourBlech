@@ -7,6 +7,8 @@ using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
+using PimpYourBlech_ClassLibrary.Services.Shop;
+using PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
 using TestAutoKonfigurator.Session;
 using TestAutoKonfigurator.Session.Implementation;
 
@@ -51,6 +53,7 @@ builder.Services.AddScoped<ICarInventory>(sp =>
 // 5) Services
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
+builder.Services.AddScoped<IShopService, ShopService>();
 
 // 6) UserSession
 builder.Services.AddSingleton<IUserSession, UserSession>();

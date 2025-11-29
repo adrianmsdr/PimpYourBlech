@@ -173,9 +173,32 @@ public class AdminService:IAdminService
 
     
     // ___________________________________Poducts____________________________________
-    public Product RegisterProduct(Product product)
+    public Product CreateProduct(string name, string articleNumber, string brand, int quantity, double price, ProductType productType)
     {
-        throw new NotImplementedException();
+        Product temp  = new Product();
+        temp.Name = name;
+        temp.ArticleNumber = articleNumber;
+        temp.Brand = brand;
+        temp.Quantity = quantity;
+        temp.Price = price;
+        temp.ProductType = productType;
+        
+        
+        return temp;
+    }
+
+    public Product RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear)
+    {
+        EngineDetail temp = new EngineDetail();
+        temp.Product = p;
+        temp.Ps = ps;
+        temp.Kw = kw;
+        temp.Displacement = displacement;
+        temp.Gear = gear;
+        p.EngineDetail =  temp;
+        productRepository.InsertProduct(p);
+        
+        return p;
     }
 
     public List<Product> GetProducts()
@@ -184,8 +207,8 @@ public class AdminService:IAdminService
     }
 
     
-
-    public Engine RegisterEngine(string name,
+/*
+    public EngineDetail RegisterEngine(string name,
         string articleNumber,
         string brand,
         string description,
@@ -196,23 +219,23 @@ public class AdminService:IAdminService
         string _displacement,
         Gear _gear)
     {
-        Engine engine = new Engine();
-        engine.Name = name;
-        engine.ArticleNumber = articleNumber;
-        engine.Brand = brand;
-        engine.Description = description;
-        engine.Quantity = quantity;
-        engine.Price = price;
-        engine.Ps = _ps;
-        engine.Kw = _kw;
-        engine.Displacement = _displacement;
-        engine.Gear = _gear;
-        productRepository.InsertEngine(engine);
+        EngineDetail engineDetail = new EngineDetail();
+        engineDetail.Name = name;
+        engineDetail.ArticleNumber = articleNumber;
+        engineDetail.Brand = brand;
+     //   engine.Description = description;
+        engineDetail.Quantity = quantity;
+        engineDetail.Price = price;
+        engineDetail.Ps = _ps;
+        engineDetail.Kw = _kw;
+        engineDetail.Displacement = _displacement;
+        engineDetail.Gear = _gear;
+        productRepository.InsertEngine(engineDetail);
         
-        return engine;
+        return engineDetail;
     }
 
-    
+    */
 
     // ___________________________________Cars____________________________________
 

@@ -4,7 +4,11 @@
 @inject IUserSession UserSession
 <h3>Deine Konfigurationen:</h3>
 
-
+@*
+Seite sollte bisher noch ne exception schmeißen weil wir keine Konfigurationen gespeichert haben
+Würde ich aber eh eher mit ner Tabelle oder so machen wie in den Admin - Menüs bisher
+weil das hier ist noch 0 schön wenns läuft
+*@
 <ul>
     @foreach (var c in configurations)
     {

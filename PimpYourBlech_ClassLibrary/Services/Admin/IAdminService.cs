@@ -33,19 +33,9 @@ public interface IAdminService
     void UpdateCustomers();
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
-     Product RegisterProduct(Product product);
-    Engine RegisterEngine(string name,
-        string articleNumber,
-        string brand,
-        string description,
-        int quantity,
-        double price,
-        int _ps,
-        int _kw,
-        string _displacement,
-        Gear _gear);
+     Product CreateProduct(string name, string articleNumber, string brand, int quantity, double price,ProductType productType);
 
-   
+     public Product RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear);
    // ___________________________________Cars____________________________________
   List<Car> GetCars();
    
