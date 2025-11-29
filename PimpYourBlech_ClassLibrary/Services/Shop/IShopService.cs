@@ -21,4 +21,6 @@ public interface IShopService
 
     //(Optional für später) Bestellen
     public List<Product> GetProducts();
+    
+    public List<Product> SearchProducts(string searchString);
 }
