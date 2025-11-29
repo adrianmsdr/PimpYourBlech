@@ -2,24 +2,116 @@
 @rendermode InteractiveServer
 
 <PageTitle>Über Uns</PageTitle>
-<h1>Über uns</h1>
-<div>
-    <h5><pre>
-    Wir sind Jung, Brutal, Überfordert – das vermutlich kompetenteste Chaos-Team seit Erfindung der schlecht sortierten Schraubenkiste.
-    Unser Projekt Pimp Your Blech versucht, die ewige Frage zu lösen:
-    „Warum kann ich meinen fahrbaren Untersatz nicht einfach selbst konfigurieren, ohne drei Fachbereiche, zwei Werkstätten und einen Cousin anzurufen?“
 
-    Also haben wir’s selbst gebaut:
-    •	einen Fahrzeugkonfigurator den sogar wir verstehen
-    •	einen Ersatzteileshop, der keine 90er-Jahre-Website ist
-    •	und eine Datenbank, die manchmal macht, was wir wollen
+<div class="about-wrapper">
 
-    Wir sind nicht perfekt – aber immerhin konsequent unperfekt.
-    Wir experimentieren, diskutieren, programmieren uns in Sackgassen und feiern jeden Bug-Fix wie andere ihren Geburtstag.
+    <img src="Logo.png" class="about-image">
 
-    Kurz gesagt:
+    <div class="about-box">
+        <h2 class="about-title">Über uns</h2>
 
-    Wir sind die, die sich überfordern, damit du’s später nicht musst.</pre></h5></div>
+        <p class="about-text">
+            Wir sind Jung, Brutal, Überfordert – das vermutlich kompetenteste Chaos-Team seit Erfindung
+            der schlecht sortierten Schraubenkiste.
+            Unser Projekt <b>Pimp Your Blech</b> versucht, die ewige Frage zu lösen:
+            „Warum kann ich meinen fahrbaren Untersatz nicht einfach selbst konfigurieren,
+            ohne drei Fachbereiche, zwei Werkstätten und einen Cousin anzurufen?“
+        </p>
+
+        <ul class="about-list">
+            <li>einen Fahrzeugkonfigurator, den sogar wir verstehen</li>
+            <li>einen Ersatzteileshop, der keine 90er-Jahre-Website ist</li>
+            <li>und eine Datenbank, die manchmal macht, was wir wollen</li>
+        </ul>
+
+        <p class="about-text">
+            Wir sind nicht perfekt – aber immerhin konsequent unperfekt.
+            Wir experimentieren, diskutieren, programmieren uns in Sackgassen
+            und feiern jeden Bug-Fix wie andere ihren Geburtstag.
+        </p>
+
+        <p class="about-text bottom">
+            Kurz gesagt:<br>
+            <b>Wir sind die, die sich überfordern, damit du’s später nicht musst.</b>
+        </p>
+    </div>
+
+</div>
+
 @code {
     
 }
+<style>
+.about-wrapper {
+display: flex;
+align-items: flex-start;
+gap: 40px;
+max-width: 90%;
+margin: 40px auto;
+padding: 20px;
+}
+
+.about-image {
+width: 260px;
+height: auto;
+border-radius: 12px;
+box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+.about-box {
+flex: 1;
+background: rgba(0, 0, 0, 0.35);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+
+padding: 25px;
+border-radius: 16px;
+border: 1px solid rgba(255, 0, 0, 0.35);
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.about-title {
+font-family: Bahnschrift;
+color: white;
+font-size: 32px;
+margin-bottom: 15px;
+text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.about-text {
+color: white;
+font-family: Bahnschrift;
+font-size: 18px;
+line-height: 1.5;
+margin-bottom: 16px;
+}
+
+.about-list {
+color: white;
+font-family: Bahnschrift;
+font-size: 18px;
+margin-bottom: 20px;
+}
+
+.about-list li {
+margin-bottom: 8px;
+}
+
+.bottom {
+margin-top: 24px;
+}
+
+.about-image {
+width: 180px;
+}
+
+.about-box {
+width: 100%;
+}
+
+.about-list {
+text-align: left;
+margin-left: 20px;
+}
+
+</style>

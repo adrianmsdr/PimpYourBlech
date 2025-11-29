@@ -12,75 +12,62 @@
 <PageTitle>Registration</PageTitle>
 
 <div class="registration-container">
-<h3 class="headline">Registrierung</h3>
+    <h3 class="headline">Registrierung</h3>
+    <img src="benutzer.png" class="user-image">
 
-@*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <div class="alert alert-danger">@ErrorMessage</div>
-}
-@if (!string.IsNullOrEmpty(SuccessMessage))
-{
-    <div class="alert alert-success">@SuccessMessage</div>
-}
-
-
-@*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Vorname..."
-           @bind="firstName"/>
-</div>
-
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Nachname..."
-           @bind="lastName"/>
-</div>
+    @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success">@SuccessMessage</div>
+    }
 
 
-
-<div class="mb-3">
-<input class="form-control"
-       placeholder="Telefonnummer..."
-       @bind="phone"/>
-</div>
-
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Email-Adresse..."
-           @bind="email"/>
-</div>
-
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Email-Adresse bestätigen..."
-           @bind="emailConfirm"/>
-</div>
-
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Username..."
+    @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
+    <input class="text-input"
+           placeholder="Username"
            @bind="username"/>
-</div>
 
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Passwort..."
+    <input class="text-input"
+           placeholder="Vorname"
+           @bind="firstName"/>
+
+    <input class="text-input"
+           placeholder="Nachname"
+           @bind="lastName"/>
+
+
+
+    <input class="text-input"
+           placeholder="Telefonnummer"
+           @bind="phone"/>
+
+    <input class="text-input"
+           placeholder="Email-Adresse"
+           @bind="email"/>
+
+    <input class="text-input"
+           placeholder="Email-Adresse bestätigen"
+           @bind="emailConfirm"/>
+
+    <input class="text-input"
+           type="password"
+           placeholder="Passwort"
            @bind="password"/>
+
+    <input class="text-input"
+           type="password"
+           placeholder="Passwort bestätigen"
+           @bind="passwordConfirm"/>
+
+    <button class="buttons" @onclick="RegisterCustomer">Registrieren</button>
+    <button class="buttons" @onclick="Cancel">Abbrechen</button>
 </div>
-    </div>
 
 
-
-
-<br />
-
-@*Buttons zum Registrieren oder Abbrechen (Mit Methoden dahinter die in @code definiert werden)*@
-<div class="d-flex gap-2">
-    <button class="btn btn-primary" @onclick="RegisterCustomer">Registrieren</button>
-    <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
-</div>
 
 @code {
     // Felder für die benötigten Werte eines Customers
@@ -91,6 +78,7 @@
     private string emailConfirm = "";
     private string username = "";
     private string password = "";
+    private string passwordConfirm = "";
 
     // Felder für die Fehler-/Erfolgsmeldungen
     private string ErrorMessage = "";
@@ -121,6 +109,19 @@
             ErrorMessage = ex.Message;
             return;
         }
+        
+        //Prüfung ob das Passwort dasselbe ist
+        try
+        {
+            PasswordChecker(password, passwordConfirm);
+        }
+        catch (WrongPasswordException wp)
+        {
+            ErrorMessage = wp.Message;
+            return;
+        }
+
+        
 
         // Hash - Code des Passworts wird generiert
         var hash = Convert.ToBase64String(
@@ -133,7 +134,11 @@
 
        
     }
-
+    private void PasswordChecker(string pw, string confirm)
+    {
+        if (pw != confirm)
+            throw new WrongPasswordException("Die Passwörter stimmen nicht überein.");
+    }
     // Kehrt zurück zum Start - Screen
     private void Cancel()
     {
@@ -206,7 +211,7 @@
         box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
     }
 
-    .registration-button {
+    .buttons {
         width: 140px;
         height: 45px;
         font-family: Bahnschrift;
@@ -220,13 +225,13 @@
         cursor: pointer;
     }
 
-    .registration-button:hover {
+    .buttons:hover {
         transform: scale(1.1);
         background-color: #b30000;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
     }
 
-    .registration-button:active {
+    .buttons:active {
         transform: scale(1.2);
     }
 </style>
