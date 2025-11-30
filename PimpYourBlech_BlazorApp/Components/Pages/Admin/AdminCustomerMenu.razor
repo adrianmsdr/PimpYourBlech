@@ -1,7 +1,10 @@
 @page "/adminCustomers"
+@using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
+@rendermode InteractiveServer
+
 <h3>Kunden verwalten</h3>
 
 <table class="table table-striped table-bordered">
@@ -27,6 +30,32 @@
     </tbody>
 </table>
 
+@if (FoundCustomer != null)
+{
+    <div class="alert alert-info mt-3">
+        <strong>Gefunden:</strong><br />
+        Vorname: @FoundCustomer.FirstName <br />
+        Nachname: @FoundCustomer.LastName <br />
+        Username: @FoundCustomer.Username <br />
+        Email: @FoundCustomer.MailAddress
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+<div class="d-flex align-items-center">
+    <input class="form-control me-2" style="width:200px"
+           placeholder="Username suchen..."
+           @bind="searchValue" />
+
+    <button class="btn btn-primary" @onclick="SearchUsername">
+        Suche nach User <MagnifyingGlassIcon></MagnifyingGlassIcon>
+    </button>
+</div>
+
 @code {
     private List<Customer> customers = new List<Customer>();
 
@@ -35,4 +64,26 @@
         customers = AdminService.GetListCustomers();
     }
 
+    private string searchValue = string.Empty;
+    private Customer FoundCustomer;
+    private string ErrorMessage = "";
+
+    private void SearchUsername()
+    {
+        FoundCustomer = null;    
+        ErrorMessage = "";     
+
+        foreach (var c in customers)
+        {
+            if (c.Username == searchValue)
+            {
+                FoundCustomer = c;
+                ErrorMessage = "";
+                return;            
+            }
+        }
+        
+        ErrorMessage = "Kein Benutzer mit diesem Username gefunden.";
+        StateHasChanged();
+    }
 }

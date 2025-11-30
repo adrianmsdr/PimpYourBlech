@@ -51,7 +51,7 @@ public class AdminService:IAdminService
 
             if (username.Length < 8)
             {
-                throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.1");
+                throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
             }
 
             foreach(Customer customer in customerRepository.ListCustomers())
