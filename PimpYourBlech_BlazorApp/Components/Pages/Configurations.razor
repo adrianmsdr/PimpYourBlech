@@ -9,18 +9,38 @@ Seite sollte bisher noch ne exception schmeißen weil wir keine Konfigurationen 
 Würde ich aber eh eher mit ner Tabelle oder so machen wie in den Admin - Menüs bisher
 weil das hier ist noch 0 schön wenns läuft
 *@
-<ul>
-    @foreach (var c in configurations)
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
     {
-        <li>@c.ToString()</li>
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+    <ul>
+    @if (configurations != null)
+    {
+        @foreach (var c in configurations)
+        {
+            <li>@c.ToString()</li>
+        }
+    }
+    else
+    {
+        
     }
 </ul>
 @code {
     private List<Configuration> configurations = new();
+    private string ErrorMessage = "";
 
     protected override void OnInitialized()
     {
-        configurations = UserSession.CurrentUser.Configurations;
+        if (UserSession.CurrentUser.Configurations != null)
+        {
+            configurations = UserSession.CurrentUser.Configurations;
+        }
+        else
+        {
+            ErrorMessage = "Keine Konfigurationen vorhanden";
+        }
     }
 
 }
