@@ -23,4 +23,6 @@ public interface IShopService
     public List<Product> GetProducts();
     
     public List<Product> SearchProducts(string searchString);
+
+    public List<Product> FilterProducts(string selectedCategory);
 }

@@ -26,6 +26,47 @@ public class ShopService(IProductInventory productInventory):IShopService
         return products;
     }
 
+    public List<Product> FilterProducts(string selectedCategory)
+    {
+        List<Product> filteredProducts = new List<Product>();
+        foreach (Product p in productInventory.ListProducts())
+        {
+            switch (selectedCategory)
+            {
+                case "All":
+                    filteredProducts.Add(p);
+                    break;
+                
+                case "Engine":
+                    if (p.EngineDetail != null)
+                    {
+                        filteredProducts.Add(p);
+                    }
+
+                    break;
+
+                case "Rim":
+                    if (p.RimDetail != null)
+                    {
+                        filteredProducts.Add(p);
+                    }
+
+                    break;
+
+                case "Lights":
+                    if (p.LightsDetail != null)
+                    {
+                        filteredProducts.Add(p);
+                    }
+
+                    break;
+
+            }
+
+        }
+        return filteredProducts;
+    }
+
     public double GetCartTotal(int userId)
     {
         throw new NotImplementedException();
