@@ -1,7 +1,7 @@
 using Application.Menus;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
-using TestAutoKonfigurator.Session;
+using PimpYourBlech_ClassLibrary.Session;
 
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 

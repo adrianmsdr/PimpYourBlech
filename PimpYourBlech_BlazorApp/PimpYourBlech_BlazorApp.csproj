@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PimpYourBlech_ClassLibrary\PimpYourBlech_ClassLibrary.csproj" />
-      <ProjectReference Include="..\PimpYourBlech_ConsoleProgramm\PimpYourBlech_ConsoleProgramm.csproj" />
     </ItemGroup>
 
     <ItemGroup>
