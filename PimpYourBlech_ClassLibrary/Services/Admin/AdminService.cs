@@ -2,6 +2,7 @@ using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Exceptions;
 using PimpYourBlech_ClassLibrary.Inventories;
+using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 
 namespace PimpYourBlech_ClassLibrary.Services.Admin;
 
@@ -11,12 +12,14 @@ public class AdminService:IAdminService
     private readonly ICustomerInventory customerRepository;
     private readonly IProductInventory productRepository;
     private readonly ICarInventory carRepository;
+    private readonly IEmailService emailService;
    
-    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car)
+    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car,  IEmailService email)
     {
         customerRepository  = costumers;
         productRepository = products;
         carRepository = car;
+        emailService = email;
     }
 
     public List<Customer> GetListCustomers()
@@ -36,6 +39,7 @@ public class AdminService:IAdminService
         customer.Telefon = telefon;
         customer.MailAddress = mailAddress;
         customerRepository.InsertCustomer(customer);
+        emailService.SendRegistrationEmail(customer);
         return customer;
     }
     

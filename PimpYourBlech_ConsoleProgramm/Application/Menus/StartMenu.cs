@@ -88,7 +88,7 @@ public class StartMenu(IAdminService service, IUserSession  userSession )
 
                 try
                 {
-                    EmailServices.IsValid(mailAddress);
+                    EmailService.IsValid(mailAddress);
 
                     PrintHeader();
                     Console.Write("E-Mail Benutzername bestätigen: ");
@@ -99,7 +99,7 @@ public class StartMenu(IAdminService service, IUserSession  userSession )
                     string domain2 = (Console.ReadLine() ?? "").Trim();
 
                     string confirm = $"{user2}@{domain2}";
-                    EmailServices.ConfirmRegistrationChecker(mailAddress, confirm);
+                    EmailService.ConfirmRegistrationChecker(mailAddress, confirm);
                     runningEmailRegistration = false;
                 }
                 catch (WrongInputException ex)

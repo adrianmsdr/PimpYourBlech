@@ -11,8 +11,8 @@ using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    [Migration("20251129001521_AddProductDetails")]
-    partial class AddProductDetails
+    [Migration("20251130171231_initialcreate")]
+    partial class initialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

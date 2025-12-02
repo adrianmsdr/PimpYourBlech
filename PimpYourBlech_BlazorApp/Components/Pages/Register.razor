@@ -99,8 +99,8 @@
         // Email wird auf Korrektheit geprüft
         try
         {
-            EmailServices.IsValid(email);
-            EmailServices.ConfirmRegistrationChecker(email, emailConfirm);
+            EmailService.IsValid(email);
+            EmailService.ConfirmRegistrationChecker(email, emailConfirm);
         }
         catch (WrongInputException ex)
         {

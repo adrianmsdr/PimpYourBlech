@@ -48,7 +48,7 @@ public class AddCustomerMenu(
 
                 try
                 {
-                    EmailServices.IsValid(mailAddress);
+                    EmailService.IsValid(mailAddress);
 
                     PrintHeader();
                     Console.Write("E-Mail Benutzername bestätigen: ");
@@ -59,7 +59,7 @@ public class AddCustomerMenu(
                     string domain2 = (Console.ReadLine() ?? "").Trim();
 
                     string confirm = $"{user2}@{domain2}";
-                    EmailServices.ConfirmRegistrationChecker(mailAddress, confirm);
+                    EmailService.ConfirmRegistrationChecker(mailAddress, confirm);
                     break;
                 }
                 catch (WrongInputException ex)
