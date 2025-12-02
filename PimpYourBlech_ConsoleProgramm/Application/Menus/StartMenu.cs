@@ -4,8 +4,8 @@ using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Exceptions;
 using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
+using PimpYourBlech_ClassLibrary.Session;
 using TestAutoKonfigurator;
-using TestAutoKonfigurator.Session;
 
 namespace Application.Menus;
 

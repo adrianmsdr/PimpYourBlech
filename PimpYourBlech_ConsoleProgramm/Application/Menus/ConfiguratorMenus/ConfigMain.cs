@@ -1,5 +1,5 @@
 using Application.Menus;
-using TestAutoKonfigurator.Session;
+using PimpYourBlech_ClassLibrary.Session;
 
 namespace TestAutoKonfigurator.Application.Menus.ConfiguratorMenus;
 

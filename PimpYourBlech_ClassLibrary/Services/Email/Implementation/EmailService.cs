@@ -4,7 +4,7 @@ using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Exceptions;
 using PimpYourBlech_ClassLibrary.ValueObjects;
 
-namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
+namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation;
 
 public class EmailService : IEmailService
 {
@@ -12,12 +12,12 @@ public class EmailService : IEmailService
     public void SendRegistrationEmail(Customer customer)
     {
         string subject = "Deine Registrierung bei PimpYourBlech";
-        string message = "Hallo " + customer.FirstName + ",\n" +
-                         "deine Registrierung bei PimpYourBlech war erfolgreich.\n" +
-                         "Viel Spaß beim Konfigurieren deiner Lieblingsfahrzeuge.\n" +
-                         "Schau gerne auch mal bei unserem Ersatzteileshop vorbei.\n" +
-                         "Bei fragen schau gerne in die FAQ oder kontaktiere uns direkt per mail über unser Kundenportal" +
-                         "und nun ist es Zeit dein Blech aufzupimpen 😉";
+        string message = "Hallo " + customer.FirstName + ",\n\n" +
+            "dein Account bei PimpYourBlech wurde erfolgreich erstellt.\n" +
+            "Du kannst dich jetzt einloggen und direkt loslegen.\n\n" +
+            "Falls du dich nicht registriert hast: Dann war vermutlich jemand besonders begeistert von unserem System.\n" +
+            "Ignorier die Mail einfach oder gib uns kurz Bescheid.\n\n" +
+            "Bis gleich in der Werkstatt!";
 
         using var client = new SmtpClient("smtp.gmail.com", 587)
             {

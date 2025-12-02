@@ -8,10 +8,11 @@ using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
+using PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Shop;
 using PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
-using TestAutoKonfigurator.Session;
-using TestAutoKonfigurator.Session.Implementation;
+using PimpYourBlech_ClassLibrary.Session;
+using PimpYourBlech_ClassLibrary.Session.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 

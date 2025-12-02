@@ -26,4 +26,8 @@
       <ProjectReference Include="..\PimpYourBlech_ClassLibrary\PimpYourBlech_ClassLibrary.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Session\Implementation\" />
+    </ItemGroup>
+
 </Project>

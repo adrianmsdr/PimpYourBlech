@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_ConsoleProgramm", "PimpYourBlech_ConsoleProgramm\PimpYourBlech_ConsoleProgramm.csproj", "{A72323A7-DCA4-417B-A0D0-71646B5ACFAF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_ClassLibrary", "PimpYourBlech_ClassLibrary\PimpYourBlech_ClassLibrary.csproj", "{B2DCDBE3-59D0-473E-AA64-A6A9EF0A9109}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_BlazorApp", "PimpYourBlech_BlazorApp\PimpYourBlech_BlazorApp.csproj", "{878E79D1-3263-470F-8527-F27BB6CEBE61}"
@@ -12,10 +10,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A72323A7-DCA4-417B-A0D0-71646B5ACFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A72323A7-DCA4-417B-A0D0-71646B5ACFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A72323A7-DCA4-417B-A0D0-71646B5ACFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A72323A7-DCA4-417B-A0D0-71646B5ACFAF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B2DCDBE3-59D0-473E-AA64-A6A9EF0A9109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2DCDBE3-59D0-473E-AA64-A6A9EF0A9109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2DCDBE3-59D0-473E-AA64-A6A9EF0A9109}.Release|Any CPU.ActiveCfg = Release|Any CPU

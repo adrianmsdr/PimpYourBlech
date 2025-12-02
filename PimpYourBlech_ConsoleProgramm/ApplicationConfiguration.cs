@@ -6,9 +6,9 @@ using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
+using PimpYourBlech_ClassLibrary.Session;
+using PimpYourBlech_ClassLibrary.Session.Implementation;
 using TestAutoKonfigurator;
-using TestAutoKonfigurator.Session;
-using TestAutoKonfigurator.Session.Implementation;
 
 
 public static class ApplicationConfiguration

@@ -1,11 +1,10 @@
-using Application.Menus;
 using PimpYourBlech_ClassLibrary.Entities;
 
-namespace TestAutoKonfigurator.Session;
+namespace PimpYourBlech_ClassLibrary.Session;
 
 public interface IUserSession
 {
-    public Screens CurrentScreen { get; set; }
+
 
     public Customer  CurrentUser { get; set; }
     
