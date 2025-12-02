@@ -5,6 +5,7 @@ using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
+using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 using TestAutoKonfigurator;
 using TestAutoKonfigurator.Session;
 using TestAutoKonfigurator.Session.Implementation;
@@ -31,7 +32,9 @@ public static class ApplicationConfiguration
         // Fahrzeuginventar wird erstellt (geladen), Zugriff erfolgt über Schnittstelle ICarInventory die wir durch den getter aus der Factory erhalten 
         var carInventory = fac.GetCarInventory(); 
         
-        IAdminService adminService = new AdminService(customerInventory, productInventory, carInventory);
+        IEmailService  emailService = new EmailService();
+        
+        IAdminService adminService = new AdminService(customerInventory, productInventory, carInventory, emailService);
         
         //Benutzer Session wird erzeugt
         IUserSession userSession = new UserSession();
