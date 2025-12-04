@@ -21,7 +21,13 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     {
         return database.Products.ToList();
     }
-    
+
+    public void DeleteProduct(Product p)
+    {
+       database.Products.Remove(p);
+       database.SaveChanges();
+    }
+
     // _____________________________________ nur für die konsole erstmal __________________________________________
 
     
