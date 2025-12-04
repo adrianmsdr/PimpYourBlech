@@ -1,8 +1,9 @@
-@page "/adminCustomers"
+@page "/admin/customers"
 @using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
+@inject NavigationManager Nav
 @rendermode InteractiveServer
 
 <h3>Kunden verwalten</h3>
@@ -20,7 +21,8 @@
     <tbody>
     @foreach (var c in customers)
     {
-        <tr>
+        <tr @onclick="@(() => Nav.NavigateTo($"/admin/customers/{c.Id}"))"
+            style="cursor: pointer">
             <td>@c.FirstName</td>
             <td>@c.LastName</td>
             <td>@c.Username</td>

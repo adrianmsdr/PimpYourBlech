@@ -1,4 +1,4 @@
-@page "/adminProducts"
+@page "/admin/products"
 @rendermode InteractiveServer
 
 @using PimpYourBlech_ClassLibrary.Entities
@@ -19,13 +19,14 @@
     </thead>
 
     <tbody>
-    @foreach (var c in products)
+    @foreach (var p in products)
     {
-        <tr>
-            <td>@c.ArticleNumber</td>
-            <td>@c.Name</td>
-            <td>@c.Brand</td>
-            <td>@c.Quantity</td>
+        <tr @onclick="@(() => Nav.NavigateTo($"/admin/cars/{p.ProductId}"))"
+            style="cursor: pointer;">
+            <td>@p.ArticleNumber</td>
+            <td>@p.Name</td>
+            <td>@p.Brand</td>
+            <td>@p.Quantity</td>
         </tr>
     }
     </tbody>

@@ -174,7 +174,20 @@ public class AdminService:IAdminService
         customerRepository.UpdateCustomers();
 
     }
-
+    
+    public Customer GetCustomerById(int id)
+    {
+        Customer temp = null;
+        foreach (Customer c in customerRepository.ListCustomers())
+        {
+            if (c.Id == id)
+            {
+                temp = c;
+            }
+        }
+        return temp;
+    }
+    
     
     // ___________________________________Poducts____________________________________
     public Product CreateProduct(string name, string articleNumber, string brand, int quantity, double price, ProductType productType)
@@ -241,6 +254,25 @@ public class AdminService:IAdminService
 
     */
 
+    public Product GetProductById(int id)
+    {
+        Product temp = null;
+        foreach (Product p in productRepository.ListProducts())
+        {
+            if (p.ProductId == id)
+            {
+                temp = p;
+            }
+        }
+        return temp;
+    }
+
+    public void DeleteProduct(Product p)
+    {
+        productRepository.DeleteProduct(p);
+
+    }
+
     // ___________________________________Cars____________________________________
 
 
@@ -262,5 +294,23 @@ public class AdminService:IAdminService
         c.Price = price;
         carRepository.InsertCar(c);
         return c;
+    }
+    
+    public Car GetCarById(int id)
+    {
+        Car temp = null;
+        foreach (Car c in carRepository.ListCars())
+        {
+            if (c.Id == id)
+            {
+                temp = c;
+            }
+        }
+        return temp;
+    }
+
+    public void DeleteCar(Car car)
+    {
+        carRepository.DeleteCar(car);
     }
 }
