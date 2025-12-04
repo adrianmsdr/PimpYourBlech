@@ -20,6 +20,7 @@ public sealed class ConfiguratorContext : DbContext
     public DbSet<EngineDetail> Engines { get; set; }
     public DbSet<RimDetail> Rims { get; set; }
     public DbSet<LightsDetail> Lights { get; set; }
+    public DbSet<Order> Orders { get; set; }
     
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
