@@ -34,6 +34,7 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     public void DeleteCustomer(Customer c)
     {
         database.Customers.Remove(c);
+        database.SaveChanges();
     }
 
     public void UpdateCustomer(Customer c,String username, String passwordHash, String telefon)

@@ -31,13 +31,23 @@ public interface IAdminService
     public void UpdateCustomer(Customer customer, String username, String passwordHash, String telefon);
 
     void UpdateCustomers();
+    
+    Customer GetCustomerById(int id);
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
      Product CreateProduct(string name, string articleNumber, string brand, int quantity, double price,ProductType productType);
 
      public Product RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear);
+     
+     Product GetProductById(int id);
+   
+     void DeleteProduct(Product p);
    // ___________________________________Cars____________________________________
   List<Car> GetCars();
    
    Car RegisterCar(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price);
+   
+   Car GetCarById(int id);
+   
+   void DeleteCar(Car car);
 }
