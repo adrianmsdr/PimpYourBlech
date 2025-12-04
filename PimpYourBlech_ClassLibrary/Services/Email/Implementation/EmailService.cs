@@ -8,7 +8,6 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementati
 
 public class EmailService : IEmailService
 {
-    
     public void SendRegistrationEmail(Customer customer)
     {
         string subject = "Deine Registrierung bei PimpYourBlech";
@@ -35,9 +34,8 @@ public class EmailService : IEmailService
       
             var addr = new EmailAddress(email);
             return true;
-       
-
-}
+            
+    }
 
     public static bool ConfirmRegistrationChecker(String mailAddress, string confirm)
     {
@@ -49,6 +47,25 @@ public class EmailService : IEmailService
         return true;
     }
 
-   
-    
+    public void SendOrderReplyEmail(Customer customer/*,Order order*/)
+    {
+        string subject = "Deine Bestellung bei PimpYourBlech";
+        string message = "Hallo " + customer.FirstName + ",\n\n" +
+                         "deine Bestellung bei PimpYourBlech war erfolgreich.\n" +
+                         "Du kannst deine Bestellungen auch jederzeit in deinem Profil verwalten.\n\n" +
+                         "Bestellübersicht:"/* +
+                         order.ShowProducts()*/
+            ;
+
+        using var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential("pimpyourblech@gmail.com", "yswx nobp xhgk sjzv")
+            }
+            ;
+
+        using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
+            to: customer.MailAddress, subject,message);
+        client.Send(mail);
+    }
 }
