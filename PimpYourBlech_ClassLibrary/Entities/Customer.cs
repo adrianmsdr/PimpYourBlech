@@ -7,7 +7,7 @@ public class Customer ()
     
     //Getter/Setter
     public int Id { get; set; }
-    public List<Configuration> Configurations { get; set; } 
+    public List<Configuration> Configurations { get; set; } = new List<Configuration>();
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }

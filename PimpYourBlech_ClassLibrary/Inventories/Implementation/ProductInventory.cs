@@ -33,16 +33,11 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     
     public List<Product> ListEngines()
     {
-        var engines = new List<Product>();
-        foreach (Product product in database.Products)
-        {
-            if (product is EngineDetail)
-            {
-                engines.Add(product);
-            }
-        }
-        return engines;
+        return database.Products
+            .Where(p => p.EngineDetail != null)
+            .ToList();
     }
+
 
     
 }

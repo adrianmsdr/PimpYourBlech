@@ -3,7 +3,7 @@ using PimpYourBlech_ClassLibrary.Entities;
 
 namespace PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 
-public sealed class ConfiguratorContext : DbContext
+public sealed class ConfiguratorContext : DbContext, IDatabase
 {
     public ConfiguratorContext() { }
 
@@ -15,6 +15,8 @@ public sealed class ConfiguratorContext : DbContext
     // definition der Datenbank Tabellen
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
+    public int SaveChanges() => base.SaveChanges();
+
     public DbSet<Car> Cars { get; set; }
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<EngineDetail> Engines { get; set; }

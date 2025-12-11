@@ -198,4 +198,5 @@ Temporary Items
 
 # Fahrzeugbilder lokal generiert
 
-wwwroot/CarImages/
+PimpYourBlech_BlazorApp/wwwroot/CarImages/
+PimpYourBlech_BlazorApp/wwwroot/ProductImages/
