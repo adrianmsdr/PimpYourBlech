@@ -1,4 +1,5 @@
 @page "/adminProducts/new"
+@using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Admin
@@ -6,6 +7,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 @inject IAdminService AdminService
+@inject IImageService ImageService
 
 
 
@@ -93,21 +95,77 @@
 
     </div>
 
+}else if (selectedProductType == "Felge")
+{
+    <div class="mb-3">
+        <input class="form-control"
+               placeholder="Durchmesser(Zoll)..."
+               @bind="diameter"/>
+    </div>
+    
+
+    <div class="mb-3">
+        <input class = "form-control"
+               placeholder="Breite(Zoll)..."
+               @bind="width"/>
+
+    </div>
+
 }
 
+else if (selectedProductType == "Lichtanlage")
+{
+    <div class="mb-3">
+        <input class="form-control"
+               placeholder="Lumen..."
+               @bind="lumen"/>
+    </div>
+    
 
+    <div class="mb-3">
+        <span class="me-2">LED?:</span>
+
+        <select class="form-select me-2" style="width:auto"
+                @bind="isLED">
+            <option value="True">Ja</option>
+            <option value="False">Nein</option>
+        </select>
+
+    </div>
+
+}
+
+<div class="mb-3">
+    <label><strong>Produktbild auswählen:</strong></label>
+    <InputFile OnChange="HandleProductImageSelected" accept="image/*" />
+    
+    @if (uploadedProductImage != null)
+    {
+        <div class="text-muted mt-1">1 Bild ausgewählt: @uploadedProductImage.Name</div>
+    }
+</div>
 
 <br />
 <div class="d-flex gap-2">
-<button class="btn btn-primary" @onclick="RegisterProduct">Produkt hinzufügen</button>
-<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+    <button class="btn btn-primary" @onclick="RegisterProduct">Produkt hinzufügen</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
 </div>
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(SuccessMessage))
+{
+    <div class="alert alert-success mt-3">@SuccessMessage</div>
+}
 
 @code {
 
     // Felder statt lokale Variablen in Schleifen
     private string selectedProductType = "Motor";
     private string selectedGear = "6-Gang Manuell";
+    private string isLED = "True";
     private string searchValue = string.Empty;
 
     private string name = "";
@@ -120,9 +178,20 @@
     private string kw = "";
     private string displacement = "";
 
+    private string diameter = "";
+    private string width = "";
+
+    private string lumen = "";
+    
+    private IBrowserFile? uploadedProductImage;
 
     private string ErrorMessage = "";
     private string SuccessMessage = "";
+    
+    private void HandleProductImageSelected(InputFileChangeEventArgs e)
+    {
+        uploadedProductImage = e.File; // 
+    }
 
     private void RegisterProduct()
     {
@@ -166,6 +235,7 @@
                 
         }
         
+        Product p = AdminService.CreateProduct(name, articleNumber, brand, quantityValue, priceValue,productType);
 
         switch (productType)
         {
@@ -205,40 +275,57 @@
                         gear = Gear.EightAutomatic;
                         break;
                 }
-                Product p = AdminService.CreateProduct(name, articleNumber, brand, quantityValue, priceValue,productType);
                 p = AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear);
-                SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
                 break;
 
-           /* case ProductType.Rim:
-                if (rimDiameter == null || rimWidth == null)
+           case ProductType.Rim:
+                if (diameter == null || width == null)
                 {
                     ErrorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
                     return;
+                }if (!decimal.TryParse(diameter, out var diameterValue) || diameterValue < 0)
+                {
+                    ErrorMessage = "Durchmesser muss eine positive Zahl sein.";
+                    return;
+                }
+                if (!decimal.TryParse(width, out var widthValue) || widthValue < 0)
+                {
+                    ErrorMessage = "Breite muss eine positive Zahl sein.";
+                    return;
                 }
 
-                product.RimDetails = new RimDetails
-                {
-                    DiameterInInch = rimDiameter.Value,
-                    WidthInInch = rimWidth.Value
-                };
+                p = AdminService.RegisterRim(p, diameterValue, widthValue);
                 break;
 
-            case ProductType.Light:
-                if (lightLumen == null)
+            case ProductType.Lights:
+                if (lumen == null)
                 {
                     ErrorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
                     return;
                 }
-
-                product.LightDetails = new LightDetails
+                
+                if (!int.TryParse(lumen, out var lumenValue) || lumenValue < 0)
                 {
-                    Lumen = lightLumen.Value,
-                    IsLed = lightIsLed
-                };
-                break;*/
+                    ErrorMessage = "Lumen muss eine positive Ganzzahl sein.";
+                    return;
+                }
+
+                bool isLed = false;
+                switch (isLED)
+                {
+                    case "True":
+                        isLed = true;
+                        break;
+
+                    case "False":
+                        break;
+                }
+
+                p = AdminService.RegisterLights(p, lumenValue, isLed);
+                break;
         }
-       
+
+        ImageService.SaveProductImagesAsync(p.ProductId, uploadedProductImage);
         SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
 
      
