@@ -1,5 +1,6 @@
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Inventories;
+using PimpYourBlech_ClassLibrary.Inventories.Implementation;
 
 namespace PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 
@@ -26,6 +27,20 @@ public class ConfiguratorService(ICustomerInventory customers, IProductInventory
         customer.Configurations.Add(config);
         SaveConfigurations();
         return config;
+    }
+
+    public Car GetCarById(int carId)
+    {
+        Car copy = new Car();
+
+        foreach (Car c in carInventory.ListCars())
+        {
+            if (c.Id == carId)
+            {
+                copy = c;
+            }
+        }
+        return copy;
     }
 
     public void AddProduct(Configuration configuration, Product product)

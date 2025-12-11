@@ -4,7 +4,7 @@ namespace PimpYourBlech_ClassLibrary.Services.Configurator;
 
 public interface IConfiguratorService
 {
-    
+    Car GetCarById(int carId);
     // Konfiguration starten
     Configuration StartNewConfiguration(Customer customer, Car car,string name);
     

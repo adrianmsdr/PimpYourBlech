@@ -1,0 +1,152 @@
+@page "/configurator/{id:int}"
+@rendermode InteractiveServer
+
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation
+@inject IImageService ImageService
+@inject IConfiguratorService ConfiguratorService
+
+
+@*
+- Auto wählen
+- Konfiguration eigenen Namen geben
+- Möglichkeiten anzeigen das Auto zu Konfigurieren
+- Preis berechnen
+- zurücksetzen
+- undo?
+- Konfiguration speichern
+- Konfiguration löschen
+- evtl. Direkt mit anderen vergleich
+- Konfiguration umbenennen
+*@
+<h3>Konfigurator</h3>
+
+<div class="config-preview">
+    @if (frameUrls.Count > 0)
+    {
+        <!-- 360°-Ansicht -->
+        <div class="car-360-wrapper">
+            <img src="@frameUrls[currentFrame]"
+                 alt="360°-Ansicht @Car?.Name"
+                 class="car-360-image" />
+
+            <div class="car-360-controls">
+                <button class="btn btn-secondary btn-sm" @onclick="RotateLeft">⟵</button>
+                <span>@(currentFrame + 1) / @frameUrls.Count</span>
+                <button class="btn btn-secondary btn-sm" @onclick="RotateRight">⟶</button>
+            </div>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(CurrentImageUrl))
+    {
+        <!-- normales Einzelbild -->
+        <img src="@CurrentImageUrl"
+             alt="Preview"
+             style="width:100%; height:100%; object-fit:contain;">
+    }
+    else
+    {
+        <!-- dein Platzhalter -->
+        <div class="placeholder-text">
+            Hier kommt unser 3D-Modell oder ein Bild vom aktuellen Konfigurationszustand rein
+        </div>
+    }
+</div>
+
+<div class="card p-3 mt-3">
+    <p><strong>Name:</strong> @Car?.Name</p>
+    <p><strong>Hersteller:</strong> @Car?.Brand</p>
+    <p><strong>Modell:</strong> @Car?.Model</p>
+    <p><strong>Preis:</strong> @Car?.Price</p>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    public Car? Car { get; set; }
+
+    // Fallback für „normales“ Bild (falls du irgendwann eins in der DB hast)
+    private string? CurrentImageUrl;
+
+    // 360°-Frames
+    private List<string> frameUrls = new();
+    private int currentFrame = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Auto laden
+        Car = ConfiguratorService.GetCarById(Id);
+
+        if (Car is null)
+            return;
+
+        // 360°-Bilder holen
+        frameUrls = ImageService.GetFrameUrls(Car.Id);
+
+        // Nur falls du zusätzlich noch ein Einzelbild hast
+        // (aktuell gibst du es ja beim Anlegen als imageUrl mit):
+        /*if (string.IsNullOrWhiteSpace(CurrentImageUrl) && !string.IsNullOrWhiteSpace(Car.ImagePath))
+        {
+            CurrentImageUrl = Car.ImagePath.StartsWith("/")
+                ? Car.ImagePath
+                : "/" + Car.ImagePath;
+        }
+        */
+    }
+
+    private void RotateLeft()
+    {
+        if (frameUrls.Count == 0) return;
+        currentFrame = (currentFrame - 1 + frameUrls.Count) % frameUrls.Count;
+    }
+
+    private void RotateRight()
+    {
+        if (frameUrls.Count == 0) return;
+        currentFrame = (currentFrame + 1) % frameUrls.Count;
+    }
+}
+
+<style>
+
+    .car-360-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .car-360-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .car-360-controls {
+        margin-top: 0.5rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        justify-content: center;
+    }
+    .config-preview {
+        width: 1000px;
+        height: 500px;
+        border: 2px dashed #aaa;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f5f5f5;
+    }
+
+    .placeholder-text {
+        color: #777;
+        font-size: 1.2rem;
+    }
+    
+</style>

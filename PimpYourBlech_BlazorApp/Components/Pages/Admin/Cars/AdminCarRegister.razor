@@ -1,0 +1,181 @@
+﻿@page "/admin/cars/new"
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Enums
+@using PimpYourBlech_ClassLibrary.Services.Admin
+
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject IAdminService AdminService
+@inject IImageService ImageService
+
+<h3>Neues Fahrzeug hinzufügen:</h3>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Name..."
+           @bind="name"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Produktionsjahr..."
+           @bind="dateProduction"/>
+</div>
+
+
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Erstzulassung..."
+           @bind="datePermit"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Hersteller..."
+           @bind="brand"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Modell..."
+           @bind="model"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="PS..."
+           @bind="ps"/>
+</div>
+
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Häufigkeit..."
+           @bind="quantity"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Preis..."
+           @bind="price"/>
+</div>
+
+<div class="mb-3">
+    <input class="form-control"
+           placeholder="Bild..."
+           @bind="imageUrl"/>
+</div>
+
+<div class="mb-3">
+    <label><strong>360° Bilder auswählen (mehrere möglich):</strong></label>
+    <InputFile OnChange="HandleFilesSelected" multiple accept="image/*" />
+    @if (uploadedFiles.Count > 0)
+    {
+        <div class="text-muted mt-1">@uploadedFiles.Count Bild(er) ausgewählt.</div>
+    }
+</div>
+
+<br />
+<div class="d-flex gap-2">
+<button class="btn btn-primary" @onclick="RegisterCar">Fahrzeug hinzufügen</button>
+<button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(SuccessMessage))
+{
+    <div class="alert alert-success mt-3">@SuccessMessage</div>
+}
+
+@code {
+    private string name = "";
+    private string dateProduction;
+    private string datePermit;
+    private string brand = "";
+    private string ps = "";
+    private string model;
+    private string quantity = "";
+    private string price = "";
+    private string imageUrl = "";
+
+    // Wird gesetzt, wenn der Admin Dateien auswählt
+    private IReadOnlyList<IBrowserFile> uploadedFiles = Array.Empty<IBrowserFile>();
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    // Wird ausgelöst, wenn der Admin Dateien auswählt:
+    private void HandleFilesSelected(InputFileChangeEventArgs e)
+    {
+        uploadedFiles = e.GetMultipleFiles(24); // mehrere Bilder speichern
+        Console.WriteLine($"HandleFilesSelected: {uploadedFiles.Count} Datei(en) gewählt.");
+    }
+    
+    private async Task RegisterCar()
+    {
+        ErrorMessage = "";
+        SuccessMessage = "";
+        
+        
+        if (string.IsNullOrWhiteSpace(name) ||
+            string.IsNullOrWhiteSpace(model))
+        {
+            ErrorMessage = "Name und Artikelnummer dürfen nicht leer sein.";
+            return;
+        }
+
+        if (!int.TryParse(quantity, out var quantityValue) || quantityValue < 0)
+        {
+            ErrorMessage = "Bestand muss eine positive Ganzzahl sein.";
+            return;
+        }
+
+        if (!double.TryParse(price, out var priceValue) || priceValue < 0)
+        {
+            ErrorMessage = "Preis muss eine positive Zahl sein.";
+            return;
+        }
+
+              
+        if (!int.TryParse(ps, out var psValue) || psValue < 0)
+        {
+            ErrorMessage = "PS muss eine positive Ganzzahl sein.";
+            return;
+        }
+
+        // Auto in DB speichern → AdminService bestimmt Car.Id
+        Car car = AdminService.RegisterCar(
+            name, dateProduction, datePermit, brand, model, psValue,
+            quantityValue, priceValue
+        );
+
+        // Falls Bilder ausgewählt → speichern
+        try
+        {
+            if (uploadedFiles.Count > 0)
+            {
+                var folder = await ImageService.SaveFramesAsync(car.Id, uploadedFiles);
+                Console.WriteLine($"Bilder gespeichert im Ordner: {folder}");
+                // optional: car.ImageFolderPath = folder; AdminService.UpdateCar(car);
+            }
+
+            SuccessMessage = "Fahrzeug erfolgreich hinzugefügt.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Fehler beim Speichern der Bilder: {ex.Message}";
+            Console.WriteLine(ex);
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/");
+    }
+}
