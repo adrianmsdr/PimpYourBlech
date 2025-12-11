@@ -1,10 +1,8 @@
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Inventories;
-using PimpYourBlech_ClassLibrary.Inventories.Implementation;
 
 namespace PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 
-//public class ConfiguratorService(ICustomerInventory customers, IProductInventory products, ICarInventory cars):IConfiguratorService
 public class ConfiguratorService : IConfiguratorService
 {
 
@@ -24,50 +22,29 @@ public class ConfiguratorService : IConfiguratorService
     }
     public Configuration StartNewConfiguration(Customer customer, Car car,string name)
     {
-        
-        //Auto kopieren
-        var copy = new Car()
-        {
-            Id = car.Id,
-            Name = car.Name,
-            DateProduction = car.DateProduction,
-            DatePermit = car.DatePermit,
-            Brand = car.Brand,
-            Model = car.Model,
-            PS = car.PS,
-            Quantity = car.Quantity,
-            Price = car.Price,
-        };
-            
-            var config = new Configuration
+        var config = new Configuration
         {
             Name = name,
-            Car = copy,
+            Car = car,
+            CustomerId = customer.Id,
         };
+       // customer.Configurations.Add(config);
+        _customerInventory.AddConfiguration(config);
         customer.Configurations.Add(config);
-        SaveConfigurations();
-        
         return config;
     }
-
+    public List<Configuration> GetAllConfigurationsForCustomer(int customerId)
+    {
+        return _customerInventory.GetConfigurationsForCustomer(customerId);
+    }
     public Car? GetCarById(int carId)
     {
         var c = carInventory.ListCars().FirstOrDefault(c => c.Id == carId);
 
         if (c == null) return null;
 
-        return new Car
-        {
-            Id = c.Id,
-            Name = c.Name,
-            DateProduction = c.DateProduction,
-            DatePermit = c.DatePermit,
-            Brand = c.Brand,
-            Model = c.Model,
-            PS = c.PS,
-            Quantity = c.Quantity,
-            Price = c.Price,
-        };
+        return c;
+
     }
     
     public void AddProduct(Configuration configuration, Product product)

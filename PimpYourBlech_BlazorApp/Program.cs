@@ -6,6 +6,7 @@ using PimpYourBlech_ClassLibrary.Inventories;
 using PimpYourBlech_ClassLibrary.Persistence;
 using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 using PimpYourBlech_ClassLibrary.Services.Admin;
+using PimpYourBlech_ClassLibrary.Services.Carts;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
@@ -61,6 +62,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
 builder.Services.AddScoped<IShopService, ShopService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 // 7) UserSession
 builder.Services.AddSingleton<IUserSession, UserSession>();

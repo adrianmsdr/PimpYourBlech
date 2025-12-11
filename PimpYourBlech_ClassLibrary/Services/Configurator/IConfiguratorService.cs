@@ -7,6 +7,8 @@ public interface IConfiguratorService
     Car GetCarById(int carId);
     // Konfiguration starten
     Configuration StartNewConfiguration(Customer customer, Car car,string name);
+
+    public List<Configuration> GetAllConfigurationsForCustomer(int customerId);
     
     // Fahrzeugteil zur Konfiguration hinzufügen
     void AddProduct(Configuration configuration, Product product);
