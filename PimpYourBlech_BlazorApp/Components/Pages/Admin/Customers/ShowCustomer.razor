@@ -5,6 +5,9 @@
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
 @inject NavigationManager Nav
+
+<PageTitle>Administrator/customers/@Id.ToString()</PageTitle>
+
 <h3>ShowCustomer</h3>
 @if (Customer == null)
 {
