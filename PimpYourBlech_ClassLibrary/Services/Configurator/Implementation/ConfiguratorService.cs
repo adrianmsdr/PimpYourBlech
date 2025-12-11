@@ -4,68 +4,110 @@ using PimpYourBlech_ClassLibrary.Inventories.Implementation;
 
 namespace PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 
-public class ConfiguratorService(ICustomerInventory customers, IProductInventory products, ICarInventory cars):IConfiguratorService
+//public class ConfiguratorService(ICustomerInventory customers, IProductInventory products, ICarInventory cars):IConfiguratorService
+public class ConfiguratorService : IConfiguratorService
 {
 
-    private readonly ICustomerInventory _customerInventory = customers;
-    private readonly IProductInventory productInventory = products;
-    private readonly ICarInventory carInventory = cars;
+    private readonly ICustomerInventory _customerInventory;
+    private readonly IProductInventory productInventory;
+    private readonly ICarInventory carInventory;
+
+    public ConfiguratorService(
+        ICustomerInventory customers,
+        IProductInventory products,
+        ICarInventory cars
+    )
+    {
+        _customerInventory = customers;
+        productInventory = products;
+        carInventory = cars;
+    }
     public Configuration StartNewConfiguration(Customer customer, Car car,string name)
     {
-        Car copy = new Car();
-        copy.Name = car.Name;
-        copy.DateProduction = car.DateProduction;
-        copy.DatePermit = car.DatePermit;
-        copy.Brand = car.Brand;
-        copy.Model = car.Model;
-        copy.PS = car.PS;
-        copy.Quantity = car.Quantity;
-        copy.Price = car.Price;
-        Configuration config = new Configuration();
-        config.Name = name;
-        config.Car = car;
+        
+        //Auto kopieren
+        var copy = new Car()
+        {
+            Id = car.Id,
+            Name = car.Name,
+            DateProduction = car.DateProduction,
+            DatePermit = car.DatePermit,
+            Brand = car.Brand,
+            Model = car.Model,
+            PS = car.PS,
+            Quantity = car.Quantity,
+            Price = car.Price,
+        };
+            
+            var config = new Configuration
+        {
+            Name = name,
+            Car = copy,
+        };
         customer.Configurations.Add(config);
         SaveConfigurations();
+        
         return config;
     }
 
-    public Car GetCarById(int carId)
+    public Car? GetCarById(int carId)
     {
-        Car copy = new Car();
+        var c = carInventory.ListCars().FirstOrDefault(c => c.Id == carId);
 
-        foreach (Car c in carInventory.ListCars())
+        if (c == null) return null;
+
+        return new Car
         {
-            if (c.Id == carId)
-            {
-                copy = c;
-            }
-        }
-        return copy;
+            Id = c.Id,
+            Name = c.Name,
+            DateProduction = c.DateProduction,
+            DatePermit = c.DatePermit,
+            Brand = c.Brand,
+            Model = c.Model,
+            PS = c.PS,
+            Quantity = c.Quantity,
+            Price = c.Price,
+        };
     }
-
+    
     public void AddProduct(Configuration configuration, Product product)
     {
-        throw new NotImplementedException();
+        configuration.Products.Add(product);
+        SaveConfigurations();
     }
-
+    
     public void RemoveProduct(Configuration configuration, Product product)
     {
-        throw new NotImplementedException();
+        configuration.Products.Remove(product);
+        SaveConfigurations();
     }
 
+    //Preisberechnung
     public double CalculateTotalPrice(Configuration configuration)
     {
-        throw new NotImplementedException();
+        double carPrice = configuration.Car?.Price ?? 0;
+        double productTotal = configuration.Products.Sum(p => p.Price);
+        
+        return carPrice + productTotal;
     }
 
+    //Config Speicher
     public void SaveConfiguration(Configuration configuration)
     {
-        throw new NotImplementedException();
+        SaveConfigurations();
     }
 
+    public void SaveConfiguration(Configuration configuration, Customer customer)
+    {
+        if (!customer.Configurations.Contains(configuration))
+            customer.Configurations.Add(configuration);
+        
+        SaveConfigurations();
+    }
     public void DeleteConfiguration(Configuration configuration, Customer customer)
     {
             customer.Configurations.Remove(configuration);
+            SaveConfigurations();
         
     }
 
@@ -74,10 +116,7 @@ public class ConfiguratorService(ICustomerInventory customers, IProductInventory
         return customer.Configurations;
     }
 
-    public void SaveConfiguration(Configuration configuration, Customer customer)
-    {
-        throw new NotImplementedException();
-    }
+   
 
     public void SaveConfigurations()
     {
