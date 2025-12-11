@@ -8,6 +8,7 @@
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 @inject IImageService ImageService
+<PageTitle>Administrator/cars/new</PageTitle>
 
 <h3>Neues Fahrzeug hinzufügen:</h3>
 
@@ -113,7 +114,7 @@
     // Wird ausgelöst, wenn der Admin Dateien auswählt:
     private void HandleFilesSelected(InputFileChangeEventArgs e)
     {
-        uploadedFiles = e.GetMultipleFiles(24); // mehrere Bilder speichern
+        uploadedFiles = e.GetMultipleFiles(40); // mehrere Bilder speichern
         Console.WriteLine($"HandleFilesSelected: {uploadedFiles.Count} Datei(en) gewählt.");
     }
     
