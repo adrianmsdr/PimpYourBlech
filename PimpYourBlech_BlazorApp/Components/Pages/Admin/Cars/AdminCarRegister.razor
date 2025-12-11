@@ -160,7 +160,7 @@
         {
             if (uploadedFiles.Count > 0)
             {
-                var folder = await ImageService.SaveFramesAsync(car.Id, uploadedFiles);
+                var folder = await ImageService.SaveCarFramesAsync(car.Id, uploadedFiles);
                 Console.WriteLine($"Bilder gespeichert im Ordner: {folder}");
                 // optional: car.ImageFolderPath = folder; AdminService.UpdateCar(car);
             }

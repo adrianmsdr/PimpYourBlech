@@ -25,7 +25,7 @@ public class ImageService: IImageService
         
         // Liest aus dem Ordner "wwwroot/CarImages/{carId}" alle Dateien aus
         // Dieser Ordner enthält die Bilder für ein bestimmtes Auto
-        public List<string> GetFrameUrls(int carId)
+        public List<string> GetCarFrameUrls(int carId)
         {
             // System-Pfad zum Ordner des Autos bauen
             // Beispiel:
@@ -53,9 +53,8 @@ public class ImageService: IImageService
         // Wichtig: Diese Methode arbeitet mit IBrowserFile
         // Das ist die Datenstruktur, die Blazor verwendet,
         // wenn ein Benutzer im Browser ein Bild hochlädt
-        public async Task<string> SaveFramesAsync(int carId, IReadOnlyList<IBrowserFile> files)
+        public async Task<string> SaveCarFramesAsync(int carId, IReadOnlyList<IBrowserFile> files)
         {
-            Console.WriteLine($"SaveFramesAsync: carId={carId}, files={files.Count}, webroot={_env.WebRootPath}");
             // vollständigen System-Pfad zum Autoordner bauen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
 
@@ -102,6 +101,53 @@ public class ImageService: IImageService
                 .Replace("\\", "/"); // wichtig für Windows
 
             return relativeFolder;
+        }
+
+        public string GetProductImageUrl(int productId)
+        {
+            // Ordner für das Produkt
+            var folder = Path.Combine(_env.WebRootPath, "ProductImages", productId.ToString());
+
+            if (!Directory.Exists(folder))
+                return "/no-image.png";
+
+            // erste Bilddatei holen
+            var file = Directory
+                .GetFiles(folder)
+                .OrderBy(f => f)
+                .FirstOrDefault();
+
+            if (file == null)
+                return "/no-image.png"; 
+
+            // Zu Web-URL umwandeln
+            return $"/ProductImages/{productId}/{Path.GetFileName(file)}";
+        }
+
+        public async Task<string> SaveProductImagesAsync(int productId, IBrowserFile file)
+        {
+            // Zielordner für das Produkt
+            var folder = Path.Combine(_env.WebRootPath, "ProductImages", productId.ToString());
+            Directory.CreateDirectory(folder);
+
+            // Dateiendung des Uploads übernehmen (.webp)
+            var extension = Path.GetExtension(file.Name);
+
+            // Fester Dateiname 
+            var fileName = "Product" + extension;
+
+            // Voller System-Pfad
+            var fullPath = Path.Combine(folder, fileName);
+
+            // Datei speichern
+            await using var fs = new FileStream(fullPath, FileMode.Create);
+            await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(fs);
+
+            // Web-URL zurückgeben
+            var relativePath = Path.Combine("ProductImages", productId.ToString(), fileName)
+                .Replace("\\", "/");
+
+            return "/" + relativePath;
         }
 
         public async Task DeleteCarImagesAsync(int carId)

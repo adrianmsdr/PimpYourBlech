@@ -3,9 +3,13 @@ using Microsoft.AspNetCore.Components.Forms;
 
 public interface IImageService
 {
-    List<string> GetFrameUrls(int carId);
+    List<string> GetCarFrameUrls(int carId);
     
-    Task<string> SaveFramesAsync(int carId, IReadOnlyList<IBrowserFile> files);
+    Task<string> SaveCarFramesAsync(int carId, IReadOnlyList<IBrowserFile> files);
+    
+    String GetProductImageUrl(int productId);
+    
+    Task<string> SaveProductImagesAsync(int productId, IBrowserFile file);
 
     Task DeleteCarImagesAsync(int carId);
 }

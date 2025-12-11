@@ -38,6 +38,10 @@ public interface IAdminService
      Product CreateProduct(string name, string articleNumber, string brand, int quantity, double price,ProductType productType);
 
      public Product RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear);
+     public Product RegisterRim(Product p, decimal diameter, decimal width);
+     
+     public Product RegisterLights(Product p, int lumen, bool isLED);
+     
      
      Product GetProductById(int id);
    
