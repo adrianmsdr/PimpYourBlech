@@ -1,16 +1,51 @@
 @page "/shop"
 @rendermode InteractiveServer
+@using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
-
+@using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
-
+@using PimpYourBlech_ClassLibrary.ValueObjects
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
+@inject ICartService CartService
 
-<h3>Ersatzteile - Shop</h3>
 
+<PageTitle>Shop</PageTitle>
+<h3 class="headline">Ersatzteile - Shop</h3>
+
+<button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
+    <ShoppingCartIcon></ShoppingCartIcon> Warenkorb
+</button>
+
+@if (IsOpen)
+{
+    <div class="overlay" @onclick="ToggleSidebar"></div>
+}
+
+<div class="sidebar @(IsOpen ? "open" : "")">
+    <div class="sidebar-header">
+        <h2>Warenkorb</h2>
+        <button class="close-btn" @onclick="ToggleSidebar">✕</button>
+    </div>
+
+    @if (CartService.CartProductsList == null || !CartService.CartProductsList.Any())
+    {
+        <div class="null-content">
+            <button class="menu-item">Keine Produkte vorhanden</button>
+        </div>
+    }
+    else
+    {
+        <div class="sidebar-content">
+            @foreach (var item in CartService.CartProductsList)
+            {
+                <button class="menu-item">@item.Name – @item.Price.ToString("C")</button>
+            }
+        </div>
+    }
+</div>
 @*
 Machen wir noch schön Bleibt nicht so aber im Prinzip holt der sich alle Produkte erstmal und zeigt sie mit
 ausgewählten infos + bild in so nem Kästchen wär noch schön
@@ -77,12 +112,13 @@ else
                     <h4>@product.Name</h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
+                    <button type="button" class="selectProduct" @onclick="() => CartService.AddProduct(product)">
+                        <BuyIcon></BuyIcon> Kaufen
+                    </button>
                 </div>
             </div>
         }
-   
     </div>
-            
 }
 
 @code {
@@ -90,6 +126,7 @@ else
     private string selectedCategory = "All";
     private string selectedSortOption = "NameAufsteigend";
     private string searchText = string.Empty;
+    
     // Damit wird die methode automatisch aufgerufen beim laden der seite (also alle produkte geholt)
     protected override void OnInitialized()
     {
@@ -101,9 +138,9 @@ else
     {
         products = ShopService.GetProducts();
     }
-    
-    
 
+  
+    
     private void ApplySearch()
     {
        products = ShopService.SearchProducts(searchText);
@@ -117,41 +154,192 @@ else
             ? "/images/placeholder.png"
             : p.ImageUrl;
     }
+    
+    private bool IsOpen = false;
 
+    private void ToggleSidebar()
+    {
+        IsOpen = !IsOpen;
+    }
+    
     // Führt zum Hauptmenü
     private void Cancel()
     {
         Nav.NavigateTo("/mainMenu");
     }
 }
+
 <style>
+.headline {
+    font-family: Bahnschrift;
+    color: white;
+    text-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+}    
+
 .product-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* responsive */
-gap: 1.5rem;
+    background-color: transparent;    
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* responsive */
+    gap: 1.5rem;
 }
 
 .product-card {
-border: 1px solid #ddd;
-border-radius: 8px;
-padding: 1rem;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-background: #fff;
+    color: white;    
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: #370202;
 }
 
 .product-image {
-width: 100%;
-height: 180px;
-object-fit: cover;
-display: block;
-border-radius: 4px;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
 }
 
 .product-info {
-margin-top: 0.75rem;
+    margin-top: 0.75rem;
 }
 
 .product-price {
-font-weight: bold;
+    font-weight: bold;
+}
+
+.GoToShoppingCart {
+    width: 140px;
+    height: 45px;
+    font-family: Bahnschrift;
+    font-size: 17px;
+    color: white;
+    background-color: #7a0000;
+    border-radius: 12px;
+    border: 2px solid #ff1a1a;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.selectProduct {
+    width: 100%;
+    height: 45px;
+    font-family: Bahnschrift;
+    font-size: 17px;
+    color: white;
+    background-color: #7a0000;
+    border-radius: 12px;
+    border: 2px solid #ff1a1a;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.selectProduct:hover {
+    transform: scale(1.1);
+    background-color: #b30000;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+}
+
+.selectProduct:active {
+    transform: scale(1.2);
+}
+
+.GoToShoppingCart:hover {
+    transform: scale(1.1);
+    background-color: #b30000;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+}
+
+.GoToShoppingCart:active {
+    transform: scale(1.2);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    height: 100%;
+    background: rgba(20, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-left: 2px solid rgba(255, 0, 0, 0.35);
+    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    transition: right 0.3s ease;
+}
+
+.sidebar.open {
+    right: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 0, 0, 0.35);
+}
+
+.sidebar-header h2 {
+    color: white;
+    margin: 0;
+    font-family: Bahnschrift;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    transition: 0.25s ease;
+}
+
+.close-btn:hover {
+    color: #ff3333;
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+.menu-item {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #7a0000;
+    color: white;
+    border: 2px solid rgba(255, 0, 0, 0.6);
+    border-radius: 8px;
+    font-family: Bahnschrift;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.menu-item:hover {
+    transform: scale(1.05);
+    background-color: #b30000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 </style>
