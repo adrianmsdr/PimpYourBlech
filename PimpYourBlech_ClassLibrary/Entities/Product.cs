@@ -17,6 +17,9 @@ public class Product
     
     public ProductType ProductType { get; set; }
     
+    // Many-to-Many
+    public List<Configuration> Configurations { get; set; } = new List<Configuration>();
+    
     public EngineDetail?  EngineDetail { get; set; }
     public RimDetail?  RimDetail { get; set; }
     public LightsDetail? LightsDetail { get; set; }

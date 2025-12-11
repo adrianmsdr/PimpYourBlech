@@ -59,8 +59,63 @@
     <p><strong>Name:</strong> @Car?.Name</p>
     <p><strong>Hersteller:</strong> @Car?.Brand</p>
     <p><strong>Modell:</strong> @Car?.Model</p>
-    <p><strong>Preis:</strong> @Car?.Price</p>
+    <p><strong>Preis:</strong> @Car?.Price EUR</p>
 </div>
+
+<h4 class="mt-4">Produkte</h4>
+
+@if (availableEngines.Count == 0)
+{
+    <p>Keine Produkte verfügbar.</p>
+}
+else
+{
+<div class="row">
+        @foreach (var product in availableEngines)
+        {
+            <div class="col-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5>@product.Name</h5>
+                        <p>@product.Brand</p>
+                        <p><strong>@product.Price</strong></p>
+                        
+                        <button class="btn btn-primary" @onclick="() => AddProduct(product)">
+                            Hinzufügen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (configuration != null)
+{
+    <h4 class="mt-4">Ausgewählte Produkte</h4>
+
+    @if (configuration.Products.Count == 0)
+    {
+        <p>Keine Produkte ausgewählt.</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var p in configuration.Products)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @p.Name (@p.Price €)
+                    <button class="btn btn-danger btn-sm" @onclick="() => RemoveProduct(p)">
+                        Entfernen
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+
+    <h4 class="mt-3">Gesamtpreis: @totalPrice €</h4>
+}
+
 
 @code {
     [Parameter] public int Id { get; set; }
@@ -74,26 +129,30 @@
     private List<string> frameUrls = new();
     private int currentFrame = 0;
 
+    private List<Product> availableEngines = new();
+    private Configuration? configuration;
+    private double totalPrice;
+
     protected override async Task OnInitializedAsync()
     {
         // Auto laden
         Car = ConfiguratorService.GetCarById(Id);
+        if (Car == null) return;
 
-        if (Car is null)
-            return;
-
-        // 360°-Bilder holen
+        // 360°-Bilder
         frameUrls = ImageService.GetCarFrameUrls(Car.Id);
 
-        // Nur falls du zusätzlich noch ein Einzelbild hast
-        // (aktuell gibst du es ja beim Anlegen als imageUrl mit):
-        /*if (string.IsNullOrWhiteSpace(CurrentImageUrl) && !string.IsNullOrWhiteSpace(Car.ImagePath))
+        // Konfiguration erstellen
+        configuration = new Configuration
         {
-            CurrentImageUrl = Car.ImagePath.StartsWith("/")
-                ? Car.ImagePath
-                : "/" + Car.ImagePath;
-        }
-        */
+            Car = Car,
+            Name = $"{Car.Brand} {Car.Model} Konfiguration"
+        };
+
+        // Produkte laden
+        availableEngines = ConfiguratorService.ListEngines();
+
+        UpdatePrice();
     }
 
     private void RotateLeft()
@@ -107,7 +166,30 @@
         if (frameUrls.Count == 0) return;
         currentFrame = (currentFrame + 1) % frameUrls.Count;
     }
+
+    private void AddProduct(Product product)
+    {
+        if (configuration == null) return;
+        configuration.Products.Add(product);
+        UpdatePrice();
+    }
+
+    private void RemoveProduct(Product product)
+    {
+        if (configuration == null) return;
+        configuration.Products.Remove(product);
+        UpdatePrice();
+    }
+
+    private void UpdatePrice()
+    {
+        if (configuration == null) return;
+        totalPrice = ConfiguratorService.CalculateTotalPrice(configuration);
+    }
 }
+
+
+
 
 <style>
 
