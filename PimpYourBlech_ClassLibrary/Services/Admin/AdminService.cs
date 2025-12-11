@@ -8,7 +8,6 @@ namespace PimpYourBlech_ClassLibrary.Services.Admin;
 
 public class AdminService:IAdminService
 {
-    
     private readonly ICustomerInventory customerRepository;
     private readonly IProductInventory productRepository;
     private readonly ICarInventory carRepository;
@@ -43,7 +42,6 @@ public class AdminService:IAdminService
         return customer;
     }
     
-
     public Customer Login(string username, string passwordHash)
     {
         throw new NotImplementedException();
@@ -218,41 +216,36 @@ public class AdminService:IAdminService
         return p;
     }
 
+    public Product RegisterRim(Product p, decimal diameter, decimal width)
+    {
+        RimDetail temp = new RimDetail();
+        temp.Product = p;
+        temp.DiameterInInch = diameter;
+        temp.WidthInInch = width;
+        p.RimDetail = temp;
+        productRepository.InsertProduct(p);
+        
+        return p;
+    }
+
+    public Product RegisterLights(Product p, int lumen, bool isLED)
+    {
+        LightsDetail temp = new LightsDetail();
+        temp.Product = p;
+        temp.Lumen = lumen;
+        temp.IsLed = isLED;
+        p.LightsDetail = temp;
+        productRepository.InsertProduct(p);
+        return p;
+    }
+
     public List<Product> GetProducts()
     {
         return productRepository.ListProducts();
     }
 
     
-/*
-    public EngineDetail RegisterEngine(string name,
-        string articleNumber,
-        string brand,
-        string description,
-        int quantity,
-        double price,
-        int _ps,
-        int _kw,
-        string _displacement,
-        Gear _gear)
-    {
-        EngineDetail engineDetail = new EngineDetail();
-        engineDetail.Name = name;
-        engineDetail.ArticleNumber = articleNumber;
-        engineDetail.Brand = brand;
-     //   engine.Description = description;
-        engineDetail.Quantity = quantity;
-        engineDetail.Price = price;
-        engineDetail.Ps = _ps;
-        engineDetail.Kw = _kw;
-        engineDetail.Displacement = _displacement;
-        engineDetail.Gear = _gear;
-        productRepository.InsertEngine(engineDetail);
-        
-        return engineDetail;
-    }
 
-    */
 
     public Product GetProductById(int id)
     {

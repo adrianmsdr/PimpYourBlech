@@ -121,7 +121,11 @@ else
     [Parameter] public int Id { get; set; }
 
     public Car? Car { get; set; }
+
+    // Fallback für „normales“ Bild (falls du irgendwann eins in der DB hast)
     private string? CurrentImageUrl;
+
+    // 360°-Frames
     private List<string> frameUrls = new();
     private int currentFrame = 0;
 
@@ -136,7 +140,7 @@ else
         if (Car == null) return;
 
         // 360°-Bilder
-        frameUrls = ImageService.GetFrameUrls(Car.Id);
+        frameUrls = ImageService.GetCarFrameUrls(Car.Id);
 
         // Konfiguration erstellen
         configuration = new Configuration
