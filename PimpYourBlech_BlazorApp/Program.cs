@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_BlazorApp.Components;
+using PimpYourBlech_BlazorApp.Services;
 using PimpYourBlech_ClassLibrary.Factories;
 using PimpYourBlech_ClassLibrary.Inventories;
 using PimpYourBlech_ClassLibrary.Persistence;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<ICarInventory>(sp =>
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
 builder.Services.AddScoped<IShopService, ShopService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 // 7) UserSession
 builder.Services.AddSingleton<IUserSession, UserSession>();

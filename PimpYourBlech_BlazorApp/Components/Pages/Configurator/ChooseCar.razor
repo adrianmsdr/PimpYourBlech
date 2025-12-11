@@ -1,0 +1,46 @@
+﻿@page "/configurator/ChooseCar"
+@rendermode InteractiveServer
+
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation
+@inject IConfiguratorService ConfiguratorService
+@inject NavigationManager Nav
+
+<h3>Fahrzeug wählen:</h3>
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Hersteller</th>
+        <th>Modell</th>
+        <th>Preis</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var c in cars)
+    {
+
+        <tr @onclick="@(() => Nav.NavigateTo($"/configurator/{c.Id}"))"
+            style="cursor: pointer;">
+            <td>@c.Name</td>
+            <td>@c.Brand</td>
+            <td>@c.Model</td>
+            <td>@c.Price</td>
+
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+
+    private List<Car> cars = new();
+
+
+    protected override void OnInitialized()
+    {
+        cars = ConfiguratorService.ListCars();
+    }
+}
