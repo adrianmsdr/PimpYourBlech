@@ -10,10 +10,15 @@
     </div>
 
     <div class="navbar-right">
+        @if (UserSession.CurrentUser == null)
+        {
+            <NavLink href="/aboutUs" class="nav-btn">Über uns</NavLink>
+            <NavLink href="/login" class="nav-btn">Anmelden</NavLink>
+        }else{
         
-        <NavLink href="/aboutUs" class="nav-btn">Über uns</NavLink>
-        <NavLink href="/" class="nav-btn">Startseite</NavLink>
-        <NavLink href="/login" class="nav-btn">Login</NavLink>
+            <NavLink href="/mainMenu" class="nav-btn">Hauptmenü</NavLink> 
+            <button class="nav-btn" @onclick="LogOut">Ausloggen</button>
+        }
     </div>
 </nav>
 
@@ -32,7 +37,12 @@
 </div>
 
 @code {
-    
+
+    public void LogOut()
+    {
+        UserSession.LogOut();
+        Nav.NavigateTo("/login");
+    }
 }
 
 <style>
@@ -41,6 +51,8 @@
         background-image: url("Wallpaper.png");
         background-size: cover;
         background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
     /* NAVBAR */
     .navbar {

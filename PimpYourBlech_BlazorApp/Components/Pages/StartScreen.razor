@@ -1,5 +1,4 @@
 ﻿@page "/"
-@rendermode InteractiveServer
 @inject NavigationManager Nav
 
 
@@ -10,8 +9,11 @@
 Willkommen bei Pimp Your Blech, deinem persönlichen Fahrzeugkonfigurator.
 
 @*Start - Knopf*@
-<div class="d-flex gap-2">
-    <button class="btn btn-primary" @onclick="StartProgramm">Start</button>
+<div class="menu-container">
+<div class="button-column">
+    <button class="buttons" @onclick="StartProgramm">Start</button>
+    
+</div>
 </div>
 
 @code

@@ -1,16 +1,17 @@
 @page "/adminMenu"
-@rendermode InteractiveServer
 @inject NavigationManager Nav
 <h3>Administrator</h3>
 
 <PageTitle>Administrator</PageTitle>
+<div class="menu-container">
 
-@*Buttons um Kundem, Produkte, Fahrzeuge und Bestellungen zu verwalten*@
-<button class="btn btn-primary" @onclick="GoToAdminCustomers">Kunden verwalten</button>
-<button class="btn btn-primary" @onclick="GoToAdminProducts">Produkte verwalten</button>
-<button class="btn btn-primary" @onclick="GoToAdminCars">Fahrzeuge verwalten</button>
-<button class="btn btn-primary" @onclick="GoToAdminOrders">Bestellungen verwalten</button>
-
+    <div class="button-column">
+        <button class="buttons" @onclick="GoToAdminCustomers">Kunden verwalten</button>
+        <button class="buttons" @onclick="GoToAdminProducts">Produkte verwalten</button>
+        <button class="buttons" @onclick="GoToAdminCars">Fahrzeuge verwalten</button>
+        <button class="buttons" @onclick="GoToAdminOrders">Bestellungen verwalten</button>
+    </div>
+</div>
 
 @code
 {
