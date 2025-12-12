@@ -1,7 +1,10 @@
 @page "/configurations"
 @using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
 @inject IUserSession UserSession
+@inject NavigationManager Nav
+@inject IConfiguratorService ConfiguratorService
 <PageTitle>Configurations</PageTitle>
 <h3>Deine Konfigurationen:</h3>
 
@@ -15,33 +18,49 @@ weil das hier ist noch 0 schön wenns läuft
     {
         <div class="alert alert-danger">@ErrorMessage</div>
     }
-    <ul>
-    @if (configurations != null)
-    {
+   
+    
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Auto</th>
+            <th>Anzahl Produkte</th>
+        </tr>
+        </thead>
+
+        <tbody>
         @foreach (var c in configurations)
         {
-            <li>@c.ToString()</li>
+            <tr @onclick="@(() => Nav.NavigateTo($"/configurations/{c.Id}"))"
+                style="cursor: pointer">
+                <td>@c.Name</td>
+                <td>@c.Car.Name</td>
+                <td>@c.Products.Count</td>
+            </tr>
         }
-    }
-    else
-    {
-        
-    }
-</ul>
-@code {
-    private List<Configuration> configurations = new();
-    private string ErrorMessage = "";
+        </tbody>
+    </table>
 
-    protected override void OnInitialized()
-    {
-        if (UserSession.CurrentUser.Configurations != null)
-        {
-            configurations = UserSession.CurrentUser.Configurations;
-        }
-        else
-        {
-            ErrorMessage = "Keine Konfigurationen vorhanden";
-        }
-    }
 
-}
+
+    @code {
+        private List<Configuration> configurations = new();
+        private string ErrorMessage = "";
+
+        protected override void OnInitialized()
+        {
+            
+            var customerId = UserSession.CurrentUser.Id;
+            if (customerId != null)
+            {
+                configurations = ConfiguratorService
+                    .GetAllConfigurationsForCustomer(customerId);
+            }
+            else
+            {
+                ErrorMessage = "Keine Konfigurationen vorhanden";
+            }
+        }
+
+    }

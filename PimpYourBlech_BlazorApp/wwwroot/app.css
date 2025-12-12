@@ -64,3 +64,74 @@ h1:focus {
     gap: 10px;          /* Abstand zwischen Buttons */
     margin-top: 10px;   /* Abstand nach oben */
 }
+
+/*Verschwommener Container für Menüs*/
+.menu-container {
+    margin: 0 auto;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    width: 55%;
+    padding: 30px;
+
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    border-radius: 18px;
+    border: 1px solid rgba(255, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+/*Buttons untereinander*/
+.button-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/*Buttons selbst*/
+.buttons {
+    width: 220px;
+    height: 48px;
+    font-family: Bahnschrift;
+    font-size: 18px;
+    color: white;
+    background-color: #7a0000;
+    border-radius: 12px;
+    border: 2px solid #ff1a1a;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+    transition: transform 0.25s ease, background-color 0.25s ease,
+    box-shadow 0.25s ease, border-color 0.25s ease;
+    cursor: pointer;
+}
+
+.buttons:hover {
+    transform: scale(1.08);
+    background-color: #b30000;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+}
+
+.buttons:active {
+    transform: scale(1.15);
+}
+
+/*Beenden Knopf*/
+.exit {
+    background-color: #500000;
+    border-color: #ff4444;
+}
+
+.exit:hover {
+    background-color: #770000;
+}
+
+
+.buttons svg {
+    margin-left: 2px;
+    margin-bottom: 3px;
+}

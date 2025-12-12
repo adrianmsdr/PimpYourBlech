@@ -1,15 +1,21 @@
 @page "/startMenu"
-@rendermode InteractiveServer
 @inject NavigationManager Nav
 <PageTitle>Pimp Your Blech</PageTitle>
 <h3>Pimp Your Blech</h3>
 
+
+<div class="menu-container">
+    
 @*Buttons für Anmelden, Registrieren und um zum Start - Screen zurückzukehren*@
-<div class="d-flex gap-2">
-    <button class="btn btn-primary" @onclick="GoToLogin">Anmelden</button>
-    <button class="btn btn-primary" @onclick="GoToRegister">Registrieren</button>
-    <button class="btn btn-primary" @onclick="Exit">Beenden</button>
+<div class="button-column">
+    <button class="buttons" @onclick="GoToLogin">Anmelden</button>
+    <button class="buttons" @onclick="GoToRegister">Registrieren</button>
+    <button class="buttons exit" @onclick="Exit">Beenden</button>
+  
 </div>
+</div>
+
+
 
 @code {
 

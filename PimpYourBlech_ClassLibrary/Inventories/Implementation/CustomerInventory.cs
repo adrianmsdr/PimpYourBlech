@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Persistence;
 
@@ -5,15 +6,11 @@ namespace PimpYourBlech_ClassLibrary.Inventories.Implementation;
 
 public sealed class CustomerInventory(IDatabase database):ICustomerInventory
 {
-   // private readonly List<Customer> _customers = database.LoadCustomers(); // Laden der Daten
-
     public void InsertCustomer(Customer c)
     {
         database.Customers.Add(c);
         database.SaveChanges();
-        //database.CreateCustomer(c);
-        //_customers.Add(c);
-       // database.SaveCustomers(_customers);
+        
     }
     public List<Customer> ListCustomers()
     {
@@ -26,6 +23,7 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     public void DeleteCustomers()
     {
         database.Customers.RemoveRange(database.Customers);
+        database.SaveChanges();
         // _customers.Clear();
         //database.SaveCustomers(_customers);
     }
@@ -53,6 +51,22 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
 
     }
 
+    public void AddConfiguration(Configuration config)
+    {
+        database.Configurations.Add(config);
+        database.SaveChanges();
+    }
+    
+    public List<Configuration> GetConfigurationsForCustomer(int customerId)
+    {
+        return database.Configurations
+            .Where(c => c.CustomerId == customerId)
+            .Include(cfg => cfg.Car)        // wichtig!
+            .Include(cfg => cfg.Products)   // falls du Products brauchst
+            .ToList();
+    }
+    }
+
     
 
    
@@ -61,4 +75,3 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     
     
     
-}

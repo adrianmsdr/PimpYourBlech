@@ -61,7 +61,20 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             .HasKey(a => a.Id);
 
         modelBuilder.Entity<Configuration>()
-            .HasKey(a => a.Id);
+            .HasKey(cfg => cfg.Id);
+
+        // Configuration -> Customer (1:n)
+        modelBuilder.Entity<Configuration>()
+            .HasOne(cfg => cfg.Customer)
+            .WithMany(c => c.Configurations)
+            .HasForeignKey(cfg => cfg.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configuration -> Car (1:n)
+        modelBuilder.Entity<Configuration>()
+            .HasOne(cfg => cfg.Car)
+            .WithMany() // Car muss nicht zwingend eine Collection von Configs haben
+            .HasForeignKey(cfg => cfg.CarId);
 
         modelBuilder.Entity<EngineDetail>();
     }

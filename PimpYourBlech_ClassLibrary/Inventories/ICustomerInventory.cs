@@ -18,6 +18,8 @@ public interface ICustomerInventory
     public void UpdateCustomers();
     
     public void DeleteCustomer(Customer customer);
-    
-    
+
+    public void AddConfiguration(Configuration config);
+
+    public List<Configuration> GetConfigurationsForCustomer(int customerId);
 }

@@ -4,14 +4,15 @@ public class Configuration()
 {
     public int Id { get; set; }
     
-    //private readonly List<Product>? _products;
-    
     public string? Name {get; set;}
 
-    public Car? Car { get; set; }
-    //public Engine Engine {get; set;}
-    
-    //Liste von produkten als öffentliche property
+    // FK + Navigation zu Customer
+    public int CustomerId { get; set; }
+    public Customer Customer { get; set; } = null!;
+   
+    // FK + Navigation zu Car
+    public int CarId { get; set; }
+    public Car Car { get; set; } = null!;
     public List<Product> Products { get; set; } = new List<Product>();
 
     public override string ToString()
