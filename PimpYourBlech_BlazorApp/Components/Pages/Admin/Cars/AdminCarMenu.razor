@@ -1,11 +1,12 @@
-@page "/admin/cars"
+@page "/administrator/cars"
+<PageTitle>Administrator/cars</PageTitle>
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject NavigationManager Nav
 @inject IAdminService AdminService
-<PageTitle>Administrator/cars</PageTitle>
 
-<h3>AdminCarMenu</h3>
+<h3>Fahrzeuge verwalten</h3>
+
 <table class="table table-striped table-bordered">
     <thead>
     <tr>
@@ -71,7 +72,7 @@
 
     private void AddCar()
     {
-        Nav.NavigateTo("/admin/cars/new");
+        Nav.NavigateTo("/administrator/cars/new");
     }
 
 }

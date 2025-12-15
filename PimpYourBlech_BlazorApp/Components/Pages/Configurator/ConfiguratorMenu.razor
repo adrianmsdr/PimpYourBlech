@@ -1,5 +1,7 @@
 @page "/configurator/{id:int}"
+<PageTitle>Configurator</PageTitle>
 
+@using Microsoft.AspNetCore.WebUtilities
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Configurator
@@ -10,7 +12,7 @@
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 
-<PageTitle>Configurator</PageTitle>
+
 @*
 - Auto wählen
 - Konfiguration eigenen Namen geben
@@ -38,9 +40,23 @@
 }
 else
 {
+    <h3 class="headline">Aktuelle Konfigurationen: @configuration.Name </h3>
     <div class="row g-4 align-items-start">
         <div class="col-lg-8">
-            @*<div class="config-preview">*@
+          
+            @if (availableColors.Count > 0)
+            {
+                <div class="color-bar mb-2">
+                    @foreach (var c in availableColors)
+                    {
+                        <button class="color-btn @(c.ProductId == selectedProductId ? "active" : "")"
+                                @onclick="() => SelectColor(c.ProductId)">
+                            @c.Name
+                        </button>
+                    }
+                </div>
+            }
+            
             @if (frameUrls.Count > 0)
             {
                 <!-- 360°-Ansicht -->
@@ -80,6 +96,8 @@ else
         <div class="col-lg-4">
             <div class="card car-details-card">
                 <div class="card-body">
+                    <h3 class="headline">Du pimpst: </h3>
+                    
                     <p><strong>Name:</strong> @Car?.Name</p>
                     <p><strong>Hersteller:</strong> @Car?.Brand</p>
                     <p><strong>Modell:</strong> @Car?.Model</p>
@@ -162,26 +180,73 @@ else
     private List<Product> availableRims = new();
     private List<Product> availableLights = new();
 
-    private Configuration? configuration=null;
+    private Configuration? configuration;
     private double totalPrice;
 
-    protected override async Task OnInitializedAsync()
+    private List<Product> availableColors = new();
+    private int selectedProductId = 0;
+
+    private void SelectColor(int colorDetailId)
     {
-        // Auto laden
-        Car = ConfiguratorService.GetCarById(Id);
-        if (Car == null) return;
-
-        // 360°-Bilder
-        frameUrls = ImageService.GetCarFrameUrls(Car.Id);
-        
-
-        // Produkte laden
-        availableEngines = ConfiguratorService.ListEngines();
-        //availableRims = ConfiguratorService.ListRims();
-        //availableLights = ConfiguratorService.ListLights();
-
-        UpdatePrice();
+        selectedProductId = colorDetailId;
+        frameUrls = ImageService.GetColorFrameUrls(Id, selectedProductId);
+        currentFrame = 0;
     }
+   protected override async Task OnInitializedAsync()
+    {
+        
+            // Auto laden
+            Car = ConfiguratorService.GetCarById(Id);
+            if (Car == null) return;
+
+            // 360°-Bilder
+            availableColors = ConfiguratorService.GetAvailableColors(Id); // neue Service-Methode
+            if (availableColors != null)
+            {
+                if (availableColors.Count > 0)
+                {
+                    selectedProductId = availableColors[0].ProductId;
+                    frameUrls = ImageService.GetColorFrameUrls(Car.Id, selectedProductId);
+                }
+                else
+                {
+                  //  frameUrls = ImageService.GetCarFrameUrls(Car.Id); // fallback (alter Ordner)
+                }
+
+
+                // Produkte laden
+                availableEngines = ConfiguratorService.ListEngines();
+                //availableRims = ConfiguratorService.ListRims();
+                //availableLights = ConfiguratorService.ListLights();
+
+                UpdatePrice();
+                // optional: Konfiguration laden, wenn configId da ist
+                var uri = Nav.ToAbsoluteUri(Nav.Uri);
+                var qs = QueryHelpers.ParseQuery(uri.Query);
+
+                if (qs.TryGetValue("configId", out var s) && int.TryParse(s, out var configId))
+                {
+                    configuration = ConfiguratorService.GetConfigurationById(configId); // oder sync
+                    name = configuration?.Name; // damit du NICHT wieder in den "Name eingeben" Screen fällst
+                    UpdatePrice();
+                }
+
+
+                // Auto laden
+                Car = ConfiguratorService.GetCarById(Id);
+                if (Car == null) return;
+                
+
+
+                // Produkte laden
+                availableEngines = ConfiguratorService.ListEngines();
+                //availableRims = ConfiguratorService.ListRims();
+                //availableLights = ConfiguratorService.ListLights();
+
+                UpdatePrice();
+            }
+    }
+
 
     private void RotateLeft()
     {

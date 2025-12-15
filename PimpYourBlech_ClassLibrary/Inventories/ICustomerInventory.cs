@@ -22,4 +22,6 @@ public interface ICustomerInventory
     public void AddConfiguration(Configuration config);
 
     public List<Configuration> GetConfigurationsForCustomer(int customerId);
+    
+    public List<Configuration> ListConfigurations();
 }

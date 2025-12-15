@@ -25,25 +25,29 @@ public class ImageService: IImageService
         
         // Liest aus dem Ordner "wwwroot/CarImages/{carId}" alle Dateien aus
         // Dieser Ordner enthält die Bilder für ein bestimmtes Auto
-        public List<string> GetCarFrameUrls(int carId)
+        public string GetCarImageUrl(int carId)
         {
             // System-Pfad zum Ordner des Autos bauen
             // Beispiel:
             // _env.WebRootPath ="/.../wwwroot"
             // Path.Combine(…, "CarImages", car.Id (z.B. 1)) = "/.../wwwroot/CarImages/1"
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "PresentationImage");
 
             // Wenn der Ordner nicht existiert, geben wir einfach eine leere Liste zurück
             if (!Directory.Exists(folder))
-                return new List<string>();
-
-            // Alle Dateien im Ordner lesen, alphabetisch sortieren und in Web-URLs umwandeln
-            // Beispiel: "/.../wwwroot/CarImages/1/frame_00.webp"
-            // wird zur Web-URL: "/CarImages/1/frame_00.webp"
-            return Directory.GetFiles(folder)
-                .OrderBy(f => f) // sorgt dafür, dass frame_00 vor frame_01 kommt
-                .Select(f => $"/CarImages/{carId}/{Path.GetFileName(f)}")
-                .ToList();
+                return "/no-img.png";
+            
+            //erste Bilddatei holen
+            var file = Directory
+                .GetFiles(folder)
+                .OrderBy(f => f)
+                .FirstOrDefault();
+            
+            if(file == null)
+                return "/no-img.png";
+            
+            //Zu Web-URL Umwandeln
+            return $"/CarImages/PresentationImage{carId}/{Path.GetFileName(file)}";
         }
 
         
@@ -53,10 +57,39 @@ public class ImageService: IImageService
         // Wichtig: Diese Methode arbeitet mit IBrowserFile
         // Das ist die Datenstruktur, die Blazor verwendet,
         // wenn ein Benutzer im Browser ein Bild hochlädt
-        public async Task<string> SaveCarFramesAsync(int carId, IReadOnlyList<IBrowserFile> files)
+        public async Task<string> SaveCarImageAsync(int carId, IBrowserFile file)
         {
             // vollständigen System-Pfad zum Autoordner bauen
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "PresentationImage");
+
+            // Ordner anlegen, falls er noch nicht existiert
+            Directory.CreateDirectory(folder);
+            
+            //Dateiendung des Uploads Übernehmen (.webp)
+            var extension = Path.GetExtension(file.Name);
+            
+            // Fester Dateiname 
+            var fileName = "Car" + extension;
+
+            // Voller System-Pfad
+            var fullPath = Path.Combine(folder, fileName);
+
+            // Datei speichern
+            await using var fs = new FileStream(fullPath, FileMode.Create);
+            await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(fs);
+
+            // Web-URL zurückgeben
+            var relativePath = Path.Combine("CarImages", carId.ToString(),"PresentationImage", fileName)
+                .Replace("\\", "/");
+
+            return "/" + relativePath;
+        }
+
+        public async Task<string> SaveColorImagesAsync(int carId, int productId, IReadOnlyList<IBrowserFile> files)
+        {
+            var filesSorted = files.OrderBy(f => f.Name);
+            // vollständigen System-Pfad zum Autoordner + Farbe bauen
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), productId.ToString());
 
             // Ordner anlegen, falls er noch nicht existiert
             Directory.CreateDirectory(folder);
@@ -64,7 +97,7 @@ public class ImageService: IImageService
             // Dateinamen fortlaufend generieren: frame_00, frame_01 ...
             int index = 0;
 
-            foreach (var file in files)
+            foreach (var file in filesSorted)
             {
                 // Dateiendung des Originals übernehmen ( .webp bei mir grad)
                 var extension = Path.GetExtension(file.Name);
@@ -97,12 +130,11 @@ public class ImageService: IImageService
             // Dieser kann später in der Datenbank gespeichert werden,
             // falls man wissen will, wo die Bilder liegen
             
-            var relativeFolder = Path.Combine("CarImages", carId.ToString())
+            var relativeFolder = Path.Combine("CarImages", carId.ToString(), productId.ToString())
                 .Replace("\\", "/"); // wichtig für Windows
 
             return relativeFolder;
         }
-
         public string GetProductImageUrl(int productId)
         {
             // Ordner für das Produkt
@@ -150,7 +182,7 @@ public class ImageService: IImageService
             return "/" + relativePath;
         }
 
-        public async Task DeleteCarImagesAsync(int carId)
+        public async Task DeleteCarImagesAsync(int productId, int carId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
@@ -170,4 +202,46 @@ public class ImageService: IImageService
                 // - oder Fehler nach oben durchreichen
             }
         }
+        public async Task DeleteProductImagesAsync(int ProductId)
+        {
+            // Ordner, in dem die Bilder dieses Autos liegen
+            var folder = Path.Combine(_env.WebRootPath, "ProductImages", ProductId.ToString());
+
+            if (!Directory.Exists(folder))
+                return; // nichts zu tun
+
+            try
+            {
+                // true = rekursiv, falls Unterordner vorhanden
+                Directory.Delete(folder, recursive: true);
+            }
+            catch (Exception ex)
+            {
+                // je nach Anspruch:
+                // - hier nur loggen und weitermachen
+                // - oder Fehler nach oben durchreichen
+            }
+        }
+
+        public List<string> GetColorFrameUrls(int carId,int ProductId)
+        {
+            // System-Pfad zum Ordner des Autos bauen
+            // Beispiel:
+            // _env.WebRootPath ="/.../wwwroot"
+            // Path.Combine(…, "CarImages", car.Id (z.B. 1), product.ProductId (z.B. 1)) = "/.../wwwroot/CarImages/1/1"
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), ProductId.ToString());
+
+            // Wenn der Ordner nicht existiert, geben wir einfach eine leere Liste zurück
+            if (!Directory.Exists(folder))
+                return new List<string>();
+
+            // Alle Dateien im Ordner lesen, alphabetisch sortieren und in Web-URLs umwandeln
+            // Beispiel: "/.../wwwroot/CarImages/1/frame_00.webp"
+            // wird zur Web-URL: "/CarImages/1/frame_00.webp"
+            return Directory.GetFiles(folder)
+                .OrderBy(f => f) // sorgt dafür, dass frame_00 vor frame_01 kommt
+                .Select(f => $"/CarImages/{carId}/{ProductId}/{Path.GetFileName(f)}")
+                .ToList();
+        }
+
 }

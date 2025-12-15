@@ -1,4 +1,5 @@
-@page "/adminProducts/new"
+@page "/administrator/products/new"
+<PageTitle>Administrator/products/new</PageTitle>
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Enums
@@ -7,13 +8,22 @@
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 @inject IImageService ImageService
-<PageTitle>Administrator/products/new</PageTitle>
 
 
 
-<h3>Neues Fahrzeugteil hinzufügen:</h3>
 
-<div class="mt-3 border-top pt-3">
+<div class="registration-container">
+    <h3 class="headline">Neues Fahrzeugteil registrieren:</h3>
+
+ @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success">@SuccessMessage</div>
+    }
     <div class="d-flex align-items-center">
         <span class="me-2">Produkttyp:</span>
        
@@ -22,143 +32,132 @@
             <option value="Motor">Motor</option>
             <option value="Felge">Felge</option>
             <option value="Lichtanlage">Lichtanlage</option>
+            <option value="Farbe">Farbe</option>
+
         </select>
        
     </div>
-</div>
 
-@*Basic Details*@
-
-<div class="mb-3">
-    <input class="form-control"
-           placeholder="Name..."
+    @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
+    <input class="text-input"
+           placeholder="Name"
            @bind="name"/>
-</div>
 
-<div class="mb-3">
-    <input class="form-control"
+    <input class="text-input"
            placeholder="Artikelnummer..."
            @bind="articleNumber"/>
-</div>
 
-
-
-<div class="mb-3">
-    <input class="form-control"
+    <input class="text-input"
            placeholder="Hersteller..."
            @bind="brand"/>
-</div>
 
-<div class="mb-3">
-    <input class="form-control"
+    
+    <input class="text-input"
            placeholder="Bestand..."
            @bind="quantity"/>
-</div>
 
-<div class="mb-3">
-    <input class="form-control"
+    <input class="text-input"
            placeholder="Preis..."
            @bind="price"/>
-</div>
 
-@*Engine Details*@
-@if (selectedProductType == "Motor")
-{
-    <div class="mb-3">
-        <input class="form-control"
-               placeholder="PS..."
-               @bind="ps"/>
-    </div>
+    @if (selectedProductType == "Motor")
+    {
+    <input class="text-input"
+           placeholder="PS..."
+           @bind="ps"/>
 
-    <div class="mb-3">
-        <input class="form-control"
-               placeholder="KW..."
-               @bind="kw"/>
-    </div>
+    <input class="text-input"
+           placeholder="KW..."
+           @bind="kw"/>
 
-    <div class="mb-3">
-        <input class="form-control"
-               placeholder="Hubraum..."
-               @bind="displacement"/>
-    </div>
-
-    <div class="mb-3">
-        <span class="me-2">Getriebeart:</span>
-
-        <select class="form-select me-2" style="width:auto"
-                @bind="selectedGear">
-            <option value="5-Gang Manuell">5-Gang Manuell</option>
-            <option value="6-Gang Manuell">6-Gang Manuell</option>
-            <option value="6-Gang Automatik">6-Gang Automatik</option>
-            <option value="8-Gang Automatik">8-Gang Automatik</option>
-        </select>
-
-    </div>
-
-}else if (selectedProductType == "Felge")
-{
-    <div class="mb-3">
-        <input class="form-control"
-               placeholder="Durchmesser(Zoll)..."
-               @bind="diameter"/>
-    </div>
+    <input class="text-input"
+           placeholder="Hubraum..."
+           @bind="displacement"/>
     
+    <span class="me-2">Getriebeart:</span>
 
-    <div class="mb-3">
-        <input class = "form-control"
-               placeholder="Breite(Zoll)..."
-               @bind="width"/>
+    <select class="form-select me-2" style="width:auto"
+            @bind="selectedGear">
+        <option value="5-Gang Manuell">5-Gang Manuell</option>
+        <option value="6-Gang Manuell">6-Gang Manuell</option>
+        <option value="6-Gang Automatik">6-Gang Automatik</option>
+        <option value="8-Gang Automatik">8-Gang Automatik</option>
+    </select>
+    }else if (selectedProductType == "Felge")
+    {
+        
+    <input class="text-input"
+           placeholder="Durchmesser(Zoll)..."
+           @bind="diameter"/>
 
-    </div>
+    <input class="text-input"
+           placeholder="Breite(Zoll)..."
+           @bind="width"/>
+   
+    }
 
-}
-
-else if (selectedProductType == "Lichtanlage")
-{
-    <div class="mb-3">
-        <input class="form-control"
+    else if (selectedProductType == "Lichtanlage")
+    {
+        <input class="text-input"
                placeholder="Lumen..."
                @bind="lumen"/>
-    </div>
-    
 
-    <div class="mb-3">
-        <span class="me-2">LED?:</span>
+        <div class="mb-3">
+            <span class="me-2">LED?:</span>
 
-        <select class="form-select me-2" style="width:auto"
-                @bind="isLED">
-            <option value="True">Ja</option>
-            <option value="False">Nein</option>
+            <select class="form-select me-2" style="width:auto"
+                    @bind="isLED">
+                <option value="True">Ja</option>
+                <option value="False">Nein</option>
+            </select>
+
+        </div>
+
+    }else if (selectedProductType == "Farbe")
+    {
+        <div class="mb-3">
+            <label class="form-label"><strong>Fahrzeug auswählen:</strong></label>
+
+            <select class="form-select" @bind="selectedCarId">
+            <option value="0">-- Bitte wählen --</option>
+            @foreach (var c in cars)
+        {
+            <option value="@c.Id">@c.Name (@c.Id)</option>
+        }
         </select>
 
+            @if (selectedCarId == 0)
+        {
+            <div class="text-muted mt-1">Wähle zuerst ein Fahrzeug aus.</div>
+        }
+        </div>
+
+            <div class="mb-3">
+            <label class="form-label"><strong>360° Bilder auswählen (mehrere möglich):</strong></label>
+            <InputFile OnChange="HandleFilesSelected" multiple accept="image/*" disabled="@(selectedCarId == 0)" />
+
+                                                                                         @if (uploadedFiles.Count > 0)
+        {
+            <div class="text-muted mt-1">@uploadedFiles.Count Bild(er) ausgewählt.</div>
+        }
+        </div>
+
+    }
+
+    <div class="mb-3">
+        <label><strong>Produktbild auswählen:</strong></label>
+        <InputFile OnChange="HandleProductImageSelected" accept="image/*" />
+    
+        @if (uploadedProductImage != null)
+        {
+            <div class="text-muted mt-1">1 Bild ausgewählt: @uploadedProductImage.Name</div>
+        }
     </div>
 
-}
-
-<div class="mb-3">
-    <label><strong>Produktbild auswählen:</strong></label>
-    <InputFile OnChange="HandleProductImageSelected" accept="image/*" />
     
-    @if (uploadedProductImage != null)
-    {
-        <div class="text-muted mt-1">1 Bild ausgewählt: @uploadedProductImage.Name</div>
-    }
+    <button class="text-input" @onclick="RegisterProduct">Fahrzeugteil registrieren</button>
+    <button class="buttons" @onclick="Cancel">Abbrechen</button>
 </div>
-
-<br />
-<div class="d-flex gap-2">
-    <button class="btn btn-primary" @onclick="RegisterProduct">Produkt hinzufügen</button>
-    <button class="btn btn-secondary" @onclick="Cancel">Abbrechen</button>
-</div>
-@if (!string.IsNullOrWhiteSpace(ErrorMessage))
-{
-    <div class="alert alert-danger mt-3">@ErrorMessage</div>
-}
-
-@if (!string.IsNullOrWhiteSpace(SuccessMessage))
-{
-    <div class="alert alert-success mt-3">@SuccessMessage</div>
-}
 
 @code {
 
@@ -182,17 +181,33 @@ else if (selectedProductType == "Lichtanlage")
     private string width = "";
 
     private string lumen = "";
+
+    private string Car;
     
     private IBrowserFile? uploadedProductImage;
+    private IReadOnlyList<IBrowserFile> uploadedFiles = Array.Empty<IBrowserFile>();
+
+    private List<Car> cars = new();
+    private int selectedCarId = 0;
 
     private string ErrorMessage = "";
     private string SuccessMessage = "";
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        cars = AdminService.GetCars();
+    }
+
     private void HandleProductImageSelected(InputFileChangeEventArgs e)
     {
         uploadedProductImage = e.File; // 
     }
 
+    private void HandleFilesSelected(InputFileChangeEventArgs e)
+    {
+        uploadedFiles = e.GetMultipleFiles(40); //mehrere Bilder Speichern
+    }
+    
     private void RegisterProduct()
     {
         ErrorMessage = "";
@@ -231,6 +246,10 @@ else if (selectedProductType == "Lichtanlage")
 
             case "Lichtanlage":
                 productType = ProductType.Lights;
+                break;
+                
+            case "Farbe":
+                productType = ProductType.Color;
                 break;
                 
         }
@@ -323,17 +342,22 @@ else if (selectedProductType == "Lichtanlage")
 
                 p = AdminService.RegisterLights(p, lumenValue, isLed);
                 break;
+                
+            case ProductType.Color:
+                p = AdminService.RegisterColor(p, AdminService.GetCarById(selectedCarId));
+                ImageService.SaveColorImagesAsync(selectedCarId, p.ProductId, uploadedFiles);
+                break;
         }
 
         ImageService.SaveProductImagesAsync(p.ProductId, uploadedProductImage);
-        SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
+        SuccessMessage = "Fahrzeugteil erfolgreich registriert.";
 
      
     }
 
     private void Cancel()
     {
-        Nav.NavigateTo("/");
+        Nav.NavigateTo("/administrator/products");
     }
 
     private void ApplyFilter()
@@ -348,3 +372,195 @@ else if (selectedProductType == "Lichtanlage")
 
 
 }
+
+<style>
+    .headline {
+        font-family: Bahnschrift;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .registration-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px); 
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+    
+
+    .text-input {
+        width: 240px;
+        height: 38px;
+        padding: 6px;
+        font-family: Bahnschrift;
+        text-align: center;
+        background-color: rgba(20, 0, 0, 0.65); 
+        color: white;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        outline: none;
+        transition: 0.25s ease;
+    }
+
+    .text-input:hover {
+        transform:scale(1.1);
+    }
+    .text-input:focus {
+        border-color: #ff3333;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    }
+
+    .buttons {
+        width: 140px;
+        height: 45px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .buttons:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .buttons:active {
+        transform: scale(1.2);
+    }
+    /* 1) Texte/Labels besser lesbar */
+    .registration-container label,
+    .registration-container span,
+    .registration-container strong,
+    .registration-container .text-muted{
+        font-family: Bahnschrift;
+        color: rgba(255,255,255,.92);
+        text-shadow: 0 2px 6px rgba(0,0,0,.65);
+    }
+
+    /* Bootstrap Utility me-2 / mb-3 etc. sind okay – wir machen nur Optik */
+    .registration-container .me-2{
+        font-weight: 700;
+    }
+
+    /* 2) SELECTS (Produkttyp/Getriebe/LED) auf dein Dark-Red-Design trimmen */
+    .registration-container .form-select{
+        width: 240px !important;                 /* gleiche Breite wie text-input */
+        height: 38px !important;
+        padding: 6px 38px 6px 10px !important;
+        font-family: Bahnschrift !important;
+        text-align: center;
+
+        background-color: rgba(20, 0, 0, 0.65) !important;
+        color: #fff !important;
+
+        border-radius: 10px !important;
+        border: 2px solid rgba(255, 0, 0, 0.6) !important;
+
+        outline: none !important;
+        box-shadow: none !important;
+
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        transition: 0.25s ease;
+    }
+
+    /* Hover/Focus konsistent mit .text-input */
+    .registration-container .form-select:hover{
+        transform: scale(1.05);
+    }
+    .registration-container .form-select:focus{
+        border-color: #ff3333 !important;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6) !important;
+    }
+
+    /* Optionen im Dropdown nicht weiß */
+    .registration-container .form-select option{
+        background: #120000;
+        color: #fff;
+    }
+
+    /* kleines Pfeil-Icon, damit’s nicht nach Default-Select aussieht */
+    .registration-container .form-select{
+        background-image:
+            linear-gradient(45deg, transparent 50%, rgba(255,255,255,.75) 50%),
+            linear-gradient(135deg, rgba(255,255,255,.75) 50%, transparent 50%);
+        background-position:
+            calc(100% - 18px) 55%,
+            calc(100% - 12px) 55%;
+        background-size: 6px 6px, 6px 6px;
+        background-repeat: no-repeat;
+    }
+
+    /* 3) FILE INPUT (InputFile) anpassen, damit nix „weiß“ wirkt */
+    .registration-container input[type="file"]{
+        width: 240px;
+        font-family: Bahnschrift;
+        color: rgba(255,255,255,.9);
+
+        background-color: rgba(20, 0, 0, 0.35);
+        border: 2px dashed rgba(255, 0, 0, 0.45);
+        border-radius: 10px;
+
+        padding: 8px 10px;
+    }
+
+    /* Button im File-Input */
+    .registration-container input[type="file"]::file-selector-button{
+        font-family: Bahnschrift;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        background: rgba(20, 0, 0, 0.65);
+        color: #fff;
+        padding: 6px 10px;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+    .registration-container input[type="file"]::file-selector-button:hover{
+        background: rgba(255, 0, 0, 0.22);
+        transform: scale(1.05);
+    }
+
+    /* 4) Success/Error Alerts (falls Bootstrap-Alert zu grell/komisch) */
+    .registration-container .alert{
+        width: 240px;
+        border-radius: 10px;
+        font-family: Bahnschrift;
+        text-align: center;
+        border: 2px solid rgba(255, 0, 0, 0.35);
+        background: rgba(0,0,0,.25);
+        color: rgba(255,255,255,.92);
+        text-shadow: 0 2px 6px rgba(0,0,0,.65);
+    }
+    .registration-container .alert-danger{
+        border-color: rgba(255, 70, 70, 0.55);
+    }
+    .registration-container .alert-success{
+        border-color: rgba(70, 255, 160, 0.35);
+    }
+
+    /* 5) TextInput Placeholder besser lesbar */
+    .text-input::placeholder{
+        color: rgba(255,255,255,.65);
+    }
+
+
+</style>

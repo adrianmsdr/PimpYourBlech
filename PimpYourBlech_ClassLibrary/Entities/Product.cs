@@ -23,6 +23,8 @@ public class Product
     public EngineDetail?  EngineDetail { get; set; }
     public RimDetail?  RimDetail { get; set; }
     public LightsDetail? LightsDetail { get; set; }
+    
+    public ColorDetail? ColorDetail { get; set; }
 }
 /*(string name, string articleNumber, string brand, string description, int quantity, double price)
 {

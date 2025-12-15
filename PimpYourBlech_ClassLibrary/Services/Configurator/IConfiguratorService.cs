@@ -33,5 +33,9 @@ public interface IConfiguratorService
     public List<Product> ListEngines();
     
     public List<Car> ListCars();
+    
+    Configuration GetConfigurationById(int Id);
+    
+    public List<Product> GetAvailableColors(int Id);
 
 }

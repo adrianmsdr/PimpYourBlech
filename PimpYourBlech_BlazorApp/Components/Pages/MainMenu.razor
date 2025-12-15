@@ -15,7 +15,12 @@
         <button class="buttons" @onclick="GoToConfigurations">Konfigurationen laden<CarIcon2></CarIcon2></button>
         <button class="buttons" @onclick="GoToShop">Ersatzteile Shop<ShopIcon></ShopIcon></button>
         <button class="buttons" @onclick="GoToAdmin">Administrator<AdminIcon></AdminIcon></button>
+        <div class="button-container">
+            <button class="buttons" @onclick="GoToFAQ">FAQ</button>
+            <button class="buttons" @onclick="GoAboutUs">About Us</button>
+        </div>
         <button class="buttons logout" @onclick="Logout">Abmelden</button>
+        
     </div>
 </div>
 
@@ -27,6 +32,10 @@
     private void GoToConfigurations() => Nav.NavigateTo("/configurations");
 
     private void GoToShop() => Nav.NavigateTo("/shop");
+    
+    private void GoToFAQ() => Nav.NavigateTo("/FAQ");
+    
+    private void GoAboutUs() => Nav.NavigateTo("/aboutUs");
 
     private void Logout()
     {
@@ -34,7 +43,7 @@
         Nav.NavigateTo("/");
     }
 
-    private void GoToAdmin() => Nav.NavigateTo("/adminMenu");
+    private void GoToAdmin() => Nav.NavigateTo("/administrator");
 }
 
 <style>

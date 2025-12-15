@@ -5,5 +5,6 @@ public enum ProductType
     Engine,
     Rim,
     Lights,
-    Exhaust
+    Exhaust,
+    Color
 }
