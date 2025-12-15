@@ -1,4 +1,5 @@
-@page "/admin/cars/{id:int}"
+@page "/administrator/cars/{id:int}"
+<PageTitle>Administrator/cars/@Id.ToString()</PageTitle>
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @rendermode InteractiveServer
@@ -6,7 +7,7 @@
 @inject IAdminService AdminService
 @inject  NavigationManager Nav
 
-<PageTitle>Administrator/cars/@Id.ToString()</PageTitle>
+
 
 <h3>Ausgewähltes Fahrzeug:</h3>
 
@@ -49,7 +50,7 @@ else
     private void DeleteProduct()
     {
         AdminService.DeleteCar(Car);
-        Nav.NavigateTo("/admin/cars");
+        Nav.NavigateTo("/administrator/cars");
     }
 
     private void EditProduct()

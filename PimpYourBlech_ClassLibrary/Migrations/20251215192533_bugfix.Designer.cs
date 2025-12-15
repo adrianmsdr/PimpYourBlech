@@ -11,8 +11,8 @@ using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    [Migration("20251208155803_AddCarImagePathColumn")]
-    partial class AddCarImagePathColumn
+    [Migration("20251215192533_bugfix")]
+    partial class bugfix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ConfigurationProduct", b =>
+                {
+                    b.Property<int>("ConfigurationsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductsProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ConfigurationsId", "ProductsProductId");
+
+                    b.HasIndex("ProductsProductId");
+
+                    b.ToTable("ConfigurationProduct");
+                });
 
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Car", b =>
                 {
@@ -41,10 +56,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DateProduction")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -70,6 +81,30 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.ToTable("Cars");
                 });
 
+            modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.ColorDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("Colors");
+                });
+
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Configuration", b =>
                 {
                     b.Property<int>("Id")
@@ -78,10 +113,10 @@ namespace PimpYourBlech_ClassLibrary.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CarId")
+                    b.Property<int>("CarId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -233,6 +268,9 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("CarId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
@@ -250,6 +288,8 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("ProductId");
+
+                    b.HasIndex("CarId");
 
                     b.ToTable("Products");
                 });
@@ -279,17 +319,57 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.ToTable("Rims");
                 });
 
+            modelBuilder.Entity("ConfigurationProduct", b =>
+                {
+                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Configuration", null)
+                        .WithMany()
+                        .HasForeignKey("ConfigurationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.ColorDetail", b =>
+                {
+                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Car", "Car")
+                        .WithMany()
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Product", "Product")
+                        .WithOne("ColorDetail")
+                        .HasForeignKey("PimpYourBlech_ClassLibrary.Entities.ColorDetail", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Configuration", b =>
                 {
                     b.HasOne("PimpYourBlech_ClassLibrary.Entities.Car", "Car")
                         .WithMany()
-                        .HasForeignKey("CarId");
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Customer", null)
+                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Customer", "Customer")
                         .WithMany("Configurations")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Car");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.EngineDetail", b =>
@@ -339,6 +419,13 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Product", b =>
+                {
+                    b.HasOne("PimpYourBlech_ClassLibrary.Entities.Car", null)
+                        .WithMany("Colors")
+                        .HasForeignKey("CarId");
+                });
+
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.RimDetail", b =>
                 {
                     b.HasOne("PimpYourBlech_ClassLibrary.Entities.Product", "Product")
@@ -350,6 +437,11 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Car", b =>
+                {
+                    b.Navigation("Colors");
+                });
+
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Customer", b =>
                 {
                     b.Navigation("Configurations");
@@ -357,6 +449,8 @@ namespace PimpYourBlech_ClassLibrary.Migrations
 
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Product", b =>
                 {
+                    b.Navigation("ColorDetail");
+
                     b.Navigation("EngineDetail");
 
                     b.Navigation("LightsDetail");

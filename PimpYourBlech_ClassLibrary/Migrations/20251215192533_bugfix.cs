@@ -5,7 +5,7 @@
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CarImage : Migration
+    public partial class bugfix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

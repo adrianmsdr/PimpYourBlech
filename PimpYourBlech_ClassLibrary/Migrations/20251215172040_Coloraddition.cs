@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class initialcreate : Migration
+    public partial class Coloraddition : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,11 +62,17 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    ProductType = table.Column<int>(type: "integer", nullable: false)
+                    ProductType = table.Column<int>(type: "integer", nullable: false),
+                    CarId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId);
+                    table.ForeignKey(
+                        name: "FK_Products_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -76,8 +82,8 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    CarId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerId = table.Column<int>(type: "integer", nullable: true)
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    CarId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,12 +92,40 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         name: "FK_Configurations_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Configurations_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Colors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CarId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Colors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Colors_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Colors_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,6 +173,38 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    CarId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_Orders_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Orders_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rims",
                 columns: table => new
                 {
@@ -158,6 +224,46 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "ConfigurationProduct",
+                columns: table => new
+                {
+                    ConfigurationsId = table.Column<int>(type: "integer", nullable: false),
+                    ProductsProductId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfigurationProduct", x => new { x.ConfigurationsId, x.ProductsProductId });
+                    table.ForeignKey(
+                        name: "FK_ConfigurationProduct_Configurations_ConfigurationsId",
+                        column: x => x.ConfigurationsId,
+                        principalTable: "Configurations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConfigurationProduct_Products_ProductsProductId",
+                        column: x => x.ProductsProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Colors_CarId",
+                table: "Colors",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Colors_ProductId",
+                table: "Colors",
+                column: "ProductId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfigurationProduct_ProductsProductId",
+                table: "ConfigurationProduct",
+                column: "ProductsProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Configurations_CarId",
@@ -182,6 +288,26 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_CarId",
+                table: "Orders",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CustomerId",
+                table: "Orders",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_ProductId",
+                table: "Orders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CarId",
+                table: "Products",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rims_ProductId",
                 table: "Rims",
                 column: "ProductId",
@@ -192,7 +318,10 @@ namespace PimpYourBlech_ClassLibrary.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Configurations");
+                name: "Colors");
+
+            migrationBuilder.DropTable(
+                name: "ConfigurationProduct");
 
             migrationBuilder.DropTable(
                 name: "Engines");
@@ -201,16 +330,22 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 name: "Lights");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "Rims");
 
             migrationBuilder.DropTable(
-                name: "Cars");
+                name: "Configurations");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Cars");
         }
     }
 }

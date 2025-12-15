@@ -9,6 +9,15 @@ public interface IDatabase
     DbSet<Product> Products { get; }
     DbSet<Car> Cars { get; }
     DbSet<Configuration> Configurations { get; }
+    
+    DbSet<Order> Orders { get; }
+
+    DbSet<LightsDetail> Lights { get; }
+    DbSet<ColorDetail> Colors { get; }
+
+    DbSet<EngineDetail>  Engines { get; }
+
+    DbSet<RimDetail>  Rims { get; }
 
     int SaveChanges();
     /*public void CreateCustomer(Customer customer);   

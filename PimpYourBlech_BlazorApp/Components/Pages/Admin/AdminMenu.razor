@@ -1,8 +1,9 @@
-@page "/adminMenu"
+@page "/administrator"
+<PageTitle>Administrator</PageTitle>
 @inject NavigationManager Nav
 <h3>Administrator</h3>
 
-<PageTitle>Administrator</PageTitle>
+
 <div class="menu-container">
 
     <div class="button-column">
@@ -18,24 +19,24 @@
     // Führt zum Menü um Kunden zu verwalten
     private void GoToAdminCustomers()
     {
-        Nav.NavigateTo("/admin/customers");
+        Nav.NavigateTo("/administrator/customers");
     }
 
     // Führt zum Menü um Produkte zu verwalten
     private void GoToAdminProducts()
     {
-        Nav.NavigateTo("/admin/products");
+        Nav.NavigateTo("/administrator/products");
     }
     
     // Führt zum Menü um Fahrzeuge zu verwalten
     private void GoToAdminCars()
     {
-        Nav.NavigateTo("/admin/cars");
+        Nav.NavigateTo("/administrator/cars");
     }
     
     // Führt zum Menü um Bestellungen zu verwalten
     private void GoToAdminOrders()
     {
-        Nav.NavigateTo("/admin/orders");
+        Nav.NavigateTo("/administrator/orders");
     }
 }

@@ -22,6 +22,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<EngineDetail> Engines { get; set; }
     public DbSet<RimDetail> Rims { get; set; }
     public DbSet<LightsDetail> Lights { get; set; }
+    
+    public DbSet<ColorDetail> Colors { get; set; }
     public DbSet<Order> Orders { get; set; }
     
 
@@ -56,6 +58,11 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
               .WithOne(d => d.Product)
               .HasForeignKey<LightsDetail>(d => d.ProductId);
       
+          modelBuilder.Entity<Product>()
+              .HasOne(p => p.ColorDetail)
+              .WithOne(d => d.Product)
+              .HasForeignKey<ColorDetail>(d => d.ProductId);
+          
 //Später vielleicht auch eine eigne id ider wir machen nen datentyp Artikelnumnmer
         modelBuilder.Entity<Car>()
             .HasKey(a => a.Id);
@@ -75,8 +82,7 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             .HasOne(cfg => cfg.Car)
             .WithMany() // Car muss nicht zwingend eine Collection von Configs haben
             .HasForeignKey(cfg => cfg.CarId);
-
-        modelBuilder.Entity<EngineDetail>();
+        
     }
 
 

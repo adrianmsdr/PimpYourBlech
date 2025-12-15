@@ -19,6 +19,12 @@ public DbSet<Product> Products => _ctx.Products;
 public DbSet<Car> Cars => _ctx.Cars;
 public DbSet<Configuration> Configurations => _ctx.Configurations;
 
+public DbSet<EngineDetail> Engines => _ctx.Engines;
+public DbSet<RimDetail> Rims => _ctx.Rims;
+public DbSet<LightsDetail> Lights => _ctx.Lights;
+public DbSet<ColorDetail> Colors => _ctx.Colors;
+public DbSet<Order> Orders => _ctx.Orders;
+
 public int SaveChanges() => _ctx.SaveChanges();
 }
 /*

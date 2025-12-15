@@ -109,5 +109,15 @@ public class ConfiguratorService : IConfiguratorService
     {
         return carInventory.ListCars();
     }
-    
+
+    public Configuration GetConfigurationById(int Id)
+    {
+       return _customerInventory.ListConfigurations()
+           .FirstOrDefault(c => c.Id == Id);
+    }
+
+    public List<Product> GetAvailableColors(int Id)
+    {
+        return carInventory.GetAvailableColor(Id);
+    }
 }

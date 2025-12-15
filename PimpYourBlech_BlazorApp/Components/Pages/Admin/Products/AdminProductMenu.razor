@@ -1,10 +1,11 @@
-@page "/admin/products"
+@page "/administrator/products"
+<PageTitle>Administrator/products</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
 @inject NavigationManager Nav
-<PageTitle>Administrator/products</PageTitle>
+
 
 <h3>Fahrzeugteile verwalten:</h3>
 
@@ -22,7 +23,7 @@
     <tbody>
     @foreach (var p in products)
     {
-        <tr @onclick="@(() => Nav.NavigateTo($"/admin/cars/{p.ProductId}"))"
+        <tr @onclick="@(() => Nav.NavigateTo($"/administrator/products/{p.ProductId}"))"
             style="cursor: pointer;">
             <td>@p.ArticleNumber</td>
             <td>@p.Name</td>
@@ -93,7 +94,7 @@
 
     private void AddProduct()
     {
-        Nav.NavigateTo("/adminProducts/new");
+        Nav.NavigateTo("/administrator/products/new");
     }
 
     private void ApplyFilter()

@@ -65,7 +65,12 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
             .Include(cfg => cfg.Products)   // falls du Products brauchst
             .ToList();
     }
+
+    public List<Configuration> ListConfigurations()
+    {
+        return database.Configurations.ToList();
     }
+}
 
     
 

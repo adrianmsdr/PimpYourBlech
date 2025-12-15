@@ -1,3 +1,4 @@
+using System.Drawing;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 
@@ -42,7 +43,7 @@ public interface IAdminService
      
      public Product RegisterLights(Product p, int lumen, bool isLED);
      
-     
+     public Product RegisterColor(Product p, Car c);
      Product GetProductById(int id);
    
      void DeleteProduct(Product p);
