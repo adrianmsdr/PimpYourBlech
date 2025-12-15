@@ -32,7 +32,7 @@ weil das hier ist noch 0 schön wenns läuft
         <tbody>
         @foreach (var c in configurations)
         {
-            <tr @onclick="@(() => Nav.NavigateTo($"/configurations/{c.Id}"))"
+            <tr @onclick="@(() => Nav.NavigateTo($"/configurator/{c.CarId}/?configId={c.Id}"))"
                 style="cursor: pointer">
                 <td>@c.Name</td>
                 <td>@c.Car.Name</td>
