@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_BlazorApp.Components;
 using PimpYourBlech_BlazorApp.Services;
@@ -66,6 +67,10 @@ builder.Services.AddScoped<ICartService, CartService>();
 
 // 7) UserSession
 builder.Services.AddSingleton<IUserSession, UserSession>();
+
+//8) ToastNotification
+builder.Services.AddBlazoredToast();
+
 
 
 var app = builder.Build();

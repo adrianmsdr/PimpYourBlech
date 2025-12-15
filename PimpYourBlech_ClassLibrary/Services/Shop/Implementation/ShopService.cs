@@ -1,11 +1,14 @@
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Inventories;
+using PimpYourBlech_ClassLibrary.Services.Carts;
+using PimpYourBlech_ClassLibrary.ValueObjects;
 
 namespace PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
 
-public class ShopService(IProductInventory productInventory):IShopService
+public class ShopService(IProductInventory productInventory, ICartService cartService):IShopService
 {
     private readonly IProductInventory _productInventory = productInventory;
+    private readonly ICartService _cartService = cartService;
     public List<Product> GetProducts()
     {
         return productInventory.ListProducts();
@@ -14,6 +17,7 @@ public class ShopService(IProductInventory productInventory):IShopService
     public List<Product> SearchProducts(string searchString)
     {
         List<Product> products = new List<Product>();
+        
         foreach (Product p in productInventory.ListProducts() )
         {
             if (p.Brand.Equals(searchString) ||
@@ -50,7 +54,6 @@ public class ShopService(IProductInventory productInventory):IShopService
                     {
                         filteredProducts.Add(p);
                     }
-
                     break;
 
                 case "Lights":
@@ -60,15 +63,24 @@ public class ShopService(IProductInventory productInventory):IShopService
                     }
 
                     break;
-
             }
-
         }
         return filteredProducts;
     }
 
-    public double GetCartTotal(int userId)
+    public double GetTotalPrice(int userId)
     {
-        throw new NotImplementedException();
+        if (_cartService?.CartProductsList == null)
+            return 0;
+
+        double total = 0;
+
+        foreach (var product in _cartService.CartProductsList)
+        {
+            total += product.Price;
+        }
+
+        return total;
     }
+
 }

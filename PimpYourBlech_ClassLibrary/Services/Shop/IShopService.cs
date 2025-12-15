@@ -17,7 +17,7 @@ public interface IShopService
     // Cart GetCart(int userId);
 
     //  Preise 
-    double GetCartTotal(int userId);
+    double GetTotalPrice(int userId);
 
     //(Optional für später) Bestellen
     public List<Product> GetProducts();

@@ -5,15 +5,20 @@
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.ValueObjects
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
+@using PimpYourBlech_ClassLibrary.Session
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
 @inject ICartService CartService
+@inject IToastService ToastService
+@inject IUserSession UserSession
+
 
 <PageTitle>Shop</PageTitle>
-<h3>Ersatzteile - Shop</h3>
-
-<PageTitle>Shop</PageTitle>
+<BlazoredToasts Position="ToastPosition.BottomRight" />
 <h3 class="headline">Ersatzteile - Shop</h3>
 
 <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
@@ -44,6 +49,7 @@
             {
                 <button class="menu-item">@item.Name – @item.Price.ToString("C")</button>
             }
+            <u class="sum">Summe: @ShopService.GetTotalPrice(UserSession.CurrentUser.Id) €</u>
         </div>
     }
 </div>
@@ -113,7 +119,8 @@ else
                     <h4>@product.Name</h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
-                    <button type="button" class="selectProduct" @onclick="() => CartService.AddProduct(product)">
+                    <button type="button" class="selectProduct"
+                            @onclick="() => AddToCart(product)">
                         <BuyIcon></BuyIcon> Kaufen
                     </button>
                 </div>
@@ -139,8 +146,6 @@ else
     {
         products = ShopService.GetProducts();
     }
-
-  
     
     private void ApplySearch()
     {
@@ -162,6 +167,14 @@ else
     {
         IsOpen = !IsOpen;
     }
+    
+    private void AddToCart(Product product)
+    {
+        CartService.AddProduct(product);
+        ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");
+        StateHasChanged();
+    }
+
     
     // Führt zum Hauptmenü
     private void Cancel()
@@ -342,5 +355,11 @@ else
     transform: scale(1.05);
     background-color: #b30000;
     box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+.sum {
+    color: white;
+    font-family: Bahnschrift;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 </style>
