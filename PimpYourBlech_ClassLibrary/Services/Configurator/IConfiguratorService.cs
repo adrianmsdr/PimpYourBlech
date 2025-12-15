@@ -32,6 +32,9 @@ public interface IConfiguratorService
     
     public List<Product> ListEngines();
     
+    public List<Product> ListRims();
+
+    
     public List<Car> ListCars();
     
     Configuration GetConfigurationById(int Id);

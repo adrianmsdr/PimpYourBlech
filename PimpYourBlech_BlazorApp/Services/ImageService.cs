@@ -47,7 +47,7 @@ public class ImageService: IImageService
                 return "/no-img.png";
             
             //Zu Web-URL Umwandeln
-            return $"/CarImages/PresentationImage{carId}/{Path.GetFileName(file)}";
+            return $"/CarImages/{carId}/PresentationImage/{Path.GetFileName(file)}";
         }
 
         

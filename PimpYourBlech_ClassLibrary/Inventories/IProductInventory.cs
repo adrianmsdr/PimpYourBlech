@@ -14,6 +14,6 @@ public interface IProductInventory
 
     public List<Product> ListEngines();
     
-    
+    public List<Product> ListRims();
  
 }

@@ -38,6 +38,13 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
             .ToList();
     }
 
+    public List<Product> ListRims()
+    {
+        return database.Products
+            .Where(p => p.RimDetail != null)
+            .ToList();
+    }
+
 
     
 }
