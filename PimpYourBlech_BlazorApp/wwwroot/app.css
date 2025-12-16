@@ -258,3 +258,12 @@ h1,h2,h3,h4{
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0,0,0,.7);
 }
+/*------ Toast-Notifications--------*/
+.blazored-toast,
+.blazored-toast-body {
+    color: white !important;
+    background-color: #7a0000 !important;
+    border-radius: 12px !important;
+    border: 2px solid #ff1a1a !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
+}
