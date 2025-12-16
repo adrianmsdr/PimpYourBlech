@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class Coloraddition : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,6 +30,27 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cars", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommunityQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    QuestionId = table.Column<int>(type: "integer", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommunityQuestions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CommunityQuestions_CommunityQuestions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "CommunityQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,6 +94,33 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         name: "FK_Products_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommunityAnswers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    QuestionId = table.Column<int>(type: "integer", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CommunityAnswerId = table.Column<int>(type: "integer", nullable: true),
+                    CommunityQuestionId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommunityAnswers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CommunityAnswers_CommunityAnswers_CommunityAnswerId",
+                        column: x => x.CommunityAnswerId,
+                        principalTable: "CommunityAnswers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CommunityAnswers_CommunityQuestions_CommunityQuestionId",
+                        column: x => x.CommunityQuestionId,
+                        principalTable: "CommunityQuestions",
                         principalColumn: "Id");
                 });
 
@@ -261,6 +310,21 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CommunityAnswers_CommunityAnswerId",
+                table: "CommunityAnswers",
+                column: "CommunityAnswerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommunityAnswers_CommunityQuestionId",
+                table: "CommunityAnswers",
+                column: "CommunityQuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommunityQuestions_QuestionId",
+                table: "CommunityQuestions",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ConfigurationProduct_ProductsProductId",
                 table: "ConfigurationProduct",
                 column: "ProductsProductId");
@@ -321,6 +385,9 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                 name: "Colors");
 
             migrationBuilder.DropTable(
+                name: "CommunityAnswers");
+
+            migrationBuilder.DropTable(
                 name: "ConfigurationProduct");
 
             migrationBuilder.DropTable(
@@ -334,6 +401,9 @@ namespace PimpYourBlech_ClassLibrary.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rims");
+
+            migrationBuilder.DropTable(
+                name: "CommunityQuestions");
 
             migrationBuilder.DropTable(
                 name: "Configurations");

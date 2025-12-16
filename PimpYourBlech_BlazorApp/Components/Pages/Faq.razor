@@ -1,41 +1,139 @@
 @page "/FAQ"
-<h3>FAQ</h3>
 
-<div>
-    <div class="accordion accordion-flush" id="accordionFlushExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingOne">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-        Accordion Item #1
-      </button>
-    </h2>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-        Accordion Item #2
-      </button>
-    </h2>
-    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingThree">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-        Accordion Item #3
-      </button>
-    </h2>
-    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-    </div>
-  </div>
+@using PimpYourBlech_ClassLibrary.Services.FAQ
+@using PimpYourBlech_ClassLibrary.Entities
+
+@inject IFaqService FaqService
+
+<h3>FAQ</h3>
+<br/>
+<br/>
+<h4>Häufig gestellte Fragen</h4>
+<div class="accordion accordion-flush">
+    @foreach (var item in AccordionItems)
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button @(item.IsOpen ? "" : "collapsed")" @onclick="() => Toggle(item)">
+                    @item.Title
+                </button>
+            </h2>
+            <div class="accordion-collapse @(item.IsOpen ? "show" : "collapse")">
+                <div class="accordion-body">
+                    @item.Content
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+<h4>Community Fragen</h4>
+
+<!-- Formular zum Posten einer Frage -->
+<div class="mb-4">
+    <textarea class="form-control mb-2" placeholder="Stelle deine Frage..." @bind="NewQuestionContent"></textarea>
+    <button class="btn btn-primary" @onclick="PostQuestion">Frage posten</button>
 </div>
+
+<!-- Liste der Fragen -->
+@foreach (var question in CommunityQuestions)
+{
+    <div class="card mb-2">
+        <div class="card-body">
+            <p>@question.Content</p>
+            <small class="text-muted">@question.CreatedAt.ToString("g")</small>
+
+            <!-- Antworten zu dieser Frage -->
+            <div class="mt-2 ms-3">
+                @foreach (var answer in question.Answers)
+                {
+                    <div class="card mb-1">
+                        <div class="card-body">
+                            <p>@answer.Content</p>
+                            <small class="text-muted">@answer.CreatedAt.ToString("g")</small>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Antwortformular -->
+            @if (!NewAnswerContent.ContainsKey(question.Id))
+            {
+                NewAnswerContent[question.Id] = "";
+            }
+            <input type="text" class="form-control mb-1"
+                   placeholder="Antwort hinzufügen..."
+                   @bind="NewAnswerContent[question.Id]" />
+                <button class="btn btn-secondary btn-sm" @onclick="() => PostAnswer(question.Id)">Antwort posten</button>
+            </div>
+        </div>
+}
 
 @code {
+    // ______________Akordeon auf der Seite_____________________
+    private List<AccordionItem> AccordionItems = new()
+    {
+        // Hier können Häufig Gestelte Fragen Angepasst werden
+        new AccordionItem { Title = "Ich habe Schwierigkeiten bei meiner Zahlung, was tun?", 
+                            Content = (MarkupString)@"Ganz einfach bei unserem Support unter <a href=""mailto:pimpyourblech@gmail.com"">pimpyourblech@gmail.com</a> melden, Ihre Anliegen sind uns wichtig!"},
+        new AccordionItem { Title = "Von wo kommen die Fahrzeuge?", 
+                            Content = (MarkupString)@"Wir sind Vertragspartner die ihren Service an Autohändler und Hersteller vermieten und die gesamte abwicklung für Sie übernehmen." },
+        new AccordionItem { Title = "Bietet Ihr keine E-Fahrzeuge an?", 
+                            Content = (MarkupString)@"E-Fahrzeuge werden unserer Produktspanne bald hinzugefügt." }
+    };
+
+    private void Toggle(AccordionItem item)
+    {
+        //Nur ein Item offen lassen
+        foreach (var i in AccordionItems)
+            i.IsOpen = false;
+
+        item.IsOpen = !item.IsOpen;
+    }
+
+    private class AccordionItem
+    {
+        public string Title { get; set; }
+        public MarkupString Content { get; set; }
+        public bool IsOpen { get; set; }
+        //----------------------------------------------------
+    }
+    //------------------Comunity FAQ----------------------
     
+    private List<CommunityQuestion> CommunityQuestions = new();
+    private string NewQuestionContent;
+    private Dictionary<int, string> NewAnswerContent = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
+        foreach (var q in CommunityQuestions)
+        {
+            if (!NewAnswerContent.ContainsKey(q.Id))
+                NewAnswerContent[q.Id] = "";
+        }
+
+    }
+
+    private async Task PostQuestion()
+    {
+        if (!string.IsNullOrWhiteSpace(NewQuestionContent))
+        {
+            await FaqService.AddCommunityQuestionAsync(NewQuestionContent);
+            NewQuestionContent = "";
+            CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
+        }
+    }
+
+    private async Task PostAnswer(int questionId)
+    {
+        if (NewAnswerContent.ContainsKey(questionId) && !string.IsNullOrWhiteSpace(NewAnswerContent[questionId]))
+        {
+            await FaqService.AddCommunityAnswerAsync(questionId, NewAnswerContent[questionId]);
+            NewAnswerContent[questionId] = "";
+            CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
+        }
+    }
+        
+    }
 }

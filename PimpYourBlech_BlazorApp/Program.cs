@@ -12,6 +12,7 @@ using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation;
+using PimpYourBlech_ClassLibrary.Services.FAQ;
 using PimpYourBlech_ClassLibrary.Services.Shop;
 using PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
 using PimpYourBlech_ClassLibrary.Session;
@@ -64,6 +65,7 @@ builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
 builder.Services.AddScoped<IShopService, ShopService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IFaqService, FaqService>();
 
 // 7) UserSession
 builder.Services.AddSingleton<IUserSession, UserSession>();

@@ -70,6 +70,33 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     {
         return database.Configurations.ToList();
     }
+    
+    public async Task AddCommunityQuestionAsync(string content)
+    {
+        CommunityQuestion temp = new CommunityQuestion();
+        temp.Content = content;
+        temp.CreatedAt = DateTime.UtcNow;
+        database.CommunityQuestions.Add(temp);
+        database.SaveChanges();
+    }
+
+    public async Task AddCommunityAnswerAsync(int questionId, string content)
+    {
+        CommunityAnswer temp = new CommunityAnswer();
+        temp.Content = content;
+        temp.CreatedAt = DateTime.UtcNow;
+        temp.QuestionId = questionId;
+        database.CommunityAnswers.Add(temp);
+        database.SaveChanges();
+    }
+    
+    public async Task<List<CommunityQuestion>> GetCommunityQuestionsAsync()
+    {
+        return await database.CommunityQuestions
+            .Include(q => q.Answers)
+            .OrderByDescending(q => q.CreatedAt)
+            .ToListAsync();
+    }
 }
 
     

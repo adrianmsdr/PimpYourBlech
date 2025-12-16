@@ -26,7 +26,10 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<ColorDetail> Colors { get; set; }
     public DbSet<Order> Orders { get; set; }
     
-
+    public DbSet<CommunityQuestion> CommunityQuestions { get; set; }
+    public DbSet<CommunityAnswer> CommunityAnswers { get; set; }
+    
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Connection String zur Datenbank
@@ -63,7 +66,24 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
               .WithOne(d => d.Product)
               .HasForeignKey<ColorDetail>(d => d.ProductId);
           
-//Später vielleicht auch eine eigne id ider wir machen nen datentyp Artikelnumnmer
+          // CommunityQuestion konfigurieren
+          modelBuilder.Entity<CommunityQuestion>().HasKey(q => q.Id);
+          modelBuilder.Entity<CommunityQuestion>().Property(q => q.Content).IsRequired();
+          modelBuilder.Entity<CommunityQuestion>().Property(q => q.CreatedAt).HasDefaultValueSql("NOW()");
+
+          // Beziehung zu CommunityAnswer
+          modelBuilder.Entity<CommunityQuestion>()
+              .HasMany(q => q.Answers)
+              .WithOne(a => a.Question)
+              .HasForeignKey(a => a.QuestionId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+          // CommunityAnswer konfigurieren
+          modelBuilder.Entity<CommunityAnswer>().HasKey(a => a.Id);
+          modelBuilder.Entity<CommunityAnswer>().Property(a => a.Content).IsRequired();
+          modelBuilder.Entity<CommunityAnswer>().Property(a => a.CreatedAt).HasDefaultValueSql("NOW()");
+          
+        //Später vielleicht auch eine eigne id ider wir machen nen datentyp Artikelnumnmer
         modelBuilder.Entity<Car>()
             .HasKey(a => a.Id);
 

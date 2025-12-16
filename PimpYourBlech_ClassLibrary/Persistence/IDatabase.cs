@@ -18,6 +18,9 @@ public interface IDatabase
     DbSet<EngineDetail>  Engines { get; }
 
     DbSet<RimDetail>  Rims { get; }
+    
+    DbSet<CommunityQuestion> CommunityQuestions { get; }
+    DbSet<CommunityAnswer> CommunityAnswers { get; }
 
     int SaveChanges();
     /*public void CreateCustomer(Customer customer);   
