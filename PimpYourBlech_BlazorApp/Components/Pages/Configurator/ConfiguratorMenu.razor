@@ -107,7 +107,7 @@ else
         </div>
     </div>
 
-    <h4 class="mt-4">Produkte</h4>
+    <h4 class="mt-4">Motor anpassen:</h4>
 
     @if (availableEngines.Count == 0)
     {
@@ -117,6 +117,33 @@ else
     {
         <div class="row">
             @foreach (var product in availableEngines)
+            {
+                <div class="col-4">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5>@product.Name</h5>
+                            <p>@product.Brand</p>
+                            <p><strong>@product.Price</strong></p>
+
+                            <button class="btn btn-primary" @onclick="() => AddProduct(product)">
+                                Hinzufügen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    
+    <h4 class="mt-4">Felgen anpassen:</h4>
+    @if (availableRims.Count == 0)
+    {
+        <p>Keine Produkte verfügbar.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var product in availableRims)
             {
                 <div class="col-4">
                     <div class="card mb-3">
@@ -216,18 +243,18 @@ else
 
                 // Produkte laden
                 availableEngines = ConfiguratorService.ListEngines();
-                //availableRims = ConfiguratorService.ListRims();
+                availableRims = ConfiguratorService.ListRims();
                 //availableLights = ConfiguratorService.ListLights();
 
                 UpdatePrice();
-                // optional: Konfiguration laden, wenn configId da ist
+               
                 var uri = Nav.ToAbsoluteUri(Nav.Uri);
                 var qs = QueryHelpers.ParseQuery(uri.Query);
 
                 if (qs.TryGetValue("configId", out var s) && int.TryParse(s, out var configId))
                 {
-                    configuration = ConfiguratorService.GetConfigurationById(configId); // oder sync
-                    name = configuration?.Name; // damit du NICHT wieder in den "Name eingeben" Screen fällst
+                    configuration = ConfiguratorService.GetConfigurationById(configId);
+                    name = configuration?.Name; 
                     UpdatePrice();
                 }
 
@@ -240,7 +267,7 @@ else
 
                 // Produkte laden
                 availableEngines = ConfiguratorService.ListEngines();
-                //availableRims = ConfiguratorService.ListRims();
+                availableRims = ConfiguratorService.ListRims();
                 //availableLights = ConfiguratorService.ListLights();
 
                 UpdatePrice();

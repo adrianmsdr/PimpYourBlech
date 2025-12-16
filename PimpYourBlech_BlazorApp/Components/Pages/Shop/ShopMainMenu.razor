@@ -5,15 +5,20 @@
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.ValueObjects
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
+@using PimpYourBlech_ClassLibrary.Session
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
 @inject ICartService CartService
+@inject IToastService ToastService
+@inject IUserSession UserSession
+
 
 <PageTitle>Shop</PageTitle>
-<h3>Ersatzteile - Shop</h3>
-
-<PageTitle>Shop</PageTitle>
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 <h3 class="headline">Ersatzteile - Shop</h3>
 
 <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
@@ -34,7 +39,7 @@
     @if (CartService.CartProductsList == null || !CartService.CartProductsList.Any())
     {
         <div class="null-content">
-            <button class="menu-item">Keine Produkte vorhanden</button>
+            <p class="no-products">Keine Produkte vorhanden</p>
         </div>
     }
     else
@@ -42,11 +47,25 @@
         <div class="sidebar-content">
             @foreach (var item in CartService.CartProductsList)
             {
-                <button class="menu-item">@item.Name – @item.Price.ToString("C")</button>
+                <div class="cart-item">
+                    <img src="@ImageService.GetProductImageUrl(item.ProductId)"
+                         alt="@item.Name"
+                         class="cart-item-image" />
+
+                    <p class="menu-item">
+                        @item.Name – @item.Price.ToString("C")
+                    </p>
+                </div>
             }
+
+            <u class="sum">
+                Summe: @ShopService.GetTotalPrice(UserSession.CurrentUser.Id) €
+            </u>
         </div>
     }
+    <button class="checkout-button" @onclick="NavigateToCheckout"><ShoppingCartIcon></ShoppingCartIcon> Zur Kasse</button>
 </div>
+
 @*
 Machen wir noch schön Bleibt nicht so aber im Prinzip holt der sich alle Produkte erstmal und zeigt sie mit
 ausgewählten infos + bild in so nem Kästchen wär noch schön
@@ -113,7 +132,8 @@ else
                     <h4>@product.Name</h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
-                    <button type="button" class="selectProduct" @onclick="() => CartService.AddProduct(product)">
+                    <button type="button" class="selectProduct"
+                            @onclick="() => AddToCart(product)">
                         <BuyIcon></BuyIcon> Kaufen
                     </button>
                 </div>
@@ -139,8 +159,6 @@ else
     {
         products = ShopService.GetProducts();
     }
-
-  
     
     private void ApplySearch()
     {
@@ -163,6 +181,19 @@ else
         IsOpen = !IsOpen;
     }
     
+    private void AddToCart(Product product)
+    {
+        CartService.AddProduct(product);
+        ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");
+        StateHasChanged();
+    }
+
+    private void NavigateToCheckout()
+    {
+        Nav.NavigateTo("/CheckoutPage");
+    }
+
+    
     // Führt zum Hauptmenü
     private void Cancel()
     {
@@ -175,7 +206,14 @@ else
     font-family: Bahnschrift;
     color: white;
     text-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-}    
+}
+
+.no-products {
+    color: white;
+    font-family: Bahnschrift;
+    text-align: center;
+    margin-top: 5px;
+}
 
 .product-grid {
     background-color: transparent;    
@@ -320,27 +358,85 @@ else
 
 .sidebar-content {
     padding: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
 }
 
-.menu-item {
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
     width: 100%;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 12px;
     background-color: #7a0000;
     color: white;
     border: 2px solid rgba(255, 0, 0, 0.6);
     border-radius: 8px;
     font-family: Bahnschrift;
-    font-size: 16px;
+    font-size: 15px;
     text-align: left;
-    cursor: pointer;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.menu-item:hover {
-    transform: scale(1.05);
+.cart-item-image {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+    .cart-item .menu-item {
+        flex: 1;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        font-family: Bahnschrift;
+        font-size: 15px;
+        color: white;
+        text-align: left;
+        cursor: default;
+    }
+
+
+.sum {
+    display: block;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 0, 0, 0.4);
+    color: white;
+    font-family: Bahnschrift;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.checkout-button {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: 80%;
+    height: 5%;
+    font-family: Bahnschrift;
+    font-size: 17px;
+    color: white;
+    background-color: #7a0000;
+    border-radius: 12px;
+    border: 2px solid #ff1a1a;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.checkout-button:hover {
+    transform: scale(1.1);
     background-color: #b30000;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+}
+
+.checkout-button:active {
+    transform: scale(1.2);
 }
 </style>

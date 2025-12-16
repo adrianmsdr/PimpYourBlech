@@ -22,7 +22,7 @@
     @foreach (var c in cars)
     {
 
-        <tr @onclick="@(() => Nav.NavigateTo($"/admin/cars/{c.Id}"))"
+        <tr @onclick="@(() => Nav.NavigateTo($"/administrator/cars/{c.Id}"))"
             style="cursor: pointer;">
             <td>@c.Name</td>
             <td>@c.Brand</td>

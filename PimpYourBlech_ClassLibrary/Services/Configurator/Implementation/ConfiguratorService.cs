@@ -1,4 +1,5 @@
 using PimpYourBlech_ClassLibrary.Entities;
+using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Inventories;
 
 namespace PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
@@ -103,6 +104,14 @@ public class ConfiguratorService : IConfiguratorService
     public List<Product> ListEngines()
     {
         return productInventory.ListEngines();
+    }
+
+    public List<Product> ListRims()
+    {
+       /* return productInventory.ListProducts()
+            .Where(p => p.RimDetail != null)
+            .ToList();*/
+       return productInventory.ListRims();
     }
 
     public List<Car> ListCars()
