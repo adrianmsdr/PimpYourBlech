@@ -4,7 +4,6 @@
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
-@using PimpYourBlech_ClassLibrary.ValueObjects
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
@@ -36,7 +35,7 @@
         <button class="close-btn" @onclick="ToggleSidebar">✕</button>
     </div>
 
-    @if (CartService.CartProductsList == null || !CartService.CartProductsList.Any())
+    @if (!CartService.CartProductsList.Any())
     {
         <div class="null-content">
             <p class="no-products">Keine Produkte vorhanden</p>
@@ -61,10 +60,15 @@
             <u class="sum">
                 Summe: @ShopService.GetTotalPrice(UserSession.CurrentUser.Id) €
             </u>
+
+            <button class="checkout-button"
+                    @onclick="NavigateToCheckout">
+                <ShoppingCartIcon /> Zur Kasse
+            </button>
         </div>
     }
-    <button class="checkout-button" @onclick="NavigateToCheckout"><ShoppingCartIcon></ShoppingCartIcon> Zur Kasse</button>
 </div>
+
 
 @*
 Machen wir noch schön Bleibt nicht so aber im Prinzip holt der sich alle Produkte erstmal und zeigt sie mit
@@ -132,10 +136,10 @@ else
                     <h4>@product.Name</h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
-                    <button type="button" class="selectProduct"
-                            @onclick="() => AddToCart(product)">
-                        <BuyIcon></BuyIcon> Kaufen
-                    </button>
+                        <button type="button" class="selectProduct"
+                                @onclick="() => AddToCart(product)">
+                            <BuyIcon></BuyIcon> Kaufen
+                        </button>
                 </div>
             </div>
         }
@@ -389,19 +393,19 @@ else
     flex-shrink: 0;
 }
 
-    .cart-item .menu-item {
-        flex: 1;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        margin: 0;
-        font-family: Bahnschrift;
-        font-size: 15px;
-        color: white;
-        text-align: left;
-        cursor: default;
-    }
+.cart-item .menu-item {
+    flex: 1;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-family: Bahnschrift;
+    font-size: 15px;
+    color: white;
+    text-align: left;
+    cursor: default;
+}
 
 
 .sum {

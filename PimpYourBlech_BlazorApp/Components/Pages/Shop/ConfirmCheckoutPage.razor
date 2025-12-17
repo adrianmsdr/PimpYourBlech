@@ -1,0 +1,191 @@
+﻿@page "/ConfirmCheckoutPage"
+
+@inject NavigationManager Nav
+@inject IImageService ImageService
+@inject IShopService ShopService
+@inject ICartService CartService
+@inject IToastService ToastService
+@inject IUserSession UserSession
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Services.Carts
+@using PimpYourBlech_ClassLibrary.Services.Shop
+@using PimpYourBlech_ClassLibrary.Session
+@using Blazored.Toast.Services
+
+<h3>Übersicht</h3>
+
+<div class="container">
+    <h4>Dein Warenkorb</h4>
+
+    @foreach (var item in CartService.CartProductsList)
+    {
+        <div class="cart-item">
+            <img src="@ImageService.GetProductImageUrl(item.ProductId)"
+                 alt="@item.Name"
+                 class="cart-item-image" />
+
+            <p class="menu-item">
+                @item.Name – @item.Price.ToString("C")
+            </p>
+        </div>
+    }
+</div>
+
+@if (UserSession.DeliveryAddress is null)
+{
+    <p>Keine Lieferadresse vorhanden.</p>
+}
+else
+{
+    <div class="container">
+        <h4>Deine Lieferadresse</h4>
+
+        <p>
+            @UserSession.DeliveryAddress.Salutation
+            @UserSession.DeliveryAddress.Surname
+            @UserSession.DeliveryAddress.Lastname
+        </p>
+
+        <p>
+            @UserSession.DeliveryAddress.Street
+            @UserSession.DeliveryAddress.HouseNumber
+        </p>
+
+        <p>
+            @UserSession.DeliveryAddress.PostalCode
+            @UserSession.DeliveryAddress.Town
+        </p>
+
+        <p>
+            @UserSession.DeliveryAddress.Country
+        </p>
+    </div>
+
+    @if (UserSession.PaymentValues is null)
+    {
+        <p>Keine Bezahldaten vorhanden.</p>
+    }
+    else
+    {
+        <div class="container">
+            <h4>Deine Bezahlung</h4>
+
+            <p>
+                <strong>Kontoinhaber:</strong>
+                @UserSession.PaymentValues.AccountOwner
+            </p>
+
+            <p>
+                <strong>IBAN:</strong>
+                **** **** **** @UserSession.PaymentValues.Iban[^4..]
+            </p>
+
+            <p>
+                <strong>BIC:</strong>
+                @UserSession.PaymentValues.Bic
+            </p>
+        </div>
+    }
+
+    <button class="checkout-button"
+            onclick="@ConfirmPayment">
+        Kauf bestätigen
+    </button>
+}
+
+@code {
+
+    private void ConfirmPayment()
+    {
+        Nav.NavigateTo("/BuySuccessfull");
+    }
+}
+
+<style>
+
+    .container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        color: white;
+        font-family: Bahnschrift;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+        width: 100%;
+        padding: 12px;
+        background-color: #7a0000;
+        color: white;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        border-radius: 8px;
+        font-family: Bahnschrift;
+        font-size: 15px;
+        text-align: left;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cart-item-image {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 6px;
+        flex-shrink: 0;
+    }
+
+    .cart-item .menu-item {
+        flex: 1;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        font-family: Bahnschrift;
+        font-size: 15px;
+        color: white;
+        text-align: left;
+        cursor: default;
+    }
+
+    .checkout-button {
+        display: block;
+        margin: 20px auto 0 auto;
+        width: 80%;
+        height: 20%;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .checkout-button:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .checkout-button:active {
+        transform: scale(1.2);
+    }
+</style>
