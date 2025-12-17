@@ -1,0 +1,156 @@
+﻿@inject NavigationManager Nav
+
+@page "/SepaPaymentPage"
+@using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.Session.Implementation
+@inject IUserSession UserSession
+
+
+<div class="sepa-container">
+    
+    <p class="font">Kontoinhaber</p>
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Vorname"
+               @bind="surname"/>
+    </div>
+    
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Nachname"
+               @bind="lastname"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="IBAN"
+               @bind="iban"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="BIC"
+               @bind="bic"/>
+    </div>
+    
+    <button class="buttons"
+            disabled="@IsCheckoutDisabled"
+            onclick="@NavigateToConfirm"
+    >Weiter zur Bestätigung</button>
+    
+</div>
+
+@code {
+    private string surname  = string.Empty;
+    private string lastname = string.Empty;
+    private string iban     = string.Empty;
+    private string bic      = string.Empty;
+
+    private bool IsCheckoutDisabled =>
+        string.IsNullOrWhiteSpace(surname) ||
+        string.IsNullOrWhiteSpace(lastname) ||
+        string.IsNullOrWhiteSpace(iban) ||
+        string.IsNullOrWhiteSpace(bic);
+
+    private void NavigateToConfirm()
+    {
+        UserSession.PaymentValues = new PaymentValues
+        {
+            AccountOwner = $"{surname} {lastname}",
+            Iban = iban,
+            Bic = bic
+        };
+
+        Nav.NavigateTo("/ConfirmCheckoutPage");
+    }
+}
+<style>
+
+    .sepa-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+    .text-input {
+        width: 240px;
+        height: 38px;
+        padding: 6px;
+        font-family: Bahnschrift;
+        text-align: center;
+        background-color: rgba(20, 0, 0, 0.65);
+        color: white;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        outline: none;
+        transition: 0.25s ease;
+    }
+
+    .text-input:hover {
+        transform: scale(1.1);
+    }
+
+    .text-input:focus {
+        border-color: #ff3333;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    }
+    
+    .font {
+        color: white;
+        font-family: Bahnschrift;
+    }
+
+    .buttons {
+        width: 200px;
+        height: 70px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+        transition:
+            transform 0.25s ease,
+            background-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .buttons:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .buttons:active {
+        transform: scale(1.2);
+    }
+
+    .buttons:disabled {
+        background-color: #4a4a4a;
+        border-color: #777;
+        color: #bbb;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+        opacity: 0.6;
+    }
+
+    .buttons:disabled:hover {
+        transform: none;
+        background-color: #4a4a4a;
+        box-shadow: none;
+    }
+</style>

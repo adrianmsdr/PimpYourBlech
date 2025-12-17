@@ -2,9 +2,6 @@ namespace PimpYourBlech_ClassLibrary.Entities;
 
 public class Customer ()
     {
-        
-        
-    
     //Getter/Setter
     public int Id { get; set; }
     public List<Configuration> Configurations { get; set; } = new List<Configuration>();

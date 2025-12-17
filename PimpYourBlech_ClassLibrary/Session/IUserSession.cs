@@ -1,20 +1,25 @@
 using PimpYourBlech_ClassLibrary.Entities;
+using PimpYourBlech_ClassLibrary.Session.Implementation;
 
 namespace PimpYourBlech_ClassLibrary.Session;
 
+using PimpYourBlech_ClassLibrary.Entities;
+
 public interface IUserSession
 {
+    Customer? CurrentUser { get; set; }
 
+    bool IsLoggedIn { get; }
 
-    public Customer  CurrentUser { get; set; }
-    
-  public bool IsLoggedIn { get; }
     bool IsAdmin { get; }
-    
-    public Configuration CurrentConfiguration { get; set; }
-    
-    void LogOut();
-    void LogIn(Customer customer);
 
-    string ToString();
+    Configuration? CurrentConfiguration { get; set; }
+
+    DeliveryAddress? DeliveryAddress { get; set; }
+    
+    PaymentValues? PaymentValues { get; set; }
+
+    void LogOut();
+
+    void LogIn(Customer customer);
 }
