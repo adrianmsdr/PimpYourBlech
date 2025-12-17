@@ -1,22 +1,222 @@
 ﻿@page "/CheckoutPage"
+
 @using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
-@using PimpYourBlech_ClassLibrary.ValueObjects
-@using Blazored.Toast
-@using Blazored.Toast.Configuration
-@using Blazored.Toast.Services
 @using PimpYourBlech_ClassLibrary.Session
+@using Blazored.Toast.Services
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
 @inject ICartService CartService
 @inject IToastService ToastService
 @inject IUserSession UserSession
-<h3>CheckoutPage</h3>
+
+
+<div class="checkout-container">
+    
+    <h3 class="font">Kasse</h3>
+    <p class="font">Wohin sollen wir deine Bestellung liefern?</p>
+    
+    <div class="mb-3">
+        <select class="text-input" @bind="salutation">
+            <option value="">Anrede wählen</option>
+            <option value="Herr">Herr</option>
+            <option value="Frau">Frau</option>
+            <option value="Divers">Divers</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Vorname"
+               @bind="surname"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Nachname"
+               @bind="lastname"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Straße"
+               @bind="street"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Hausnummer"
+               @bind="housenumber"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Ort"
+               @bind="town"/>
+    </div>
+
+    <div class="mb-3">
+        <input class="text-input"
+               placeholder="Postleitzahl"
+               @bind="postalcode"/>
+    </div>
+
+    <div class="mb-3">
+        <select class="text-input" @bind="country">
+            <option value="">Land wählen</option>
+            <option value="DE">🇩🇪 Deutschland</option>
+            <option value="AT">🇦🇹 Österreich</option>
+            <option value="CH">🇨🇭 Schweiz</option>
+        </select>
+    </div>
+
+    <p class="font">Womit möchtest du bezahlen?</p>
+
+    <div class="d-flex gap-3">
+        <button class="buttons"
+                disabled="@IsCheckoutDisabled">
+            <PayPalIcon/> Mit Paypal bezahlen
+        </button>
+
+        <button class="buttons"
+                disabled="@IsCheckoutDisabled"
+                onclick="@NavigateToConfirm">
+            <CreditCardIcon/> Per Lastschrift bezahlen
+        </button>
+    </div>
+</div>
 
 @code {
+    private string salutation  = string.Empty;
+    private string surname     = string.Empty;
+    private string lastname    = string.Empty;
+    private string street      = string.Empty;
+    private string housenumber = string.Empty;
+    private string town        = string.Empty;
+    private string postalcode  = string.Empty;
+    private string country     = string.Empty;
+    
+    private bool IsCheckoutDisabled =>
+            string.IsNullOrWhiteSpace(salutation) ||
+            string.IsNullOrWhiteSpace(country)    ||
+            string.IsNullOrWhiteSpace(surname)    ||
+            string.IsNullOrWhiteSpace(lastname)   ||
+            string.IsNullOrWhiteSpace(street)     ||
+            string.IsNullOrWhiteSpace(housenumber)||
+            string.IsNullOrWhiteSpace(town)       ||
+            string.IsNullOrWhiteSpace(postalcode);
+
+    private void NavigateToConfirm()
+    {
+        UserSession.DeliveryAddress = new DeliveryAddress
+        {
+            Salutation  = salutation,
+            Surname     = surname,
+            Lastname    = lastname,
+            Street      = street,
+            HouseNumber = housenumber,
+            Town        = town,
+            PostalCode  = postalcode,
+            Country     = country
+        };
+
+        Nav.NavigateTo("/SepaPaymentPage");
+    }
+
     
 }
+
+<style>
+
+    .checkout-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+    .text-input {
+        width: 240px;
+        height: 38px;
+        padding: 6px;
+        font-family: Bahnschrift;
+        text-align: center;
+        background-color: rgba(20, 0, 0, 0.65);
+        color: white;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        outline: none;
+        transition: 0.25s ease;
+    }
+
+    .text-input:hover {
+        transform: scale(1.1);
+    }
+
+    .text-input:focus {
+        border-color: #ff3333;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    }
+
+    .buttons {
+        width: 200px;
+        height: 70px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+        transition:
+            transform 0.25s ease,
+            background-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .buttons:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .buttons:active {
+        transform: scale(1.2);
+    }
+
+    .buttons:disabled {
+        background-color: #4a4a4a;
+        border-color: #777;
+        color: #bbb;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+        opacity: 0.6;
+    }
+
+    .buttons:disabled:hover {
+        transform: none;
+        background-color: #4a4a4a;
+        box-shadow: none;
+    }
+    
+    .font {
+        color: white;
+        font-family: Bahnschrift;
+    }
+
+</style>
