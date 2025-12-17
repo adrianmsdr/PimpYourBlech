@@ -2,21 +2,6 @@ namespace PimpYourBlech_ClassLibrary.Entities;
 
 public class Car
 {
-    public Car()
-    {
-        
-    }
-    /*public Car(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity, double price)
-    {
-        Name = name;
-        DateProduction = dateProduction;
-        DatePermit = datePermit;
-        Brand = brand;
-        Model = model;
-        PS = ps;
-        Quantity = quantity;
-        Price = price;
-    }*/
 
     public int Id { get; set; }
     public string Name { get; set; } 
@@ -32,7 +17,7 @@ public class Car
     public double Price {get; set;}
 
     public List<Product> Colors { get; set; } = new List<Product>();
-    //public Engine Engine {get; set;}
+  
     
 
     public override string ToString()

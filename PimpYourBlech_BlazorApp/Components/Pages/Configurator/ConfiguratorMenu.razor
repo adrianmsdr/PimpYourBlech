@@ -5,7 +5,6 @@
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Configurator
-@using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation
 @using PimpYourBlech_ClassLibrary.Session
 @inject IImageService ImageService
 @inject IConfiguratorService ConfiguratorService
@@ -14,16 +13,10 @@
 
 
 @*
-- Auto wählen
-- Konfiguration eigenen Namen geben
-- Möglichkeiten anzeigen das Auto zu Konfigurieren
-- Preis berechnen
+
 - zurücksetzen
 - undo?
-- Konfiguration speichern
-- Konfiguration löschen
 - evtl. Direkt mit anderen vergleich
-- Konfiguration umbenennen
 *@
 <h3>Konfigurator</h3>
 @if (name == null)
@@ -59,7 +52,7 @@ else
             
             @if (frameUrls.Count > 0)
             {
-                <!-- 360°-Ansicht -->
+                @*360°-Ansicht*@
                 <div class="car-360-wrapper">
                     <img src="@frameUrls[currentFrame]"
                          alt="360°-Ansicht @Car?.Name"
@@ -90,7 +83,6 @@ else
                     </div>
                 </div>
             }
-            @* </div>*@
         </div>
 
         <div class="col-lg-4">
@@ -227,7 +219,7 @@ else
             if (Car == null) return;
 
             // 360°-Bilder
-            availableColors = ConfiguratorService.GetAvailableColors(Id); // neue Service-Methode
+            availableColors = ConfiguratorService.GetAvailableColors(Id);
             if (availableColors != null)
             {
                 if (availableColors.Count > 0)

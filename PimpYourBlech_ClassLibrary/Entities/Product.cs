@@ -26,17 +26,3 @@ public class Product
     
     public ColorDetail? ColorDetail { get; set; }
 }
-/*(string name, string articleNumber, string brand, string description, int quantity, double price)
-{
-public string Name { get; set; } = name;
-public string ArticleNumber{ get; set; }  = articleNumber;
-public string Brand { get; set; }   = brand;
-public string Description{get;set;}   = description;
-public int Quantity { get; set; }   = quantity;
-public double Price { get; set; }   = price;
-
-public override string ToString()
-{
-return "Name: " + Name + "\nArtikelnummer: " + ArticleNumber + "\nHersteller: " + Brand + "\nAuf Lager: " + Quantity + "\nPreis: " +  Price + "\nBeschreibung: " +  Description;
-}
-}*/

@@ -24,8 +24,7 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     {
         database.Customers.RemoveRange(database.Customers);
         database.SaveChanges();
-        // _customers.Clear();
-        //database.SaveCustomers(_customers);
+     
     }
     
 
@@ -40,7 +39,6 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         c.Username = username;
         c.PasswordHash = passwordHash;
         c.Telefon = telefon;
-        //database.SaveCustomers(_customers);
         database.SaveChanges();
 
         
