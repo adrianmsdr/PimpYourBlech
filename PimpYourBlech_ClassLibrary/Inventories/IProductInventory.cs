@@ -9,9 +9,7 @@ public interface IProductInventory
     public List<Product> ListProducts();
     
     public void DeleteProduct(Product p);
-
-    // _____________________________________ nur für die konsole erstmal __________________________________________
-
+    
     public List<Product> ListEngines();
     
     public List<Product> ListRims();

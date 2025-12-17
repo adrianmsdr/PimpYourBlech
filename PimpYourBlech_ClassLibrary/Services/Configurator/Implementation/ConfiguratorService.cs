@@ -29,7 +29,6 @@ public class ConfiguratorService : IConfiguratorService
             Car = car,
             CustomerId = customer.Id,
         };
-       // customer.Configurations.Add(config);
         _customerInventory.AddConfiguration(config);
         customer.Configurations.Add(config);
         return config;
@@ -108,9 +107,6 @@ public class ConfiguratorService : IConfiguratorService
 
     public List<Product> ListRims()
     {
-       /* return productInventory.ListProducts()
-            .Where(p => p.RimDetail != null)
-            .ToList();*/
        return productInventory.ListRims();
     }
 

@@ -127,13 +127,13 @@
             return;
         }
 
-        // Auto in DB speichern → AdminService bestimmt Car.Id
+        // Auto in DB speichern
         Car car = AdminService.RegisterCar(
             name, dateProduction, datePermit, brand, model, psValue,
             quantityValue, priceValue
         );
 
-        // Falls Bilder ausgewählt → speichern
+        // Falls Bilder ausgewählt speichern
         try
         {
                 if (uploadedCarImage != null)
@@ -153,7 +153,7 @@
 
     private void Cancel()
     {
-        Nav.NavigateTo("/");
+        Nav.NavigateTo("/administrator/cars");
     }
 }
 
