@@ -5,28 +5,37 @@
 
 @inject IFaqService FaqService
 
-<h3>FAQ</h3>
-<br/>
-<br/>
-<h4>Häufig gestellte Fragen</h4>
-<div class="accordion accordion-flush">
-    @foreach (var item in AccordionItems)
-    {
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button @(item.IsOpen ? "" : "collapsed")" @onclick="() => Toggle(item)">
-                    @item.Title
-                </button>
-            </h2>
-            <div class="accordion-collapse @(item.IsOpen ? "show" : "collapse")">
-                <div class="accordion-body">
-                    @item.Content
-                </div>
-            </div>
-        </div>
-    }
+<!-- Hero Header -->
+<div class="hero-header d-flex align-items-center mb-5">
+    <div class="container-fluid text-white text-center">
+        <h1 class="display-4 fw-bold">FAQ & Community</h1>
+        <p class="lead">
+            Antworten auf häufige Fragen und Austausch mit der Community
+        </p>
+    </div>
 </div>
 
+    <h4>Häufig gestellte Fragen</h4>
+    <div class="accordion accordion-flush">
+        @foreach (var item in AccordionItems)
+        {
+            <div class="form-control accordion-item mb-3">
+                <h2 class="box-control accordion-header">
+                    <button class="back-control accordion-button @(item.IsOpen ? "" : "collapsed")" @onclick="() => Toggle(item)">
+                        @item.Title
+                    </button>
+                </h2>
+                <div class="accordion-collapse @(item.IsOpen ? "show" : "collapse")">
+                    <div class="border-akkordion accordion-body">
+                        @item.Content
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+
+<br/>
 <h4>Community Fragen</h4>
 
 <!-- Formular zum Posten einer Frage -->
@@ -38,23 +47,34 @@
 <!-- Liste der Fragen -->
 @foreach (var question in CommunityQuestions)
 {
-    <div class="card mb-2">
+    <div class="form-control card mb-2">
         <div class="card-body">
             <p>@question.Content</p>
-            <small class="text-muted">@question.CreatedAt.ToString("g")</small>
+            <small class="faq-timestamp">@question.CreatedAt.ToString("g")</small>
+            
+            <!-- Toggle Button -->
+            <button class="btn btn-link p-0 mt-2"
+                    @onclick="() => ToggleAnswers(question.Id)">
+                @(IsAnswersOpen(question.Id)
+                    ? "Antworten ausblenden"
+                    : $"Antworten anzeigen ({question.Answers.Count})")
+            </button>
 
             <!-- Antworten zu dieser Frage -->
-            <div class="mt-2 ms-3">
-                @foreach (var answer in question.Answers)
-                {
-                    <div class="card mb-1">
-                        <div class="card-body">
-                            <p>@answer.Content</p>
-                            <small class="text-muted">@answer.CreatedAt.ToString("g")</small>
+            @if (IsAnswersOpen(question.Id) && question.Answers != null)
+            {
+                <div class="mt-2 ms-3">
+                    @foreach (var answer in question.Answers)
+                    {
+                        <div class="form-control card mb-1">
+                            <div class="card-body">
+                                <p>@answer.Content</p>
+                                <small class="faq-timestamp">@answer.CreatedAt.ToString("g")</small>
+                            </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            }
 
             <!-- Antwortformular -->
             @if (!NewAnswerContent.ContainsKey(question.Id))
@@ -64,7 +84,7 @@
             <input type="text" class="form-control mb-1"
                    placeholder="Antwort hinzufügen..."
                    @bind="NewAnswerContent[question.Id]" />
-                <button class="btn btn-secondary btn-sm" @onclick="() => PostAnswer(question.Id)">Antwort posten</button>
+                <button class="btn btn-primary btn-sm" @onclick="() => PostAnswer(question.Id)">Antwort posten</button>
             </div>
         </div>
 }
@@ -134,6 +154,82 @@
             CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
         }
     }
-        
+    //----------Ausklappfunktion der Fragen--------------
+    private HashSet<int> OpenAnswerQuestions = new();
+
+    private void ToggleAnswers(int questionId)
+    {
+        if (!OpenAnswerQuestions.Add(questionId))
+            OpenAnswerQuestions.Remove(questionId);
+    }
+
+    private bool IsAnswersOpen(int questionId)
+    {
+        return OpenAnswerQuestions.Contains(questionId);
+    }
+    
     }
 }
+<style>
+.hero-header {
+    
+    min-height: 750px;
+    border-radius: 15px;
+    
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.55),
+        rgba(0, 0, 0, 0.55)
+    ),
+    url('QandA_Header.png'); /* Bildpfad */
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.back-control{
+    font-family: Bahnschrift;
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    
+    
+}.box-control {
+     font-family: Bahnschrift;
+     background-color: rgba(0, 0, 0, 0) !important;
+     color: #fff !important;
+     box-shadow: none !important;
+ }
+
+.faq-timestamp {
+    color: #ff1a1a  ;     
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.bottom-margin {
+    margin-bottom: 10px !important;
+}
+
+.border-akkordion {
+    border-top: 2px solid rgba(255,0,0,.6) !important;
+}
+
+.btn-link {
+    font-size: 0.85rem;
+    color: #0d6efd;
+    text-decoration: none;
+    padding-bottom: 10px !important;
+    padding-left: 8px !important;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.accordion-item {
+    margin-bottom: 15px;
+}
+
+
+</style>
