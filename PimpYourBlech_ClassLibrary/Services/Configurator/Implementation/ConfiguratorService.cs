@@ -49,8 +49,23 @@ public class ConfiguratorService : IConfiguratorService
     
     public void AddProduct(Configuration configuration, Product product)
     {
+        if (product == null || configuration == null)
+            return;
+
+        var existingProduct = configuration.Products
+            .FirstOrDefault(p => p.ProductType == product.ProductType);
+
+        // exakt gleiches Produkt → nichts tun
+        if (existingProduct?.ProductId == product.ProductId)
+            return;
+
+        // gleicher ProductType → ersetzen
+        if (existingProduct != null)
+            configuration.Products.Remove(existingProduct);
+
         configuration.Products.Add(product);
         SaveConfigurations();
+    
     }
     
     public void RemoveProduct(Configuration configuration, Product product)
@@ -122,5 +137,10 @@ public class ConfiguratorService : IConfiguratorService
     public List<Product> GetAvailableColors(int Id)
     {
         return carInventory.GetAvailableColor(Id);
+    }
+
+    public Product GetProductById(int Id)
+    {
+        return productInventory.ListProducts().FirstOrDefault(p => p.ProductId == Id);
     }
 }

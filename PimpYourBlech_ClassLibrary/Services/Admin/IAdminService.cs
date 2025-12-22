@@ -43,7 +43,7 @@ public interface IAdminService
      
      public Product RegisterLights(Product p, int lumen, bool isLED);
      
-     public Product RegisterColor(Product p, Car c);
+     public Product RegisterColor(Product p, Car c,string colorName);
      Product GetProductById(int id);
    
      void DeleteProduct(Product p);

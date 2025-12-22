@@ -241,11 +241,12 @@ public class AdminService:IAdminService
         return p;
     }
 
-    public Product RegisterColor(Product p, Car c)
+    public Product RegisterColor(Product p, Car c,string colorName)
     {
         ColorDetail temp = new ColorDetail();
         temp.ProductId = p.ProductId;
         temp.Product = p;
+        temp.DisplayName = colorName;
         p.ColorDetail = temp;
         productRepository.InsertProduct(p);
         c.Colors.Add(p);

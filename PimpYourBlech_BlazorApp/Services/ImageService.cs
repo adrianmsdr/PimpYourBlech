@@ -86,8 +86,7 @@ public class ImageService: IImageService
         }
 
         public async Task<string> SaveColorImagesAsync(int carId, int productId, IReadOnlyList<IBrowserFile> files)
-        {
-            var filesSorted = files.OrderBy(f => f.Name);
+        { 
             // vollständigen System-Pfad zum Autoordner + Farbe bauen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), productId.ToString());
 
@@ -97,7 +96,7 @@ public class ImageService: IImageService
             // Dateinamen fortlaufend generieren: frame_00, frame_01 ...
             int index = 0;
 
-            foreach (var file in filesSorted)
+            foreach (var file in files)
             {
                 // Dateiendung des Originals übernehmen ( .webp bei mir grad)
                 var extension = Path.GetExtension(file.Name);
