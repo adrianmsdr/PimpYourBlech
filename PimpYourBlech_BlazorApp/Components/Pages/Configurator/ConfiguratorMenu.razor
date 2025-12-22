@@ -19,35 +19,34 @@
 - evtl. Direkt mit anderen vergleich
 *@
 
+
+
 @if (configuration == null)
 {
-    <div class="mb-3">
+    <div class="registration-container">
         <input class="text-input"
                placeholder="Konfigurationsname"
                @bind="configurationName"/>
-    </div>
    
         <button class="buttons" @onclick="StartConfiguration">Konfiguration starten</button>
         <button class="buttons" @onclick="Cancel">Abbrechen</button>
-   
+    </div>
 }
 else
 {
-    <h3 class="headline">Aktuelle Konfigurationen: @configuration.Name </h3>
+    <div class="configurator-header">
+        <img src="/KonfigBanner.png" class="header" />
+        </div>
+    <div class="config-strip">
+        <div class="config-strip-left">
+            <span class="config-strip-label">Aktuelle Konfiguration:</span>
+            <span class="config-strip-name">@configuration.Name</span>
+        </div>
+        <div class="config-strip-right">
+            <span class="config-strip-price">@totalPrice €</span>
+        </div>
+    </div>
     <div class="row g-4t">
-
-        @if (availableColors.Count > 0)
-        {
-            <div class="color-bar mb-2">
-                @foreach (var c in availableColors)
-                {
-                    <button class="buttons @(c.ProductId == selectedProductId ? "active" : "")"
-                            @onclick="() => SelectColor(c.ProductId)">
-                        @c.ColorDetail.DisplayName
-                    </button>
-                }
-            </div>
-        }
 
         <div class="col-lg-8">
 
@@ -126,8 +125,42 @@ else
             </div>
         </div>
     </div>
+    <div class="section-strip mt-4">Farbe wählen:</div>
+    @if (availableColors.Count == 0)
+    {
+        <p>Keine Farben verfügbar.</p>
+    }else{
+        
+        <div class="row">
+            @foreach (var c in availableColors)
+            {
+                
+                
+                var isSelected = configuration?.Products?.Any(p => p.ProductId == c.ProductId) == true;
+                <div class="col-4">
+                    <div class="card mb-3 configurator-card @(isSelected ? "selected" : "")"
+                         role="button"
+                         tabindex="0"
+                         @onclick="() => SelectColor(c.ProductId)">
 
-    <h4 class="mt-4">Motor anpassen:</h4>
+                        <img class="product-img"
+                             src="@ImageService.GetProductImageUrl(c.ProductId)"
+                             alt="@c.ColorDetail.DisplayName"/>
+                        <div class="card-body">
+                            <h5>@c.ColorDetail.DisplayName</h5>
+                            <p>@c.Brand</p>
+                            <p><strong>@c.Price</strong></p>
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    <div class="section-strip mt-4">Motor wählen:</div>
+
+   
 
     @if (availableEngines.Count == 0)
     {
@@ -161,7 +194,8 @@ else
         </div>
     }
 
-    <h4 class="mt-4">Felgen anpassen:</h4>
+    <div class="section-strip mt-4">Felgen wählen:</div>
+
     @if (availableRims.Count == 0)
     {
         <p>Keine Produkte verfügbar.</p>
@@ -192,10 +226,11 @@ else
             }
         </div>
     }
-
+    <div class="registration-container">
     <button class="buttons" @onclick="SaveConfiguration">Speichern</button>
     <button class="buttons" @onclick="DeleteConfiguration">Löschen</button>
     <button class="buttons" @onclick="GoToOrderConfiguration">Anfragen</button>
+    </div>
 }
 
 @code {
@@ -466,8 +501,7 @@ else
     width: 100%;
     height: auto;
     display: block;
-    object-fit: contain;
-}
+    object-fit: contain;}
 
 /* Untere Control-Leiste (Pfeile + Counter) für die 360°-Ansicht */
 .car-360-controls {
@@ -548,15 +582,16 @@ else
 
 /* Rechte Karte: Glas-Look, Schatten, roter Akzent links und volle Breite innerhalb der Spalte */
 .car-details-card {
+    
     width: 100%;
     height: 100%;
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-    backdrop-filter: blur(6px);
     border-left: 5px solid #8b0000;
     flex: 1 1 auto;
+    backdrop-filter: blur(6px);
 
 }
 
@@ -641,5 +676,128 @@ else
 .configurator-card.selected {
     border: 5px solid #0d6efd;
     box-shadow: 0 6px 14px rgba(13,110,253,0.25);
+}
+
+.configurator-header {
+      width: 100%;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+  }
+
+.header {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 25px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+    }
+
+.config-strip {
+    width: 100%;
+    margin: -10px auto 22px auto;
+    padding: 14px 18px;
+    border-radius: 25px;
+
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(6px);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.config-strip-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+}
+
+.config-strip-label {
+    opacity: 0.8;
+    font-weight: 600;
+    color: #444;
+    font-weight: 600;
+}
+
+.config-strip-name {
+    font-weight: 800;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #8b0000;          
+    font-weight: 800;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.config-strip-right {
+    font-weight: 800;
+    opacity: 0.95;
+    color: #222;
+    font-weight: 800;
+}
+
+.section-strip {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 25px;
+
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+    backdrop-filter: blur(6px);
+
+    color: #8b0000;
+    font-weight: 800;
+    font-size: 1.2rem;
+
+    margin-bottom: 14px;
+}
+.registration-container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 55%;
+    height: 100%;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.text-input {
+    width: 240px;
+    height: 38px;
+    padding: 6px;
+    font-family: Bahnschrift;
+    text-align: center;
+    background-color: rgba(20, 0, 0, 0.65);
+    color: white;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 0, 0, 0.6);
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.text-input:hover {
+    transform:scale(1.1);
+}
+.text-input:focus {
+    border-color: #ff3333;
+    box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
 }
 </style>
