@@ -188,9 +188,11 @@ public class AdminService:IAdminService
     
     
     // ___________________________________Poducts____________________________________
-    public Product CreateProduct(string name, string articleNumber, string brand, int quantity, double price, ProductType productType)
+    public Product CreateProduct(Car car, string name, string articleNumber, string brand, int quantity, double price, ProductType productType)
     {
         Product temp  = new Product();
+        temp.Car = car;
+        temp.CarId = car.Id;
         temp.Name = name;
         temp.ArticleNumber = articleNumber;
         temp.Brand = brand;
@@ -244,8 +246,6 @@ public class AdminService:IAdminService
         ColorDetail temp = new ColorDetail();
         temp.ProductId = p.ProductId;
         temp.Product = p;
-        temp.Car = c;
-        temp.CarId = c.Id;
         p.ColorDetail = temp;
         productRepository.InsertProduct(p);
         c.Colors.Add(p);

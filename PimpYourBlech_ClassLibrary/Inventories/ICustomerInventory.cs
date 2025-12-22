@@ -29,4 +29,6 @@ public interface ICustomerInventory
 
     public Task<List<CommunityQuestion>> GetCommunityQuestionsAsync();
     public List<Configuration> ListConfigurations();
+    
+    public void DeleteConfiguration(Configuration config);
 }

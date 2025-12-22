@@ -39,56 +39,29 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
         optionsBuilder.UseNpgsql(cs);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+   protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-  // CustomerID oder so als Primary key
-        modelBuilder.Entity<Customer>()
-            .HasKey(b => b.Id);
-          
-          
-          modelBuilder.Entity<Product>()
-              .HasOne(p => p.EngineDetail)
-              .WithOne(d => d.Product)
-              .HasForeignKey<EngineDetail>(d => d.ProductId);
+        base.OnModelCreating(modelBuilder);
 
-          modelBuilder.Entity<Product>()
-              .HasOne(p => p.RimDetail)
-              .WithOne(d => d.Product)
-              .HasForeignKey<RimDetail>(d => d.ProductId);
+        // Product -> Car (1:n)  (EMPFOHLEN: Car.Products in Car.cs anlegen)
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Car)
+            .WithMany(c => c.Products)      // statt .WithMany()
+            .HasForeignKey(p => p.CarId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-          modelBuilder.Entity<Product>()
-              .HasOne(p => p.LightsDetail)
-              .WithOne(d => d.Product)
-              .HasForeignKey<LightsDetail>(d => d.ProductId);
-      
-          modelBuilder.Entity<Product>()
-              .HasOne(p => p.ColorDetail)
-              .WithOne(d => d.Product)
-              .HasForeignKey<ColorDetail>(d => d.ProductId);
-          
-          // CommunityQuestion konfigurieren
-          modelBuilder.Entity<CommunityQuestion>().HasKey(q => q.Id);
-          modelBuilder.Entity<CommunityQuestion>().Property(q => q.Content).IsRequired();
-          modelBuilder.Entity<CommunityQuestion>().Property(q => q.CreatedAt).HasDefaultValueSql("NOW()");
+        // Product -> Details (1:1)
+        modelBuilder.Entity<Product>().HasOne(p => p.EngineDetail).WithOne(d => d.Product)
+            .HasForeignKey<EngineDetail>(d => d.ProductId);
 
-          // Beziehung zu CommunityAnswer
-          modelBuilder.Entity<CommunityQuestion>()
-              .HasMany(q => q.Answers)
-              .WithOne(a => a.Question)
-              .HasForeignKey(a => a.QuestionId)
-              .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Product>().HasOne(p => p.RimDetail).WithOne(d => d.Product)
+            .HasForeignKey<RimDetail>(d => d.ProductId);
 
-          // CommunityAnswer konfigurieren
-          modelBuilder.Entity<CommunityAnswer>().HasKey(a => a.Id);
-          modelBuilder.Entity<CommunityAnswer>().Property(a => a.Content).IsRequired();
-          modelBuilder.Entity<CommunityAnswer>().Property(a => a.CreatedAt).HasDefaultValueSql("NOW()");
-          
-        //Später vielleicht auch eine eigne id ider wir machen nen datentyp Artikelnumnmer
-        modelBuilder.Entity<Car>()
-            .HasKey(a => a.Id);
+        modelBuilder.Entity<Product>().HasOne(p => p.LightsDetail).WithOne(d => d.Product)
+            .HasForeignKey<LightsDetail>(d => d.ProductId);
 
-        modelBuilder.Entity<Configuration>()
-            .HasKey(cfg => cfg.Id);
+        modelBuilder.Entity<Product>().HasOne(p => p.ColorDetail).WithOne(d => d.Product)
+            .HasForeignKey<ColorDetail>(d => d.ProductId);
 
         // Configuration -> Customer (1:n)
         modelBuilder.Entity<Configuration>()
@@ -97,13 +70,29 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             .HasForeignKey(cfg => cfg.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Configuration -> Car (1:n)
+        // Configuration -> Car (n:1)
         modelBuilder.Entity<Configuration>()
             .HasOne(cfg => cfg.Car)
-            .WithMany() // Car muss nicht zwingend eine Collection von Configs haben
+            .WithMany() // optional: Car.Configurations, wenn du willst
             .HasForeignKey(cfg => cfg.CarId);
-        
+
+        // Community
+        modelBuilder.Entity<CommunityQuestion>(q =>
+        {
+            q.Property(x => x.Content).IsRequired();
+            q.Property(x => x.CreatedAt).HasDefaultValueSql("NOW()");
+            q.HasMany(x => x.Answers)
+             .WithOne(a => a.Question)
+             .HasForeignKey(a => a.QuestionId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<CommunityAnswer>(a =>
+        {
+            a.Property(x => x.Content).IsRequired();
+            a.Property(x => x.CreatedAt).HasDefaultValueSql("NOW()");
+        });
     }
 
-
+    int IDatabase.SaveChanges() => base.SaveChanges();
 }

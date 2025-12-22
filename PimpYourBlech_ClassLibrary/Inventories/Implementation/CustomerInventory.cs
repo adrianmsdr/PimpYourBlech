@@ -95,6 +95,12 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
             .OrderByDescending(q => q.CreatedAt)
             .ToListAsync();
     }
+
+    public void DeleteConfiguration(Configuration config)
+    {
+        database.Configurations.Remove(config);
+        database.SaveChanges();
+    }
 }
 
     

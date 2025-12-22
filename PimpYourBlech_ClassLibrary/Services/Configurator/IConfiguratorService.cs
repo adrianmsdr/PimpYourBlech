@@ -22,7 +22,7 @@ public interface IConfiguratorService
     // Konfiguration speichern
     void SaveConfiguration(Configuration configuration);
     
-    void DeleteConfiguration(Configuration configuration, Customer customer);
+    void DeleteConfiguration(Configuration configuration);
     
     
     List<Configuration> GetAllConfigurations(Customer customer);
