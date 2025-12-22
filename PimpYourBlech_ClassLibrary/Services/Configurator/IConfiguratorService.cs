@@ -40,5 +40,7 @@ public interface IConfiguratorService
     Configuration GetConfigurationById(int Id);
     
     public List<Product> GetAvailableColors(int Id);
+    
+    public Product GetProductById(int Id);
 
 }

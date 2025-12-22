@@ -26,10 +26,10 @@
                placeholder="Konfigurationsname"
                @bind="configurationName"/>
     </div>
-    <div class="d-flex gap-2">
+   
         <button class="buttons" @onclick="StartConfiguration">Konfiguration starten</button>
         <button class="buttons" @onclick="Cancel">Abbrechen</button>
-    </div>
+   
 }
 else
 {
@@ -41,9 +41,9 @@ else
             <div class="color-bar mb-2">
                 @foreach (var c in availableColors)
                 {
-                    <button class="color-btn @(c.ProductId == selectedProductId ? "active" : "")"
+                    <button class="buttons @(c.ProductId == selectedProductId ? "active" : "")"
                             @onclick="() => SelectColor(c.ProductId)">
-                        @c.Name
+                        @c.ColorDetail.DisplayName
                     </button>
                 }
             </div>
@@ -226,60 +226,47 @@ else
         selectedProductId = colorDetailId;
         frameUrls = ImageService.GetColorFrameUrls(Id, selectedProductId);
         currentFrame = 0;
+        ConfiguratorService.AddProduct(configuration,ConfiguratorService.GetProductById(selectedProductId));
     }
-   protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        // 1) Auto laden (einmal)
+        Car = ConfiguratorService.GetCarById(Id);
+        if (Car == null) return;
+
+        // 2) Farben + Frames
+        availableColors = ConfiguratorService.GetAvailableColors(Id) ?? new List<Product>();
+
+        if (availableColors.Count > 0)
+        {
+            selectedProductId = availableColors[0].ProductId; 
+            frameUrls = ImageService.GetColorFrameUrls(Car.Id, selectedProductId);
+        }
+        else
+        {
+            frameUrls = new List<string>(); // oder fallback, wenn du willst
+            // frameUrls = ImageService.GetCarFrameUrls(Car.Id);
+        }
+
+        // 3) Produkte laden (einmal)
+        availableEngines = ConfiguratorService.ListEngines();
+        availableRims = ConfiguratorService.ListRims();
+        // availableLights = ConfiguratorService.ListLights();
+
+        // 4) Optional: configId aus QueryString laden
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var qs = QueryHelpers.ParseQuery(uri.Query);
+
+        if (qs.TryGetValue("configId", out var s) && int.TryParse(s, out var configId))
+        {
+            configuration = ConfiguratorService.GetConfigurationById(configId);
+            name = configuration?.Name;
+        }
+
         
-            // Auto laden
-            Car = ConfiguratorService.GetCarById(Id);
-            if (Car == null) return;
-
-            // 360°-Bilder
-            availableColors = ConfiguratorService.GetAvailableColors(Id);
-            if (availableColors != null)
-            {
-                if (availableColors.Count > 0)
-                {
-                    selectedProductId = availableColors[0].ProductId;
-                    frameUrls = ImageService.GetColorFrameUrls(Car.Id, selectedProductId);
-                }
-                else
-                {
-                  //  frameUrls = ImageService.GetCarFrameUrls(Car.Id); // fallback (alter Ordner)
-                }
-
-
-                // Produkte laden
-                availableEngines = ConfiguratorService.ListEngines();
-                availableRims = ConfiguratorService.ListRims();
-                //availableLights = ConfiguratorService.ListLights();
-
-                UpdatePrice();
-               
-                var uri = Nav.ToAbsoluteUri(Nav.Uri);
-                var qs = QueryHelpers.ParseQuery(uri.Query);
-
-                if (qs.TryGetValue("configId", out var s) && int.TryParse(s, out var configId))
-                {
-                    configuration = ConfiguratorService.GetConfigurationById(configId);
-                    name = configuration?.Name; 
-                    UpdatePrice();
-                }
-
-
-                // Auto laden
-                Car = ConfiguratorService.GetCarById(Id);
-                if (Car == null) return;
-                
-
-
-                // Produkte laden
-                availableEngines = ConfiguratorService.ListEngines();
-                availableRims = ConfiguratorService.ListRims();
-                //availableLights = ConfiguratorService.ListLights();
-
-                UpdatePrice();
-            }
+        
+        // 5) Preis einmal am Ende
+        UpdatePrice();
     }
 
 
@@ -331,6 +318,18 @@ else
         name = configurationName;
         configuration = ConfiguratorService.StartNewConfiguration(UserSession.CurrentUser, Car, name);
 
+        // Standardfarbe als Produkt setzen
+        if (availableColors.Count > 0)
+        {
+            selectedProductId = availableColors[0].ProductId;
+            ConfiguratorService.AddProduct(configuration, availableColors[0]);
+
+            frameUrls = ImageService.GetColorFrameUrls(Car.Id, selectedProductId);
+            currentFrame = 0;
+        }
+
+        UpdatePrice();
+    
     }
 
     private void Cancel()

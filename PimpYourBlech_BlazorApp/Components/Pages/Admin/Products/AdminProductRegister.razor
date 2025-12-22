@@ -133,7 +133,10 @@
 
     }else if (selectedProductType == "Farbe")
     {
-
+        <input class="text-input"
+               placeholder="Farbenname"
+               @bind="displayName"/>
+        
             <div class="mb-3">
             <label class="form-label"><strong>360° Bilder auswählen (mehrere möglich):</strong></label>
             <InputFile OnChange="HandleFilesSelected" multiple accept="image/*" disabled="@(selectedCarId == 0)" />
@@ -183,6 +186,8 @@
     private string width = "";
 
     private string lumen = "";
+
+    private string displayName = "";
 
     private string Car;
     
@@ -346,7 +351,7 @@
                 break;
                 
             case ProductType.Color:
-                p = AdminService.RegisterColor(p, AdminService.GetCarById(selectedCarId));
+                p = AdminService.RegisterColor(p, AdminService.GetCarById(selectedCarId), displayName);
                 ImageService.SaveColorImagesAsync(selectedCarId, p.ProductId, uploadedFiles);
                 break;
         }
