@@ -53,7 +53,7 @@ else
         ImageService.DeleteProductImagesAsync(Product.ProductId);
         if (Product.ProductType == ProductType.Color)
         {
-            ImageService.DeleteCarImagesAsync(Product.ProductId, Product.ColorDetail.CarId);
+            ImageService.DeleteCarImagesAsync(Product.ProductId, Product.CarId);
         }
         Nav.NavigateTo("/administrator/products");
 
