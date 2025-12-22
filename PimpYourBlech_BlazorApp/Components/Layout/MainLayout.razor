@@ -28,8 +28,15 @@
             @Body
         </article>
     </main>
+    
 </div>
-
+<footer class="footer">
+    <span>© 2025 PimpYourBlech</span>
+    <span class="footer-separator">|</span>
+    <NavLink href="/impressum" class="footer-link">Impressum</NavLink>
+    <span class="footer-separator">|</span>
+    <NavLink href="/datenschutz" class="footer-link">Datenschutz</NavLink>
+</footer>
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
@@ -120,6 +127,52 @@
 
     /* Abstand zum Inhalt durch fixe Navbar */
     .page {
-        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding-top: 80px; /* wegen fixer Navbar */
     }
+
+    .footer {
+        margin-top: auto;
+        padding: 16px 0;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        font-family: Bahnschrift;
+        font-size: 13px;
+        color: rgba(255,255,255,0.7);
+
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+
+        border-top: 1px solid rgba(255, 0, 0, 0.25);
+    }
+
+    .footer-link {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .footer-link:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .footer-separator {
+        opacity: 0.5;
+    }
+    main {
+        flex: 1;
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
 </style>
