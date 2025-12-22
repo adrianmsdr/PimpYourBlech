@@ -1,6 +1,89 @@
 ﻿@page "/BuySuccessfull"
-<h3>Kauf erfolgreich</h3>
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Services.Carts
+@using PimpYourBlech_ClassLibrary.Services.Shop
+@using PimpYourBlech_ClassLibrary.Session
+@inject NavigationManager Nav
+@inject IImageService ImageService
+@inject IShopService ShopService
+@inject ICartService CartService
+@inject IUserSession UserSession
+
+<PageTitle>Kauf erfolgreich</PageTitle>
+
+<div class="success-container">
+    <h1>🚗💥 </h1>
+    <h1>Kauf erfolgreich!</h1>
+
+    <h2>Danke, @UserSession.CurrentUser.FirstName! Dein Setup ist unterwegs 🔧🔥</h2>
+
+    <p>
+        Deine Bestellung ist erfolgreich bei uns eingegangen und wird gerade für dich vorbereitet.
+        Schon bald kannst du dein Blech auf das nächste Level bringen.
+    </p>
+
+    <p>
+        📬 Eine Bestätigungsmail landet gleich in deinem Postfach.
+    </p>
+
+    <p>
+        Danke, dass du mit <strong>PimpYourBlech</strong> pimpen gehst –
+        wir wünschen dir maximalen Fahrspaß! 🏁
+    </p>
+    <button class="go-back-button"
+            @onclick="GoBackToHomepage">Zurück zur Homepage</button>
+</div>
+
 
 @code {
-    
+
+    private void GoBackToHomepage()
+    {
+        Nav.NavigateTo("/MainMenu");
+    }
 }
+<style>
+    .success-container {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 55%;
+        height: 100%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        color: white;
+        font-family: Bahnschrift;
+    }
+
+    .go-back-button {
+        width: 170px;
+        height: 65px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .go-back-button:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .go-back-button:active {
+        transform: scale(1.2);
+    }
+</style>

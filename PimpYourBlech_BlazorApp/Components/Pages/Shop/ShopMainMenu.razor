@@ -18,7 +18,9 @@
 
 <PageTitle>Shop</PageTitle>
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
-<h3 class="headline">Ersatzteile - Shop</h3>
+<div class="shop-header">
+    <img src="shopheader.png" class="header">
+</div>
 
 <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
     <ShoppingCartIcon></ShoppingCartIcon> Warenkorb
@@ -75,36 +77,21 @@ Machen wir noch schön Bleibt nicht so aber im Prinzip holt der sich alle Produk
 ausgewählten infos + bild in so nem Kästchen wär noch schön
 - sollte man später auch anklicken können + warenkorb und alles drum und dran
 *@
-
-<div class="input-group mb-3">
-    <input class="form-control"
-           placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
-           @bind="searchText" />
-
-    <button class="btn btn-primary" @onclick="ApplySearch">
-        Suchen
-    </button>
-    
-</div>
-<div class="d-flex align-items-center mb-3 gap-3">
-
-    @*Filter: Kategorie*@
-    <div class="d-flex align-items-center">
-        <label class="me-2 mb-0">Kategorie:</label>
-        <select class="form-select" style="width: 200px"
+<div class="search-container">
+    <h2 class="fields">Filter</h2>
+    <div class="d-flex align-items-center gap-3">
+        <label class="fields">Kategorie:</label>
+        <select class="search-select" style="width: 200px"
                 @bind="selectedCategory">
             <option value="All">Alle</option>
             <option value="Engine">Motor</option>
             <option value="Rim">Felge</option>
             <option value="Lights">Lichtanlage</option>
-            <!-- weitere Kategorien später -->
         </select>
     </div>
     
-
-    @*Sortierung*@
-    <div class="d-flex align-items-center ms-auto">
-        <label class="me-2 mb-0">Sortieren nach:</label>
+    <div class="sorting-label">
+        <label class="fields">Sortieren nach:</label>
         <select class="form-select" style="width: 220px"
                 @bind="selectedSortOption">
             <option value="NameAscending">Name (A–Z)</option>
@@ -113,7 +100,19 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
             <option value="PriceDescending">Preis (absteigend)</option>
         </select>
     </div>
+
+    <div class="search-row">
+        <input class="search-input"
+               placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
+               @bind="searchText" />
+        <button class="buttons" @onclick="ApplySearch">
+            Suchen <MagnifyingGlassIcon />
+        </button>
+    </div>
+
+
 </div>
+
 
 @if (products == null)
 {
@@ -136,15 +135,18 @@ else
                     <h4>@product.Name</h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
-                        <button type="button" class="selectProduct"
-                                @onclick="() => AddToCart(product)">
-                            <BuyIcon></BuyIcon> Kaufen
-                        </button>
+                    <button type="button" class="selectProduct"
+                            @onclick="() => AddToCart(product)">
+                        <BuyIcon></BuyIcon> Kaufen
+                    </button>
                 </div>
             </div>
         }
     </div>
-}
+    <div class="marken-container">
+        <img src="marken.png" class="marken-image">    
+    </div>
+    }
 
 @code {
     private List<Product> products;
@@ -204,243 +206,354 @@ else
         Nav.NavigateTo("/mainMenu");
     }
 }
-
 <style>
-.headline {
-    font-family: Bahnschrift;
-    color: white;
-    text-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-}
+    .shop-header {
+        width: 100%;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+    }
 
-.no-products {
-    color: white;
-    font-family: Bahnschrift;
-    text-align: center;
-    margin-top: 5px;
-}
+    .header {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 25px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+    }
 
-.product-grid {
-    background-color: transparent;    
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* responsive */
-    gap: 1.5rem;
-}
+    .search-container, .product-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 25px 0 30px 0;
+        padding: 18px 22px;
+        background: rgba(40, 0, 0, 0.55);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 0, 0, 0.35);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+    }
 
-.product-card {
-    color: white;    
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background: #370202;
-}
+    .search-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.product-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    display: block;
-    border-radius: 4px;
-}
+    .search-input {
+        flex: 1;
+        height: 45px;
+        padding: 0 14px;
+        font-family: Bahnschrift;
+        font-size: 16px;
+        color: white;
+        background: rgba(20, 0, 0, 0.8);
+        border: 2px solid #ff1a1a;
+        border-radius: 12px;
+        outline: none;
+    }
 
-.product-info {
-    margin-top: 0.75rem;
-}
+    .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
 
-.product-price {
-    font-weight: bold;
-}
-
-.GoToShoppingCart {
-    width: 140px;
-    height: 45px;
-    font-family: Bahnschrift;
-    font-size: 17px;
-    color: white;
-    background-color: #7a0000;
-    border-radius: 12px;
-    border: 2px solid #ff1a1a;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
-    cursor: pointer;
-}
-
-.selectProduct {
-    width: 100%;
-    height: 45px;
-    font-family: Bahnschrift;
-    font-size: 17px;
-    color: white;
-    background-color: #7a0000;
-    border-radius: 12px;
-    border: 2px solid #ff1a1a;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
-    cursor: pointer;
-}
-
-.selectProduct:hover {
-    transform: scale(1.1);
-    background-color: #b30000;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-}
-
-.selectProduct:active {
-    transform: scale(1.2);
-}
-
-.GoToShoppingCart:hover {
-    transform: scale(1.1);
-    background-color: #b30000;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-}
-
-.GoToShoppingCart:active {
-    transform: scale(1.2);
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    animation: fadeIn 0.3s;
-}
-
-.sidebar {
-    position: fixed;
-    top: 0;
-    right: -320px;
-    width: 320px;
-    height: 100%;
-    background: rgba(20, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-left: 2px solid rgba(255, 0, 0, 0.35);
-    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.6);
-    z-index: 1000;
-    transition: right 0.3s ease;
-}
-
-.sidebar.open {
-    right: 0;
-}
-
-.sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid rgba(255, 0, 0, 0.35);
-}
-
-.sidebar-header h2 {
-    color: white;
-    margin: 0;
-    font-family: Bahnschrift;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
-
-.close-btn {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    transition: 0.25s ease;
-}
-
-.close-btn:hover {
-    color: #ff3333;
-}
-
-.sidebar-content {
-    padding: 20px;
-    overflow-y: auto;
-    max-height: calc(100vh - 100px);
-}
+    .search-select {
+        height: 42px;
+        padding: 0 10px;
+        font-family: Bahnschrift;
+        font-size: 15px;
+        color: white;
+        background: rgba(20, 0, 0, 0.8);
+        border: 2px solid #ff1a1a;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 
 
-.cart-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-    width: 100%;
-    padding: 12px;
-    background-color: #7a0000;
-    color: white;
-    border: 2px solid rgba(255, 0, 0, 0.6);
-    border-radius: 8px;
-    font-family: Bahnschrift;
-    font-size: 15px;
-    text-align: left;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .buttons {
+        width: 140px;
+        height: 45px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease,
+                    background-color 0.25s ease,
+                    box-shadow 0.25s ease;
+        cursor: pointer;
+    }
 
-.cart-item-image {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 6px;
-    flex-shrink: 0;
-}
+    .buttons:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
 
-.cart-item .menu-item {
-    flex: 1;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    font-family: Bahnschrift;
-    font-size: 15px;
-    color: white;
-    text-align: left;
-    cursor: default;
-}
+    .buttons:active {
+        transform: scale(1.2);
+    }
 
+    .no-products {
+        color: white;
+        font-family: Bahnschrift;
+        text-align: center;
+        margin-top: 5px;
+    }
 
-.sum {
-    display: block;
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 0, 0, 0.4);
-    color: white;
-    font-family: Bahnschrift;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
+    .product-grid {
+        background-color: transparent;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        //!!!
+    }
 
-.checkout-button {
-    display: block;
-    margin: 20px auto 0 auto;
-    width: 80%;
-    height: 5%;
-    font-family: Bahnschrift;
-    font-size: 17px;
-    color: white;
-    background-color: #7a0000;
-    border-radius: 12px;
-    border: 2px solid #ff1a1a;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
-    cursor: pointer;
-}
+    .product-card {
+        color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background: #370202;
+    }
 
-.checkout-button:hover {
-    transform: scale(1.1);
-    background-color: #b30000;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-}
+    .product-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        border-radius: 4px;
+    }
 
-.checkout-button:active {
-    transform: scale(1.2);
-}
+    .product-info {
+        margin-top: 0.75rem;
+    }
+
+    .product-price {
+        font-weight: bold;
+    }
+
+    .GoToShoppingCart {
+        margin-left: auto;
+        display: block;
+        width: 250px;
+        height: 60px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease,
+                    background-color 0.25s ease,
+                    box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .fields {
+        color: white;
+    }
+
+    .selectProduct {
+        width: 100%;
+        height: 45px;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease,
+                    background-color 0.25s ease,
+                    box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .selectProduct:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .selectProduct:active {
+        transform: scale(1.2);
+    }
+
+    .GoToShoppingCart:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .GoToShoppingCart:active {
+        transform: scale(1.2);
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        animation: fadeIn 0.3s;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -320px;
+        width: 320px;
+        height: 100%;
+        background: rgba(20, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-left: 2px solid rgba(255, 0, 0, 0.35);
+        box-shadow: -4px 0 25px rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        transition: right 0.3s ease;
+    }
+
+    .sidebar.open {
+        right: 0;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 0, 0, 0.35);
+    }
+
+    .sidebar-header h2 {
+        color: white;
+        margin: 0;
+        font-family: Bahnschrift;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .close-btn {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        transition: 0.25s ease;
+    }
+
+    .close-btn:hover {
+        color: #ff3333;
+    }
+
+    .sidebar-content {
+        padding: 20px;
+        overflow-y: auto;
+        max-height: calc(100vh - 100px);
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+        width: 100%;
+        padding: 12px;
+        background-color: #7a0000;
+        color: white;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        border-radius: 8px;
+        font-family: Bahnschrift;
+        font-size: 15px;
+        text-align: left;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+        transition: transform 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    .cart-item-image {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 6px;
+        flex-shrink: 0;
+    }
+
+    .cart-item .menu-item {
+        flex: 1;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        font-family: Bahnschrift;
+        font-size: 15px;
+        color: white;
+        text-align: left;
+        cursor: default;
+    }
+
+    .sum {
+        display: block;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 0, 0, 0.4);
+        color: white;
+        font-family: Bahnschrift;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .checkout-button {
+        display: block;
+        margin: 20px auto 0 auto;
+        width: 80%;
+        height: 5%;
+        font-family: Bahnschrift;
+        font-size: 17px;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        transition: transform 0.25s ease,
+                    background-color 0.25s ease,
+                    box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .checkout-button:hover {
+        transform: scale(1.1);
+        background-color: #b30000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .checkout-button:active {
+        transform: scale(1.2);
+    }
+
+    .marken-container {
+        width: 100%;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    .marken-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 25px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+    }
 </style>
