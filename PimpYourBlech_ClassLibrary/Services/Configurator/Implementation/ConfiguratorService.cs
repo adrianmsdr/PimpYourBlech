@@ -81,11 +81,9 @@ public class ConfiguratorService : IConfiguratorService
         
         SaveConfigurations();
     }
-    public void DeleteConfiguration(Configuration configuration, Customer customer)
+    public void DeleteConfiguration(Configuration configuration)
     {
-            customer.Configurations.Remove(configuration);
-            SaveConfigurations();
-        
+            _customerInventory.DeleteConfiguration(configuration);
     }
 
     public List<Configuration> GetAllConfigurations(Customer customer)
