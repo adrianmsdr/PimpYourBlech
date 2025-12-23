@@ -38,6 +38,10 @@
       <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\frame_09.webp" />
       <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\frame_10.webp" />
       <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\frame_11.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\1\Product.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\2\Product.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\3\Product.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\4\Product.jpg" />
     </ItemGroup>
 
 </Project>

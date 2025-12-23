@@ -2,25 +2,102 @@
 @inject NavigationManager Nav
 
 
-<PageTitle>Pimp Your Blech</PageTitle>
+<PageTitle>PimpYourBlech</PageTitle>
 
-<h1>Pimp Your Blech</h1>
-
-Willkommen bei Pimp Your Blech, deinem persönlichen Fahrzeugkonfigurator.
-
-@*Start - Knopf*@
-<div class="menu-container">
-<div class="button-column">
-    <button class="buttons" @onclick="StartProgramm">Start</button>
-    
+<div class="header-wrapper">
+    <img src="HeaderMainMenu.png" class="header-image">
 </div>
+<div class="menu-container">
+    <div class="button-column">
+        <video
+            class="video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto">
+            <source src="PYB-Video.mp4" type="video/mp4"/>
+            Dein Browser unterstützt kein HTML5-Video.
+        </video>
+        <button class="buttons" @onclick="StartProgramm">Zeit zu pimpen!</button>
+    </div>
 </div>
 
 @code
 {
-    // Führt zum Startmenü
     public void StartProgramm()
     {
         Nav.NavigateTo("/startMenu");
     }
 }
+<style>
+    .header-wrapper {
+        width: 100%;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .header-image {
+        width: 100%;
+        max-height: 320px;
+        display: block;
+        object-fit: cover;
+        object-position: center 12%;
+    }
+    
+    .menu-container {
+        margin: 30px auto 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        width: 55%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        margin-bottom: 8px;
+    }
+    
+    .button-column {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        align-items: center;
+    }
+    
+    .video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border-radius: 22px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+    }
+    
+    .buttons {
+        width: 100%;
+        height: 45px;
+        font-family: Bahnschrift;
+        font-size: 1.1rem;
+        color: white;
+        background-color: #7a0000;
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+        transition: transform 0.25s ease, background-color 0.25s ease;
+    }
+
+    .buttons:hover {
+        transform: scale(1.05);
+        background-color: #b30000;
+    }
+</style>
