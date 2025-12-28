@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Text.Json
 @using PimpYourBlech_BlazorApp.Components.Icons
 @inject NavigationManager Nav
 
@@ -26,17 +27,34 @@
             </button>
 
             <div class="button-column">
+                @*
                 <video
                     class="video"
                     autoplay
                     muted
                     loop
-                    playsinline
-                    preload="auto">
-                    <source src="PYB-Video.mp4" type="video/mp4"/>
+                    playsinline 
+                    preload="auto"
+                    
+                    >
+                    <source src="/PYB-Video.webp" type="video/webp"/>
                     Dein Browser unterstützt kein HTML5-Video.
                 </video>
+                *@
+                <img class="video" src="/PYB-Video.webp" alt="" />
             </div>
+        </div>
+        
+        <div class="funfact-card">
+            <div class="funfact-title">Unnützer Auto-Fakt des Tages</div>
+            @*
+                <div class="funfact-text">@factText</div>
+            
+
+                <button class="buttons funfact-btn" @onclick="LoadAutoFact">
+                    Neuer Fakt
+                </button>
+            *@
         </div>
     </div>
 </div>
@@ -44,6 +62,9 @@
 
 @code
 {
+    
+
+
     public void StartProgramm()
     {
         Nav.NavigateTo("/startMenu");
@@ -196,5 +217,16 @@
         border: 1px solid rgba(255, 0, 0, 0.25);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     }
+
+    .funfact-card{
+        width: 280px;
+        padding: 14px;
+        background: rgba(0,0,0,0.25);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255,0,0,0.25);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    }
+    .funfact-title{ font-family: Bahnschrift; color: white; font-size: 1.05rem; margin-bottom: 10px; }
 
 </style>
