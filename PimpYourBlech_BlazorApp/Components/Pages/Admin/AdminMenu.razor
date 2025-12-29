@@ -10,6 +10,8 @@
         <button class="buttons" @onclick="GoToAdminProducts">Produkte verwalten</button>
         <button class="buttons" @onclick="GoToAdminCars">Fahrzeuge verwalten</button>
         <button class="buttons" @onclick="GoToAdminOrders">Bestellungen verwalten</button>
+        <button class="buttons" @onclick="GoToAdminImages">Bilder verwalten</button>
+        <button class="buttons" @onclick="Cancel">Zurück</button>
     </div>
 </div>
 
@@ -37,5 +39,15 @@
     private void GoToAdminOrders()
     {
         Nav.NavigateTo("/administrator/orders");
+    }
+    
+    private void GoToAdminImages()
+    {
+        Nav.NavigateTo("/administrator/images");
+    }
+    
+    private void Cancel()
+    {
+        Nav.NavigateTo("/mainMenu");
     }
 }

@@ -266,4 +266,257 @@ h1,h2,h3,h4{
     border-radius: 12px !important;
     border: 2px solid #ff1a1a !important;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
+    
+}
+.blur-container{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 55%;
+    height: 100%;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.text-inputPYB {
+    width: 240px;
+    height: 38px;
+    padding: 6px;
+    font-family: Bahnschrift;
+    text-align: center;
+    background-color: rgba(20, 0, 0, 0.65);
+    color: white;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 0, 0, 0.6);
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.text-inputPYB:hover {
+    transform:scale(1.1);
+}
+.text-inputPYB:focus {
+    border-color: #ff3333;
+    box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+}
+
+/* Für die Admin Menüs*/
+
+
+/* Neu: saubere vertikale Struktur + gleichmäßige Abstände */
+.detail-overview-admin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Neu: Bild bleibt groß, aber kontrolliert (kein “riesiger Ballon”) */
+.detail-image-admin{
+    width: min(360px, 90%);
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+}
+
+
+/* Neu: Upload + Button ordentlich in einer Reihe */
+.upload-row-admin{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Bestehendes Card-Design: nur sauberer lesbar + gleiche Breite */
+.combo-card-admin {
+    width: min(420px, 92%);
+    display: grid;
+    gap: 10px;
+    padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    background: rgba(0,0,0,0.22);
+}
+
+.combo-card-admin-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 18px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    background: rgba(0,0,0,0.22);
+}
+
+
+/* Neu: Absätze nicht “auseinanderreißen” */
+.combo-card-admin p{
+    margin: 0;
+    line-height: 1.35;
+}
+
+
+
+.form-grid-admin {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 12px 16px;
+    align-items: center;
+}
+
+.form-grid-admin .form-input-grid{
+    width: 100%;
+    height: 38px;
+    box-sizing: border-box;
+    transform: none;
+}
+
+.form-grid-admin .form-input-grid:hover{
+    transform: none;
+}
+
+.headline-admin {
+    font-family: Bahnschrift;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+/*--------------------------------------------Admin-Bilder-Menü--------------------------------------------------------*/
+
+.combo-visual {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-thumb,
+.rim-thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: #111;
+}
+
+.combo-plus {
+    font-weight: 700;
+    opacity: 0.6;
+}
+
+.combo-caption {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+/* Links: Preview */
+.combo-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.combo-preview {
+    width: 220px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.25);
+}
+
+.combo-empty {
+    width: 220px;
+    height: 150px;
+    border-radius: 12px;
+    border: 1px dashed rgba(255,255,255,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.75;
+}
+
+/* Rechts: Header (Farbe + Felge) */
+.combo-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.combo-thumb {
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.25);
+}
+
+.combo-plus {
+    font-weight: 900;
+    opacity: 0.75;
+    font-size: 1.1rem;
+}
+
+.combo-title {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-left: 6px;
+}
+
+.combo-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.combo-meta {
+    font-size: 0.85rem;
+    opacity: 0.75;
+}
+
+/* Upload */
+.combo-upload {
+    margin-top: 10px;
+}
+
+.combo-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+.combo-selected {
+    margin-top: 6px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Buttons */
+.combo-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.headline-register {
+    font-family: Bahnschrift;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }

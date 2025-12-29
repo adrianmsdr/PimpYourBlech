@@ -157,9 +157,9 @@ public class AdminService:IAdminService
         return temp;
     }
     
-    public void UpdateCustomer(Customer c,String username, String passwordHash, String telefon)
+    public void UpdateCustomer(Customer c)
     {
-        customerRepository.UpdateCustomer(c, username, passwordHash, telefon);
+        customerRepository.UpdateCustomer(c);
     }
     
     public void DeleteCustomer(Customer c)
@@ -281,6 +281,11 @@ public class AdminService:IAdminService
 
     }
 
+    public void UpdateProduct(Product p)
+    {
+        productRepository.UpdateProduct(p);
+    }
+
     // ___________________________________Cars____________________________________
 
 
@@ -320,5 +325,24 @@ public class AdminService:IAdminService
     public void DeleteCar(Car car)
     {
         carRepository.DeleteCar(car);
+    }
+
+    public void UpdateCar(Car car)
+    {
+        carRepository.UpdateCar(car);
+    }
+    
+    public List<Product> GetAvailableRims(int carId)
+    {
+        return GetProducts()
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Rim)
+            .ToList();
+    }
+
+    public List<Product> GetAvailableColors(int carId)
+    {
+        return GetProducts()
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Color)
+            .ToList();
     }
 }

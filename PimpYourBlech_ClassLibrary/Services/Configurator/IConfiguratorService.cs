@@ -41,6 +41,9 @@ public interface IConfiguratorService
     
     public List<Product> GetAvailableColors(int Id);
     
+    public List<Product> GetAvailableEngines(int Id);
+    public List<Product> GetAvailableRims(int Id);
+    
     public Product GetProductById(int Id);
 
 }

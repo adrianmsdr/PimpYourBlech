@@ -36,4 +36,10 @@ public sealed class CarInventory(IDatabase database):ICarInventory
         database.Cars.Remove(car);
         database.SaveChanges();
     }
+
+    public void UpdateCar(Car car)
+    {
+        database.Cars.Update(car);
+        database.SaveChanges();
+    }
 }

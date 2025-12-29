@@ -42,6 +42,14 @@
       <_ContentIncludedByDefault Remove="wwwroot\ProductImages\2\Product.jpg" />
       <_ContentIncludedByDefault Remove="wwwroot\ProductImages\3\Product.jpg" />
       <_ContentIncludedByDefault Remove="wwwroot\ProductImages\4\Product.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\1\Product.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\4\Product.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\5\Product.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\5\Product.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\6\Product.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\7\Product.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\8\Product.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\9\Product.webp" />
     </ItemGroup>
 
 </Project>

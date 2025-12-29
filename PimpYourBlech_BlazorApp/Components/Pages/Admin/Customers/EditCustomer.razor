@@ -1,0 +1,130 @@
+@page "/administrator/customers/{id:int}/edit"
+
+<PageTitle>User bearbeiten</PageTitle>
+
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+@inject NavigationManager Nav
+
+<div class="blur-container">
+    <h3>User bearbeiten</h3>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p style="color:#ffb3b3">@ErrorMessage</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+    {
+        <p style="color:#bfffbf">@SuccessMessage</p>
+    }
+
+    @if (Customer is null)
+    {
+        <p>Lade Daten…</p>
+    }
+    else
+    {
+
+            <div style="flex:1; min-width:320px;">
+                <div class="combo-card-admin">
+                    <EditForm Model="EditModel" OnValidSubmit="SaveEdits">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-grid-admin">
+                            <label>Vorname</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.FirstName" />
+
+                            <label>Nachname</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.LastName" />
+
+                            <label>E-Mail</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.MailAddress" />
+
+                            <label>Telefon</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Telefon" />
+
+                            <label>Passwort</label>
+                            <InputText class="text-inputPYB form-input-grid" type="password" @bind-Value="EditModel.PasswordHash" />
+                            
+                            <label>Username</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Username" />
+                        </div>
+
+                        <div class="button-column" style="margin-top:16px;">
+                            <button type="submit" class="buttons">Speichern</button>
+                            <button type="button" class="buttons" @onclick="Cancel">Zurück</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+      
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Customer? Customer;
+    private Customer EditModel = new();
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    protected override void OnInitialized()
+    {
+        Customer = AdminService.GetCustomerById(Id);
+        if (Customer is null)
+        {
+            ErrorMessage = "User nicht gefunden.";
+            return;
+        }
+
+        // Kopie fürs Formular (damit Cancel sauber ist)
+        EditModel = new Customer()
+        {
+           Id = Customer.Id,
+           FirstName = Customer.FirstName,
+           LastName = Customer.LastName,
+           AdminRights = Customer.AdminRights, 
+           Configurations  = Customer.Configurations,
+           MailAddress = Customer.MailAddress,
+           Telefon = Customer.Telefon,
+           PasswordHash = Customer.PasswordHash,
+           Username = Customer.Username
+        };
+    }
+
+    
+
+    private void SaveEdits()
+    {
+        if (Customer is null) return;
+
+        // Original updaten
+        Customer.Id = EditModel.Id;
+        Customer.FirstName = EditModel.FirstName;
+        Customer.LastName = EditModel.LastName;
+        Customer.AdminRights = EditModel.AdminRights;
+        Customer.Configurations = EditModel.Configurations;
+        Customer.MailAddress = EditModel.MailAddress;
+        Customer.Telefon = EditModel.Telefon;
+        Customer.PasswordHash = EditModel.PasswordHash;
+        Customer.Username = EditModel.Username;
+
+        // Persistieren (muss existieren)
+        AdminService.UpdateCustomer(Customer);
+
+        SuccessMessage = "Änderungen gespeichert.";
+        ErrorMessage = "";
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo($"/administrator/customers/{Id}");
+    }
+
+    
+}

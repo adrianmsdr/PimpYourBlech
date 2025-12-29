@@ -1,15 +1,16 @@
 @page "/administrator/cars/{id:int}"
 <PageTitle>Administrator/cars/@Id.ToString()</PageTitle>
+@using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
-@rendermode InteractiveServer
 
 @inject IAdminService AdminService
 @inject  NavigationManager Nav
+@inject IImageService ImageService
 
 
-
-<h3>Ausgewähltes Fahrzeug:</h3>
+<div class="blur-container">
+<h3>Fahrzeugübersicht:</h3>
 
 
 @if (Car == null)
@@ -18,43 +19,74 @@
 }
 else
 {
-    <div class="card p-3">
+    <div class="detail-overview-admin">
+        <img class="detail-image-admin" src="@ImageService.GetCarImageUrl(Car.Id)" />
+
+    <div class="upload-row-admin">
+        <InputFile OnChange="OnCarImageSelected" accept="image/*" />
+        <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedCarImage is null)">
+            Speichern
+        </button>
+    </div>
+
+    <div class="combo-card-admin">
         <p><strong>Name:</strong> @Car.Name</p>
         <p><strong>Hersteller:</strong> @Car.Brand</p>
         <p><strong>Modell:</strong> @Car.Model</p>
         <p><strong>Preis:</strong> @Car.Price</p>
         <p><strong>Auf Lager:</strong> @Car.Quantity</p>
-
-        <div class="mt-3">
-            <button class="btn btn-warning me-2" @onclick="ChangeQuantity">Bestand anpassen</button>
-            <button class="btn btn-danger me-2"  @onclick="DeleteProduct">Löschen</button>
-            <button class="btn btn-primary"       @onclick="EditProduct">Bearbeiten</button>
+    </div>
+        <div class="button-column">
+            <button class="buttons" @onclick="DeleteCar">Fahrzeug löschen</button>
+            <button class="buttons" @onclick="EditCar">Fahrzeug bearbeiten</button>
+            <button class="buttons" @onclick="Cancel">Zurück</button>
         </div>
     </div>
 }
+</div>
 @code {
     [Parameter] public int Id { get; set; }
 
     public Car? Car { get; set; }
 
+    private IBrowserFile? uploadedCarImage;
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+    
     protected override void OnInitialized()
     {
         Car = AdminService.GetCarById(Id);
     }
 
-    private void ChangeQuantity()
+    private void OnCarImageSelected(InputFileChangeEventArgs e)
     {
-        // AdminService.ChangeQuantityCar
+        uploadedCarImage = e.File;
     }
+    
 
-    private void DeleteProduct()
+    private async Task DeleteCar()
     {
+        await ImageService.DeleteCarImagesAsync(Car.Id);
         AdminService.DeleteCar(Car);
         Nav.NavigateTo("/administrator/cars");
     }
 
-    private void EditProduct()
+    private async Task SaveCarImage()
     {
+        if (Car.Id == 0 || uploadedCarImage is null) return;
 
+        await ImageService.SaveCarImageAsync(Car.Id, uploadedCarImage);
+        SuccessMessage = "Präsentationsbild gespeichert.";
+    }
+
+    private void EditCar()
+    {
+        Nav.NavigateTo($"/administrator/cars/{Car.Id}/edit");
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo($"/administrator/cars");
     }
 }

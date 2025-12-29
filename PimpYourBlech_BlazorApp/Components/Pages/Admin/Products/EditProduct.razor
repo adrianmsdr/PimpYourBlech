@@ -1,0 +1,125 @@
+@page "/administrator/products/{id:int}/edit"
+<PageTitle>Produkt bearbeiten</PageTitle>
+
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+@inject NavigationManager Nav
+
+<div class="blur-container">
+    <h3>Fahrzeugteil bearbeiten</h3>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p style="color:#ffb3b3">@ErrorMessage</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+    {
+        <p style="color:#bfffbf">@SuccessMessage</p>
+    }
+
+    @if (Product is null)
+    {
+        <p>Lade Daten…</p>
+    }
+    else
+    {
+
+            <div style="flex:1; min-width:320px;">
+                <div class="combo-card-admin">
+                    <EditForm Model="EditModel" OnValidSubmit="SaveEdits">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-grid-admin">
+                            <label>Name</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Name" />
+
+                            <label>Artikelnummer</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.ArticleNumber" />
+
+                            <label>Hersteller</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Brand" />
+
+                            <label>Preis</label>
+                            <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Price" />
+
+                            <label>Auf Lager</label>
+                            <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Quantity" />
+                            
+                        </div>
+
+                        <div class="button-column" style="margin-top:16px;">
+                            <button type="submit" class="buttons">Speichern</button>
+                            <button type="button" class="buttons" @onclick="Cancel">Zurück</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+      
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Product? Product;
+    private Product EditModel = new();
+
+    private IBrowserFile? uploadedProductImage;
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    protected override void OnInitialized()
+    {
+        Product = AdminService.GetProductById(Id);
+        if (Product is null)
+        {
+            ErrorMessage = "Produkt nicht gefunden.";
+            return;
+        }
+
+        // Kopie fürs Formular (damit Cancel sauber ist)
+        EditModel = new Product
+        {
+            ProductId = Product.ProductId,
+            CarId = Product.CarId,
+            Name = Product.Name,
+            ArticleNumber = Product.ArticleNumber,
+            Brand = Product.Brand,
+            Price = Product.Price,
+            Quantity = Product.Quantity,
+            ProductType = Product.ProductType
+        };
+    }
+
+    
+
+    private void SaveEdits()
+    {
+        if (Product is null) return;
+
+        // Original updaten
+        Product.Name = EditModel.Name;
+        Product.ArticleNumber = EditModel.ArticleNumber;
+        Product.Brand = EditModel.Brand;
+        Product.Price = EditModel.Price;
+        Product.Quantity = EditModel.Quantity;
+        Product.ProductType = EditModel.ProductType;
+
+        // Persistieren (muss existieren)
+        AdminService.UpdateProduct(Product);
+
+        SuccessMessage = "Änderungen gespeichert.";
+        ErrorMessage = "";
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo($"/administrator/products/{Id}");
+    }
+
+    
+}

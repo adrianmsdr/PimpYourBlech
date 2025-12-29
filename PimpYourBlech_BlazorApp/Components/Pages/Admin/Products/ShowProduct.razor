@@ -8,59 +8,104 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IImageService ImageService
-<h3>ShowCustomer</h3>
+
+<div class="blur-container">
+<h3>Produktübersicht</h3>
 @if (Product == null)
 {
     <p>Lade Daten…</p>
 }
 else
 {
-    <div class="card p-3">
-        <p><strong>Name:</strong> @Product.Name</p>
-        <p><strong>Artikelnummer:</strong> @Product.ArticleNumber</p>
-        <p><strong>Hersteller:</strong> @Product.Brand</p>
-        <p><strong>Preis:</strong> @Product.Price</p>
-        <p><strong>Auf Lager:</strong> @Product.Quantity</p>
-        <p><strong>Kategorie:</strong> @Product.ProductType</p>
+    <div class="detail-overview-admin">
+        <img class="detail-image-admin" src="@ImageService.GetProductImageUrl(Product.ProductId)" />
 
-
-
-        <div class="mt-3">
-            <button class="btn btn-warning me-2" @onclick="LockCustomer">Bestand anpassen</button>
-            <button class="btn btn-danger me-2"  @onclick="DeleteProduct">Fahrzeugteil löschen</button>
-            <button class="btn btn-primary"       @onclick="EditProduct">Fahrzeugteil bearbeiten</button>
+        <div class="upload-row-admin">
+            <InputFile OnChange="OnProductImageSelected" accept="image/*" />
+            <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedProductImage is null)">
+                Speichern
+            </button>
         </div>
+
+        <div class="combo-card-admin">
+            <p><strong>Name:</strong> @Product.Name</p>
+            <p><strong>Artikelnummer:</strong> @Product.ArticleNumber</p>
+            <p><strong>Hersteller:</strong> @Product.Brand</p>
+            <p><strong>Preis:</strong> @Product.Price</p>
+            <p><strong>Auf Lager:</strong> @Product.Quantity</p>
+            <p><strong>Kategorie:</strong> @Product.ProductType</p>
+        </div>
+
+
+            <div class="button-column">
+                <button class="buttons" @onclick="DeleteProduct">Fahrzeugteil löschen</button>
+                <button class="buttons" @onclick="EditProduct">Fahrzeugteil bearbeiten</button>
+                <button class="buttons" @onclick="Cancel">Zurück</button>
+            </div>
+        </div>
+        }
     </div>
-}
+    
 @code {
     [Parameter] public int Id { get; set; }
 
     public Product? Product { get; set; }
+
+    private IBrowserFile? uploadedProductImage;
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
 
     protected override void OnInitialized()
     {
         Product = AdminService.GetProductById(Id);
     }
 
-    private void LockCustomer()
+    private async Task DeleteProduct()
     {
-        // AdminService.LockCustomer(Customer)
-    }
-
-    private void DeleteProduct()
-    {
-        AdminService.DeleteProduct(Product);
-        ImageService.DeleteProductImagesAsync(Product.ProductId);
+        Car c = AdminService.GetCarById(Product.CarId);
+        await ImageService.DeleteProductImagesAsync(Product.ProductId);
         if (Product.ProductType == ProductType.Color)
         {
-            ImageService.DeleteCarImagesAsync(Product.ProductId, Product.CarId);
+            foreach (var r in AdminService.GetAvailableRims(c.Id))
+            {
+                await ImageService.Delete360ImagesAsync(c.Id, Product.ProductId, r.ProductId);
+            }
         }
-        Nav.NavigateTo("/administrator/products");
 
+        if (Product.ProductType == ProductType.Rim)
+        {
+            foreach (var color in AdminService.GetAvailableColors(c.Id))
+            {
+                await ImageService.Delete360ImagesAsync(c.Id, color.ProductId, Product.ProductId);
+            }
+        }
+
+        AdminService.DeleteProduct(Product);
+        Nav.NavigateTo("/administrator/products");
+    }
+
+    private void OnProductImageSelected(InputFileChangeEventArgs e)
+    {
+        uploadedProductImage = e.File;
+    }
+
+    private async Task SaveCarImage()
+    {
+        if (Product.ProductId == 0 || uploadedProductImage is null) return;
+
+        await ImageService.SaveProductImagesAsync(Product.ProductId, uploadedProductImage);
+        SuccessMessage = "Präsentationsbild gespeichert.";
     }
 
     private void EditProduct()
     {
-
+        Nav.NavigateTo($"/administrator/products/{Product.ProductId}/edit");
     }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("administrator/products/");
+    }
+
 }
