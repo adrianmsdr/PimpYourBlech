@@ -232,13 +232,29 @@ public class ImageService: IImageService
                 .Select(f => $"/CarImages/{carId}/Combos/{colorId}/{rimId}/{Path.GetFileName(f)}")
                 .ToList();
         }
-
-    
-
         
+        public List<string> GetCustomerImageUrl()
+        {
 
-    
+            // System-Pfad zum Ordner des Autos bauen
+            // Beispiel:
+            // _env.WebRootPath ="/.../wwwroot"
+            // Path.Combine(…, "CarImages", car.Id (z.B. 1), product.ProductId (z.B. 1)) = "/.../wwwroot/CarImages/1/1"
+            var folder = Path.Combine(_env.WebRootPath, "CustomerImages");
 
+            // Wenn der Ordner nicht existiert, geben wir einfach eine leere Liste zurück
+            if (!Directory.Exists(folder))
+                return new List<string>();
+
+            // Alle Dateien im Ordner lesen, alphabetisch sortieren und in Web-URLs umwandeln
+            // Beispiel: "/.../wwwroot/CarImages/1/frame_00.webp"
+            // wird zur Web-URL: "/CarImages/1/frame_00.webp"
+            return Directory.GetFiles(folder)
+                .OrderBy(f => f) // sorgt dafür, dass frame_00 vor frame_01 kommt
+                .Select(f => $"/CustomerImages/{Path.GetFileName(f)}")
+                .ToList();
+        }
+        
         public async Task Save360ImagesAsync(int carId, int colorId, int rimId, IReadOnlyList<IBrowserFile> files)
         {
             if (files is null || files.Count == 0)
