@@ -12,8 +12,7 @@
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
 
-<h3>Übersicht</h3>
-
+<h1 class="headline">Übersicht</h1>
 <div class="container">
     <h4>Dein Warenkorb</h4>
 
@@ -22,7 +21,7 @@
         <div class="cart-item">
             <img src="@ImageService.GetProductImageUrl(item.ProductId)"
                  alt="@item.Name"
-                 class="cart-item-image" />
+                 class="cart-item-image"/>
 
             <p class="menu-item">
                 @item.Name – @item.Price.ToString("C")
@@ -102,6 +101,10 @@ else
 }
 
 <style>
+    
+    .headline {
+        text-align: center;
+    }
 
     .container {
         margin: 0 auto;

@@ -56,6 +56,7 @@
                     <p class="menu-item">
                         @item.Name – @item.Price.ToString("C")
                     </p>
+                    <p class="remove-icon" @onclick="() => RemoveItem(item)">❌</p>
                 </div>
             }
 
@@ -192,6 +193,13 @@ else
     {
         CartService.AddProduct(product);
         ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");
+        StateHasChanged();
+    }
+
+    private void RemoveItem(Product product)
+    {
+        CartService.RemoveProduct(product);
+        ToastService.ShowInfo($"{product.Name} wurde aus dem Warenkorb entfernt");
         StateHasChanged();
     }
 
@@ -556,5 +564,16 @@ else
         object-fit: cover;
         border-radius: 25px;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+    }
+    
+    .remove-icon {
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        transition: transform 0.25s ease;
+    }
+    
+    .remove-icon:hover {
+        transform: scale(1.35);
     }
 </style>
