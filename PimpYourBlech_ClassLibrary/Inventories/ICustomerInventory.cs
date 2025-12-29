@@ -13,7 +13,7 @@ public interface ICustomerInventory
     
    
     
-    public void UpdateCustomer(Customer customer,string username,string passwordHash,string telefon);
+    public void UpdateCustomer(Customer customer);
     
     public void UpdateCustomers();
     

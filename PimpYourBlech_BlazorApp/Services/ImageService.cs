@@ -85,55 +85,7 @@ public class ImageService: IImageService
             return "/" + relativePath;
         }
 
-        public async Task<string> SaveColorImagesAsync(int carId, int productId, IReadOnlyList<IBrowserFile> files)
-        { 
-            // vollständigen System-Pfad zum Autoordner + Farbe bauen
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), productId.ToString());
-
-            // Ordner anlegen, falls er noch nicht existiert
-            Directory.CreateDirectory(folder);
-
-            // Dateinamen fortlaufend generieren: frame_00, frame_01 ...
-            int index = 0;
-
-            foreach (var file in files)
-            {
-                // Dateiendung des Originals übernehmen ( .webp bei mir grad)
-                var extension = Path.GetExtension(file.Name);
-
-                // Der neue Dateiname:
-                // frame_00.webp, frame_01.webp ...
-                var fileName = $"frame_{index:D2}{extension}";
-
-                // Zielpfad auf der Festplatte
-                var fullPath = Path.Combine(folder, fileName);
-
-                // Datei in den Zielordner kopieren
-                
-                // FileStream = Klasse in .NET die eine Verbindung zu
-                // einer Datei auf der Festplatte darstellt (erlaubt anlegen, schreiben, lesen)
-                // using -> damit Stream sicher geschlossen wird, auch wenns kracht
-                // await -> damit nichts blockiert
-                await using var fs = new FileStream(fullPath, FileMode.Create);
-
-                // IBrowserFile.OpenReadStream öffnet den Upload-Stream
-                // maxAllowedSize ist ein Schutz gegen zu große Dateien
-                await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(fs);
-
-                index++;
-            }
-
-            // Wir geben einen relativen Pfad zurück:
-            // "images/cars/{carId}"
-            
-            // Dieser kann später in der Datenbank gespeichert werden,
-            // falls man wissen will, wo die Bilder liegen
-            
-            var relativeFolder = Path.Combine("CarImages", carId.ToString(), productId.ToString())
-                .Replace("\\", "/"); // wichtig für Windows
-
-            return relativeFolder;
-        }
+       
         public string GetProductImageUrl(int productId)
         {
             // Ordner für das Produkt
@@ -181,7 +133,7 @@ public class ImageService: IImageService
             return "/" + relativePath;
         }
 
-        public async Task DeleteCarImagesAsync(int productId, int carId)
+        public async Task DeleteCarImagesAsync(int carId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
@@ -242,5 +194,82 @@ public class ImageService: IImageService
                 .Select(f => $"/CarImages/{carId}/{ProductId}/{Path.GetFileName(f)}")
                 .ToList();
         }
+        
+        public async Task Delete360ImagesAsync(int carId, int colorId, int rimId)
+        {
+            // Ordner, in dem die Bilder dieses Autos liegen
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "Combos", colorId.ToString(), rimId.ToString());
+
+            if (!Directory.Exists(folder))
+                return; // nichts zu tun
+
+            try
+            {
+                // true = rekursiv, falls Unterordner vorhanden
+                Directory.Delete(folder, recursive: true);
+            }
+            catch (Exception ex)
+            {
+                // je nach Anspruch:
+                // - hier nur loggen und weitermachen
+                // - oder Fehler nach oben durchreichen
+            }
+        }
+
+        public List<string> Get360ImageUrls(int carId, int colorId, int rimId)
+        {
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(),"Combos", colorId.ToString(),rimId.ToString());
+
+            // Wenn der Ordner nicht existiert, geben wir einfach eine leere Liste zurück
+            if (!Directory.Exists(folder))
+                return new List<string>();
+
+            // Alle Dateien im Ordner lesen, alphabetisch sortieren und in Web-URLs umwandeln
+            // Beispiel: "/.../wwwroot/CarImages/1/frame_00.webp"
+            // wird zur Web-URL: "/CarImages/1/frame_00.webp"
+            return Directory.GetFiles(folder)
+                .OrderBy(f => f) // sorgt dafür, dass frame_00 vor frame_01 kommt
+                .Select(f => $"/CarImages/{carId}/Combos/{colorId}/{rimId}/{Path.GetFileName(f)}")
+                .ToList();
+        }
+
+    
+
+        
+
+    
+
+        public async Task Save360ImagesAsync(int carId, int colorId, int rimId, IReadOnlyList<IBrowserFile> files)
+        {
+            if (files is null || files.Count == 0)
+                throw new ArgumentException("No files uploaded.", nameof(files));
+
+            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "Combos",
+                colorId.ToString(), rimId.ToString());
+
+            // Wenn schon welche vorhanden löschen
+            if (Directory.Exists(folder))
+                Directory.Delete(folder, recursive: true);
+
+            // 2) Neu anlegen
+            Directory.CreateDirectory(folder);
+
+            // 3) Neu speichern (geordnet)
+            int index = 0;
+            foreach (var file in files)
+            {
+                var ext = Path.GetExtension(file.Name);
+                if (string.IsNullOrWhiteSpace(ext)) ext = ".webp"; // optional fallback
+
+                var fileName = $"frame_{index:D2}{ext}";
+                var fullPath = Path.Combine(folder, fileName);
+
+                await using var fs = new FileStream(fullPath, FileMode.Create);
+                await file.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024).CopyToAsync(fs);
+
+                index++;
+            }
+        }
+
 
 }

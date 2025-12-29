@@ -12,9 +12,14 @@ public interface IImageService
     List<string> GetColorFrameUrls(int carId, int productId);
     
     Task<string> SaveProductImagesAsync(int productId, IBrowserFile file);
+    
+    Task Save360ImagesAsync(int carId, int colorId,int rimId, IReadOnlyList<IBrowserFile> files);
 
-    Task<string> SaveColorImagesAsync(int carId, int productId, IReadOnlyList<IBrowserFile> files);
-    Task DeleteCarImagesAsync(int productId, int carId);
+    Task Delete360ImagesAsync(int carId, int colorId, int rimId);
+
+    List<string> Get360ImageUrls(int carId, int colorId, int rimId);
+    
+    Task DeleteCarImagesAsync(int carId);
     
     Task DeleteProductImagesAsync(int productId);
 }

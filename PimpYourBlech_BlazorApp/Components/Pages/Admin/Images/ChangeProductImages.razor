@@ -1,0 +1,67 @@
+@page "/administrator/images/products"
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+<PageTitle>Produktbilder bearbeiten</PageTitle>
+@inject IImageService ImageService
+@inject IAdminService AdminService
+
+<div class="blur-container">
+    <h3>Produktbilder bearbeiten</h3>
+    <label><strong>Produkt:</strong></label>
+    <select class="form-select" @bind="SelectedProductId">
+        <option value="0">-- Bitte w채hlen --</option>
+        @foreach (var p in products)
+        {
+            <option value="@p.ProductId">@p.Name (@p.ProductId)</option>
+        }
+    </select>
+    @if (SelectedProductId == 0)
+    {
+        <div class="text-muted mt-1">Bitte w채hle ein Fahrzeug aus.</div>
+    }
+
+    @if (SelectedProductId != 0)
+    {
+        <hr/>
+
+        <h4>Pr채sentationsbild:</h4>
+        <img src="@ImageService.GetProductImageUrl(SelectedProductId)" style="max-width:320px;border-radius:12px;"/>
+
+        <div style="margin-top:10px">
+            <InputFile OnChange="OnProductImageSelected" accept="image/*"/>
+            <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedProductImage is null)">Speichern</button>
+        </div>
+    }
+</div>
+
+    @code {
+           
+            private List<Product> products = new();
+            private int SelectedProductId;
+
+            private int CarId;
+
+            private IBrowserFile? uploadedProductImage;
+    
+            private string ErrorMessage = "";
+            private string SuccessMessage = "";
+            
+            protected override void OnInitialized()
+            {
+                products = AdminService.GetProducts();
+            }
+            
+            private void OnProductImageSelected(InputFileChangeEventArgs e)
+            {
+                uploadedProductImage = e.File;
+            }
+            
+            private async Task SaveCarImage()
+            {
+                if (SelectedProductId == 0 || uploadedProductImage is null) return;
+
+                await ImageService.SaveProductImagesAsync(SelectedProductId, uploadedProductImage);
+                SuccessMessage = "Pr채sentationsbild gespeichert.";
+            }
+    }

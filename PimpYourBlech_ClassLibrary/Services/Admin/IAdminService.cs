@@ -29,7 +29,7 @@ public interface IAdminService
     
     public Customer GetCustomerByNames(String firstName, String lastName);
 
-    public void UpdateCustomer(Customer customer, String username, String passwordHash, String telefon);
+    public void UpdateCustomer(Customer customer);
 
     void UpdateCustomers();
     
@@ -47,6 +47,8 @@ public interface IAdminService
      Product GetProductById(int id);
    
      void DeleteProduct(Product p);
+     
+     void UpdateProduct(Product p);
    // ___________________________________Cars____________________________________
   List<Car> GetCars();
    
@@ -55,4 +57,9 @@ public interface IAdminService
    Car GetCarById(int id);
    
    void DeleteCar(Car car);
+   
+   public void UpdateCar(Car car);
+   
+   public List<Product> GetAvailableRims(int id);
+   public List<Product> GetAvailableColors(int id);
 }

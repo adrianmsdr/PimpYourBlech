@@ -17,6 +17,9 @@ using PimpYourBlech_ClassLibrary.Services.Shop;
 using PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
 using PimpYourBlech_ClassLibrary.Session;
 using PimpYourBlech_ClassLibrary.Session.Implementation;
+using PimpYourBlech_ClassLibrary.Services.Comparator;
+using PimpYourBlech_ClassLibrary.Services.Comparator.Implementation;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +65,7 @@ builder.Services.AddScoped<ICarInventory>(sp =>
 // 6) Services
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
+builder.Services.AddScoped<IComparatorService, ComparatorService>();
 builder.Services.AddScoped<IShopService, ShopService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ICartService, CartService>();

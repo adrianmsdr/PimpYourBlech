@@ -7,32 +7,38 @@
 @inject NavigationManager Nav
 
 
-<h3>Kunden verwalten</h3>
+<div class="blur-container">
+@if (customers == null || customers.Count == 0)
+{
+    <p>Keine Nutzer vorhanden.</p>
+}
+else
+{
 
-<table class="table table-striped table-bordered">
-    <thead>
-    <tr>
-        <th>Vorname</th>
-        <th>Nachname</th>
-        <th>Username</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    @foreach (var c in customers)
-    {
-        <tr @onclick="@(() => Nav.NavigateTo($"/administrator/customers/{c.Id}"))"
-            style="cursor: pointer">
-            <td>@c.FirstName</td>
-            <td>@c.LastName</td>
-            <td>@c.Username</td>
-            <td>@c.MailAddress</td>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Username</th>
+            <th>Email</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
 
+        <tbody>
+        @foreach (var c in customers)
+        {
+            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/customers/{c.Id}"))"
+                style="cursor: pointer">
+                <td>@c.FirstName</td>
+                <td>@c.LastName</td>
+                <td>@c.Username</td>
+                <td>@c.MailAddress</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 @if (FoundCustomer != null)
 {
     <div class="alert alert-info mt-3">
@@ -49,14 +55,17 @@
     <div class="alert alert-danger mt-3">@ErrorMessage</div>
 }
 
-<div class="d-flex align-items-center">
-    <input class="form-control me-2" style="width:200px"
-           placeholder="Username suchen..."
-           @bind="searchValue" />
-
-    <button class="btn btn-primary" @onclick="SearchUsername">
+<input class="text-inputPYB"
+       placeholder="Username suchen..."
+       @bind="searchValue" />
+<div class="button-column">
+    <button class="buttons" @onclick="SearchUsername">
         Suche nach User <MagnifyingGlassIcon></MagnifyingGlassIcon>
     </button>
+    <button class="buttons" @onclick="Cancel">Zurück</button>
+
+</div>
+
 </div>
 
 @code {
@@ -73,8 +82,12 @@
 
     private void SearchUsername()
     {
-        FoundCustomer = null;    
-        ErrorMessage = "";     
+        if (customers == null || customers.Count == 0)
+        {
+            return;
+        }
+        FoundCustomer = null;
+        ErrorMessage = "";
 
         foreach (var c in customers)
         {
@@ -82,11 +95,16 @@
             {
                 FoundCustomer = c;
                 ErrorMessage = "";
-                return;            
+                return;
             }
         }
-        
+
         ErrorMessage = "Kein Benutzer mit diesem Username gefunden.";
         StateHasChanged();
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/administrator/");
     }
 }

@@ -11,4 +11,6 @@ public interface ICarInventory
     void DeleteCar(Car c);
     
     public List<Product> GetAvailableColor(int Id);
+    
+    public void UpdateCar(Car car);
 }

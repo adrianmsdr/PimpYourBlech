@@ -24,7 +24,11 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
        database.SaveChanges();
     }
 
-
+    public void UpdateProduct(Product p)
+    {
+        database.Products.Update(p);
+        database.SaveChanges();
+    }
     
     public List<Product> ListEngines()
     {
