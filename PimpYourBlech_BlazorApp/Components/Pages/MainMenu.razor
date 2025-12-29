@@ -8,7 +8,7 @@
 <div class="menu-container">
     <h2 class="headline-admin">Willkommen, @UserSession.CurrentUser.Username!</h2>
 
-    <img src="benutzer.png" class="user-image">
+    <img src=@UserSession.CurrentUser.ImagePath class="user-image">
 
     <div class="button-column">
         <button class="buttons" @onclick="GoToConfigurator">Konfiguration starten<CarIcon></CarIcon></button>

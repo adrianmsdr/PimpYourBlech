@@ -22,4 +22,6 @@ public interface IImageService
     Task DeleteCarImagesAsync(int carId);
     
     Task DeleteProductImagesAsync(int productId);
+
+    public List<string> GetCustomerImageUrl();
 }

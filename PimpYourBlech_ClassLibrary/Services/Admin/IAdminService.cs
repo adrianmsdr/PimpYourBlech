@@ -11,7 +11,7 @@ public interface IAdminService
     public List<Customer> GetListCustomers();
 
     Customer Register(string firstName, string lastName, string username, string passwordHash, string telefon,
-        string mailAddress);
+        string mailAddress, string ImagePath);
     Customer Login(string username, string passwordHash);
     bool isUsernameAvailable(string username);
     
