@@ -16,11 +16,11 @@
 
 <div class="checkout-container">
     
-    <h3 class="font">Kasse</h3>
-    <p class="font">Wohin sollen wir deine Bestellung liefern?</p>
+    <h1 class="font">Kasse</h1>
+    <h5 class="font">Wohin sollen wir deine Bestellung liefern?</h5>
     
     <div class="mb-3">
-        <select class="text-input" @bind="salutation">
+        <select class="text-inputPYB" @bind="salutation">
             <option value="">Anrede wählen</option>
             <option value="Herr">Herr</option>
             <option value="Frau">Frau</option>
@@ -29,43 +29,43 @@
     </div>
 
     <div class="mb-3">
-        <input class="text-input"
+        <input class="text-inputPYB"
                placeholder="Vorname"
                @bind="surname"/>
     </div>
 
     <div class="mb-3">
-        <input class="text-input"
+        <input class="text-inputPYB"
                placeholder="Nachname"
                @bind="lastname"/>
     </div>
 
     <div class="mb-3">
-        <input class="text-input"
+        <input class="text-inputPYB"
                placeholder="Straße"
                @bind="street"/>
     </div>
 
     <div class="mb-3">
-        <input class="text-input"
+        <input class="text-inputPYB"
                placeholder="Hausnummer"
                @bind="housenumber"/>
     </div>
 
     <div class="mb-3">
-        <input class="text-input"
+        <input class="text-inputPYB"
                placeholder="Ort"
                @bind="town"/>
     </div>
 
     <div class="mb-3">
-        <input class="text-input"
+        <input class="text-inputPYB"
                placeholder="Postleitzahl"
                @bind="postalcode"/>
     </div>
 
     <div class="mb-3">
-        <select class="text-input" @bind="country">
+        <select class="text-inputPYB" @bind="country">
             <option value="">Land wählen</option>
             <option value="DE">🇩🇪 Deutschland</option>
             <option value="AT">🇦🇹 Österreich</option>
