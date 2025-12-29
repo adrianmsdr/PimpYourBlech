@@ -20,6 +20,8 @@ public class Customer ()
 
     public bool? AdminRights { get; set; } 
     
+    public string ImagePath { get; set; }
+    
 
     public override string ToString()
     {

@@ -2,28 +2,34 @@
 @using System.Security.Cryptography
 @using System.Text
 @using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Exceptions
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation
 @inject IAdminService AdminService
 @inject NavigationManager Nav
+@inject IImageService ImageService
 
 <PageTitle>Registration</PageTitle>
 
 <div class="registration-container">
     <h3 class="headline">Registrierung</h3>
-    <img src="benutzer.png" class="user-image" @onclick="SelectAvatar">
+    <img src=@SelectedAvatar class="user-image" @onclick="SelectAvatar">
     <h5 class="headline">Klicke auf den Kopf, um einen Avatar auszuwählen</h5>
     @if (ShowAvatarMenu)
     {
         <div class="avatar-dropdown">
-            <img src="Car1.png" class="avatar-option"/>
-            <img src="Car2.png" class="avatar-option"/>
-            <img src="Car3.png" class="avatar-option" />
+            <img src=@Avatar1 class="avatar-option"
+                 @onclick="() => ChooseAvatar(Avatar1)" />
+
+            <img src=@Avatar2 class="avatar-option"
+                 @onclick="() => ChooseAvatar(Avatar2)" />
+
+            <img src=@Avatar3 class="avatar-option"
+                 @onclick="() => ChooseAvatar(Avatar3)" />
         </div>
     }
-
 
     @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
     @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -138,7 +144,7 @@
         );
 
         // Mittels des AdminService wird der Benutzer registriert und die Erfolgsmeldung gesetzt + angezeigt
-        AdminService.Register(firstName, lastName, username, hash, phone, email);
+        AdminService.Register(firstName, lastName, username, hash, phone, email, SelectedAvatar);
         SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
 
        
@@ -154,6 +160,22 @@
         Nav.NavigateTo("/");
     }
 
+    private List<String> Images = new List<string>();
+
+    private string Avatar1;
+    private string Avatar2;
+    private string Avatar3;
+
+    private readonly IWebHostEnvironment _env;
+
+    protected override void OnInitialized()
+    {
+        Images = ImageService.GetCustomerImageUrl();
+        Avatar1 = Images[0];
+        Avatar2 = Images[1];
+        Avatar3 = Images[2];
+    }
+
     private bool ShowAvatarMenu = false;
     private string SelectedAvatar = "benutzer.png";
 
@@ -166,6 +188,7 @@
     {
         SelectedAvatar = avatar;
         ShowAvatarMenu = false;
+        StateHasChanged();
     }
 
 }

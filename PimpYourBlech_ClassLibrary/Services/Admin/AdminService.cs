@@ -28,7 +28,7 @@ public class AdminService:IAdminService
     
     
     public Customer Register(string firstName, string lastName, string username, string passwordHash, string telefon,
-        string mailAddress)
+        string mailAddress, string ImagePath)
     {
         Customer customer = new Customer();
         customer.FirstName = firstName;
@@ -37,6 +37,7 @@ public class AdminService:IAdminService
         customer.PasswordHash = passwordHash;
         customer.Telefon = telefon;
         customer.MailAddress = mailAddress;
+        customer.ImagePath = ImagePath;
         customerRepository.InsertCustomer(customer);
         emailService.SendRegistrationEmail(customer);
         return customer;
