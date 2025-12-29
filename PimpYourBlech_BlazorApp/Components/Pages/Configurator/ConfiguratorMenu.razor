@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
 @inject IImageService ImageService
@@ -23,14 +24,16 @@
 
 @if (configuration == null)
 {
-    <div class="registration-container">
-        <input class="text-input"
+    <div class="blur-container">
+        <input class="text-inputPYB"
                placeholder="Konfigurationsname"
                @bind="configurationName"/>
    
-        <button class="buttons" @onclick="StartConfiguration">Konfiguration starten</button>
-        <button class="buttons" @onclick="Cancel">Abbrechen</button>
-    </div>
+        <div class="button-column">
+            <button class="buttons" @onclick="StartConfiguration">Konfiguration starten</button>
+            <button class="buttons" @onclick="Cancel">Abbrechen</button>
+        </div>
+        </div>
 }
 else
 {
@@ -246,6 +249,7 @@ else
     private List<string> frameUrls = new();
     private int currentFrame = 0;
 
+    private List<Product> availableColors = new();
     private List<Product> availableEngines = new();
     private List<Product> availableRims = new();
     private List<Product> availableLights = new();
@@ -253,40 +257,44 @@ else
     private Configuration? configuration;
     private double totalPrice;
 
-    private List<Product> availableColors = new();
-    private int selectedProductId = 0;
+    private int selectedColorId = 0;
+    private int selectedRimId = 0;
 
-    private void SelectColor(int colorDetailId)
+    private void SelectColor(int colorId)
     {
-        selectedProductId = colorDetailId;
-        frameUrls = ImageService.GetColorFrameUrls(Id, selectedProductId);
-        currentFrame = 0;
-        ConfiguratorService.AddProduct(configuration,ConfiguratorService.GetProductById(selectedProductId));
+        if (configuration == null) return;
+
+        selectedColorId = colorId;
+
+        ConfiguratorService.AddProduct(configuration, ConfiguratorService.GetProductById(selectedColorId));
+        LoadFrames();
+        UpdatePrice();
     }
+
     protected override async Task OnInitializedAsync()
     {
         // 1) Auto laden (einmal)
         Car = ConfiguratorService.GetCarById(Id);
         if (Car == null) return;
 
-        // 2) Farben + Frames
+        // 2) Farben laden
         availableColors = ConfiguratorService.GetAvailableColors(Id) ?? new List<Product>();
 
-        if (availableColors.Count > 0)
-        {
-            selectedProductId = availableColors[0].ProductId; 
-            frameUrls = ImageService.GetColorFrameUrls(Car.Id, selectedProductId);
-        }
-        else
-        {
-            frameUrls = new List<string>(); // oder fallback, wenn du willst
-            // frameUrls = ImageService.GetCarFrameUrls(Car.Id);
-        }
+        // 3) Produkte laden
+        availableEngines = ConfiguratorService.GetAvailableEngines(Id) ?? new List<Product>();
+        availableRims = ConfiguratorService.GetAvailableRims(Id) ?? new List<Product>();
 
-        // 3) Produkte laden (einmal)
-        availableEngines = ConfiguratorService.ListEngines();
-        availableRims = ConfiguratorService.ListRims();
-        // availableLights = ConfiguratorService.ListLights();
+
+        // Default Farbe + Felge setzen (damit sofort 360° geht)
+        if (availableColors.Count > 0)
+            selectedColorId = availableColors[0].ProductId;
+
+        if (availableRims.Count > 0)
+            selectedRimId = availableRims[0].ProductId;
+
+        // Frames laden über neue Kombi-Logik
+        LoadFrames();
+
 
         // 4) Optional: configId aus QueryString laden
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
@@ -298,8 +306,6 @@ else
             name = configuration?.Name;
         }
 
-        
-        
         // 5) Preis einmal am Ende
         UpdatePrice();
     }
@@ -320,18 +326,18 @@ else
     private void HandleProduct(Product product)
     {
         if (configuration == null) return;
-        var existing = configuration.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
 
-        if (existing != null)
-        {
-            // entfernen
-            configuration.Products.Remove(existing);
-        }
-        else
-        {
-           // hinzufügen
-            ConfiguratorService.AddProduct(configuration, product);
-        }
+
+        ConfiguratorService.AddProduct(configuration, product);
+
+        if (product.ProductType == ProductType.Rim)
+            selectedRimId = product.ProductId;
+
+        if (product.ProductType == ProductType.Color)
+            selectedColorId = product.ProductId;
+
+
+        LoadFrames();
         UpdatePrice();
     }
 
@@ -353,25 +359,29 @@ else
         name = configurationName;
         configuration = ConfiguratorService.StartNewConfiguration(UserSession.CurrentUser, Car, name);
 
-        // Standardfarbe als Produkt setzen
+        // Defaultfarbe + Defaultfelge als Produkt setzen
         if (availableColors.Count > 0)
         {
-            selectedProductId = availableColors[0].ProductId;
+            selectedColorId = availableColors[0].ProductId;
             ConfiguratorService.AddProduct(configuration, availableColors[0]);
-
-            frameUrls = ImageService.GetColorFrameUrls(Car.Id, selectedProductId);
-            currentFrame = 0;
         }
 
+        if (availableRims.Count > 0)
+        {
+            selectedRimId = availableRims[0].ProductId;
+            ConfiguratorService.AddProduct(configuration, availableRims[0]);
+        }
+
+        LoadFrames();
         UpdatePrice();
-    
+
     }
 
     private void Cancel()
     {
         Nav.NavigateTo("/mainMenu");
     }
-    
+
     private void DeleteConfiguration()
     {
         ConfiguratorService.DeleteConfiguration(configuration);
@@ -389,6 +399,21 @@ else
     {
         ConfiguratorService.SaveConfiguration(configuration);
     }
+
+    private void LoadFrames()
+    {
+        if (Car == null) return;
+        if (selectedColorId == 0 || selectedRimId == 0)
+        {
+            frameUrls = new List<string>();
+            currentFrame = 0;
+            return;
+        }
+
+        frameUrls = ImageService.Get360ImageUrls(Car.Id, selectedColorId, selectedRimId) ?? new List<string>();
+        currentFrame = 0;
+    }
+
 }
 
 
@@ -779,7 +804,7 @@ else
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
 }
 
-.text-input {
+.text-inputBYB {
     width: 240px;
     height: 38px;
     padding: 6px;
@@ -793,10 +818,10 @@ else
     transition: 0.25s ease;
 }
 
-.text-input:hover {
+.text-inputBYB:hover {
     transform:scale(1.1);
 }
-.text-input:focus {
+.text-inputBYB:focus {
     border-color: #ff3333;
     box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
 }

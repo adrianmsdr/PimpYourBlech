@@ -10,6 +10,8 @@ public interface IProductInventory
     
     public void DeleteProduct(Product p);
     
+    public void UpdateProduct(Product p);
+    
     public List<Product> ListEngines();
     
     public List<Product> ListRims();

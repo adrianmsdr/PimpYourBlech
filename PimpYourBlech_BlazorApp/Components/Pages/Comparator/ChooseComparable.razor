@@ -1,0 +1,64 @@
+<h3>ChooseComparable</h3>
+
+@page "/compare/choose"
+
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Configurator
+@inject IConfiguratorService ConfiguratorService
+@inject IImageService ImageService
+
+<h3>Fahrzeuge vergleichen</h3>
+<p>Wähle mindestens zwei Fahrzeuge aus</p>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Bild</th>
+        <th>Name</th>
+        <th>Marke</th>
+        <th>Modell</th>
+        <th>Preis</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var car in cars)
+    {
+        <tr>
+            <td>
+                <input type="checkbox"
+                       @onchange="() => ToggleCar(car)" />
+            </td>
+            <td>
+                <img src="@ImageService.GetCarImageUrl(car.Id)"
+                     style="width:120px; height:70px; object-fit:cover;" />
+            </td>
+            <td>@car.Name</td>
+            <td>@car.Brand</td>
+            <td>@car.Model</td>
+            <td>@car.Price €</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<CarComparator SelectedCars="@selectedCars" />
+
+@code {
+    private List<Car> cars = new();
+    private List<Car> selectedCars = new();
+
+    protected override void OnInitialized()
+    {
+        cars = ConfiguratorService.ListCars();
+    }
+
+    private void ToggleCar(Car car)
+    {
+        if (selectedCars.Contains(car))
+            selectedCars.Remove(car);
+        else
+            selectedCars.Add(car);
+    }
+}

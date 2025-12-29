@@ -1,0 +1,137 @@
+@page "/administrator/cars/{id:int}/edit"
+<PageTitle>Fahrzeug bearbeiten</PageTitle>
+
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+@inject NavigationManager Nav
+
+<div class="blur-container">
+    <h3>Fahrzeug bearbeiten</h3>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p style="color:#ffb3b3">@ErrorMessage</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+    {
+        <p style="color:#bfffbf">@SuccessMessage</p>
+    }
+
+    @if (Car is null)
+    {
+        <p>Lade Daten…</p>
+    }
+    else
+    {
+
+            <div style="flex:1; min-width:320px;">
+                <div class="combo-card-admin">
+                    <EditForm Model="EditModel" OnValidSubmit="SaveEdits">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-grid-admin">
+                            <label>Name</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Name" />
+
+                            <label>Hersteller</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Brand" />
+
+                            <label>Model</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Model" />
+
+                            <label>Preis</label>
+                            <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Price" />
+
+                            <label>Auf Lager</label>
+                            <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Quantity" />
+                            
+                            <label>Produktionsdatum</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DateProduction" />
+                            
+                            <label>Erstzulassung</label>
+                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DatePermit" />
+                            
+                        </div>
+
+                        <div class="button-column" style="margin-top:16px;">
+                            <button type="submit" class="buttons">Speichern</button>
+                            <button type="button" class="buttons" @onclick="Cancel">Zurück</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+      
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Car? Car;
+    private Car EditModel = new();
+    
+    
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    protected override void OnInitialized()
+    {
+        Car = AdminService.GetCarById(Id);
+        if (Car is null)
+        {
+            ErrorMessage = "Fahrzeug nicht gefunden.";
+            return;
+        }
+
+        // Kopie fürs Formular (damit Cancel sauber ist)
+        EditModel = new Car
+        {
+            Id = Car.Id,
+            Name = Car.Name,
+            Brand = Car.Brand,
+            Colors = Car.Colors,
+            DatePermit = Car.DatePermit,
+            DateProduction = Car.DateProduction,
+            Model = Car.Model,
+            Price = Car.Price,
+            Products = Car.Products,
+            PS = Car.PS,
+            Quantity = Car.Quantity
+            
+        };
+    }
+
+    
+
+    private void SaveEdits()
+    {
+        if (Car is null) return;
+
+        // Original updaten
+        Car.Name = EditModel.Name;
+        Car.Brand = EditModel.Brand;
+        Car.Model = EditModel.Model;
+        Car.Price = EditModel.Price;
+        Car.Quantity = EditModel.Quantity;
+        Car.DatePermit = EditModel.DatePermit;
+        Car.DateProduction = EditModel.DateProduction;
+        
+        
+
+        // Persistieren (muss existieren)
+        AdminService.UpdateCar(Car);
+
+        SuccessMessage = "Änderungen gespeichert.";
+        ErrorMessage = "";
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo($"/administrator/cars/{Car.Id}");
+    }
+
+    
+}

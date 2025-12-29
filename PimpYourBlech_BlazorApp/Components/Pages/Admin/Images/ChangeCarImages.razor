@@ -1,0 +1,217 @@
+@page "/administrator/images/360"
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Enums
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+@inject Services.IImageService ImageService
+@inject NavigationManager Nav
+
+<div class="blur-container">
+<h3>Bildverwaltung</h3>
+
+    <label><strong>Fahrzeug:</strong></label>
+    <select class="form-select" @bind="SelectedCarId">
+        <option value="0">-- Bitte wählen --</option>
+        @foreach (var c in cars)
+        {
+            <option value="@c.Id">@c.Name (@c.Id)</option>
+        }
+    </select>
+    @if (SelectedCarId == 0)
+    {
+        <div class="text-muted mt-1">Bitte wähle ein Fahrzeug aus.</div>
+    }
+
+    @if (SelectedCarId != 0)
+    {
+        <hr/>
+
+        <h4>Präsentationsbild:</h4>
+        <img src="@ImageService.GetCarImageUrl(SelectedCarId)" style="max-width:320px;border-radius:12px;"/>
+
+        <div style="margin-top:10px">
+            <InputFile OnChange="OnCarImageSelected" accept="image/*"/>
+            <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedCarImage is null)">Speichern</button>
+        </div>
+
+        <hr/>
+
+        <h4>360° Bilder</h4>
+
+        @if (Colors.Count == 0 || Rims.Count == 0)
+        {
+            <div>Keine Varianten für dieses Fahrzeug gefunden.</div>
+            <div style="padding:8px;border:1px dashed #666;margin-bottom:10px;">
+                Debug:
+                CarId=@SelectedCarId |
+                Colors=@Colors.Count |
+                Rims=@Rims.Count
+            </div>
+        }
+        else
+        {
+            @foreach (var c in Colors)
+            {
+                @foreach (var r in Rims)
+                {
+                    var frames = ImageService.Get360ImageUrls(SelectedCarId, c.ProductId, r.ProductId);
+                    var preview = frames.FirstOrDefault();
+
+                    <div style="padding:12px;border:1px solid #444;border-radius:12px;margin-bottom:12px;">
+
+                        <div class="combo-card-admin-grid">
+                            <div class="combo-left">
+                                @if (!string.IsNullOrWhiteSpace(preview))
+                                {
+                                    <img src="@preview" class="combo-preview"/>
+                                }
+                                else
+                                {
+                                    <div class="combo-empty">Keine Frames</div>
+                                }
+                            </div>
+
+                            <div class="combo-right">
+                                <div class="combo-header">
+                                    <img class="combo-thumb" src="@ImageService.GetProductImageUrl(c.ProductId)"/>
+                                    <span class="combo-plus">+</span>
+                                    <img class="combo-thumb" src="@ImageService.GetProductImageUrl(r.ProductId)"/>
+                                    <div class="combo-title">
+                                        <div class="combo-name">@(c.ColorDetail?.DisplayName ?? c.Name) + @r.Name</div>
+                                        <div class="combo-meta">Frames: @frames.Count • C:@c.ProductId /
+                                            R:@r.ProductId</div>
+                                    </div>
+                                </div>
+
+                                <div class="combo-upload">
+                                    <label class="combo-label">360° Bilder auswählen (mehrere möglich)</label>
+                                    <InputFile OnChange="HandleFilesSelected" multiple accept="image/*"/>
+                                    @if (uploadedFiles.Count > 0)
+                                    {
+                                        <div class="combo-selected">@uploadedFiles.Count Datei(en) ausgewählt</div>
+                                    }
+                                </div>
+
+                                <div class="combo-actions">
+                                    <button class="btn btn-danger"
+                                            @onclick="() => SaveColorFrames(c.ProductId, r.ProductId)"
+                                            disabled="@(uploadedFiles.Count == 0)">
+                                        Frames speichern
+                                    </button>
+
+                                    <button class="btn btn-outline-danger"
+                                            @onclick="() => DeleteColorFrames(c.ProductId, r.ProductId)"
+                                            disabled="@(frames.Count == 0)">
+                                        Löschen
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            }
+
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            @if (!string.IsNullOrEmpty(SuccessMessage))
+            {
+                <div class="alert alert-success">@SuccessMessage</div>
+            }
+
+        }
+    }
+</div>
+
+
+@code {
+    private Car car = new();
+    private List<Car> cars = new();
+    private List<Product> Colors = new();
+    private List<Product> Rims = new();
+    private int selectedCarId;
+
+    private int CarId;
+
+    private IBrowserFile? uploadedCarImage;
+    private IReadOnlyList<IBrowserFile> uploadedFiles = Array.Empty<IBrowserFile>();
+    
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+    
+    
+    
+    private int SelectedCarId
+    {
+        get => selectedCarId;
+        set
+        {
+            if (selectedCarId == value) return;
+            selectedCarId = value;
+            OnCarChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        cars = AdminService.GetCars();
+    }
+
+    private void HandleFilesSelected(InputFileChangeEventArgs e)
+    {
+        uploadedFiles = e.GetMultipleFiles(40); //mehrere Bilder Speichern
+    }
+
+    private void OnCarChanged()
+    {
+        uploadedCarImage = null;
+        uploadedFiles = Array.Empty<IBrowserFile>();
+           
+        Colors.Clear();
+        Rims.Clear();
+
+        if (selectedCarId == 0) return;
+
+        Colors = AdminService.GetAvailableColors(selectedCarId);
+        Rims = AdminService.GetAvailableRims(selectedCarId);
+        Console.WriteLine($"[Images] OnCarChanged fired. selectedCarId={selectedCarId}");
+    }
+
+    private void OnCarImageSelected(InputFileChangeEventArgs e)
+    {
+       uploadedCarImage = e.File;
+    }
+   
+
+    private async Task SaveCarImage()
+    {
+        if (SelectedCarId == 0 || uploadedCarImage is null) return;
+
+        await ImageService.SaveCarImageAsync(SelectedCarId, uploadedCarImage);
+        SuccessMessage = "Präsentationsbild gespeichert.";
+    }
+    
+
+    private async Task SaveColorFrames(int colorId, int rimId)
+    {
+        if (SelectedCarId == 0) return;
+        if (uploadedFiles.Count == 0) return;
+
+        await ImageService.Save360ImagesAsync(SelectedCarId, colorId, rimId, uploadedFiles );
+        
+        SuccessMessage = "Frames ersetzt.";
+    }
+
+    private async Task DeleteColorFrames(int colorId, int rimId)
+    {
+        if (SelectedCarId == 0) return;
+
+        await ImageService.Delete360ImagesAsync(SelectedCarId, colorId, rimId);
+                
+    }
+    
+}

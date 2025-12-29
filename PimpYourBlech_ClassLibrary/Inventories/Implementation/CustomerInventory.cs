@@ -34,11 +34,9 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         database.SaveChanges();
     }
 
-    public void UpdateCustomer(Customer c,String username, String passwordHash, String telefon)
+    public void UpdateCustomer(Customer c)
     {
-        c.Username = username;
-        c.PasswordHash = passwordHash;
-        c.Telefon = telefon;
+        database.Customers.Update(c);
         database.SaveChanges();
 
         

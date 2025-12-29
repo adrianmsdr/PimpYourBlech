@@ -139,6 +139,19 @@ public class ConfiguratorService : IConfiguratorService
         return carInventory.GetAvailableColor(Id);
     }
 
+    public List<Product> GetAvailableEngines(int carId)
+    {
+        return ListEngines()
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Engine)
+            .ToList();
+    }
+
+    public List<Product> GetAvailableRims(int carId)
+    {
+        return ListRims()
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Rim)
+            .ToList();
+    }
     public Product GetProductById(int Id)
     {
         return productInventory.ListProducts().FirstOrDefault(p => p.ProductId == Id);

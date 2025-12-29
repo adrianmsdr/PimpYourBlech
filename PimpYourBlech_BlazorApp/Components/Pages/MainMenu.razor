@@ -6,12 +6,13 @@
 <PageTitle>Main Menu</PageTitle>
 
 <div class="menu-container">
-    <h2 class="headline">Willkommen, @UserSession.CurrentUser.Username!</h2>
+    <h2 class="headline-admin">Willkommen, @UserSession.CurrentUser.Username!</h2>
 
     <img src=@UserSession.CurrentUser.ImagePath class="user-image">
 
     <div class="button-column">
         <button class="buttons" @onclick="GoToConfigurator">Konfiguration starten<CarIcon></CarIcon></button>
+        <button class="buttons" @onclick="GoToComparator">Fahrzeuge Vergleichen</button>
         <button class="buttons" @onclick="GoToConfigurations">Konfigurationen laden<CarIcon2></CarIcon2></button>
         <button class="buttons" @onclick="GoToShop">Ersatzteile Shop<ShopIcon></ShopIcon></button>
         <button class="buttons" @onclick="GoToAdmin">Administrator<AdminIcon></AdminIcon></button>
@@ -19,8 +20,6 @@
             <button class="buttons" @onclick="GoToFAQ">FAQ</button>
             <button class="buttons" @onclick="GoAboutUs">About Us</button>
         </div>
-        <button class="buttons logout" @onclick="Logout">Abmelden</button>
-        
     </div>
 </div>
 
@@ -29,6 +28,8 @@
 {
     private void GoToConfigurator() => Nav.NavigateTo("/configurator/chooseCar");
 
+    private void GoToComparator() => Nav.NavigateTo("/compare/choose");
+    
     private void GoToConfigurations() => Nav.NavigateTo("/configurations");
 
     private void GoToShop() => Nav.NavigateTo("/shop");
@@ -47,14 +48,7 @@
 }
 
 <style>
-
-    .headline {
-        font-family: Bahnschrift;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        margin-bottom: 10px;
-    }
-
+    
     .user-image {
         width: 120px;
         height: 120px;

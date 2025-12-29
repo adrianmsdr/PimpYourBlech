@@ -13,10 +13,17 @@
 
 <PageTitle>Registration</PageTitle>
 
+<<<<<<< HEAD
 <div class="registration-container">
     <h3 class="headline">Registrierung</h3>
     <img src=@SelectedAvatar class="user-image" @onclick="SelectAvatar">
     <h5 class="headline">Klicke auf den Kopf, um einen Avatar auszuwählen</h5>
+=======
+<div class="blur-container">
+    <h3 class="headline-admin">Registrierung</h3>
+    <img src="benutzer.png" class="user-image" @onclick="SelectAvatar">
+    <h7 class="headline">Klicke auf den Kopf, um einen Avatar auszuwählen</h7>
+>>>>>>> main
     @if (ShowAvatarMenu)
     {
         <div class="avatar-dropdown">
@@ -43,37 +50,37 @@
 
 
     @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
-    <input class="text-input"
+    <input class="text-inputPYB"
            placeholder="Username"
            @bind="username"/>
 
-    <input class="text-input"
+    <input class="text-inputPYB"
            placeholder="Vorname"
            @bind="firstName"/>
 
-    <input class="text-input"
+    <input class="text-inputPYB"
            placeholder="Nachname"
            @bind="lastName"/>
 
     
-    <input class="text-input"
+    <input class="text-inputPYB"
            placeholder="Telefonnummer"
            @bind="phone"/>
 
-    <input class="text-input"
+    <input class="text-inputPYB"
            placeholder="Email-Adresse"
            @bind="email"/>
 
-    <input class="text-input"
+    <input class="text-inputPYB"
            placeholder="Email-Adresse bestätigen"
            @bind="emailConfirm"/>
 
-    <input class="text-input"
+    <input class="text-inputPYB"
            type="password"
            placeholder="Passwort"
            @bind="password"/>
 
-    <input class="text-input"
+    <input class="text-inputPYB"
            type="password"
            placeholder="Passwort bestätigen"
            @bind="passwordConfirm"/>
@@ -194,30 +201,7 @@
 }
 
 <style>
-    .headline {
-        font-family: Bahnschrift;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    }
-
-    .registration-container {
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-        width: 55%;
-        height: 100%;
-        padding: 25px;
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px); 
-        -webkit-backdrop-filter: blur(8px);
-        border-radius: 18px;
-        border: 1px solid rgba(255, 0, 0, 0.25);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-    }
-
+    
     .user-image {
         width: 120px;
         height: 120px;
@@ -225,52 +209,6 @@
         border: 2px solid rgba(255, 0, 0, 0.5);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
         cursor: pointer;
-    }
-
-    .text-input {
-        width: 240px;
-        height: 38px;
-        padding: 6px;
-        font-family: Bahnschrift;
-        text-align: center;
-        background-color: rgba(20, 0, 0, 0.65); 
-        color: white;
-        border-radius: 10px;
-        border: 2px solid rgba(255, 0, 0, 0.6);
-        outline: none;
-        transition: 0.25s ease;
-    }
-
-    .text-input:hover {
-        transform:scale(1.1);
-    }
-    .text-input:focus {
-        border-color: #ff3333;
-        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
-    }
-
-    .buttons {
-        width: 140px;
-        height: 45px;
-        font-family: Bahnschrift;
-        font-size: 17px;
-        color: white;
-        background-color: #7a0000;
-        border-radius: 12px;
-        border: 2px solid #ff1a1a;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-        transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
-        cursor: pointer;
-    }
-
-    .buttons:hover {
-        transform: scale(1.1);
-        background-color: #b30000;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-    }
-
-    .buttons:active {
-        transform: scale(1.2);
     }
 
     .avatar-dropdown {

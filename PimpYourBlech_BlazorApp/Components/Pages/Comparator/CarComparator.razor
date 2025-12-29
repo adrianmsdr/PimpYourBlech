@@ -1,0 +1,42 @@
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Comparator.Models
+@using PimpYourBlech_ClassLibrary.Services.Comparator
+
+@inject IComparatorService ComparatorService
+
+@if (SelectedCars == null || SelectedCars.Count < 2)
+{
+    <p>Bitte mindestens zwei Fahrzeuge auswählen</p>
+}
+else
+{
+    var comparison = ComparatorService.CompareCars(SelectedCars);
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Merkmal</th>
+            @foreach (var car in comparison.Cars)
+            {
+                <th>@car.Brand @car.Model</th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var row in comparison.Rows)
+        {
+            <tr>
+                <td>@row.Label</td>
+                @foreach (var value in row.Values)
+                {
+                    <td>@value</td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@code {
+    [Parameter]
+    public List<Car> SelectedCars { get; set; } = new();
+}
