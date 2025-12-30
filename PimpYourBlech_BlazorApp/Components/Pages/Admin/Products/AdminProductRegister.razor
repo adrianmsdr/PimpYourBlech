@@ -12,7 +12,7 @@
 
 
 
-<div class="blur-container">
+<div class="menu-container">
     <h3 class="headline-admin">Neues Fahrzeugteil registrieren:</h3>
 
  @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
@@ -365,22 +365,22 @@
 
 <style>
     /* 1) Texte/Labels besser lesbar */
-    .blur-container label,
-    .blur-container span,
-    .blur-container strong,
-    .blur-container .text-muted{
+    .menu-container label,
+    .menu-container span,
+    .menu-container strong,
+    .menu-container .text-muted{
         font-family: Bahnschrift;
         color: rgba(255,255,255,.92);
         text-shadow: 0 2px 6px rgba(0,0,0,.65);
     }
 
     /* Bootstrap Utility me-2 / mb-3 etc. sind okay – wir machen nur Optik */
-    .blur-container .me-2{
+    .menu-container .me-2{
         font-weight: 700;
     }
 
     /* 2) SELECTS (Produkttyp/Getriebe/LED) auf dein Dark-Red-Design trimmen */
-    .blur-container .form-select{
+    .menu-container .form-select{
         width: 240px !important;                 /* gleiche Breite wie text-input */
         height: 38px !important;
         padding: 6px 38px 6px 10px !important;
@@ -404,22 +404,22 @@
     }
 
     /* Hover/Focus konsistent mit .text-input */
-    .blur-container .form-select:hover{
+    .menu-container .form-select:hover{
         transform: scale(1.05);
     }
-    .blur-container .form-select:focus{
+    .menu-container .form-select:focus{
         border-color: #ff3333 !important;
         box-shadow: 0 0 10px rgba(255, 50, 50, 0.6) !important;
     }
 
     /* Optionen im Dropdown nicht weiß */
-    .blur-container .form-select option{
+    .menu-container .form-select option{
         background: #120000;
         color: #fff;
     }
 
     /* kleines Pfeil-Icon, damit’s nicht nach Default-Select aussieht */
-    .blur-container .form-select{
+    .menu-container .form-select{
         background-image:
             linear-gradient(45deg, transparent 50%, rgba(255,255,255,.75) 50%),
             linear-gradient(135deg, rgba(255,255,255,.75) 50%, transparent 50%);
@@ -431,7 +431,7 @@
     }
 
     /* 3) FILE INPUT (InputFile) anpassen, damit nix „weiß“ wirkt */
-    .blur-container input[type="file"]{
+    .menu-container input[type="file"]{
         width: 240px;
         font-family: Bahnschrift;
         color: rgba(255,255,255,.9);
@@ -444,7 +444,7 @@
     }
 
     /* Button im File-Input */
-    .blur-container input[type="file"]::file-selector-button{
+    .menu-container input[type="file"]::file-selector-button{
         font-family: Bahnschrift;
         border-radius: 10px;
         border: 2px solid rgba(255, 0, 0, 0.6);
@@ -454,13 +454,13 @@
         cursor: pointer;
         transition: 0.25s ease;
     }
-    .blur-container input[type="file"]::file-selector-button:hover{
+    .menu-container input[type="file"]::file-selector-button:hover{
         background: rgba(255, 0, 0, 0.22);
         transform: scale(1.05);
     }
 
     /* 4) Success/Error Alerts (falls Bootstrap-Alert zu grell/komisch) */
-    .blur-container .alert{
+    .menu-container .alert{
         width: 240px;
         border-radius: 10px;
         font-family: Bahnschrift;
@@ -470,10 +470,10 @@
         color: rgba(255,255,255,.92);
         text-shadow: 0 2px 6px rgba(0,0,0,.65);
     }
-    .blur-container .alert-danger{
+    .menu-container .alert-danger{
         border-color: rgba(255, 70, 70, 0.55);
     }
-    .blur-container .alert-success{
+    .menu-container .alert-success{
         border-color: rgba(70, 255, 160, 0.35);
     }
 

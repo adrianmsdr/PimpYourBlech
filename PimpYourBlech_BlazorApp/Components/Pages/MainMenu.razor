@@ -8,8 +8,15 @@
 <div class="menu-container">
     <h2 class="headline-admin">Willkommen, @UserSession.CurrentUser.Username!</h2>
 
-    <img src=@UserSession.CurrentUser.ImagePath class="user-image">
+    @if (UserSession.CurrentUser.ImagePath != null)
+    {
+        <img src=@UserSession.CurrentUser.ImagePath class="user-image" @onclick="GoToUserSettings">
+    }
+    else
+    {
+        <img src="benutzer.png" class="user-image" @onclick="GoToUserSettings">
 
+    }
     <div class="button-column">
         <button class="buttons" @onclick="GoToConfigurator">Konfiguration starten<CarIcon></CarIcon></button>
         <button class="buttons" @onclick="GoToComparator">Fahrzeuge Vergleichen</button>
@@ -38,6 +45,8 @@
     
     private void GoAboutUs() => Nav.NavigateTo("/aboutUs");
 
+    private void GoToUserSettings() => Nav.NavigateTo("/user");
+
     private void Logout()
     {
         UserSession.LogOut();
@@ -55,17 +64,6 @@
         border-radius: 50%;
         border: 2px solid rgba(255, 0, 0, 0.5);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-    }
-
-   
-
-    .logout {
-        background-color: #500000;
-        border-color: #ff4444;
-    }
-
-    .logout:hover {
-        background-color: #770000;
     }
     
 

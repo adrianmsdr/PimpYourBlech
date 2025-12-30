@@ -16,10 +16,6 @@ a, .btn-link {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.content {
-    padding-top: 1.1rem;
-}
-
 h1:focus {
     outline: none;
 }
@@ -84,6 +80,7 @@ h1:focus {
     border-radius: 18px;
     border: 1px solid rgba(255, 0, 0, 0.25);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.92);
 }
 
 /*Buttons untereinander*/
@@ -268,7 +265,8 @@ h1,h2,h3,h4{
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
     
 }
-.blur-container{
+/*
+.menu-container{
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -287,6 +285,8 @@ h1,h2,h3,h4{
 
     color: rgba(255, 255, 255, 0.92);
 }
+
+ */
 
 .text-inputPYB {
     width: 240px;
@@ -520,3 +520,4 @@ h1,h2,h3,h4{
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
+
