@@ -6,11 +6,15 @@
 
 <PageTitle>PimpYourBlech</PageTitle>
 
-<div class="content">
+
+<div class="hero-bleed">
     <div class="header-wrapper">
         <img src="HeaderMainMenu.png" class="header-image">
     </div>
+</div>
 
+
+<div class="home-section">
     <div class="main-row">
         <div class="our-partners-box">
             <img src="unsere-partner.png" class="our-partners">
@@ -27,26 +31,13 @@
             </button>
 
             <div class="button-column">
-                @*
-                <video
-                    class="video"
-                    autoplay
-                    muted
-                    loop
-                    playsinline 
-                    preload="auto"
-                    
-                    >
-                    <source src="/PYB-Video.webp" type="video/webp"/>
-                    Dein Browser unterstützt kein HTML5-Video.
-                </video>
-                *@
+               
                 <img class="video" src="/PYB-Video.webp" alt="" />
             </div>
         </div>
         
         <div class="funfact-card">
-            <div class="funfact-title">Unnützer Auto-Fakt des Tages</div>
+            <div class="funfact-title">Unnützer Auto-Faktwdfasdvyvsddes Tages</div>
             @*
                 <div class="funfact-text">@factText</div>
             
@@ -73,14 +64,14 @@
 <style>
     
     .main-row {
-        margin-top: 30px;
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 24px;
     }
 
     .header-wrapper {
+       margin-top: 16px;
         width: 100%;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.25);
@@ -88,6 +79,9 @@
         border-radius: 18px;
         border: 1px solid rgba(255, 0, 0, 0.25);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+
+       
+
     }
 
     .header-image {
@@ -229,4 +223,51 @@
     }
     .funfact-title{ font-family: Bahnschrift; color: white; font-size: 1.05rem; margin-bottom: 10px; }
 
+  
+
+    /* damit es wirklich an der Navbar “klebt” */
+   /* .header-wrapper{
+        width: 100%;
+        overflow: hidden;
+
+        border-bottom-left-radius: 18px;
+        border-bottom-right-radius: 18px;
+
+        background: transparent;
+    }*/
+
+    .home-section{
+        margin-top: 16px;
+        margin-bottom: 16px/* exakt unter dem Header-Radius */
+    }
+
+    .menu-container {
+        margin: 0;           /* WICHTIG: kein margin-top, kein auto, kein left hack */
+        /* margin-left: -14px;  RAUS */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        width: 55%;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 0, 0, 0.25);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .menu-container,
+    .our-partners-box,
+    .funfact-card{
+        margin-top: 0 !important;
+    }
+
+    .home-wrapper{
+        max-width: var(--content-max-width);
+        margin: 0 auto;
+        padding: 0 16px; /* kleiner Innenabstand für kleinere Screens */
+    }
+    
 </style>

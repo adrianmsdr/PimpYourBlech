@@ -1,0 +1,206 @@
+@page "/user"
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.Session.Implementation
+@inject IUserSession UserSession
+@inject NavigationManager Nav
+@inject IAdminService AdminService
+@inject IImageService ImageService
+
+<div class="menu-container">
+    <h3 class="headline-admin">Benutzer verwalten</h3>
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p style="color:#ffb3b3">@ErrorMessage</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+    {
+        <p style="color:#bfffbf">@SuccessMessage</p>
+    }
+    
+    <img src=@SelectedAvatar class="user-image" @onclick="SelectAvatar">
+    <h7 class="headline-admin">Klicke auf den Kopf, um einen Avatar auszuwählen</h7>
+
+    @if (ShowAvatarMenu)
+    {
+        <div class="avatar-dropdown">
+            <img src=@Avatar1 class="avatar-option"
+                 @onclick="() => ChooseAvatar(Avatar1)" />
+
+            <img src=@Avatar2 class="avatar-option"
+                 @onclick="() => ChooseAvatar(Avatar2)" />
+
+            <img src=@Avatar3 class="avatar-option"
+                 @onclick="() => ChooseAvatar(Avatar3)" />
+        </div>
+    }
+    
+    <div style="flex:1; min-width:320px;">
+        <div class="combo-card-admin">
+            <EditForm Model="EditModel" OnValidSubmit="SaveUser">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-grid-admin">
+                    <label>Vorname</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.FirstName" />
+
+                    <label>Nachname</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.LastName" />
+
+                    <label>E-Mail</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.MailAddress" />
+
+                    <label>Telefon</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Telefon" />
+
+                    <label>Passwort</label>
+                    <InputText class="text-inputPYB form-input-grid" type="password" @bind-Value="EditModel.PasswordHash" />
+                    
+                </div>
+
+                
+            </EditForm>
+        </div>
+    </div>
+    <div class="button-column">
+        <button class="buttons" @onclick="SaveUser">Speichern</button>
+        <button class="buttons" @onclick="Cancel">Zurück</button>
+    </div>
+</div>
+@code {
+    private bool ShowAvatarMenu = false;
+    private string SelectedAvatar = "benutzer.png";
+    
+    private List<String> Images = new List<string>();
+
+    private string Avatar1;
+    private string Avatar2;
+    private string Avatar3;
+
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+
+    private Customer Customer = new Customer();
+    private Customer EditModel = new();
+
+    protected override void OnInitialized()
+    {
+        Images = ImageService.GetCustomerImageUrl();
+        Avatar1 = Images[0];
+        Avatar2 = Images[1];
+        Avatar3 = Images[2];
+        SelectedAvatar = UserSession.CurrentUser.ImagePath;
+        Customer = UserSession.CurrentUser;
+        EditModel = new Customer()
+        {
+            Id = Customer.Id,
+            FirstName = Customer.FirstName,
+            LastName = Customer.LastName,
+            AdminRights = Customer.AdminRights, 
+            Configurations  = Customer.Configurations,
+            MailAddress = Customer.MailAddress,
+            Telefon = Customer.Telefon,
+            PasswordHash = Customer.PasswordHash,
+            Username = Customer.Username,
+            ImagePath = Customer.ImagePath
+        };
+    }
+    
+    public void Cancel()
+    {
+        Nav.NavigateTo("/mainMenu");
+    }
+    public void SaveUser()
+    {
+        if (Customer is null) return;
+
+        // Original updaten
+        Customer.Id = EditModel.Id;
+        Customer.FirstName = EditModel.FirstName;
+        Customer.LastName = EditModel.LastName;
+        Customer.AdminRights = EditModel.AdminRights;
+        Customer.Configurations = EditModel.Configurations;
+        Customer.MailAddress = EditModel.MailAddress;
+        Customer.Telefon = EditModel.Telefon;
+        Customer.PasswordHash = EditModel.PasswordHash;
+        Customer.Username = EditModel.Username;
+        Customer.ImagePath = EditModel.ImagePath;
+
+        // Persistieren (muss existieren)
+        AdminService.UpdateCustomer(Customer);
+
+        SuccessMessage = "Änderungen gespeichert.";
+        ErrorMessage = "";
+        
+        
+        
+        
+        AdminService.UpdateCustomer(UserSession.CurrentUser);
+        Nav.NavigateTo("/mainMenu");
+        
+        
+        
+    }
+    public void ChangeImage()
+    {
+        
+    }
+    
+    private void SelectAvatar()
+    {
+        ShowAvatarMenu = !ShowAvatarMenu;
+    }
+
+    private void ChooseAvatar(string avatar)
+    {
+        SelectedAvatar = avatar;
+        EditModel.ImagePath = SelectedAvatar;
+        ShowAvatarMenu = false;
+        StateHasChanged();
+    }
+    
+}
+<style>
+    
+    .user-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .avatar-dropdown {
+        margin-top: 10px;
+        padding: 10px;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 0, 0, 0.4);
+
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    .avatar-option {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.2s ease;
+        border: 2px solid transparent;
+    }
+
+    .avatar-option:hover {
+        transform: scale(1.1);
+        border-color: #ff3333;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+</style>

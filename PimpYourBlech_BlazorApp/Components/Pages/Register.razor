@@ -14,7 +14,7 @@
 <PageTitle>Registration</PageTitle>
 
 
-<div class="blur-container">
+<div class="menu-container">
     <h3 class="headline-admin">Registrierung</h3>
     <img src=@SelectedAvatar class="user-image" @onclick="SelectAvatar">
     <h7 class="headline-admin">Klicke auf den Kopf, um einen Avatar auszuwählen</h7>
@@ -167,8 +167,7 @@
     private string Avatar1;
     private string Avatar2;
     private string Avatar3;
-
-    private readonly IWebHostEnvironment _env;
+    
 
     protected override void OnInitialized()
     {
