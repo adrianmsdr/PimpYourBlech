@@ -10,23 +10,23 @@
 
 <PageTitle>LogIn</PageTitle>
 
-@*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <div class="alert alert-danger">@ErrorMessage</div>
-}
-@if (!string.IsNullOrEmpty(DebugInfo))
-{
-    <p style="color: orange;">DEBUG: @DebugInfo</p>
-}
-
-
 @*EditForm um Enter drücken zum Anmelden zu ermöglichen*@
 <EditForm Model="@this">
     
     <div class="menu-container">
         <h2 class="headline-admin">Anmelden</h2>
         <img src="benutzer.png" class="user-image">
+        
+        @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger">@ErrorMessage</div>
+        }
+        @if (!string.IsNullOrEmpty(DebugInfo))
+        {
+            <p style="color: orange;">DEBUG: @DebugInfo</p>
+        }
+        
         @*Eingabefelder für Username und Passwort*@
         <div class="mb-3">
             <input class="text-inputPYB"
