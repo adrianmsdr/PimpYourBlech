@@ -55,11 +55,31 @@ h1:focus {
     text-align: start;
 }
 
+/*  ---------- Botton-Container ---------- */
+
 .button-row {
     display: flex;
-    gap: 10px;          /* Abstand zwischen Buttons */
-    margin-top: 10px;   /* Abstand nach oben */
+    gap: 10px;          
+    margin-top: 10px;
 }
+
+.button-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+
+/* ---------- Container ---------- */
 
 /*Verschwommener Container für Menüs*/
 .menu-container {
@@ -77,19 +97,15 @@ h1:focus {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 
-    border-radius: 18px;
-    border: 1px solid rgba(255, 0, 0, 0.25);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 0, 0, 0.7);
+    border-radius: 12px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+
     color: rgba(255, 255, 255, 0.92);
 }
 
-/*Buttons untereinander*/
-.button-column {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 10px;
-}
+/* ---------- Buttons ---------- */
 
 .buttons {
     width: 220px;
@@ -104,12 +120,12 @@ h1:focus {
     background-position: center;
     background-size: cover; /* <- Stretch sauber */
 
+    border: 1px solid rgba(255, 0, 0, 0.7);
     border-radius: 12px;
-    border: 2px solid #ff1a1a;
 
-    box-shadow:
-            inset 0 0 0 1px rgba(255,255,255,0.08),
-            0 6px 16px rgba(0,0,0,0.6);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+
+   
 
     transition:
             transform 0.2s ease,
@@ -119,21 +135,8 @@ h1:focus {
     cursor: pointer;
     margin: 0 auto;
 }
-.buttons,
-.menu-container ,
-.our-partners-box,
-.funfact-card,
-.header-wrapper,
-.btn-label,
-.btn-label2,
-.btn-icon{
 
 
-    border: 1px solid rgba(255, 0, 0, 0.7) !important;
-    border-radius: 12px !important;
-
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6) !important;
-}
 .buttons:hover {
     transform: scale(1.06);
     border-color: #ff4d4d;
@@ -162,15 +165,42 @@ h1:focus {
     margin-left: 2px;
     margin-bottom: 3px;
 }
-.button-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 15px;
-    width: 50%;
-    margin: 0 auto;
+
+/* Buttons: */
+.btn-primary{
+    font-family: Bahnschrift;
+    background-color: #7a0000 !important;
+    border: 2px solid #ff1a1a !important;
+    border-radius: 12px !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,.6);
+    transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
+}
+.btn-primary:hover{
+    transform: scale(1.06);
+    background-color: #b30000 !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,.7);
+}
+.btn-primary:active{
+    transform: scale(1.10);
 }
 
-/* ---------- Tabellen im App-Design ---------- */
+/* search-button auch passend */
+.search-button{
+    font-family: Bahnschrift;
+    color: white;
+    background-color: rgba(20,0,0,.65);
+    border-radius: 12px;
+    border: 2px solid rgba(255,0,0,.6);
+    box-shadow: 0 6px 16px rgba(0,0,0,.6);
+    padding: 10px 14px;
+    transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
+}
+.search-button:hover{
+    transform: scale(1.06);
+    background-color: rgba(255,0,0,.22);
+    box-shadow: 0 10px 20px rgba(0,0,0,.7);
+}
+/* ---------- Tabellen ---------- */
 .table{
     font-family: Bahnschrift;
     color: rgba(255,255,255,.92);
@@ -218,6 +248,8 @@ h1:focus {
     transform: translateY(-1px);
 }
 
+/* ---------- FAQ ---------- */
+
 /* Inputs/Selects auf dunkles Rot ziehen */
 .form-control, .form-select{
     font-family: Bahnschrift;
@@ -243,48 +275,23 @@ h1:focus {
     color: #fff;
 }
 
-/* Buttons: */
-.btn-primary{
-    font-family: Bahnschrift;
-    background-color: #7a0000 !important;
-    border: 2px solid #ff1a1a !important;
-    border-radius: 12px !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,.6);
-    transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
-}
-.btn-primary:hover{
-    transform: scale(1.06);
-    background-color: #b30000 !important;
-    box-shadow: 0 10px 20px rgba(0,0,0,.7);
-}
-.btn-primary:active{
-    transform: scale(1.10);
-}
 
-/* search-button auch passend */
-.search-button{
-    font-family: Bahnschrift;
-    color: white;
-    background-color: rgba(20,0,0,.65);
-    border-radius: 12px;
-    border: 2px solid rgba(255,0,0,.6);
-    box-shadow: 0 6px 16px rgba(0,0,0,.6);
-    padding: 10px 14px;
-    transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
-}
-.search-button:hover{
-    transform: scale(1.06);
-    background-color: rgba(255,0,0,.22);
-    box-shadow: 0 10px 20px rgba(0,0,0,.7);
-}
 
-/* ---------- Überschriften lesbarer auf dem Background ---------- */
+
+
+/* ---------- Überschriften  ---------- */
 h1,h2,h3,h4{
     font-family: Bahnschrift;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0,0,0,.7);
 }
-/*------ Toast-Notifications--------*/
+
+.headline-admin {
+    font-family: Bahnschrift;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+/* ---------- Toast-Notifications ---------- */
 .blazored-toast,
 .blazored-toast-body {
     color: white !important;
@@ -294,28 +301,8 @@ h1,h2,h3,h4{
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
     
 }
-/*
-.menu-container{
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    width: 55%;
-    height: 100%;
-    padding: 25px;
-    background: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 18px;
-    border: 1px solid rgba(255, 0, 0, 0.25);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
 
-    color: rgba(255, 255, 255, 0.92);
-}
-
- */
+/* ---------- Inputs ---------- */
 
 .text-inputPYB {
     width: 240px;
@@ -339,10 +326,9 @@ h1,h2,h3,h4{
     box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
 }
 
-/* Für die Admin Menüs*/
+/* ---------- Admin-Menüs ---------- */
 
-
-/* Neu: saubere vertikale Struktur + gleichmäßige Abstände */
+/* Gesamtcontainer */
 .detail-overview-admin{
     display: flex;
     flex-direction: column;
@@ -350,7 +336,7 @@ h1,h2,h3,h4{
     gap: 14px;
 }
 
-/* Neu: Bild bleibt groß, aber kontrolliert (kein “riesiger Ballon”) */
+/* Bild */
 .detail-image-admin{
     width: min(360px, 90%);
     aspect-ratio: 1 / 1;
@@ -360,7 +346,7 @@ h1,h2,h3,h4{
 }
 
 
-/* Neu: Upload + Button ordentlich in einer Reihe */
+/* Upload Karten Struktur */
 .upload-row-admin{
     display: flex;
     align-items: center;
@@ -369,7 +355,7 @@ h1,h2,h3,h4{
     flex-wrap: wrap;
 }
 
-/* Bestehendes Card-Design: nur sauberer lesbar + gleiche Breite */
+/* Karte selbst */
 .combo-card-admin {
     width: min(420px, 92%);
     display: grid;
@@ -381,6 +367,7 @@ h1,h2,h3,h4{
     color: rgba(255,255,255,0.92);
 }
 
+/* Karte aufgeteilt in Spalten */
 .combo-card-admin-grid {
     display: grid;
     grid-template-columns: 220px 1fr;
@@ -391,15 +378,14 @@ h1,h2,h3,h4{
     background: rgba(0,0,0,0.22);
 }
 
-
-/* Neu: Absätze nicht “auseinanderreißen” */
+/* Um Absätze nicht auseinanderzureißen */
 .combo-card-admin p{
     margin: 0;
     line-height: 1.35;
 }
 
 
-
+/* Struktur der Inputs im Admin Menü */
 .form-grid-admin {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -407,6 +393,7 @@ h1,h2,h3,h4{
     align-items: center;
 }
 
+/* Inputs angepasst auf Struktur des Admin Menüs*/
 .form-grid-admin .form-input-grid{
     width: 100%;
     height: 38px;
@@ -418,40 +405,14 @@ h1,h2,h3,h4{
     transform: none;
 }
 
-.headline-admin {
-    font-family: Bahnschrift;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
 
 /*--------------------------------------------Admin-Bilder-Menü--------------------------------------------------------*/
-
-.combo-visual {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.color-thumb,
-.rim-thumb {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: #111;
-}
 
 .combo-plus {
     font-weight: 700;
     opacity: 0.6;
 }
 
-.combo-caption {
-    font-size: 0.75rem;
-    opacity: 0.7;
-    margin-top: 4px;
-}
 
 /* Links: Preview */
 .combo-left {
@@ -543,247 +504,4 @@ h1,h2,h3,h4{
     display: flex;
     gap: 10px;
     margin-top: 12px;
-}
-
-.headline-register {
-    font-family: Bahnschrift;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
-
-.navbarMerged{
-    /* Tuning */
-    --bar-h: 65px;                 /* passt zu deinem bisherigen Layout */
-    --circle: 150px;               /* Kreisgröße */
-    --edge-gap: 8px;               /* 0..12px: Abstand zum linken Rand */
-    --right-pad: 30px;             /* wie bisher padding rechts */
-    --radius: 14px;
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
-    width: 100vw;                  /* viewport-basiert, damit es NIE rechts klebt */
-    height: var(--bar-h);
-    z-index: 1000;
-    
-}
-
-.navbarMerged::after{
-    content:"";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(var(--circle) * 0.62);
-    right: 0;
-    border-radius: 0 var(--radius) var(--radius) 0;
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 0, 0, 0.25);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-}
-
-.navbarMerged::before {
-    content:"";
-    position:absolute;
-    top: 10px;
-    bottom: 10px;
-    left: calc(var(--circle) * 0.62);
-    width: 14px;
-    border-radius: 12px;
-    background: linear-gradient(to bottom, rgba(155,0,0,0.35), rgba(0,0,0,0));
-    opacity: 0.9;
-    pointer-events:none;
-}
-
-.navbarMerged__logo {
-    position: absolute;
-    left: var(--edge-gap);
-    top: 50%;
-    transform: translateY(-50%);
-    width: var(--circle);
-    height: var(--circle);
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    text-decoration: none;
-    isolation: isolate;
-}
-
-.navbarMerged__logoRing {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: rgba(25, 0, 0, 0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow:
-            inset 0 0 0 1px rgba(255,255,255,0.12),
-            inset 0 0 0 3px rgba(140, 0, 0, 0.28),
-            0 18px 34px rgba(0,0,0,0.38);
-}
-
-.navbarMerged__logoImg {
-    width: 82%;
-    height: 82%;
-    border-radius: 50%;
-    object-fit: cover;
-    z-index: 1;
-    filter: contrast(1.05) saturate(1.05);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.35);
-}
-
-
-.navbarMerged__actions {
-    position: absolute;
-    top: 50%;
-    right: var(--right-pad);
-    transform: translateY(-50%);
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    z-index: 2;
-}
-
-.navbarMerged__btn {
-    padding: 10px 20px;
-    font-family: Bahnschrift;
-    font-size: 16px;
-    background: rgba(255, 0, 0, 0.45);
-    color: white;
-    border: 1px solid rgba(255, 0, 0, 0.55);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.25s ease;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.navbarMergedbtn:hover {
-    background: rgba(255, 0, 0, 0.65);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 18px rgba(0,0,0,0.7);
-}
-
-.navbarMergedbtn:active {
-    transform: translateY(0);
-}
-
-@media (max-width: 980px){
-    .navbarMerged{ --circle: 132px; --right-pad: 18px; }
-    .navbarMergedactions{ gap: 12px; }
-    .navbarMergedbtn{ padding: 10px 16px; }
-}
-
-@media (max-width: 720px){
-    .navbarMerged{ --circle: 112px; --right-pad: 14px; }
-    .navbarMergedbtn{ font-size: 15px; padding: 9px 14px; }
-}
-
-@media (max-width: 520px){
-    .navbarMerged{ --circle: 96px; --edge-gap: 6px; --right-pad: 10px; }
-    .navbarMergedactions{ gap: 10px; }
-    .navbarMerged__btn{ font-size: 14px; padding: 8px 12px; }
-}
-
-.outline-button{
-    /* =========================
-       FORM / GEOMETRIE
-       ========================= */
-    --h: 40px;        /* Höhe des Griffs */
-    --handle: 100px;  /* Länge des Griffs */
-    --head: 60px;    /* Durchmesser Kopf (links) */
-    --neck: 18px;     /* Tiefe der Einbuchtung */
-
-    --r: calc(var(--h) / 2);
-    --w: calc(var(--head) + var(--handle));
-
-    position: relative;
-    width: var(--w);
-    height: var(--h);
-    padding: 0;
-    cursor: pointer;
-
-    /* =========================
-       STIL (HIER FREI)
-       ========================= */
-    font-family: Bahnschrift;
-    font-size: 16px;
-
-    background: rgba(255, 0, 0, 0.45);
-    color: white;
-    border: 1px solid rgba(255, 0, 0, 0.7);
-    border-radius: 12px;
-
-    cursor: pointer;
-    transition: 0.25s ease;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
-
-    /* border: ...; */
-    /* outline: ...; */
-    /* box-shadow: ...; */
-
-    /* =========================
-       FORM-MASKE
-       ========================= */
-    -webkit-mask:
-        /* statt: linear-gradient(#000 0 0) */
-            linear-gradient(#000 0%, #000 100%)
-            right / calc(var(--handle) + var(--r)) 100% no-repeat,
-            radial-gradient(circle, #000 99%, transparent 100%)
-            left center / var(--head) var(--head) no-repeat,
-            radial-gradient(circle, transparent 99%, #000 100%)
-            calc(var(--head) * 0.55) calc(50% - var(--r))
-      / calc(var(--neck) * 2) calc(var(--neck) * 2) no-repeat,
-            radial-gradient(circle, transparent 99%, #000 100%)
-            calc(var(--head) * 0.55) calc(50% + var(--r))
-      / calc(var(--neck) * 2) calc(var(--neck) * 2) no-repeat;
-
-    -webkit-mask-composite: source-over, source-over, xor, xor;
-
-    mask:
-        /* statt: linear-gradient(#000 0 0) */
-            linear-gradient(#000 0%, #000 100%)
-            right / calc(var(--handle) + var(--r)) 100% no-repeat,
-
-            radial-gradient(circle, #000 99%, transparent 100%)
-            left center / var(--head) var(--head) no-repeat,
-            radial-gradient(circle, transparent 99%, #000 100%)
-            calc(var(--head) * 0.55) calc(50% - var(--r))
-      / calc(var(--neck) * 2) calc(var(--neck) * 2) no-repeat,
-            radial-gradient(circle, transparent 99%, #000 100%)
-            calc(var(--head) * 0.55) calc(50% + var(--r))
-      / calc(var(--neck) * 2) calc(var(--neck) * 2) no-repeat;
-
-    mask-composite: add, add, exclude, exclude;
-}
-
-/* ===== OPTIONAL: Interaktion (leer gelassen) ===== */
-.outline-button:hover{
-    background: rgba(255, 0, 0, 0.7);
-    transform: scale(1.08);
-    box-shadow: 0 4px 18px rgba(0,0,0,0.7);
-}
-.outline-button:active{
-    transform: scale(1.12);
-}
-.outline-button:focus-visible{
-    /* outline: ...; */
-}
-
-:root{
-    --bar-h: 58px;
-    --circle: 160px;
-    --circle-overlap: 34px;
-    --radius: 14px;
-}
-
-.logo-container {
-
 }
