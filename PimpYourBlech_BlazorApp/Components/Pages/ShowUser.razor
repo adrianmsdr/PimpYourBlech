@@ -1,14 +1,20 @@
 @page "/user"
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
-@using PimpYourBlech_ClassLibrary.Session.Implementation
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 @inject IImageService ImageService
+@inject IToastService ToastService
 
+
+
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 <div class="menu-container">
     <h3 class="headline-admin">Benutzer verwalten</h3>
     @if (!string.IsNullOrWhiteSpace(ErrorMessage))

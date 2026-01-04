@@ -17,16 +17,16 @@
         {
             <div class="nav-dd">
                 <button type="button" class="nav-merged" @onclick="ToggleMenu" aria-expanded="@menuOpen">
-                    <span class="nav-mergedlabel"><MenuIcon></MenuIcon></span>
+                    <span class="nav-merged__label"><MenuIcon></MenuIcon></span>
                 </button>
 
                 @if (menuOpen)
                 {
                     <!-- Backdrop layer: schließt beim Klick außerhalb -->
-                    <div class="nav-ddbackdrop" @onclick="CloseMenu"></div>
+                    <div class="nav-dd__backdrop" @onclick="CloseMenu"></div>
 
                     <!-- Dropdown layer -->
-                    <div class="nav-ddpanel" @onclick:stopPropagation="true">
+                    <div class="nav-dd__panel" @onclick:stopPropagation="true">
                         <NavLink class="buttons dd-btn" href="/mainMenu" @onclick="CloseMenu">Hauptmenü</NavLink>
                         <NavLink class="buttons dd-btn" href="/configurator/ChooseCar" @onclick="CloseMenu">Konfigurator</NavLink>
                         <NavLink class="buttons dd-btn" href="/shop"   @onclick="CloseMenu">Shop</NavLink>
@@ -116,6 +116,14 @@
         z-index: 1000;
     }
 
+    .navbar-left {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        padding-left: 48px;
+    }
     .navbar-logo {
         font-family: Bahnschrift;
         font-size: 26px;
@@ -226,8 +234,6 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-    /border: 1px solid rgb(71, 0, 0);
-        background-color: rgb(71, 0, 0);
         position: absolute;
         left: -45px;
         pointer-events: none;
@@ -255,14 +261,14 @@
         display: inline-flex;
     }
 
-    .nav-ddbackdrop {
+    .nav-dd__backdrop {
         position: fixed;
         inset: 0;
         background: transparent;
         z-index: 999;
     }
 
-    .nav-ddpanel {
+    .nav-dd__panel {
         position: absolute;
         top: calc(100% + 30px);
         left: -40px;
