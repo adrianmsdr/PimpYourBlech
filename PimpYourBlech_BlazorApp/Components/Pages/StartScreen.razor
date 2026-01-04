@@ -37,15 +37,26 @@
         </div>
         
         <div class="funfact-card">
-            <div class="funfact-title">Unnützer Auto-Faktwdfasdvyvsddes Tages</div>
-            @*
-                <div class="funfact-text">@factText</div>
-            
+            <div class="funfact-title">Heute vor @yearsAgo Jahren:</div>
 
-                <button class="buttons funfact-btn" @onclick="LoadAutoFact">
-                    Neuer Fakt
-                </button>
-            *@
+            @if (isLoading)
+            {
+                <div class="funfact-text">Lade…</div>
+            }
+            else
+            {
+                <div class="funfact-text">@factText</div>
+
+                @if (!string.IsNullOrWhiteSpace(factUrl))
+                {
+                    <a class="funfact-link" href="@factUrl" target="_blank">
+                        Mehr dazu
+                    </a>
+                }
+            }
+            <button class="buttons funfact-btn" @onclick="LoadOnThisDay">
+                Neuer Fakt
+            </button>
         </div>
     </div>
 </div>
@@ -53,16 +64,106 @@
 
 @code
 {
+    // Wichtig: Wikipedia REST API blockt gerne Requests ohne User-Agent -> sonst immer Fallback
+    private static readonly HttpClient http = CreateHttp();
+
+    private bool isLoading = true;
+    private string factText = "";
+    private string factUrl = "";
+    private int yearsAgo;
+
+    private static HttpClient CreateHttp()
+    {
+        var c = new HttpClient();
+        c.DefaultRequestHeaders.UserAgent.ParseAdd("PimpYourBlech/1.0 (Blazor; localhost)");
+        c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+        return c;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOnThisDay();
+    }
+
+    private async Task LoadOnThisDay()
+    {
+        isLoading = true;
+        factText = "Lade…";
+        factUrl = "";
+        yearsAgo = 0;
+        StateHasChanged();
+
+        var today = DateTime.Today;
+        var url = $"https://de.wikipedia.org/api/rest_v1/feed/onthisday/events/{today:MM}/{today:dd}";
+
+        try
+        {
+            using var resp = await http.GetAsync(url);
+            var body = await resp.Content.ReadAsStringAsync();
+
+            if (!resp.IsSuccessStatusCode)
+            {
+                factText = $"Wikipedia API Fehler: {(int)resp.StatusCode} {resp.ReasonPhrase}";
+                factUrl = "";
+                yearsAgo = 0;
+                isLoading = false;
+                return;
+            }
+
+            using var doc = JsonDocument.Parse(body);
+            var events = doc.RootElement.GetProperty("events");
+
+            var count = events.GetArrayLength();
+            if (count == 0)
+            {
+                factText = "Keine Ereignisse für heute gefunden.";
+                factUrl = "";
+                yearsAgo = 0;
+                isLoading = false;
+                return;
+            }
+
+            // Random Event picken
+            var idx = Random.Shared.Next(count);
+            var ev = events[idx];
+
+            var text = ev.GetProperty("text").GetString() ?? "";
+            var year = ev.GetProperty("year").GetInt32();
+
+            yearsAgo = today.Year - year;
+            factText = $"{year}: {text}";
+
+            // Optional Link (wenn vorhanden)
+            if (ev.TryGetProperty("pages", out var pages) && pages.GetArrayLength() > 0)
+            {
+                var p0 = pages[0];
+                if (p0.TryGetProperty("content_urls", out var cu) &&
+                    cu.TryGetProperty("desktop", out var desk) &&
+                    desk.TryGetProperty("page", out var page))
+                {
+                    factUrl = page.GetString() ?? "";
+                }
+            }
+
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            yearsAgo = 0;
+            factText = $"Exception: {ex.GetType().Name} – {ex.Message}";
+            factUrl = "";
+            isLoading = false;
+        }
+    }
     
-
-
     public void StartProgramm()
     {
         Nav.NavigateTo("/startMenu");
     }
+    
 }
 <style>
-    
+
     .main-row {
         display: flex;
         justify-content: center;
@@ -71,16 +172,22 @@
     }
 
     .header-wrapper {
-       margin-top: 16px;
+        margin-top: 16px;
         width: 100%;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.25);
         backdrop-filter: blur(8px);
-        border-radius: 18px;
-        border: 1px solid rgba(255, 0, 0, 0.25);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        /* border-radius: 18px;
+            border: 1px solid rgba(255, 0, 0, 0.25);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    */
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
 
-       
+        box-shadow:
+            inset 0 0 0 1px rgba(255,255,255,0.08),
+            0 6px 16px rgba(0,0,0,0.6);
+
 
     }
 
@@ -91,25 +198,7 @@
         object-fit: cover;
         object-position: center 12%;
     }
-    
-    .menu-container {
-        margin: 30px auto 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-        width: 55%;
-        padding: 25px;
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
-        border-radius: 18px;
-        border: 1px solid rgba(255, 0, 0, 0.25);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-        margin-bottom: 8px;
-        margin-left: -14px;
-    }
-    
+
     .button-column {
         width: 100%;
         display: flex;
@@ -117,7 +206,7 @@
         gap: 14px;
         align-items: center;
     }
-    
+
     .video {
         width: 100%;
         aspect-ratio: 16 / 9;
@@ -125,7 +214,7 @@
         border-radius: 22px;
         box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
     }
-    
+
     .buttons {
         width: 100%;
         height: 45px;
@@ -154,7 +243,7 @@
         gap: 10px;
         transition: background-color 0.35s ease, box-shadow 0.35s ease;
     }
-    
+
     .car-icon {
         position: absolute;
         left: 18px;
@@ -167,26 +256,26 @@
             transform 0.45s ease,
             opacity 0.3s ease;
     }
-    
+
     .button-text {
         transition: opacity 0.35s ease;
     }
-    
+
     .button-text:hover {
         opacity: 0;
     }
-    
+
     .car-button:hover {
         background-color: #5a0000;
         box-shadow: 0 10px 22px rgba(0, 0, 0, 0.8);
     }
-    
+
     .car-button:hover .car-icon {
         left: 50%;
         transform: translateX(-50%) scale(1);
         opacity: 1;
     }
-    
+
     .car-button:hover .button-text {
         opacity: 0.2;
     }
@@ -196,7 +285,7 @@
         height: 100%;
         object-fit: contain;
     }
-    
+
     .our-partners-box {
         width: 280px;
         height: 550px;
@@ -207,9 +296,11 @@
         overflow: hidden;
         background: rgba(0, 0, 0, 0.25);
         backdrop-filter: blur(8px);
-        border-radius: 18px;
-        border: 1px solid rgba(255, 0, 0, 0.25);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow:
+            inset 0 0 0 1px rgba(255,255,255,0.08),
+            0 6px 16px rgba(0,0,0,0.6);
     }
 
     .funfact-card{
@@ -217,57 +308,27 @@
         padding: 14px;
         background: rgba(0,0,0,0.25);
         backdrop-filter: blur(8px);
-        border-radius: 18px;
-        border: 1px solid rgba(255,0,0,0.25);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        border-radius: 12px;
+        border: 2px solid #ff1a1a;
+        box-shadow:
+            inset 0 0 0 1px rgba(255,255,255,0.08),
+            0 6px 16px rgba(0,0,0,0.6);
     }
     .funfact-title{ font-family: Bahnschrift; color: white; font-size: 1.05rem; margin-bottom: 10px; }
+    .funfact-text{ color: rgba(255,255,255,0.9); line-height: 1.35; margin-bottom: 10px; }
+    .funfact-link{ color: #ff7a7a; text-decoration: none; display: inline-block; margin-bottom: 10px; }
+    .funfact-btn{ height: 40px; }
 
-  
-
-    /* damit es wirklich an der Navbar “klebt” */
-   /* .header-wrapper{
-        width: 100%;
-        overflow: hidden;
-
-        border-bottom-left-radius: 18px;
-        border-bottom-right-radius: 18px;
-
-        background: transparent;
-    }*/
-
+    
     .home-section{
         margin-top: 16px;
         margin-bottom: 16px/* exakt unter dem Header-Radius */
-    }
-
-    .menu-container {
-        margin: 0;           /* WICHTIG: kein margin-top, kein auto, kein left hack */
-        /* margin-left: -14px;  RAUS */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-        width: 55%;
-        padding: 25px;
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
-        border-radius: 18px;
-        border: 1px solid rgba(255, 0, 0, 0.25);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     }
 
     .menu-container,
     .our-partners-box,
     .funfact-card{
         margin-top: 0 !important;
-    }
-
-    .home-wrapper{
-        max-width: var(--content-max-width);
-        margin: 0 auto;
-        padding: 0 16px; /* kleiner Innenabstand für kleinere Screens */
     }
     
 </style>

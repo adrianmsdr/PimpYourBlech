@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Exceptions;
@@ -27,20 +29,43 @@ public class AdminService:IAdminService
     }
     
     
-    public Customer Register(string firstName, string lastName, string username, string passwordHash, string telefon,
-        string mailAddress, string ImagePath)
+    public async Task RegisterCustomerAsync(string firstName, string lastName, string username, string passwordHash, string passwordHashConfirm, string telefon,
+        string mailAddress, string mailAddressConfirm,string ImagePath)
     {
+        // Username darf nicht leer sein
+        if (string.IsNullOrWhiteSpace(username))
+            throw new WrongInputException("Username darf nicht leer sein.");
+
+        // Email darf nicht leer sein
+        if (string.IsNullOrWhiteSpace(mailAddress))
+            throw new WrongInputException("Email darf nicht leer sein.");
+
+        // Email Validierung
+        if(!emailService.IsValid(mailAddress))
+            throw new WrongInputException("Keine gültige Email Adresse. (Beispiel: user@example.com)");
+
+        emailService.ConfirmRegistrationChecker(mailAddress, mailAddressConfirm);
+
+        // Verfügbarkeit des Usernames checken
+        isUsernameAvailable(username);
+
+        // Passwörter auf Übereinstimmung checken
+        if (passwordHash != passwordHashConfirm)
+            throw new WrongPasswordException("Die Passwörter stimmen nicht überein.");
+
+        var hash = Convert.ToBase64String(
+            SHA256.HashData(Encoding.UTF8.GetBytes(passwordHash ?? ""))
+        );
         Customer customer = new Customer();
         customer.FirstName = firstName;
         customer.LastName = lastName;
         customer.Username = username;
-        customer.PasswordHash = passwordHash;
+        customer.PasswordHash = hash;
         customer.Telefon = telefon;
         customer.MailAddress = mailAddress;
         customer.ImagePath = ImagePath;
         customerRepository.InsertCustomer(customer);
         emailService.SendRegistrationEmail(customer);
-        return customer;
     }
     
     public Customer Login(string username, string passwordHash)

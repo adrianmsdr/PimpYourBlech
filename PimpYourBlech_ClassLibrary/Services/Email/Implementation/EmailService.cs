@@ -29,15 +29,17 @@ public class EmailService : IEmailService
             to: customer.MailAddress, subject,message);
         client.Send(mail);
     }
-    public static bool IsValid(string email)
+    public bool IsValid(string email)
     {
       
             var addr = new EmailAddress(email);
             return true;
             
     }
+    
+    
 
-    public static bool ConfirmRegistrationChecker(String mailAddress, string confirm)
+    public bool ConfirmRegistrationChecker(String mailAddress, string confirm)
     {
         if (!mailAddress.Equals(confirm, StringComparison.OrdinalIgnoreCase))
         {

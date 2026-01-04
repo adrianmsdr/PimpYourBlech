@@ -5,4 +5,8 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 public interface IEmailService
 {
     void SendRegistrationEmail(Customer customer);
+    
+    bool IsValid(string email);
+
+    bool ConfirmRegistrationChecker(string mailAddress, String confirm);
 }

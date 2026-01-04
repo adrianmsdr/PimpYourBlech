@@ -102,60 +102,26 @@
     private string SuccessMessage = "";
 
     // Registrieren eines Kunden
-    private void RegisterCustomer()
+    private async Task RegisterCustomer()
     {
-        // Email wird auf Korrektheit geprüft
+        ErrorMessage = "";
+        SuccessMessage = "";
+
         try
         {
-            EmailService.IsValid(email);
-            EmailService.ConfirmRegistrationChecker(email, emailConfirm);
+            await AdminService.RegisterCustomerAsync(firstName,lastName,username,password,passwordConfirm,phone,email,emailConfirm,SelectedAvatar);
+            SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
         }
-        catch (WrongInputException ex)
+        catch (Exception ex) when (
+            ex is WrongInputException ||  
+                    ex is WrongPasswordException ||
+                ex is UsernameNotAvailableException
+        )
         {
             ErrorMessage = ex.Message;
-            return;
         }
-
-        // Prüfung ob der Username verfügbar ist
-        try
-        {
-            AdminService.isUsernameAvailable(username);
-        }
-        catch (UsernameNotAvailableException ex)
-        {
-            ErrorMessage = ex.Message;
-            return;
-        }
-        
-        //Prüfung ob das Passwort dasselbe ist
-        try
-        {
-            PasswordChecker(password, passwordConfirm);
-        }
-        catch (WrongPasswordException wp)
-        {
-            ErrorMessage = wp.Message;
-            return;
-        }
-
-        
-
-        // Hash - Code des Passworts wird generiert
-        var hash = Convert.ToBase64String(
-            SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
-        );
-
-        // Mittels des AdminService wird der Benutzer registriert und die Erfolgsmeldung gesetzt + angezeigt
-        AdminService.Register(firstName, lastName, username, hash, phone, email, SelectedAvatar);
-        SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
-
-       
     }
-    private void PasswordChecker(string pw, string confirm)
-    {
-        if (pw != confirm)
-            throw new WrongPasswordException("Die Passwörter stimmen nicht überein.");
-    }
+    
     // Kehrt zurück zum Start - Screen
     private void Cancel()
     {
