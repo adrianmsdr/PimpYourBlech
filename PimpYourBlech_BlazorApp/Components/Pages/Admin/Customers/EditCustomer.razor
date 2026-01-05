@@ -1,12 +1,16 @@
 @page "/administrator/customers/{id:int}/edit"
 
 <PageTitle>User bearbeiten</PageTitle>
-
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
 @inject NavigationManager Nav
+@inject IToastService ToastService
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
     <h3>User bearbeiten</h3>
@@ -78,6 +82,7 @@
         Customer = AdminService.GetCustomerById(Id);
         if (Customer is null)
         {
+            
             ErrorMessage = "User nicht gefunden.";
             return;
         }
@@ -117,8 +122,8 @@
         // Persistieren (muss existieren)
         AdminService.UpdateCustomer(Customer);
 
-        SuccessMessage = "Änderungen gespeichert.";
-        ErrorMessage = "";
+        ToastService.ShowSuccess("Änderungen wurden gespeichert.");
+
     }
 
     private void Cancel()

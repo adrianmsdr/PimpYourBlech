@@ -1,11 +1,15 @@
 @page "/administrator/cars/{id:int}/edit"
 <PageTitle>Fahrzeug bearbeiten</PageTitle>
-
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
 @inject NavigationManager Nav
+@inject IToastService ToastService
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
     <h3>Fahrzeug bearbeiten</h3>
@@ -124,8 +128,8 @@
         // Persistieren (muss existieren)
         AdminService.UpdateCar(Car);
 
-        SuccessMessage = "Änderungen gespeichert.";
-        ErrorMessage = "";
+        ToastService.ShowSuccess("Änderungen wurden gespeichert.");
+
     }
 
     private void Cancel()

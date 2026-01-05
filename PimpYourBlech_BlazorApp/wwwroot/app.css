@@ -13,7 +13,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 h1:focus {
@@ -38,9 +38,9 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
@@ -59,7 +59,7 @@ h1:focus {
 
 .button-row {
     display: flex;
-    gap: 10px;          
+    gap: 10px;
     margin-top: 10px;
 }
 
@@ -125,12 +125,10 @@ h1:focus {
 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 
-   
 
-    transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease,
-            border-color 0.2s ease;
+    transition: transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 
     cursor: pointer;
     margin: 0 auto;
@@ -141,9 +139,8 @@ h1:focus {
     transform: scale(1.06);
     border-color: #ff4d4d;
 
-    box-shadow:
-            inset 0 0 0 1px rgba(255,255,255,0.14),
-            0 10px 22px rgba(0,0,0,0.75);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 10px 22px rgba(0, 0, 0, 0.75);
 }
 
 .buttons:active {
@@ -167,131 +164,135 @@ h1:focus {
 }
 
 /* Buttons: */
-.btn-primary{
+.btn-primary {
     font-family: Bahnschrift;
     background-color: #7a0000 !important;
     border: 2px solid #ff1a1a !important;
     border-radius: 12px !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,.6);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .6);
     transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
 }
-.btn-primary:hover{
+
+.btn-primary:hover {
     transform: scale(1.06);
     background-color: #b30000 !important;
-    box-shadow: 0 10px 20px rgba(0,0,0,.7);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .7);
 }
-.btn-primary:active{
+
+.btn-primary:active {
     transform: scale(1.10);
 }
 
 /* search-button auch passend */
-.search-button{
+.search-button {
     font-family: Bahnschrift;
     color: white;
-    background-color: rgba(20,0,0,.65);
+    background-color: rgba(20, 0, 0, .65);
     border-radius: 12px;
-    border: 2px solid rgba(255,0,0,.6);
-    box-shadow: 0 6px 16px rgba(0,0,0,.6);
+    border: 2px solid rgba(255, 0, 0, .6);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .6);
     padding: 10px 14px;
     transition: transform .25s ease, background-color .25s ease, box-shadow .25s ease;
 }
-.search-button:hover{
+
+.search-button:hover {
     transform: scale(1.06);
-    background-color: rgba(255,0,0,.22);
-    box-shadow: 0 10px 20px rgba(0,0,0,.7);
+    background-color: rgba(255, 0, 0, .22);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .7);
 }
+
 /* ---------- Tabellen ---------- */
-.table{
+.table {
     font-family: Bahnschrift;
-    color: rgba(255,255,255,.92);
-    background: rgba(0,0,0,.28);
-    border: 1px solid rgba(255,0,0,.25) !important;
+    color: rgba(255, 255, 255, .92);
+    background: rgba(0, 0, 0, .28);
+    border: 1px solid rgba(255, 0, 0, .25) !important;
     border-radius: 14px;
     overflow: hidden; /* damit Radius auch wirklich greift */
-    box-shadow: 0 8px 25px rgba(0,0,0,.55);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .55);
 }
 
 /* Head */
-.table thead th{
-    background: rgba(20,0,0,.70) !important;
+.table thead th {
+    background: rgba(20, 0, 0, .70) !important;
     color: #fff !important;
-    border-bottom: 1px solid rgba(255,0,0,.35) !important;
-    text-shadow: 0 2px 6px rgba(0,0,0,.65);
+    border-bottom: 1px solid rgba(255, 0, 0, .35) !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, .65);
     letter-spacing: .2px;
 }
 
 /* Body cells */
-.table td, .table th{
-    border-color: rgba(255,255,255,.10) !important;
+.table td, .table th {
+    border-color: rgba(255, 255, 255, .10) !important;
     vertical-align: middle;
 }
 
 /* Stripe-Look (Bootstrap überschreiben) */
-.table-striped tbody tr:nth-of-type(odd){
-    background: rgba(255,255,255,.04) !important;
+.table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(255, 255, 255, .04) !important;
 }
-.table-striped tbody tr:nth-of-type(even){
-    background: rgba(0,0,0,.10) !important;
+
+.table-striped tbody tr:nth-of-type(even) {
+    background: rgba(0, 0, 0, .10) !important;
 }
 
 /* Hover für klickbare Rows */
-.table tbody tr{
+.table tbody tr {
     transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
 }
-.table tbody tr:hover{
-    background: rgba(255,0,0,.12) !important;
-    box-shadow: inset 0 0 0 1px rgba(255,0,0,.25);
+
+.table tbody tr:hover {
+    background: rgba(255, 0, 0, .12) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 0, .25);
 }
 
 /* Optional: kleine “Klick mich”-Haptik ohne dass es nervt */
-.table tbody tr[style*="cursor: pointer"]:hover{
+.table tbody tr[style*="cursor: pointer"]:hover {
     transform: translateY(-1px);
 }
 
 /* ---------- FAQ ---------- */
 
 /* Inputs/Selects auf dunkles Rot ziehen */
-.form-control, .form-select{
+.form-control, .form-select {
     font-family: Bahnschrift;
     background-color: rgba(20, 0, 0, 0.65) !important;
     color: #fff !important;
-    border: 2px solid rgba(255,0,0,.6) !important;
+    border: 2px solid rgba(255, 0, 0, .6) !important;
     border-radius: 10px !important;
     box-shadow: none !important;
 }
 
-.form-control::placeholder{
-    color: rgba(255,255,255,.65) !important;
+.form-control::placeholder {
+    color: rgba(255, 255, 255, .65) !important;
 }
 
-.form-control:focus, .form-select:focus{
+.form-control:focus, .form-select:focus {
     border-color: #ff3333 !important;
-    box-shadow: 0 0 10px rgba(255,50,50,.6) !important;
+    box-shadow: 0 0 10px rgba(255, 50, 50, .6) !important;
 }
 
 /* Dropdown-Optionen nicht weiß */
-.form-select option{
+.form-select option {
     background: #120000;
     color: #fff;
 }
 
 
-
-
-
 /* ---------- Überschriften  ---------- */
-h1,h2,h3,h4{
+h1, h2, h3, h4 {
     font-family: Bahnschrift;
     color: #fff;
-    text-shadow: 2px 2px 4px rgba(0,0,0,.7);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, .7);
 }
 
 .headline-admin {
     font-family: Bahnschrift;
     color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     text-align: center;
 }
+
 /* ---------- Toast-Notifications ---------- */
 .blazored-toast,
 .blazored-toast-body {
@@ -300,7 +301,7 @@ h1,h2,h3,h4{
     border-radius: 12px !important;
     border: 2px solid #ff1a1a !important;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
-    
+
 }
 
 /* ---------- Inputs ---------- */
@@ -320,8 +321,9 @@ h1,h2,h3,h4{
 }
 
 .text-inputPYB:hover {
-    transform:scale(1.1);
+    transform: scale(1.1);
 }
+
 .text-inputPYB:focus {
     border-color: #ff3333;
     box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
@@ -330,7 +332,7 @@ h1,h2,h3,h4{
 /* ---------- Admin-Menüs ---------- */
 
 /* Gesamtcontainer */
-.detail-overview-admin{
+.detail-overview-admin {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -338,7 +340,7 @@ h1,h2,h3,h4{
 }
 
 /* Bild */
-.detail-image-admin{
+.detail-image-admin {
     width: min(360px, 90%);
     aspect-ratio: 1 / 1;
     object-fit: contain;
@@ -348,7 +350,7 @@ h1,h2,h3,h4{
 
 
 /* Upload Karten Struktur */
-.upload-row-admin{
+.upload-row-admin {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -362,10 +364,10 @@ h1,h2,h3,h4{
     display: grid;
     gap: 10px;
     padding: 16px 18px;
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 14px;
-    background: rgba(0,0,0,0.22);
-    color: rgba(255,255,255,0.92);
+    background: rgba(0, 0, 0, 0.22);
+    color: rgba(255, 255, 255, 0.92);
 }
 
 /* Karte aufgeteilt in Spalten */
@@ -374,15 +376,15 @@ h1,h2,h3,h4{
     grid-template-columns: 220px 1fr;
     gap: 18px;
     padding: 16px;
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 14px;
-    background: rgba(0,0,0,0.22);
-    color: rgba(255,255,255,0.92);
+    background: rgba(0, 0, 0, 0.22);
+    color: rgba(255, 255, 255, 0.92);
 
 }
 
 /* Um Absätze nicht auseinanderzureißen */
-.combo-card-admin p{
+.combo-card-admin p {
     margin: 0;
     line-height: 1.35;
 }
@@ -397,14 +399,14 @@ h1,h2,h3,h4{
 }
 
 /* Inputs angepasst auf Struktur des Admin Menüs*/
-.form-grid-admin .form-input-grid{
+.form-grid-admin .form-input-grid {
     width: 100%;
     height: 38px;
     box-sizing: border-box;
     transform: none;
 }
 
-.form-grid-admin .form-input-grid:hover{
+.form-grid-admin .form-input-grid:hover {
     transform: none;
 }
 
@@ -429,15 +431,15 @@ h1,h2,h3,h4{
     height: 150px;
     object-fit: cover;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.25);
 }
 
 .combo-empty {
     width: 220px;
     height: 150px;
     border-radius: 12px;
-    border: 1px dashed rgba(255,255,255,0.22);
+    border: 1px dashed rgba(255, 255, 255, 0.22);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -457,8 +459,8 @@ h1,h2,h3,h4{
     height: 58px;
     object-fit: cover;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.25);
 }
 
 .combo-plus {
@@ -508,52 +510,53 @@ h1,h2,h3,h4{
     gap: 10px;
     margin-top: 12px;
     /* Popup */
-
-    .pyb-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 60000;
-        padding: 20px;
-
-    }
-
-    .pyb-modal {
-        width: min(520px, 100%);
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 2px solid #ff1a1a;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
-        padding: 18px 18px 14px 18px;
-    }
-
-    .pyb-modal-title {
-        margin: 0 0 8px 0;
-        color: #fff;
-        font-family: Bahnschrift;
-    }
-
-    .pyb-modal-text {
-        margin: 0 0 14px 0;
-        color: rgba(255, 255, 255, 0.85);
-        font-family: Bahnschrift;
-    }
-
-    .pyb-modal-actions {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-    }
-
-    .buttons.danger {
-        background-color: #a00000;
-        border-color: #ff1a1a;
-    }
 }
+
+.pyb-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60000;
+    padding: 20px;
+
+}
+
+.pyb-modal {
+    width: min(520px, 100%);
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid #ff1a1a;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
+    padding: 18px 18px 14px 18px;
+}
+
+.pyb-modal-title {
+    margin: 0 0 8px 0;
+    color: #fff;
+    font-family: Bahnschrift;
+}
+
+.pyb-modal-text {
+    margin: 0 0 14px 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: Bahnschrift;
+}
+
+.pyb-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.buttons.danger {
+    background-color: #a00000;
+    border-color: #ff1a1a;
+}
+

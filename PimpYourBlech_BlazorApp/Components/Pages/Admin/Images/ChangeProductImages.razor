@@ -1,11 +1,15 @@
 @page "/administrator/images/products"
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 <PageTitle>Produktbilder bearbeiten</PageTitle>
 @inject IImageService ImageService
 @inject IAdminService AdminService
-
+@inject IToastService ToastService
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 <div class="menu-container">
     <h3>Produktbilder bearbeiten</h3>
     <label><strong>Produkt:</strong></label>
@@ -18,7 +22,7 @@
     </select>
     @if (SelectedProductId == 0)
     {
-        <div class="text-muted mt-1">Bitte w채hle ein Fahrzeug aus.</div>
+        <div class="text-muted mt-1">Bitte wähle ein Fahrzeug aus.</div>
     }
 
     @if (SelectedProductId != 0)
@@ -62,6 +66,6 @@
                 if (SelectedProductId == 0 || uploadedProductImage is null) return;
 
                 await ImageService.SaveProductImagesAsync(SelectedProductId, uploadedProductImage);
-                SuccessMessage = "Pr채sentationsbild gespeichert.";
+                ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
             }
     }

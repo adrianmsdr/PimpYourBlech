@@ -138,14 +138,12 @@
         // Persistieren (muss existieren)
         AdminService.UpdateCustomer(Customer);
 
-        SuccessMessage = "Änderungen gespeichert.";
-        ErrorMessage = "";
+       
         
         
+        ToastService.ShowSuccess("Änderungen wurden gespeichert.");
+        StateHasChanged();
         
-        
-        AdminService.UpdateCustomer(UserSession.CurrentUser);
-        Nav.NavigateTo("/mainMenu");
         
         
         

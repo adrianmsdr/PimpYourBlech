@@ -5,10 +5,25 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du den User wirklich löschen?</h3>
+            <p class="pyb-modal-text">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Löschen</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
 
 <div class="menu-container">
 
-<h3>Kundenübersicht</h3>
+
+    <h3>Kundenübersicht</h3>
 @if (Customer == null)
 {
     <p>Lade Daten…</p>
@@ -16,15 +31,15 @@
 else
 {
     <div class="detail-overview-admin"> 
-    <div class="combo-card-admin">
-        <p><strong>Vorname:</strong> @Customer.FirstName</p>
-        <p><strong>Nachname:</strong> @Customer.LastName</p>
-        <p><strong>Username:</strong> @Customer.Username</p>
-        <p><strong>E-Mail:</strong> @Customer.MailAddress</p>
-    </div>
+        <div class="combo-card-admin">
+            <p><strong>Vorname:</strong> @Customer.FirstName</p>
+            <p><strong>Nachname:</strong> @Customer.LastName</p>
+            <p><strong>Username:</strong> @Customer.Username</p>
+            <p><strong>E-Mail:</strong> @Customer.MailAddress</p>
+        </div>
         <div class="button-column">
             <button class="buttons" @onclick="LockCustomer">Sperren</button>
-            <button class="buttons" @onclick="DeleteCustomer">Löschen</button>
+            <button class="buttons" @onclick="OpenDeleteModal">Löschen</button>
             <button class="buttons" @onclick="EditCustomer">Bearbeiten</button>
             <button class="buttons" @onclick="Cancel">Zurück</button>
         </div>
@@ -46,11 +61,6 @@ else
         // AdminService.LockCustomer(Customer)
     }
 
-    private void DeleteCustomer()
-    {
-        AdminService.DeleteCustomer(Customer);
-        Nav.NavigateTo("/administrator/customers");
-    }
 
     private void EditCustomer()
     {
@@ -61,5 +71,18 @@ else
     private void Cancel()
     {
         Nav.NavigateTo("/administrator/customers");
+    }
+    
+    private bool showDeleteModal;
+
+    void OpenDeleteModal() => showDeleteModal = true;
+    void CloseDeleteModal() => showDeleteModal = false;
+
+    async Task ConfirmDelete()
+    {
+        AdminService.DeleteCustomer(Customer);
+        showDeleteModal = false;
+        Nav.NavigateTo("/administrator/customers");
+
     }
 }

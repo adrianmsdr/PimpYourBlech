@@ -33,6 +33,21 @@
         }
     </div>
 </nav>
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du dich wirklich abmelden?</h3>
+            <p class="pyb-modal-text">Um die App nutzen zu können, musst du eingeloggt sein.</p>
+
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Abmelden</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
+
 @if (menuOpen)
 {
     <!-- Backdrop layer: schließt beim Klick außerhalb -->
@@ -48,20 +63,7 @@
     </div>
     </div>
 }
-@if (showDeleteModal)
-{
-    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
-        <div class="pyb-modal" @onclick:stopPropagation="true">
-            <h3 class="pyb-modal-title">Möchtest du dich wirklich abmelden?</h3>
-            <p class="pyb-modal-text">Um die App nutzen zu können, musst du eingeloggt sein.</p>
 
-            <div class="pyb-modal-actions">
-                <button class="buttons danger" @onclick="ConfirmDelete">Abmelden</button>
-                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
-            </div>
-        </div>
-    </div>
-}
 
 <div class="page">
     <main>
@@ -98,9 +100,10 @@
 
     void ConfirmDelete()
     {
+        CloseMenu();
         showDeleteModal = false;
         UserSession.LogOut();
-        Nav.NavigateTo("/login");
+        Nav.NavigateTo("/");
 
     }
 }
@@ -131,7 +134,7 @@
         -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(255, 0, 0, 0.25);
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-        z-index: 1000;
+        z-index: 50001;
     }
 
     .navbar-left {

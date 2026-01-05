@@ -16,27 +16,27 @@
     <h3 class="headline-admin">Neues Fahrzeugteil registrieren:</h3>
 
  @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
-    @if (!string.IsNullOrEmpty(ErrorMessage))
+    @if (!string.IsNullOrEmpty(_errorMessage))
     {
-        <div class="alert alert-danger">@ErrorMessage</div>
+        <div class="alert alert-danger">@_errorMessage</div>
     }
-    @if (!string.IsNullOrEmpty(SuccessMessage))
+    @if (!string.IsNullOrEmpty(_successMessage))
     {
-        <div class="alert alert-success">@SuccessMessage</div>
+        <div class="alert alert-success">@_successMessage</div>
     }
     
     <div class="mb-3">
         <label class="form-label"><strong>Fahrzeug auswählen:</strong></label>
 
-        <select class="form-select" @bind="selectedCarId">
+        <select class="form-select" @bind="_selectedCarId">
             <option value="0">-- Bitte wählen --</option>
-            @foreach (var c in cars)
+            @foreach (var c in _cars)
             {
                 <option value="@c.Id">@c.Name (@c.Id)</option>
             }
         </select>
 
-        @if (selectedCarId == 0)
+        @if (_selectedCarId == 0)
         {
             <div class="text-muted mt-1">Bitte wähle ein Fahrzeug aus.</div>
         }
@@ -46,8 +46,8 @@
         <span class="me-2">Produkttyp:</span>
 
         <select class="form-select me-2" style="width:auto"
-                @bind="selectedProductType">
-            @foreach (ProductType T in categories)
+                @bind="_selectedProductType">
+            @foreach (ProductType T in _categories)
             {
                 <option value="@T">@T</option>
             }
@@ -57,47 +57,47 @@
     @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
     <input class="text-inputPYB"
            placeholder="Name"
-           @bind="name"/>
+           @bind="_name"/>
     
 
     <input class="text-inputPYB"
            placeholder="Hersteller..."
-           @bind="brand"/>
+           @bind="_brand"/>
 
     
     <input class="text-inputPYB"
            placeholder="Bestand..."
-           @bind="quantity"/>
+           @bind="_quantity"/>
 
     <input class="text-inputPYB"
            placeholder="Preis..."
-           @bind="price"/>
+           @bind="_price"/>
 
-    @if (selectedProductType == ProductType.Engine)
+    @if (_selectedProductType == ProductType.Engine)
     {
     <input class="text-inputPYB"
            placeholder="PS..."
-           @bind="ps"/>
+           @bind="_ps"/>
 
     <input class="text-inputPYB"
            placeholder="KW..."
-           @bind="kw"/>
+           @bind="_kw"/>
 
     <input class="text-inputPYB"
            placeholder="Hubraum..."
-           @bind="displacement"/>
+           @bind="_displacement"/>
     
     <span class="me-2">Getriebeart:</span>
 
     <select class="form-select me-2" style="width:auto"
-            @bind="selectedGear">
+            @bind="_selectedGear">
         <option value="5-Gang Manuell">5-Gang Manuell</option>
         <option value="6-Gang Manuell">6-Gang Manuell</option>
         <option value="6-Gang Automatik">6-Gang Automatik</option>
         <option value="8-Gang Automatik">8-Gang Automatik</option>
     </select>
     <select class="form-select me-2" style="width:auto"
-            @bind="selectedFuel">
+            @bind="SelectedFuel">
         <option value="Benzin">Benzin</option>
         <option value="Diesel">Diesel</option>
         <option value="Hybrid">Hybrid</option>
@@ -105,50 +105,50 @@
         <option value="Elektro">Elektro</option>
     </select>
     
-    }else if (selectedProductType == ProductType.Rim)
+    }else if (_selectedProductType == ProductType.Rim)
     {
         
     <input class="text-inputPYB"
            placeholder="Durchmesser(Zoll)..."
-           @bind="diameter"/>
+           @bind="_diameter"/>
 
     <input class="text-inputPYB"
            placeholder="Breite(Zoll)..."
-           @bind="width"/>
+           @bind="_width"/>
    
     }
 
-    else if (selectedProductType == ProductType.Lights)
+    else if (_selectedProductType == ProductType.Lights)
     {
         <input class="text-inputPYB"
                placeholder="Lumen..."
-               @bind="lumen"/>
+               @bind="_lumen"/>
 
         <div class="mb-3">
             <span class="me-2">LED?:</span>
 
             <select class="form-select me-2" style="width:auto"
-                    @bind="isLED">
+                    @bind="_isLed">
                 <option value="True">Ja</option>
                 <option value="False">Nein</option>
             </select>
 
         </div>
 
-    }else if (selectedProductType == ProductType.Color)
+    }else if (_selectedProductType == ProductType.Color)
     {
         <input class="text-inputPYB"
                placeholder="Farbenname"
-               @bind="displayName"/>
+               @bind="_displayName"/>
     }
 
     <div class="mb-3">
         <label><strong>Produktbild auswählen:</strong></label>
         <InputFile OnChange="HandleProductImageSelected" accept="image/*" />
     
-        @if (uploadedProductImage != null)
+        @if (_uploadedProductImage != null)
         {
-            <div class="text-muted mt-1">1 Bild ausgewählt: @uploadedProductImage.Name</div>
+            <div class="text-muted mt-1">1 Bild ausgewählt: @_uploadedProductImage.Name</div>
         }
     </div>
 
@@ -161,98 +161,97 @@
 @code {
 
     // Felder 
-    private ProductType selectedProductType = ProductType.Engine;
-    private string selectedGear = "6-Gang Manuell";
-    public string selectedFuel = "Benzin";
-    private string isLED = "True";
-    private string searchValue = string.Empty;
+    private ProductType _selectedProductType = ProductType.Engine;
+    private string _selectedGear = "6-Gang Manuell";
+    public string SelectedFuel = "Benzin";
+    private string _isLed = "True";
+    private string _searchValue = string.Empty;
 
-    private string name = "";
-    private string articleNumber = "";
-    private string brand = "";
-    private string quantity = "";
-    private string price = "";
-
-    private string ps = "";
-    private string kw = "";
-    private string displacement = "";
-
-    private string diameter = "";
-    private string width = "";
-
-    private string lumen = "";
-
-    private string displayName = "";
-
-    private string Car;
+    private string _name = "";
     
-    private IBrowserFile? uploadedProductImage;
+    private string _brand = "";
+    private string _quantity = "";
+    private string _price = "";
 
-    private List<Car> cars = new();
-    private List<ProductType> categories = new();
-    private int selectedCarId = 0;
+    private string _ps = "";
+    private string _kw = "";
+    private string _displacement = "";
 
-    private string ErrorMessage = "";
-    private string SuccessMessage = "";
+    private string _diameter = "";
+    private string _width = "";
 
-    protected override async Task OnInitializedAsync()
+    private string _lumen = "";
+
+    private string _displayName = "";
+    
+    
+    private IBrowserFile? _uploadedProductImage;
+
+    private List<Car> _cars = new();
+    private List<ProductType> _categories = new();
+    private int _selectedCarId = 0;
+
+    private string _errorMessage = "";
+    private string _successMessage = "";
+
+    protected override void OnInitialized()
     {
-        cars = AdminService.GetCars();
-        categories = AdminService.GetProductTypes();
+        _cars = AdminService.GetCars();
+        _categories = AdminService.GetProductTypes();
     }
 
     private void HandleProductImageSelected(InputFileChangeEventArgs e)
     {
-        uploadedProductImage = e.File; // 
+        _uploadedProductImage = e.File; // 
     }
     
     private async Task RegisterProduct()
     {
-        ErrorMessage = "";
-        SuccessMessage = "";
+        _errorMessage = "";
+        _successMessage = "";
         
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(_name))
         {
-            ErrorMessage = "Name darf nicht leer sein.";
+            _errorMessage = "Name darf nicht leer sein.";
             return;
         }
 
-        if (!int.TryParse(quantity, out var quantityValue) || quantityValue < 0)
+        if (!int.TryParse(_quantity, out var quantityValue) || quantityValue < 0)
         {
-            ErrorMessage = "Bestand muss eine positive Ganzzahl sein.";
+            _errorMessage = "Bestand muss eine positive Ganzzahl sein.";
             return;
         }
 
-        if (!double.TryParse(price, out var priceValue) || priceValue < 0)
+        if (!double.TryParse(_price, out var priceValue) || priceValue < 0)
         {
-            ErrorMessage = "Preis muss eine positive Zahl sein.";
+            _errorMessage = "Preis muss eine positive Zahl sein.";
             return;
         }
         
-        Product p = AdminService.CreateProduct(AdminService.GetCarById(selectedCarId),name, brand, quantityValue, priceValue,selectedProductType);
+        Product p = AdminService.CreateProduct(AdminService.GetCarById(_selectedCarId),_name, _brand, quantityValue, priceValue,_selectedProductType);
 
-        switch (selectedProductType)
+        switch (_selectedProductType)
         {
             case ProductType.Engine:
                 Fuel fuel = Fuel.Benzin;
                 Gear gear = Gear.SixManual;
-                if (ps == null || kw == null || string.IsNullOrWhiteSpace(selectedGear))
+                if (string.IsNullOrWhiteSpace(_ps) || string.IsNullOrWhiteSpace(_kw) || string.IsNullOrWhiteSpace(_selectedGear))
                 {
-                    ErrorMessage = "Bitte alle Motor-Details ausfüllen (PS, kW, Getriebeart).";
+                    _errorMessage = "Bitte alle Motor-Details ausfüllen (PS, kW, Getriebeart).";
                     return;
                 }
-                if (!int.TryParse(ps, out var psValue) || psValue < 0)
+                if (!int.TryParse(_ps, out var psValue) || psValue < 0)
                 {
-                    ErrorMessage = "PS muss eine positive Ganzzahl sein.";
+                    _errorMessage = "PS muss eine positive Ganzzahl sein.";
                     return;
                 }
-                if (!int.TryParse(kw, out var kwValue) || kwValue < 0)
+                if (!int.TryParse(_kw, out var kwValue) || kwValue < 0)
                 {
-                    ErrorMessage = "KW muss eine positive Ganzzahl sein.";
+                    _errorMessage = "KW muss eine positive Ganzzahl sein.";
                     return;
                 }
 
-                switch (selectedGear)
+                switch (_selectedGear)
                 {
                     case "5-Gang Manuell":
                         gear = Gear.FifeManual;
@@ -271,7 +270,7 @@
                         break;
                 }
                 
-                switch (selectedFuel)
+                switch (SelectedFuel)
                 {
                     case "Benzin":
                         fuel = Fuel.Benzin;
@@ -295,22 +294,22 @@
                         break;
                 }
 
-                p = await AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear,fuel);
+                p = await AdminService.RegisterEngine(p, psValue, kwValue, _displacement, gear,fuel);
                 break;
 
            case ProductType.Rim:
-                if (diameter == null || width == null)
+                if (string.IsNullOrEmpty(_diameter) || string.IsNullOrEmpty(_width))
                 {
-                    ErrorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
+                    _errorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
                     return;
-                }if (!decimal.TryParse(diameter, out var diameterValue) || diameterValue < 0)
+                }if (!decimal.TryParse(_diameter, out var diameterValue) || diameterValue < 0)
                 {
-                    ErrorMessage = "Durchmesser muss eine positive Zahl sein.";
+                    _errorMessage = "Durchmesser muss eine positive Zahl sein.";
                     return;
                 }
-                if (!decimal.TryParse(width, out var widthValue) || widthValue < 0)
+                if (!decimal.TryParse(_width, out var widthValue) || widthValue < 0)
                 {
-                    ErrorMessage = "Breite muss eine positive Zahl sein.";
+                    _errorMessage = "Breite muss eine positive Zahl sein.";
                     return;
                 }
 
@@ -318,20 +317,20 @@
                 break;
 
             case ProductType.Lights:
-                if (lumen == null)
+                if (string.IsNullOrEmpty(_lumen))
                 {
-                    ErrorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
+                    _errorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
                     return;
                 }
                 
-                if (!int.TryParse(lumen, out var lumenValue) || lumenValue < 0)
+                if (!int.TryParse(_lumen, out var lumenValue) || lumenValue < 0)
                 {
-                    ErrorMessage = "Lumen muss eine positive Ganzzahl sein.";
+                    _errorMessage = "Lumen muss eine positive Ganzzahl sein.";
                     return;
                 }
 
                 bool isLed = false;
-                switch (isLED)
+                switch (_isLed)
                 {
                     case "True":
                         isLed = true;
@@ -345,16 +344,20 @@
                 break;
                 
             case ProductType.Color:
-                p = AdminService.RegisterColor(p, AdminService.GetCarById(selectedCarId), displayName);
+                p = AdminService.RegisterColor(p, AdminService.GetCarById(_selectedCarId), _displayName);
                 break;
                 
                 default:
-                p = await AdminService.InsertProduct(AdminService.GetCarById(selectedCarId), p);
+                p = await AdminService.InsertProduct(AdminService.GetCarById(_selectedCarId), p);
                 break;
         }
 
-        await ImageService.SaveProductImagesAsync(p.ProductId, uploadedProductImage);
-        SuccessMessage = "Fahrzeugteil erfolgreich registriert.";
+        if (_uploadedProductImage != null)
+        {
+            await ImageService.SaveProductImagesAsync(p.ProductId, _uploadedProductImage);
+        }
+
+        _successMessage = "Fahrzeugteil erfolgreich registriert.";
 
      
     }
@@ -366,12 +369,12 @@
 
     private void ApplyFilter()
     {
-        if (string.IsNullOrWhiteSpace(searchValue))
+        if (string.IsNullOrWhiteSpace(_searchValue))
         {
             return;
         }
 
-        var term = searchValue.Trim().ToLower();
+        var term = _searchValue.Trim().ToLower();
     }
 
 
