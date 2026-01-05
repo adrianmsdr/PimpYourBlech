@@ -10,22 +10,22 @@ namespace PimpYourBlech_ClassLibrary.Services.Admin;
 
 public class AdminService:IAdminService
 {
-    private readonly ICustomerInventory customerRepository;
-    private readonly IProductInventory productRepository;
-    private readonly ICarInventory carRepository;
-    private readonly IEmailService emailService;
+    private readonly ICustomerInventory _customerRepository;
+    private readonly IProductInventory _productRepository;
+    private readonly ICarInventory _carRepository;
+    private readonly IEmailService _emailService;
    
     public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car,  IEmailService email)
     {
-        customerRepository  = costumers;
-        productRepository = products;
-        carRepository = car;
-        emailService = email;
+        _customerRepository  = costumers;
+        _productRepository = products;
+        _carRepository = car;
+        _emailService = email;
     }
 
     public List<Customer> GetListCustomers()
     {
-        return customerRepository.ListCustomers();
+        return _customerRepository.ListCustomers();
     }
     
     
@@ -41,10 +41,10 @@ public class AdminService:IAdminService
             throw new WrongInputException("Email darf nicht leer sein.");
 
         // Email Validierung
-        if(!emailService.IsValid(mailAddress))
+        if(!_emailService.IsValid(mailAddress))
             throw new WrongInputException("Keine gültige Email Adresse. (Beispiel: user@example.com)");
 
-        emailService.ConfirmRegistrationChecker(mailAddress, mailAddressConfirm);
+        _emailService.ConfirmRegistrationChecker(mailAddress, mailAddressConfirm);
 
         // Verfügbarkeit des Usernames checken
         isUsernameAvailable(username);
@@ -64,8 +64,8 @@ public class AdminService:IAdminService
         customer.Telefon = telefon;
         customer.MailAddress = mailAddress;
         customer.ImagePath = ImagePath;
-        customerRepository.InsertCustomer(customer);
-        emailService.SendRegistrationEmail(customer);
+        _customerRepository.InsertCustomer(customer);
+        _emailService.SendRegistrationEmail(customer);
     }
     
     public Customer Login(string username, string passwordHash)
@@ -82,7 +82,7 @@ public class AdminService:IAdminService
                 throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
             }
 
-            foreach(Customer customer in customerRepository.ListCustomers())
+            foreach(Customer customer in _customerRepository.ListCustomers())
             if (customer.Username == username)
             {
                 throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
@@ -94,7 +94,7 @@ public class AdminService:IAdminService
     public bool LoginAccepted(string username, string passwordHash)
     {
         bool login = false;
-        foreach (Customer c in customerRepository.ListCustomers())
+        foreach (Customer c in _customerRepository.ListCustomers())
         { 
             if (c.Username == username && c.PasswordHash == passwordHash)
             {
@@ -109,7 +109,7 @@ public class AdminService:IAdminService
     public Customer GetCustomer(string username, string passwordHash)
     {
         Customer temp = null;
-        foreach (Customer c in customerRepository.ListCustomers())
+        foreach (Customer c in _customerRepository.ListCustomers())
         {
             if (c.Username == username && c.PasswordHash == passwordHash)
             {
@@ -122,13 +122,13 @@ public class AdminService:IAdminService
 
     public void DeleteAllCustomers()
     {
-        customerRepository.DeleteCustomers();
+        _customerRepository.DeleteCustomers();
     }
     
     public Customer GetCustomerByUsername(String username)
     {
         Customer temp = null;
-        foreach (Customer c in customerRepository.ListCustomers())
+        foreach (Customer c in _customerRepository.ListCustomers())
         {
             if (c.Username == username)
             {
@@ -148,7 +148,7 @@ public class AdminService:IAdminService
     public Customer GetCustomerByTelefon(String telefon)
     {
         Customer temp = null;
-        foreach (Customer c in customerRepository.ListCustomers())
+        foreach (Customer c in _customerRepository.ListCustomers())
         {
             if (c.Telefon == telefon)
             {
@@ -167,7 +167,7 @@ public class AdminService:IAdminService
     public Customer GetCustomerByNames(String firstName, String lastName)
     {
         Customer temp = null;
-        foreach (Customer c in customerRepository.ListCustomers())
+        foreach (Customer c in _customerRepository.ListCustomers())
         {
             if (c.FirstName== firstName&&c.LastName==lastName)
             {
@@ -185,24 +185,24 @@ public class AdminService:IAdminService
     
     public void UpdateCustomer(Customer c)
     {
-        customerRepository.UpdateCustomer(c);
+        _customerRepository.UpdateCustomer(c);
     }
     
     public void DeleteCustomer(Customer c)
     {
-        customerRepository.DeleteCustomer(c);
+        _customerRepository.DeleteCustomer(c);
     }
     
     public void UpdateCustomers()
     {
-        customerRepository.UpdateCustomers();
+        _customerRepository.UpdateCustomers();
 
     }
     
     public Customer GetCustomerById(int id)
     {
         Customer temp = null;
-        foreach (Customer c in customerRepository.ListCustomers())
+        foreach (Customer c in _customerRepository.ListCustomers())
         {
             if (c.Id == id)
             {
@@ -232,7 +232,7 @@ public class AdminService:IAdminService
     public async Task<Product> InsertProduct(Car car,Product p)
     {
 
-        await productRepository.InsertProduct(p);
+        await _productRepository.InsertProduct(p);
         return p;
     }
 
@@ -246,7 +246,7 @@ public class AdminService:IAdminService
         temp.Gear = gear;
         temp.Fuel = fuel;
         p.EngineDetail =  temp;
-        await productRepository.InsertProduct(p);
+        await _productRepository.InsertProduct(p);
         return p;
     }
 
@@ -257,7 +257,7 @@ public class AdminService:IAdminService
         temp.DiameterInInch = diameter;
         temp.WidthInInch = width;
         p.RimDetail = temp;
-        productRepository.InsertProduct(p);
+        _productRepository.InsertProduct(p);
         
         return p;
     }
@@ -269,7 +269,7 @@ public class AdminService:IAdminService
         temp.Lumen = lumen;
         temp.IsLed = isLED;
         p.LightsDetail = temp;
-        productRepository.InsertProduct(p);
+        _productRepository.InsertProduct(p);
         return p;
     }
 
@@ -280,7 +280,7 @@ public class AdminService:IAdminService
         temp.Product = p;
         temp.DisplayName = colorName;
         p.ColorDetail = temp;
-        productRepository.InsertProduct(p);
+        _productRepository.InsertProduct(p);
         c.Colors.Add(p);
 
         return p;
@@ -288,13 +288,13 @@ public class AdminService:IAdminService
 
     public List<Product> GetProducts()
     {
-        return productRepository.ListProducts();
+        return _productRepository.ListProducts();
     }
     
     public Product GetProductById(int id)
     {
         Product temp = null;
-        foreach (Product p in productRepository.ListProducts())
+        foreach (Product p in _productRepository.ListProducts())
         {
             if (p.ProductId == id)
             {
@@ -306,13 +306,13 @@ public class AdminService:IAdminService
 
     public void DeleteProduct(Product p)
     {
-        productRepository.DeleteProduct(p);
+        _productRepository.DeleteProduct(p);
 
     }
 
     public void UpdateProduct(Product p)
     {
-        productRepository.UpdateProduct(p);
+        _productRepository.UpdateProduct(p);
     }
     
     public List<ProductType> GetProductTypes()
@@ -325,7 +325,7 @@ public class AdminService:IAdminService
 
     public List<Car> GetCars()
     {
-        return carRepository.ListCars();
+        return _carRepository.ListCars();
     }
     public Car RegisterCar(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity,
         double price)
@@ -339,14 +339,14 @@ public class AdminService:IAdminService
         c.PS = ps;
         c.Quantity = quantity;
         c.Price = price;
-        carRepository.InsertCar(c);
+        _carRepository.InsertCar(c);
         return c;
     }
     
     public Car GetCarById(int id)
     {
         Car temp = null;
-        foreach (Car c in carRepository.ListCars())
+        foreach (Car c in _carRepository.ListCars())
         {
             if (c.Id == id)
             {
@@ -358,12 +358,12 @@ public class AdminService:IAdminService
 
     public void DeleteCar(Car car)
     {
-        carRepository.DeleteCar(car);
+        _carRepository.DeleteCar(car);
     }
 
     public void UpdateCar(Car car)
     {
-        carRepository.UpdateCar(car);
+        _carRepository.UpdateCar(car);
     }
     
     public List<Product> GetAvailableRims(int carId)

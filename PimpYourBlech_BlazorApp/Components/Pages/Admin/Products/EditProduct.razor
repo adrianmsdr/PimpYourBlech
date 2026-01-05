@@ -1,11 +1,15 @@
 @page "/administrator/products/{id:int}/edit"
 <PageTitle>Produkt bearbeiten</PageTitle>
-
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
 @inject NavigationManager Nav
+@inject IToastService ToastService
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
     <h3>Fahrzeugteil bearbeiten</h3>
@@ -25,39 +29,37 @@
     }
     else
     {
+        <div style="flex:1; min-width:320px;">
+            <div class="combo-card-admin">
+                <EditForm Model="EditModel" OnValidSubmit="SaveEdits">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
 
-            <div style="flex:1; min-width:320px;">
-                <div class="combo-card-admin">
-                    <EditForm Model="EditModel" OnValidSubmit="SaveEdits">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
+                    <div class="form-grid-admin">
+                        <label>Name</label>
+                        <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Name"/>
 
-                        <div class="form-grid-admin">
-                            <label>Name</label>
-                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Name" />
+                        <label>Artikelnummer</label>
+                        <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.ArticleNumber"/>
 
-                            <label>Artikelnummer</label>
-                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.ArticleNumber" />
+                        <label>Hersteller</label>
+                        <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Brand"/>
 
-                            <label>Hersteller</label>
-                            <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Brand" />
+                        <label>Preis</label>
+                        <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Price"/>
 
-                            <label>Preis</label>
-                            <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Price" />
+                        <label>Auf Lager</label>
+                        <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Quantity"/>
 
-                            <label>Auf Lager</label>
-                            <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Quantity" />
-                            
-                        </div>
+                    </div>
 
-                        <div class="button-column" style="margin-top:16px;">
-                            <button type="submit" class="buttons">Speichern</button>
-                            <button type="button" class="buttons" @onclick="Cancel">Zurück</button>
-                        </div>
-                    </EditForm>
-                </div>
+                    <div class="button-column" style="margin-top:16px;">
+                        <button type="submit" class="buttons">Speichern</button>
+                        <button type="button" class="buttons" @onclick="Cancel">Zurück</button>
+                    </div>
+                </EditForm>
             </div>
-      
+        </div>
     }
 </div>
 
@@ -95,7 +97,6 @@
         };
     }
 
-    
 
     private void SaveEdits()
     {
@@ -109,11 +110,9 @@
         Product.Quantity = EditModel.Quantity;
         Product.ProductType = EditModel.ProductType;
 
-        // Persistieren (muss existieren)
+        // Persistieren
         AdminService.UpdateProduct(Product);
-
-        SuccessMessage = "Änderungen gespeichert.";
-        ErrorMessage = "";
+        ToastService.ShowSuccess("Änderungen wurden gespeichert.");
     }
 
     private void Cancel()
@@ -121,5 +120,5 @@
         Nav.NavigateTo($"/administrator/products/{Id}");
     }
 
-    
+
 }

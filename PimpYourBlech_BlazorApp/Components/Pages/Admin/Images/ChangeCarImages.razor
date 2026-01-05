@@ -1,10 +1,15 @@
 @page "/administrator/images/360"
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Enums
+@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@using Blazored.Toast.Services
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
 @inject Services.IImageService ImageService
 @inject NavigationManager Nav
+@inject IToastService ToastService
+<BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
 <h3>Bildverwaltung</h3>
@@ -178,7 +183,6 @@
 
         Colors = AdminService.GetAvailableColors(selectedCarId);
         Rims = AdminService.GetAvailableRims(selectedCarId);
-        Console.WriteLine($"[Images] OnCarChanged fired. selectedCarId={selectedCarId}");
     }
 
     private void OnCarImageSelected(InputFileChangeEventArgs e)
@@ -192,7 +196,7 @@
         if (SelectedCarId == 0 || uploadedCarImage is null) return;
 
         await ImageService.SaveCarImageAsync(SelectedCarId, uploadedCarImage);
-        SuccessMessage = "Präsentationsbild gespeichert.";
+        ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
     }
     
 
@@ -202,8 +206,8 @@
         if (uploadedFiles.Count == 0) return;
 
         await ImageService.Save360ImagesAsync(SelectedCarId, colorId, rimId, uploadedFiles );
-        
-        SuccessMessage = "Frames ersetzt.";
+        ToastService.ShowSuccess("Frames wurden gespeichert.");
+
     }
 
     private async Task DeleteColorFrames(int colorId, int rimId)
@@ -211,7 +215,7 @@
         if (SelectedCarId == 0) return;
 
         await ImageService.Delete360ImagesAsync(SelectedCarId, colorId, rimId);
-                
+           ToastService.ShowError("Frames wurden gelöscht");     
     }
     
 }

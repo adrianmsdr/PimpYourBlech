@@ -8,6 +8,21 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IImageService ImageService
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du das Fahrzeugteil wirklich löschen?</h3>
+            <p class="pyb-modal-text">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Löschen</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
+
 
 <div class="menu-container">
 <h3>Produktübersicht</h3>
@@ -38,7 +53,7 @@ else
 
 
             <div class="button-column">
-                <button class="buttons" @onclick="DeleteProduct">Fahrzeugteil löschen</button>
+                <button class="buttons" @onclick="OpenDeleteModal">Fahrzeugteil löschen</button>
                 <button class="buttons" @onclick="EditProduct">Fahrzeugteil bearbeiten</button>
                 <button class="buttons" @onclick="Cancel">Zurück</button>
             </div>
@@ -82,7 +97,7 @@ else
         }
 
         AdminService.DeleteProduct(Product);
-        Nav.NavigateTo("/administrator/products");
+       
     }
 
     private void OnProductImageSelected(InputFileChangeEventArgs e)
@@ -106,6 +121,19 @@ else
     private void Cancel()
     {
         Nav.NavigateTo("administrator/products/");
+    }
+    
+    private bool showDeleteModal;
+
+    void OpenDeleteModal() => showDeleteModal = true;
+    void CloseDeleteModal() => showDeleteModal = false;
+
+    async Task ConfirmDelete()
+    {
+        await DeleteProduct();
+        showDeleteModal = false;
+        Nav.NavigateTo("/administrator/products");
+
     }
 
 }

@@ -7,6 +7,20 @@
 @inject IAdminService AdminService
 @inject  NavigationManager Nav
 @inject IImageService ImageService
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du das Fahrzeug wirklich löschen?</h3>
+            <p class="pyb-modal-text">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Löschen</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
 
 
 <div class="menu-container">
@@ -19,6 +33,7 @@
 }
 else
 {
+    
     <div class="detail-overview-admin">
         <img class="detail-image-admin" src="@ImageService.GetCarImageUrl(Car.Id)" />
 
@@ -37,7 +52,7 @@ else
         <p><strong>Auf Lager:</strong> @Car.Quantity</p>
     </div>
         <div class="button-column">
-            <button class="buttons" @onclick="DeleteCar">Fahrzeug löschen</button>
+            <button class="buttons" @onclick="OpenDeleteModal">Fahrzeug löschen</button>
             <button class="buttons" @onclick="EditCar">Fahrzeug bearbeiten</button>
             <button class="buttons" @onclick="Cancel">Zurück</button>
         </div>
@@ -88,5 +103,21 @@ else
     private void Cancel()
     {
         Nav.NavigateTo($"/administrator/cars");
+    }
+    
+    private bool showDeleteModal;
+
+    void OpenDeleteModal() => showDeleteModal = true;
+    void CloseDeleteModal() => showDeleteModal = false;
+
+    async Task ConfirmDelete()
+    {
+        await ImageService.DeleteCarImagesAsync(Car.Id);
+        AdminService.DeleteCar(Car);
+        showDeleteModal = false;
+        Nav.NavigateTo("/administrator/cars");
+        
+       
+
     }
 }
