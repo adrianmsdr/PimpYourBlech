@@ -228,6 +228,13 @@ public class AdminService:IAdminService
         
         return temp;
     }
+    
+    public async Task<Product> InsertProduct(Car car,Product p)
+    {
+
+        await productRepository.InsertProduct(p);
+        return p;
+    }
 
     public async Task<Product>RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel)
     {
@@ -283,10 +290,7 @@ public class AdminService:IAdminService
     {
         return productRepository.ListProducts();
     }
-
     
-
-
     public Product GetProductById(int id)
     {
         Product temp = null;
@@ -309,6 +313,11 @@ public class AdminService:IAdminService
     public void UpdateProduct(Product p)
     {
         productRepository.UpdateProduct(p);
+    }
+    
+    public List<ProductType> GetProductTypes()
+    {
+        return Enum.GetValues(typeof(ProductType)).Cast<ProductType>().ToList();
     }
 
     // ___________________________________Cars____________________________________

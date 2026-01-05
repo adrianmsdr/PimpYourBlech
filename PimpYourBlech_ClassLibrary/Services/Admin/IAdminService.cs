@@ -38,6 +38,8 @@ public interface IAdminService
     List<Product> GetProducts();
      Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType);
 
+     Task<Product> InsertProduct(Car car, Product p);
+
      public Task <Product> RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel);
      public Product RegisterRim(Product p, decimal diameter, decimal width);
      
@@ -49,6 +51,8 @@ public interface IAdminService
      void DeleteProduct(Product p);
      
      void UpdateProduct(Product p);
+
+     List<ProductType> GetProductTypes();
    // ___________________________________Cars____________________________________
   List<Car> GetCars();
    

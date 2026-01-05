@@ -75,14 +75,6 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
 - sollte man später auch anklicken können + warenkorb und alles drum und dran
 *@
 <div class="search-container">
-    <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
-        <span class="cart-inside">
-            @CartService.CartProductsList.Count
-            <span class="cart-icon">
-                <ShoppingCartIcon/>
-            </span>
-        </span>Warenkorb
-    </button>
     <h2 class="fields">Filter</h2>
     <div class="d-flex align-items-center gap-3">
         <label class="fields">Kategorie:</label>
@@ -113,6 +105,16 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
         <button class="buttons" @onclick="ApplySearch">
             Suchen <MagnifyingGlassIcon/>
         </button>
+        <p class="GoToShoppingCart" @onclick="ToggleSidebar">
+            <span class="cart-inside">
+                <span class="count">
+                    @CartService.CartProductsList.Count
+                </span>
+                <span class="cart-icon">
+                    <ShoppingCartIcon/>
+                </span>
+            </span>Warenkorb
+        </p>
     </div>
 
 
@@ -352,41 +354,64 @@ else
 
     .GoToShoppingCart {
         margin-left: auto;
+        margin-top: 5px;
         display: flex;
         align-items: center;
-        gap: 12px;
         width: 160px;
         height: 60px;
         font-family: Bahnschrift;
-        font-size: 30px;
+        font-size: 20px;
         color: white;
-        background-color: #7a0000;
-        border-radius: 12px;
-        border: 2px solid #ff1a1a;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
         cursor: pointer;
         transition:
             transform 0.25s ease,
-            background-color 0.25s ease,
+            color 0.25s ease,
             box-shadow 0.25s ease;
     }
 
+    .GoToShoppingCart:hover {
+        transform: scale(1.05);
+        color: #aca3a3;
+        border: 1px solid #aca3a3;
+        border-radius: 10px;
+        border-color: #ff1a1a;
+        box-shadow: 0 6px 7px rgba(0, 0, 0, 0.7);
+    }
+
+    .GoToShoppingCart:active {
+        transform: scale(1.2);
+    }
+    
     .cart-inside {
-        width: 38px;
-        height: 38px;
+        width: 42px;
+        height: 48px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: -20px;
+        justify-content: center;
+        line-height: 1;
+        margin-bottom: 15px;
+    }
+
+    .GoToShoppingCart:hover .cart-icon svg {
+        color: #aca3a3;
+    }
     
+    .count {
+        font-size: 16px;
+        font-weight: bold;
+        color: #cfcf2a;
+        margin-bottom: 2px;
+        position: relative;
+        top: 8px;
     }
-
+    
     .cart-icon svg {
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
+        color: white;
     }
-
-
+    
     .fields {
         color: white;
     }
@@ -414,16 +439,6 @@ else
     }
 
     .selectProduct:active {
-        transform: scale(1.2);
-    }
-
-    .GoToShoppingCart:hover {
-        transform: scale(1.1);
-        background-color: #b30000;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
-    }
-
-    .GoToShoppingCart:active {
         transform: scale(1.2);
     }
 
