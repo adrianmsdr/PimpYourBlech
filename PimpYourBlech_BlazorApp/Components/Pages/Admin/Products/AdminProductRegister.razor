@@ -44,26 +44,21 @@
     
     <div class="d-flex align-items-center">
         <span class="me-2">Produkttyp:</span>
-       
+
         <select class="form-select me-2" style="width:auto"
                 @bind="selectedProductType">
-            <option value="Motor">Motor</option>
-            <option value="Felge">Felge</option>
-            <option value="Lichtanlage">Lichtanlage</option>
-            <option value="Farbe">Farbe</option>
-
+            @foreach (ProductType T in categories)
+            {
+                <option value="@T">@T</option>
+            }
         </select>
-       
     </div>
 
     @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
     <input class="text-inputPYB"
            placeholder="Name"
            @bind="name"/>
-
-    <input class="text-inputPYB"
-           placeholder="Artikelnummer..."
-           @bind="articleNumber"/>
+    
 
     <input class="text-inputPYB"
            placeholder="Hersteller..."
@@ -78,7 +73,7 @@
            placeholder="Preis..."
            @bind="price"/>
 
-    @if (selectedProductType == "Motor")
+    @if (selectedProductType == ProductType.Engine)
     {
     <input class="text-inputPYB"
            placeholder="PS..."
@@ -101,7 +96,16 @@
         <option value="6-Gang Automatik">6-Gang Automatik</option>
         <option value="8-Gang Automatik">8-Gang Automatik</option>
     </select>
-    }else if (selectedProductType == "Felge")
+    <select class="form-select me-2" style="width:auto"
+            @bind="selectedFuel">
+        <option value="Benzin">Benzin</option>
+        <option value="Diesel">Diesel</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="Gas">Gas</option>
+        <option value="Elektro">Elektro</option>
+    </select>
+    
+    }else if (selectedProductType == ProductType.Rim)
     {
         
     <input class="text-inputPYB"
@@ -114,7 +118,7 @@
    
     }
 
-    else if (selectedProductType == "Lichtanlage")
+    else if (selectedProductType == ProductType.Lights)
     {
         <input class="text-inputPYB"
                placeholder="Lumen..."
@@ -131,7 +135,7 @@
 
         </div>
 
-    }else if (selectedProductType == "Farbe")
+    }else if (selectedProductType == ProductType.Color)
     {
         <input class="text-inputPYB"
                placeholder="Farbenname"
@@ -157,8 +161,9 @@
 @code {
 
     // Felder 
-    private string selectedProductType = "Motor";
+    private ProductType selectedProductType = ProductType.Engine;
     private string selectedGear = "6-Gang Manuell";
+    public string selectedFuel = "Benzin";
     private string isLED = "True";
     private string searchValue = string.Empty;
 
@@ -184,6 +189,7 @@
     private IBrowserFile? uploadedProductImage;
 
     private List<Car> cars = new();
+    private List<ProductType> categories = new();
     private int selectedCarId = 0;
 
     private string ErrorMessage = "";
@@ -192,6 +198,7 @@
     protected override async Task OnInitializedAsync()
     {
         cars = AdminService.GetCars();
+        categories = AdminService.GetProductTypes();
     }
 
     private void HandleProductImageSelected(InputFileChangeEventArgs e)
@@ -203,13 +210,10 @@
     {
         ErrorMessage = "";
         SuccessMessage = "";
-
-        ProductType productType = ProductType.Engine;
         
-        if (string.IsNullOrWhiteSpace(name) ||
-            string.IsNullOrWhiteSpace(articleNumber))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            ErrorMessage = "Name und Artikelnummer dürfen nicht leer sein.";
+            ErrorMessage = "Name darf nicht leer sein.";
             return;
         }
 
@@ -224,32 +228,13 @@
             ErrorMessage = "Preis muss eine positive Zahl sein.";
             return;
         }
+        
+        Product p = AdminService.CreateProduct(AdminService.GetCarById(selectedCarId),name, brand, quantityValue, priceValue,selectedProductType);
 
         switch (selectedProductType)
         {
-            case "Motor":
-                productType = ProductType.Engine;
-                break;
-
-            case "Felge":
-                productType = ProductType.Rim;
-                break;
-
-            case "Lichtanlage":
-                productType = ProductType.Lights;
-                break;
-                
-            case "Farbe":
-                productType = ProductType.Color;
-                break;
-                
-        }
-        
-        Product p = AdminService.CreateProduct(AdminService.GetCarById(selectedCarId),name, articleNumber, brand, quantityValue, priceValue,productType);
-
-        switch (productType)
-        {
             case ProductType.Engine:
+                Fuel fuel = Fuel.Benzin;
                 Gear gear = Gear.SixManual;
                 if (ps == null || kw == null || string.IsNullOrWhiteSpace(selectedGear))
                 {
@@ -285,7 +270,32 @@
                         gear = Gear.EightAutomatic;
                         break;
                 }
-                p = AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear);
+                
+                switch (selectedFuel)
+                {
+                    case "Benzin":
+                        fuel = Fuel.Benzin;
+                        break;
+
+                    case "Diesel":
+                        fuel = Fuel.Diesel;
+                        break;
+
+                    case "Hybrid":
+                        fuel = Fuel.Hybrid;
+                        break;
+
+                    case "Gas":
+                        fuel = Fuel.Gas;
+                        break;
+
+
+                    case "Elektro":
+                        fuel = Fuel.Elektro;
+                        break;
+                }
+
+                p = await AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear,fuel);
                 break;
 
            case ProductType.Rim:
@@ -336,6 +346,10 @@
                 
             case ProductType.Color:
                 p = AdminService.RegisterColor(p, AdminService.GetCarById(selectedCarId), displayName);
+                break;
+                
+                default:
+                p = await AdminService.InsertProduct(AdminService.GetCarById(selectedCarId), p);
                 break;
         }
 

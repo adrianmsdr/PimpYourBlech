@@ -29,6 +29,15 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<CommunityQuestion> CommunityQuestions { get; set; }
     public DbSet<CommunityAnswer> CommunityAnswers { get; set; }
     
+    public async Task<int> GetNextArticleNumberAsync()
+    {
+        long next = await Database
+            .SqlQuery<long>($"SELECT nextval('\"ArticleNumberSeq\"') AS \"Value\"")
+            .SingleAsync();
+
+        return checked((int)next);
+    }
+    
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -42,6 +51,10 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.HasSequence<int>("ArticleNumberSeq").StartsAt(100000).IncrementsBy(1);
+        modelBuilder.Entity<Product>().HasIndex(p => p.ArticleNumber).IsUnique();
+        modelBuilder.Entity<Product>().Property(p => p.ArticleNumber).HasMaxLength(7);
 
         // Product -> Car (1:n)  (EMPFOHLEN: Car.Products in Car.cs anlegen)
         modelBuilder.Entity<Product>()

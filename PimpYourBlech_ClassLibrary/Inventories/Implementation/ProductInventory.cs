@@ -7,10 +7,12 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
 {
     
     
-    public void InsertProduct(Product p)
+    public async Task InsertProduct(Product p)
     {
-      database.Products.Add(p);
-      database.SaveChanges();
+        int counter = await database.GetNextArticleNumberAsync();
+        p.ArticleNumber = counter.ToString("D7");
+        database.Products.Add(p);
+        database.SaveChanges();
     }
 
     public List<Product> ListProducts()

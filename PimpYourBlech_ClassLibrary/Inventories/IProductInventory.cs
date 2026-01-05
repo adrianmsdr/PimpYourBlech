@@ -4,7 +4,7 @@ namespace PimpYourBlech_ClassLibrary.Inventories;
 
 public interface IProductInventory
 {
-    public void InsertProduct(Product product);
+    public Task InsertProduct(Product product);
     
     public List<Product> ListProducts();
     

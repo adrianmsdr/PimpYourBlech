@@ -214,13 +214,12 @@ public class AdminService:IAdminService
     
     
     // ___________________________________Poducts____________________________________
-    public Product CreateProduct(Car car, string name, string articleNumber, string brand, int quantity, double price, ProductType productType)
+    public Product CreateProduct(Car car, string name, string brand, int quantity, double price, ProductType productType)
     {
         Product temp  = new Product();
         temp.Car = car;
         temp.CarId = car.Id;
         temp.Name = name;
-        temp.ArticleNumber = articleNumber;
         temp.Brand = brand;
         temp.Quantity = quantity;
         temp.Price = price;
@@ -229,8 +228,15 @@ public class AdminService:IAdminService
         
         return temp;
     }
+    
+    public async Task<Product> InsertProduct(Car car,Product p)
+    {
 
-    public Product RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear)
+        await productRepository.InsertProduct(p);
+        return p;
+    }
+
+    public async Task<Product>RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel)
     {
         EngineDetail temp = new EngineDetail();
         temp.Product = p;
@@ -238,9 +244,9 @@ public class AdminService:IAdminService
         temp.Kw = kw;
         temp.Displacement = displacement;
         temp.Gear = gear;
+        temp.Fuel = fuel;
         p.EngineDetail =  temp;
-        productRepository.InsertProduct(p);
-        
+        await productRepository.InsertProduct(p);
         return p;
     }
 
@@ -284,10 +290,7 @@ public class AdminService:IAdminService
     {
         return productRepository.ListProducts();
     }
-
     
-
-
     public Product GetProductById(int id)
     {
         Product temp = null;
@@ -310,6 +313,11 @@ public class AdminService:IAdminService
     public void UpdateProduct(Product p)
     {
         productRepository.UpdateProduct(p);
+    }
+    
+    public List<ProductType> GetProductTypes()
+    {
+        return Enum.GetValues(typeof(ProductType)).Cast<ProductType>().ToList();
     }
 
     // ___________________________________Cars____________________________________
