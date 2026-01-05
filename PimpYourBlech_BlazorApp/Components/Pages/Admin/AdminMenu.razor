@@ -5,7 +5,7 @@
 <div class="menu-container">
 
     <div class="button-column">
-        <h3>Administrator</h3>
+        <h3 class="headline-admin">Administrator</h3>
         <button class="buttons" @onclick="GoToAdminCustomers">Kunden verwalten</button>
         <button class="buttons" @onclick="GoToAdminProducts">Produkte verwalten</button>
         <button class="buttons" @onclick="GoToAdminCars">Fahrzeuge verwalten</button>
@@ -51,3 +51,9 @@
         Nav.NavigateTo("/mainMenu");
     }
 }
+
+<style>
+    .headline-admin {
+        text-align: center;
+    }
+</style>

@@ -290,6 +290,7 @@ h1,h2,h3,h4{
     font-family: Bahnschrift;
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    text-align: center;
 }
 /* ---------- Toast-Notifications ---------- */
 .blazored-toast,

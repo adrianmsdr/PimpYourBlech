@@ -22,10 +22,6 @@
     <img src="shopheader.png" class="header">
 </div>
 
-<button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
-    <ShoppingCartIcon></ShoppingCartIcon> Warenkorb
-</button>
-
 @if (IsOpen)
 {
     <div class="overlay" @onclick="ToggleSidebar"></div>
@@ -109,6 +105,11 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
         <button class="buttons" @onclick="ApplySearch">
             Suchen <MagnifyingGlassIcon />
         </button>
+        <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
+            <span class="cart-icon">
+                <ShoppingCartIcon/>
+            </span> Warenkorb
+        </button>
     </div>
 
 
@@ -129,9 +130,9 @@ else
         @foreach (var product in products)
         {
             <div class="product-card">
-                <img src="@ImageService.GetProductImageUrl(product.ProductId)" 
-                     alt="@product.Name" 
-                     class="product-image" />
+                <img src="@ImageService.GetProductImageUrl(product.ProductId)"
+                     alt="@product.Name"
+                     class="product-image"/>
                 <div class="product-info">
                     <h4>@product.Name</h4>
                     <p>@product.Brand</p>
@@ -348,8 +349,10 @@ else
 
     .GoToShoppingCart {
         margin-left: auto;
-        display: block;
-        width: 250px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 160px;
         height: 60px;
         font-family: Bahnschrift;
         font-size: 17px;
@@ -358,10 +361,23 @@ else
         border-radius: 12px;
         border: 2px solid #ff1a1a;
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-        transition: transform 0.25s ease,
-                    background-color 0.25s ease,
-                    box-shadow 0.25s ease;
         cursor: pointer;
+        transition:
+            transform 0.25s ease,
+            background-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+    
+    .cart-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 2px solid #ffcccc;
+        background-color: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
 
     .fields {
