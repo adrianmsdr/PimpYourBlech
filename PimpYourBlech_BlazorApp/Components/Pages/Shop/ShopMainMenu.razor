@@ -75,6 +75,14 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
 - sollte man später auch anklicken können + warenkorb und alles drum und dran
 *@
 <div class="search-container">
+    <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
+        <span class="cart-inside">
+            @CartService.CartProductsList.Count
+            <span class="cart-icon">
+                <ShoppingCartIcon/>
+            </span>
+        </span>Warenkorb
+    </button>
     <h2 class="fields">Filter</h2>
     <div class="d-flex align-items-center gap-3">
         <label class="fields">Kategorie:</label>
@@ -86,7 +94,7 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
             <option value="Lights">Lichtanlage</option>
         </select>
     </div>
-    
+
     <div class="sorting-label">
         <label class="fields">Sortieren nach:</label>
         <select class="form-select" style="width: 220px"
@@ -101,14 +109,9 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
     <div class="search-row">
         <input class="search-input"
                placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
-               @bind="searchText" />
+               @bind="searchText"/>
         <button class="buttons" @onclick="ApplySearch">
-            Suchen <MagnifyingGlassIcon />
-        </button>
-        <button type="button" class="GoToShoppingCart" @onclick="ToggleSidebar">
-            <span class="cart-icon">
-                <ShoppingCartIcon/>
-            </span> Warenkorb
+            Suchen <MagnifyingGlassIcon/>
         </button>
     </div>
 
@@ -355,7 +358,7 @@ else
         width: 160px;
         height: 60px;
         font-family: Bahnschrift;
-        font-size: 17px;
+        font-size: 30px;
         color: white;
         background-color: #7a0000;
         border-radius: 12px;
@@ -367,18 +370,22 @@ else
             background-color 0.25s ease,
             box-shadow 0.25s ease;
     }
-    
-    .cart-icon {
+
+    .cart-inside {
         width: 38px;
         height: 38px;
-        border-radius: 50%;
-        border: 2px solid #ffcccc;
-        background-color: rgba(255, 255, 255, 0.1);
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
+        margin-top: -20px;
+    
     }
+
+    .cart-icon svg {
+        width: 38px;
+        height: 38px;
+    }
+
 
     .fields {
         color: white;

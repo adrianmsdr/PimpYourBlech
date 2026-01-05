@@ -19,21 +19,6 @@
                 <button type="button" class="nav-merged" @onclick="ToggleMenu" aria-expanded="@menuOpen">
                     <span class="nav-merged__label"><MenuIcon></MenuIcon></span>
                 </button>
-
-                @if (menuOpen)
-                {
-                    <!-- Backdrop layer: schließt beim Klick außerhalb -->
-                    <div class="nav-dd__backdrop" @onclick="CloseMenu"></div>
-
-                    <!-- Dropdown layer -->
-                    <div class="nav-dd__panel" @onclick:stopPropagation="true">
-                        <NavLink class="buttons dd-btn" href="/mainMenu" @onclick="CloseMenu">Hauptmenü</NavLink>
-                        <NavLink class="buttons dd-btn" href="/configurator/ChooseCar" @onclick="CloseMenu">Konfigurator</NavLink>
-                        <NavLink class="buttons dd-btn" href="/shop"   @onclick="CloseMenu">Shop</NavLink>
-                        <NavLink class="buttons dd-btn" href="/user"  @onclick="CloseMenu">Profil</NavLink>
-                        <button class="buttons dd-btn" @onclick="LogOut">Ausloggen</button>
-                    </div>
-                }
             </div>
         }
     </div>
@@ -44,10 +29,39 @@
             <NavLink href="/" class="nav-btn">Startmenü</NavLink>
             <NavLink href="/login" class="nav-btn">Anmelden</NavLink>
         }else{
-            <button class="nav-btn" @onclick="LogOut">Ausloggen</button>
+            <button class="nav-btn" @onclick="OpenDeleteModal">Ausloggen</button>
         }
     </div>
 </nav>
+@if (menuOpen)
+{
+    <!-- Backdrop layer: schließt beim Klick außerhalb -->
+    <div class="nav-dd__backdrop" @onclick="CloseMenu">
+
+    <!-- Dropdown layer -->
+    <div class="nav-dd__panel" @onclick:stopPropagation="true">
+        <NavLink class="buttons dd-btn" href="/mainMenu" @onclick="CloseMenu">Hauptmenü</NavLink>
+        <NavLink class="buttons dd-btn" href="/configurator/ChooseCar" @onclick="CloseMenu">Konfigurator</NavLink>
+        <NavLink class="buttons dd-btn" href="/shop"   @onclick="CloseMenu">Shop</NavLink>
+        <NavLink class="buttons dd-btn" href="/user"  @onclick="CloseMenu">Profil</NavLink>
+        <button class="buttons dd-btn" @onclick="OpenDeleteModal">Ausloggen</button>
+    </div>
+    </div>
+}
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du dich wirklich abmelden?</h3>
+            <p class="pyb-modal-text">Um die App nutzen zu können, musst du eingeloggt sein.</p>
+
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Abmelden</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
 
 <div class="page">
     <main>
@@ -71,17 +85,24 @@
 </div>
 
 @code {
-
-    public void LogOut()
-    {
-        UserSession.LogOut();
-        Nav.NavigateTo("/login");
-    }
-    
     private bool menuOpen;
 
     private void ToggleMenu() => menuOpen = !menuOpen;
     private void CloseMenu() => menuOpen = false;
+
+
+    private bool showDeleteModal;
+
+    void OpenDeleteModal() => showDeleteModal = true;
+    void CloseDeleteModal() => showDeleteModal = false;
+
+    void ConfirmDelete()
+    {
+        showDeleteModal = false;
+        UserSession.LogOut();
+        Nav.NavigateTo("/login");
+
+    }
 }
 
 <style>
@@ -102,15 +123,12 @@
         width: 100%;
         height: 65px;
         padding: 0 30px;
-
         display: flex;
         justify-content: space-between;
         align-items: center;
-
         background: rgba(0, 0, 0, 0.35);          /* leicht transparent */
         backdrop-filter: blur(10px);              /* Frosted Glass */
         -webkit-backdrop-filter: blur(10px);
-
         border-bottom: 1px solid rgba(255, 0, 0, 0.25);
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
         z-index: 1000;
@@ -121,16 +139,7 @@
         display: flex;
         align-items: center;
         gap: 16px;
-
         padding-left: 48px;
-    }
-    .navbar-logo {
-        font-family: Bahnschrift;
-        font-size: 26px;
-        font-weight: bold;
-        color: white;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
-        letter-spacing: 1px;
     }
 
     .navbar-right {
@@ -143,12 +152,10 @@
         padding: 10px 20px;
         font-family: Bahnschrift;
         font-size: 16px;
-
         background: rgba(255, 0, 0, 0.45);
         color: white;
         border: 1px solid rgba(255, 0, 0, 0.7);
         border-radius: 12px;
-
         cursor: pointer;
         transition: 0.25s ease;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
@@ -175,20 +182,16 @@
     .footer {
         margin-top: 20px;
         padding: 16px 0;
-
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 10px;
-
         font-family: Bahnschrift;
         font-size: 13px;
         color: rgba(255, 255, 255, 0.7);
-
         background: rgba(0, 0, 0, 0.35);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-
         border-top: 1px solid rgba(255, 0, 0, 0.25);
     }
 
@@ -264,22 +267,26 @@
     .nav-dd__backdrop {
         position: fixed;
         inset: 0;
-        background: transparent;
-        z-index: 999;
+        z-index: 50000;
+        background: rgba(0, 0, 0, 0.25);backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        pointer-events: auto;
     }
 
     .nav-dd__panel {
-        position: absolute;
-        top: calc(100% + 30px);
-        left: -40px;
-        z-index: 1000;
-        background: transparent;
-        border: 0;
-        padding: 0;
-        box-shadow: none;
+        position: fixed;
+        z-index: 50001;
+        pointer-events: auto;
+        top: 95px;
+        left: 30px;
         display: flex;
         flex-direction: column;
         gap: 14px;
+        background: rgba(0,0,0,.55);
+        border: 1px solid rgba(255,0,0,.25);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.7);
     }
 
     .dd-btn {

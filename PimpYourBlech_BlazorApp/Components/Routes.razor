@@ -1,6 +1,28 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@using PimpYourBlech_ClassLibrary.Session
+
+@inject NavigationManager Nav
+@inject IUserSession UserSession
+
+<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)"/>
+
         <FocusOnNavigate RouteData="routeData" Selector="h1"/>
+        @if (!IsAnonymus(routeData.PageType) && UserSession.CurrentUser == null)
+        {
+            Nav.NavigateTo("/login", forceLoad: true);
+        }
     </Found>
 </Router>
+@code{
+
+    private static bool IsAnonymus(Type pageType)
+        => Attribute.IsDefined(pageType, typeof(AllowAnonymousAttribute));
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
+    public sealed class AllowAnonymousAttribute : Attribute{}
+
+
+}

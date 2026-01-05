@@ -60,10 +60,7 @@
     <input class="text-inputPYB"
            placeholder="Name"
            @bind="name"/>
-
-    <input class="text-inputPYB"
-           placeholder="Artikelnummer..."
-           @bind="articleNumber"/>
+    
 
     <input class="text-inputPYB"
            placeholder="Hersteller..."
@@ -101,6 +98,15 @@
         <option value="6-Gang Automatik">6-Gang Automatik</option>
         <option value="8-Gang Automatik">8-Gang Automatik</option>
     </select>
+    <select class="form-select me-2" style="width:auto"
+            @bind="selectedFuel">
+        <option value="Benzin">Benzin</option>
+        <option value="Diesel">Diesel</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="Gas">Gas</option>
+        <option value="Elektro">Elektro</option>
+    </select>
+    
     }else if (selectedProductType == "Felge")
     {
         
@@ -159,6 +165,7 @@
     // Felder 
     private string selectedProductType = "Motor";
     private string selectedGear = "6-Gang Manuell";
+    public string selectedFuel = "Benzin";
     private string isLED = "True";
     private string searchValue = string.Empty;
 
@@ -206,10 +213,9 @@
 
         ProductType productType = ProductType.Engine;
         
-        if (string.IsNullOrWhiteSpace(name) ||
-            string.IsNullOrWhiteSpace(articleNumber))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            ErrorMessage = "Name und Artikelnummer dürfen nicht leer sein.";
+            ErrorMessage = "Name darf nicht leer sein.";
             return;
         }
 
@@ -245,11 +251,12 @@
                 
         }
         
-        Product p = AdminService.CreateProduct(AdminService.GetCarById(selectedCarId),name, articleNumber, brand, quantityValue, priceValue,productType);
+        Product p = AdminService.CreateProduct(AdminService.GetCarById(selectedCarId),name, brand, quantityValue, priceValue,productType);
 
         switch (productType)
         {
             case ProductType.Engine:
+                Fuel fuel = Fuel.Benzin;
                 Gear gear = Gear.SixManual;
                 if (ps == null || kw == null || string.IsNullOrWhiteSpace(selectedGear))
                 {
@@ -285,7 +292,32 @@
                         gear = Gear.EightAutomatic;
                         break;
                 }
-                p = AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear);
+                
+                switch (selectedFuel)
+                {
+                    case "Benzin":
+                        fuel = Fuel.Benzin;
+                        break;
+
+                    case "Diesel":
+                        fuel = Fuel.Diesel;
+                        break;
+
+                    case "Hybrid":
+                        fuel = Fuel.Hybrid;
+                        break;
+
+                    case "Gas":
+                        fuel = Fuel.Gas;
+                        break;
+
+
+                    case "Elektro":
+                        fuel = Fuel.Elektro;
+                        break;
+                }
+
+                p = await AdminService.RegisterEngine(p, psValue, kwValue, displacement, gear,fuel);
                 break;
 
            case ProductType.Rim:

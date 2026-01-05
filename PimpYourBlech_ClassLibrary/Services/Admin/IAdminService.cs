@@ -36,9 +36,9 @@ public interface IAdminService
     Customer GetCustomerById(int id);
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
-     Product CreateProduct(Car car, string name, string articleNumber, string brand, int quantity, double price,ProductType productType);
+     Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType);
 
-     public Product RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear);
+     public Task <Product> RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel);
      public Product RegisterRim(Product p, decimal diameter, decimal width);
      
      public Product RegisterLights(Product p, int lumen, bool isLED);
