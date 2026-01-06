@@ -25,48 +25,47 @@
 @if (IsOpen)
 {
     <div class="overlay" @onclick="ToggleSidebar"></div>
-}
+    <div class="sidebar @(IsOpen ? "open" : "")">
+        <div class="sidebar-header">
+            <h2>Warenkorb</h2>
+            <button class="close-btn" @onclick="ToggleSidebar">✕</button>
+        </div>
 
-<div class="sidebar @(IsOpen ? "open" : "")">
-    <div class="sidebar-header">
-        <h2>Warenkorb</h2>
-        <button class="close-btn" @onclick="ToggleSidebar">✕</button>
+        @if (!CartService.CartProductsList.Any())
+        {
+            <div class="null-content">
+                <p class="no-products">Keine Produkte vorhanden</p>
+            </div>
+        }
+        else
+        {
+            <div class="sidebar-content">
+                @foreach (var item in CartService.CartProductsList)
+                {
+                    <div class="cart-item">
+                        <img src="@ImageService.GetProductImageUrl(item.ProductId)"
+                             alt="@item.Name"
+                             class="cart-item-image" />
+
+                        <p class="menu-item">
+                            @item.Name – @item.Price.ToString("C")
+                        </p>
+                        <p class="remove-icon" @onclick="() => RemoveItem(item)"></p>
+                    </div>
+                }
+
+                <u class="sum">
+                    Summe: @ShopService.GetTotalPrice(UserSession.CurrentUser.Id) €
+                </u>
+
+                <button class="checkout-button"
+                        @onclick="NavigateToCheckout">
+                    <ShoppingCartIcon /> Zur Kasse
+                </button>
+            </div>
+        }
     </div>
-
-    @if (!CartService.CartProductsList.Any())
-    {
-        <div class="null-content">
-            <p class="no-products">Keine Produkte vorhanden</p>
-        </div>
-    }
-    else
-    {
-        <div class="sidebar-content">
-            @foreach (var item in CartService.CartProductsList)
-            {
-                <div class="cart-item">
-                    <img src="@ImageService.GetProductImageUrl(item.ProductId)"
-                         alt="@item.Name"
-                         class="cart-item-image" />
-
-                    <p class="menu-item">
-                        @item.Name – @item.Price.ToString("C")
-                    </p>
-                    <p class="remove-icon" @onclick="() => RemoveItem(item)">❌</p>
-                </div>
-            }
-
-            <u class="sum">
-                Summe: @ShopService.GetTotalPrice(UserSession.CurrentUser.Id) €
-            </u>
-
-            <button class="checkout-button"
-                    @onclick="NavigateToCheckout">
-                <ShoppingCartIcon /> Zur Kasse
-            </button>
-        </div>
-    }
-</div>
+}
 
 
 @*
@@ -134,8 +133,8 @@ else
     <div class="product-grid">
         @foreach (var product in products)
         {
-            <div class="product-card">
-                <img src="@ImageService.GetProductImageUrl(product.ProductId)"
+            <a class="product-card" href="@($"shop/details/{product.ProductId}")">
+                <img loading ="lazy" src="@ImageService.GetProductImageUrl(product.ProductId)"
                      alt="@product.Name"
                      class="product-image"/>
                 <div class="product-info">
@@ -147,7 +146,7 @@ else
                         <BuyIcon></BuyIcon> Kaufen
                     </button>
                 </div>
-            </div>
+            </a>
         }
     </div>
     }
@@ -161,6 +160,7 @@ else
     private string selectedCategory = "All";
     private string selectedSortOption = "NameAufsteigend";
     private string searchText = string.Empty;
+    private Product selectedProduct = new Product();
     
     // Damit wird die methode automatisch aufgerufen beim laden der seite (also alle produkte geholt)
     protected override void OnInitialized()
@@ -220,6 +220,12 @@ else
     {
         Nav.NavigateTo("/mainMenu");
     }
+    
+    private void ShowProduct(Product product)
+    {
+        Nav.NavigateTo($"/shop/details/{product.ProductId}");
+    }
+    
 }
 <style>
     .shop-header {
@@ -324,7 +330,6 @@ else
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1.5rem;
-        //!!!
     }
 
     .product-card {
@@ -464,7 +469,7 @@ else
         -webkit-backdrop-filter: blur(8px);
         border-left: 2px solid rgba(255, 0, 0, 0.35);
         box-shadow: -4px 0 25px rgba(0, 0, 0, 0.6);
-        z-index: 1000;
+        z-index: 50001;
         transition: right 0.3s ease;
     }
 
@@ -613,5 +618,10 @@ else
     
     .remove-icon:hover {
         transform: scale(1.35);
+    }
+
+    .product-card:hover {
+
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
     }
 </style>

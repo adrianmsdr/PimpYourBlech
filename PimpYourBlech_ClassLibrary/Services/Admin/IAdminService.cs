@@ -36,7 +36,7 @@ public interface IAdminService
     Customer GetCustomerById(int id);
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
-     Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType);
+     Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType, string description);
 
      Task<Product> InsertProduct(Car car, Product p);
 
@@ -46,7 +46,7 @@ public interface IAdminService
      public Product RegisterLights(Product p, int lumen, bool isLED);
      
      public Product RegisterColor(Product p, Car c,string colorName);
-     Product GetProductById(int id);
+     Task<Product> GetProductByIdAsync(int id);
    
      void DeleteProduct(Product p);
      

@@ -71,9 +71,9 @@ else
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Product = AdminService.GetProductById(Id);
+        Product = await AdminService.GetProductByIdAsync(Id);
     }
 
     private async Task DeleteProduct()

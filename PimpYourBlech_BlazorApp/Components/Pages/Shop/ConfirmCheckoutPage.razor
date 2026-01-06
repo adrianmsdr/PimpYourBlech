@@ -6,11 +6,14 @@
 @inject ICartService CartService
 @inject IToastService ToastService
 @inject IUserSession UserSession
+@inject IOrderService OrderService
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Orders
 
 <h1 class="headline">Übersicht</h1>
 <div class="container">
@@ -30,7 +33,7 @@
     }
 </div>
 
-@if (UserSession.DeliveryAddress is null)
+@if (UserSession.CurrentUser.DeliveryAddress is null)
 {
     <p>Keine Lieferadresse vorhanden.</p>
 }
@@ -40,23 +43,23 @@ else
         <h4>Deine Lieferadresse</h4>
 
         <p>
-            @UserSession.DeliveryAddress.Salutation
-            @UserSession.DeliveryAddress.Surname
-            @UserSession.DeliveryAddress.Lastname
+            @UserSession.CurrentUser.DeliveryAddress.Salutation
+            @UserSession.CurrentUser.DeliveryAddress.Surname
+            @UserSession.CurrentUser.DeliveryAddress.Lastname
         </p>
 
         <p>
-            @UserSession.DeliveryAddress.Street
-            @UserSession.DeliveryAddress.HouseNumber
+            @UserSession.CurrentUser.DeliveryAddress.Street
+            @UserSession.CurrentUser.DeliveryAddress.HouseNumber
         </p>
 
         <p>
-            @UserSession.DeliveryAddress.PostalCode
-            @UserSession.DeliveryAddress.Town
+            @UserSession.CurrentUser.DeliveryAddress.PostalCode
+            @UserSession.CurrentUser.DeliveryAddress.Town
         </p>
 
         <p>
-            @UserSession.DeliveryAddress.Country
+            @UserSession.CurrentUser.DeliveryAddress.Country
         </p>
     </div>
 
@@ -94,10 +97,18 @@ else
 
 @code {
 
-    private void ConfirmPayment()
+    DeliveryAddress address = new DeliveryAddress();
+    private async Task ConfirmPayment()
     {
+        Console.WriteLine(UserSession.CurrentUser.DeliveryAddress);
+        await OrderService.CreateOrderFromCart(
+            CartService.GetCart(),
+            UserSession.CurrentUser, UserSession.CurrentUser.DeliveryAddress
+        );
+
         Nav.NavigateTo("/BuySuccessfull");
     }
+
 }
 
 <style>

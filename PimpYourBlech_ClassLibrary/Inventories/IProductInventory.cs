@@ -15,5 +15,7 @@ public interface IProductInventory
     public List<Product> ListEngines();
     
     public List<Product> ListRims();
+    
+    Task<Product?> GetProductByIdAsync(int id);
  
 }

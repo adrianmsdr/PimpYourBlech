@@ -99,6 +99,18 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         database.Configurations.Remove(config);
         database.SaveChanges();
     }
+
+    public void AddOrder(Order order)
+    {
+        database.Orders.Add(order);
+        database.SaveChanges();
+    }
+
+    public void RemoveOrder(Order order)
+    {
+        database.Orders.Remove(order);
+        database.SaveChanges();
+    }
 }
 
     

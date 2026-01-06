@@ -36,23 +36,31 @@
                     <ValidationSummary/>
 
                     <div class="form-grid-admin">
-                        <label>Name</label>
+                        <label>Name:</label>
                         <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Name"/>
 
-                        <label>Artikelnummer</label>
+                        <label>Artikelnummer:</label>
                         <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.ArticleNumber"/>
 
-                        <label>Hersteller</label>
+                        <label>Hersteller:</label>
                         <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Brand"/>
 
-                        <label>Preis</label>
+                        <label>Preis:</label>
                         <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Price"/>
 
-                        <label>Auf Lager</label>
+                        <label>Auf Lager:</label>
                         <InputNumber class="text-inputPYB form-input-grid" @bind-Value="EditModel.Quantity"/>
 
                     </div>
+                    
+                    <div class="description-block-admin">
+                        <div class="description-label-admin">Beschreibung</div>
 
+                        <InputTextArea class="text-inputPYB form-textarea-admin"
+                                       @bind-Value="EditModel.Description"
+                                       rows="6" />
+                    </div>
+                    
                     <div class="button-column" style="margin-top:16px;">
                         <button type="submit" class="buttons">Speichern</button>
                         <button type="button" class="buttons" @onclick="Cancel">Zurück</button>
@@ -74,9 +82,9 @@
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Product = AdminService.GetProductById(Id);
+        Product = await AdminService.GetProductByIdAsync(Id);
         if (Product is null)
         {
             ErrorMessage = "Produkt nicht gefunden.";
@@ -93,7 +101,8 @@
             Brand = Product.Brand,
             Price = Product.Price,
             Quantity = Product.Quantity,
-            ProductType = Product.ProductType
+            ProductType = Product.ProductType,
+            Description = Product.Description
         };
     }
 
@@ -109,6 +118,7 @@
         Product.Price = EditModel.Price;
         Product.Quantity = EditModel.Quantity;
         Product.ProductType = EditModel.ProductType;
+        Product.Description = EditModel.Description;
 
         // Persistieren
         AdminService.UpdateProduct(Product);
@@ -120,5 +130,29 @@
         Nav.NavigateTo($"/administrator/products/{Id}");
     }
 
-
 }
+<style>
+    .form-textarea-admin {
+        margin-top: 20px;
+        resize: vertical;
+
+        width: 380px;
+        min-height: 140px;
+        line-height: 1.4;
+        text-align: left;
+
+    }
+    .description-block-admin {
+        margin-top: 20px;
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .description-label-admin {
+        text-align: center;
+        font-weight: 600;
+        opacity: 0.9;
+    }
+</style>
