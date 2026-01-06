@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Persistence;
 
@@ -19,7 +20,12 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     {
         return database.Products.ToList();
     }
-
+    
+    public async Task<Product?> GetProductByIdAsync(int id)
+    {
+        return await database.Products.FindAsync(id);
+    }
+    
     public void DeleteProduct(Product p)
     {
        database.Products.Remove(p);
@@ -36,6 +42,7 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     {
         return database.Products
             .Where(p => p.EngineDetail != null)
+            .Include(p => p.EngineDetail)
             .ToList();
     }
 

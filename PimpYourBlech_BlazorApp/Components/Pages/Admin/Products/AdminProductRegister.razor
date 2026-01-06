@@ -73,6 +73,12 @@
            placeholder="Preis..."
            @bind="_price"/>
 
+    <textarea class="text-areaPYB"
+          placeholder="Beschreibung (nur Shop)..."
+          maxlength="1000"
+          @bind="_description"></textarea>
+    <div class="text-muted mt-1">@_description.Length / 1000</div>
+    
     @if (_selectedProductType == ProductType.Engine)
     {
     <input class="text-inputPYB"
@@ -97,7 +103,7 @@
         <option value="8-Gang Automatik">8-Gang Automatik</option>
     </select>
     <select class="form-select me-2" style="width:auto"
-            @bind="SelectedFuel">
+            @bind="_selectedFuel">
         <option value="Benzin">Benzin</option>
         <option value="Diesel">Diesel</option>
         <option value="Hybrid">Hybrid</option>
@@ -163,7 +169,7 @@
     // Felder 
     private ProductType _selectedProductType = ProductType.Engine;
     private string _selectedGear = "6-Gang Manuell";
-    public string SelectedFuel = "Benzin";
+    public string _selectedFuel = "Benzin";
     private string _isLed = "True";
     private string _searchValue = string.Empty;
 
@@ -172,6 +178,7 @@
     private string _brand = "";
     private string _quantity = "";
     private string _price = "";
+    private string _description = "";
 
     private string _ps = "";
     private string _kw = "";
@@ -228,7 +235,7 @@
             return;
         }
         
-        Product p = AdminService.CreateProduct(AdminService.GetCarById(_selectedCarId),_name, _brand, quantityValue, priceValue,_selectedProductType);
+        Product p = AdminService.CreateProduct(AdminService.GetCarById(_selectedCarId),_name, _brand, quantityValue, priceValue,_selectedProductType, _description);
 
         switch (_selectedProductType)
         {
@@ -270,7 +277,7 @@
                         break;
                 }
                 
-                switch (SelectedFuel)
+                switch (_selectedFuel)
                 {
                     case "Benzin":
                         fuel = Fuel.Benzin;
@@ -496,6 +503,34 @@
 
     /* 5) TextInput Placeholder besser lesbar */
     .text-inputPYB::placeholder{
+        color: rgba(255,255,255,.65);
+    }
+
+    .text-areaPYB{
+        width: 380px;
+        min-height: 140px;
+        resize: vertical;
+        font-family: Bahnschrift;
+        text-align: left;
+        background-color: rgba(20, 0, 0, 0.65);
+        color: #fff;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 0, 0, 0.6);
+        padding: 10px;
+        outline: none;
+        transition: 0.25s ease;
+    }
+
+    .text-areaPYB:hover{
+        transform: scale(1.05);
+    }
+
+    .text-areaPYB:focus{
+        border-color: #ff3333;
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    }
+
+    .text-areaPYB::placeholder{
         color: rgba(255,255,255,.65);
     }
 

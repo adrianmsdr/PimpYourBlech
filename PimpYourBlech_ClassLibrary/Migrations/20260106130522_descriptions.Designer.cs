@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
@@ -11,9 +12,11 @@ using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    partial class ConfiguratorContextModelSnapshot : ModelSnapshot
+    [Migration("20260106130522_descriptions")]
+    partial class descriptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,9 +194,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.Property<bool?>("AdminRights")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("DeliveryAddressId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
@@ -219,8 +219,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeliveryAddressId");
 
                     b.ToTable("Customers");
                 });
@@ -299,25 +297,14 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DeliveryAddressId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
 
                     b.HasKey("OrderId");
 
                     b.HasIndex("CarId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("DeliveryAddressId");
 
                     b.HasIndex("ProductId");
 
@@ -404,51 +391,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.ToTable("Rims");
                 });
 
-            modelBuilder.Entity("PimpYourBlech_ClassLibrary.Session.DeliveryAddress", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("HouseNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Lastname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Salutation")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Town")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeliveryAddresses");
-                });
-
             modelBuilder.Entity("ConfigurationProduct", b =>
                 {
                     b.HasOne("PimpYourBlech_ClassLibrary.Entities.Configuration", null)
@@ -505,15 +447,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Customer", b =>
-                {
-                    b.HasOne("PimpYourBlech_ClassLibrary.Session.DeliveryAddress", "DeliveryAddress")
-                        .WithMany()
-                        .HasForeignKey("DeliveryAddressId");
-
-                    b.Navigation("DeliveryAddress");
-                });
-
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.EngineDetail", b =>
                 {
                     b.HasOne("PimpYourBlech_ClassLibrary.Entities.Product", "Product")
@@ -543,14 +476,8 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         .HasForeignKey("CarId");
 
                     b.HasOne("PimpYourBlech_ClassLibrary.Entities.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PimpYourBlech_ClassLibrary.Session.DeliveryAddress", "DeliveryAddress")
                         .WithMany()
-                        .HasForeignKey("DeliveryAddressId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -563,8 +490,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                     b.Navigation("Car");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("DeliveryAddress");
 
                     b.Navigation("Product");
                 });
@@ -610,8 +535,6 @@ namespace PimpYourBlech_ClassLibrary.Migrations
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Customer", b =>
                 {
                     b.Navigation("Configurations");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("PimpYourBlech_ClassLibrary.Entities.Product", b =>

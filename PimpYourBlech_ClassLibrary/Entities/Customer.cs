@@ -1,8 +1,12 @@
+using PimpYourBlech_ClassLibrary.Session;
+
 namespace PimpYourBlech_ClassLibrary.Entities;
 
 public class Customer ()
     {
     public int Id { get; set; }
+    
+    public List<Order> Orders { get; set; } = new();
     public List<Configuration> Configurations { get; set; } = new List<Configuration>();
     public string? FirstName { get; set; }
 
@@ -11,7 +15,8 @@ public class Customer ()
     public string Username { get; set; }
 
     public string PasswordHash { get; set; }
-
+    
+    public DeliveryAddress? DeliveryAddress { get; set; }
 
     public string? Telefon { get; set; }
 

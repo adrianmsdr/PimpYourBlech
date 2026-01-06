@@ -214,7 +214,7 @@ public class AdminService:IAdminService
     
     
     // ___________________________________Poducts____________________________________
-    public Product CreateProduct(Car car, string name, string brand, int quantity, double price, ProductType productType)
+    public Product CreateProduct(Car car, string name, string brand, int quantity, double price, ProductType productType, string description)
     {
         Product temp  = new Product();
         temp.Car = car;
@@ -224,7 +224,7 @@ public class AdminService:IAdminService
         temp.Quantity = quantity;
         temp.Price = price;
         temp.ProductType = productType;
-        
+        temp.Description = description;
         
         return temp;
     }
@@ -291,17 +291,10 @@ public class AdminService:IAdminService
         return _productRepository.ListProducts();
     }
     
-    public Product GetProductById(int id)
+    public async Task<Product> GetProductByIdAsync(int id)
     {
-        Product temp = null;
-        foreach (Product p in _productRepository.ListProducts())
-        {
-            if (p.ProductId == id)
-            {
-                temp = p;
-            }
-        }
-        return temp;
+        return await _productRepository.GetProductByIdAsync(id);
+        
     }
 
     public void DeleteProduct(Product p)

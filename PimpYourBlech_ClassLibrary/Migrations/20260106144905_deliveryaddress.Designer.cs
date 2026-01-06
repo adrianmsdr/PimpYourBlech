@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
@@ -11,9 +12,11 @@ using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 namespace PimpYourBlech_ClassLibrary.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    partial class ConfiguratorContextModelSnapshot : ModelSnapshot
+    [Migration("20260106144905_deliveryaddress")]
+    partial class deliveryaddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,6 +295,10 @@ namespace PimpYourBlech_ClassLibrary.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int?>("CarId")
                         .HasColumnType("integer");

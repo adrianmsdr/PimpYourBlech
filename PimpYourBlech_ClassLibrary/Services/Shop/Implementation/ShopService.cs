@@ -2,6 +2,7 @@ using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Inventories;
 using PimpYourBlech_ClassLibrary.Services.Carts;
 using PimpYourBlech_ClassLibrary.ValueObjects;
+using PimpYourBlech_ClassLibrary.Enums;
 
 namespace PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
 
@@ -11,7 +12,7 @@ public class ShopService(IProductInventory productInventory, ICartService cartSe
     private readonly ICartService _cartService = cartService;
     public List<Product> GetProducts()
     {
-        return productInventory.ListProducts();
+        return productInventory.ListProducts().Where(p=>p.ProductType!=ProductType.Color).ToList();
     }
 
     public List<Product> SearchProducts(string searchString)

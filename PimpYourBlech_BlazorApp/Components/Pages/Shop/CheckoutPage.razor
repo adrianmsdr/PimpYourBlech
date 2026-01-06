@@ -111,7 +111,7 @@
 
     private void NavigateToConfirm()
     {
-        UserSession.DeliveryAddress = new DeliveryAddress
+        UserSession.CurrentUser.DeliveryAddress = new DeliveryAddress
         {
             Salutation  = salutation,
             Surname     = surname,

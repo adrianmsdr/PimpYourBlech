@@ -31,4 +31,6 @@ public interface ICustomerInventory
     public List<Configuration> ListConfigurations();
     
     public void DeleteConfiguration(Configuration config);
+
+    void AddOrder(Order order);
 }

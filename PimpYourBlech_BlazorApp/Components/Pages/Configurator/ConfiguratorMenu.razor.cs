@@ -29,6 +29,7 @@ public partial class ConfiguratorMenu : ComponentBase
 
     private int selectedColorId = 0;
     private int selectedRimId = 0;
+    private Product? selectedEngine = new Product();
 
     private void SelectColor(int colorId)
     {
@@ -61,6 +62,9 @@ public partial class ConfiguratorMenu : ComponentBase
 
         if (availableRims.Count > 0)
             selectedRimId = availableRims[0].ProductId;
+
+        if (availableEngines.Count > 0)
+            selectedEngine = availableEngines[0];
 
         // Frames laden über neue Kombi-Logik
         LoadFrames();
@@ -140,6 +144,12 @@ public partial class ConfiguratorMenu : ComponentBase
         {
             selectedRimId = availableRims[0].ProductId;
             ConfiguratorService.AddProduct(configuration, availableRims[0]);
+        }
+        
+        if (availableEngines.Count > 0)
+        {
+            selectedEngine = availableEngines[0];
+            ConfiguratorService.AddProduct(configuration, availableEngines[0]);
         }
 
         LoadFrames();

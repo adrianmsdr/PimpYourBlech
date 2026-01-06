@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_ClassLibrary.Entities;
+using PimpYourBlech_ClassLibrary.Session;
 
 namespace PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 
@@ -28,6 +29,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     
     public DbSet<CommunityQuestion> CommunityQuestions { get; set; }
     public DbSet<CommunityAnswer> CommunityAnswers { get; set; }
+    
+    public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
     
     public async Task<int> GetNextArticleNumberAsync()
     {
