@@ -31,7 +31,7 @@
             <button class="close-btn" @onclick="ToggleSidebar">✕</button>
         </div>
 
-        @if (!CartService.CartProductsList.Any())
+        @if (!UserSession.CurrentCart.Products.Any())
         {
             <div class="null-content">
                 <p class="no-products">Keine Produkte vorhanden</p>
@@ -40,7 +40,7 @@
         else
         {
             <div class="sidebar-content">
-                @foreach (var item in CartService.CartProductsList)
+                @foreach (var item in UserSession.CurrentCart.Products)
                 {
                     <div class="cart-item">
                         <img src="@ImageService.GetProductImageUrl(item.ProductId)"
@@ -55,7 +55,7 @@
                 }
 
                 <u class="sum">
-                    Summe: @ShopService.GetTotalPrice(UserSession.CurrentUser.Id) €
+                    Summe: @CartService.GetTotalPrice(UserSession.CurrentCart) €
                 </u>
 
                 <button class="checkout-button"
@@ -106,9 +106,12 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
         </button>
         <p class="GoToShoppingCart" @onclick="ToggleSidebar">
             <span class="cart-inside">
-                <span class="count">
-                    @CartService.CartProductsList.Count
-                </span>
+                @if (UserSession.CurrentCart.Products!=null)
+                {
+                    <span class="count">
+                        @UserSession.CurrentCart.Products.Count
+                    </span>
+                }
                 <span class="cart-icon">
                     <ShoppingCartIcon/>
                 </span>
@@ -197,14 +200,14 @@ else
     
     private void AddToCart(Product product)
     {
-        CartService.AddProduct(product);
+        CartService.AddProduct(UserSession.CurrentCart,product);
         ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");
         StateHasChanged();
     }
 
     private void RemoveItem(Product product)
     {
-        CartService.RemoveProduct(product);
+        CartService.RemoveProduct(UserSession.CurrentCart,product);
         ToastService.ShowInfo($"{product.Name} wurde aus dem Warenkorb entfernt");
         StateHasChanged();
     }

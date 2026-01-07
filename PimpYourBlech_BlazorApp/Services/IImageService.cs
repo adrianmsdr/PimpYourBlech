@@ -9,7 +9,6 @@ public interface IImageService
     
     String GetProductImageUrl(int productId);
     
-    List<string> GetColorFrameUrls(int carId, int productId);
     
     Task<string> SaveProductImagesAsync(int productId, IBrowserFile file);
     
@@ -24,4 +23,6 @@ public interface IImageService
     Task DeleteProductImagesAsync(int productId);
 
     public List<string> GetCustomerImageUrl();
+
+    public void DeleteAllImages();
 }

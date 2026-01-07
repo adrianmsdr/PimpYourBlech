@@ -49,14 +49,15 @@ public class EmailService : IEmailService
         return true;
     }
 
-    public void SendOrderReplyEmail(Customer customer/*,Order order*/)
+    public async Task SendOrderReplyEmail(Customer customer,Order order)
     {
         string subject = "Deine Bestellung bei PimpYourBlech";
         string message = "Hallo " + customer.FirstName + ",\n\n" +
                          "deine Bestellung bei PimpYourBlech war erfolgreich.\n" +
                          "Du kannst deine Bestellungen auch jederzeit in deinem Profil verwalten.\n\n" +
-                         "Bestellübersicht:"/* +
-                         order.ShowProducts()*/
+                         "Bestellübersicht: Hierfür müsste eine Order jetzt mehrere Produkte speichern können, \\n\\n\" +" +
+                         "nicht nur eins wie jetzt"
+                         
             ;
 
         using var client = new SmtpClient("smtp.gmail.com", 587)
@@ -65,9 +66,11 @@ public class EmailService : IEmailService
                 Credentials = new NetworkCredential("pimpyourblech@gmail.com", "yswx nobp xhgk sjzv")
             }
             ;
-
-        using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
-            to: customer.MailAddress, subject,message);
-        client.Send(mail);
+        if (customer.MailAddress != null)
+        {
+            using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
+                to: customer.MailAddress, subject, message);
+            await client.SendMailAsync(mail);
+        }
     }
 }

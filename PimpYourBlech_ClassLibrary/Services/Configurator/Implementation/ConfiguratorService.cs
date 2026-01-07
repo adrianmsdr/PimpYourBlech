@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Inventories;
@@ -155,5 +157,19 @@ public class ConfiguratorService : IConfiguratorService
     public Product GetProductById(int Id)
     {
         return productInventory.ListProducts().FirstOrDefault(p => p.ProductId == Id);
+    }
+    
+    public string GetGearDisplayName(Gear gear)
+    {
+        var field = gear.GetType().GetField(gear.ToString());
+        return field?
+            .GetCustomAttribute<DisplayAttribute>()?
+            .Name ?? gear.ToString();
+    }
+
+    public List<Product> GetAvailableExtras(int carId)
+    {
+        return productInventory.ListProducts().Where(p => p.CarId == carId)
+            .Where(p=>p.ProductType!=ProductType.Color&&p.ProductType!=ProductType.Engine&&p.ProductType!=ProductType.Rim).ToList();
     }
 }

@@ -69,19 +69,6 @@ public class ShopService(IProductInventory productInventory, ICartService cartSe
         return filteredProducts;
     }
 
-    public double GetTotalPrice(int userId)
-    {
-        if (_cartService?.CartProductsList == null)
-            return 0;
-
-        double total = 0;
-
-        foreach (var product in _cartService.CartProductsList)
-        {
-            total += product.Price;
-        }
-
-        return total;
-    }
+    
 
 }

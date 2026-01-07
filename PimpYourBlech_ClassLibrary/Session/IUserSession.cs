@@ -1,5 +1,6 @@
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Session.Implementation;
+using PimpYourBlech_ClassLibrary.ValueObjects;
 
 namespace PimpYourBlech_ClassLibrary.Session;
 
@@ -15,11 +16,13 @@ public interface IUserSession
 
     Configuration? CurrentConfiguration { get; set; }
 
-    DeliveryAddress? DeliveryAddress { get; set; }
     
     PaymentValues? PaymentValues { get; set; }
 
     void LogOut();
 
     void LogIn(Customer customer);
+
+    public Cart CurrentCart { get; set; } 
+
 }

@@ -2,30 +2,34 @@
 using PimpYourBlech_ClassLibrary.Services.Carts;
 using PimpYourBlech_ClassLibrary.ValueObjects;
 
+
 public class CartService : ICartService
 {
-    public Cart Cart { get; }
-
-    public List<Product> CartProductsList => Cart.Products;
-
-    public CartService()
-    {
-        Cart = new Cart();
-    }
-
-    public Cart GetCart() => Cart;
-
-    public Cart AddProduct(Product product)
+   
+    public Cart AddProduct(Cart cart,Product product)
     {
         if (product != null)
-            Cart.Products.Add(product);
+            cart.Products.Add(product);
 
-        return Cart;
+        return cart;
     }
 
-    public void RemoveProduct(Product product)
+    public void RemoveProduct(Cart cart, Product product)
     {
         if (product != null)
-            Cart.Products.Remove(product);
+            cart.Products.Remove(product);
+    }
+    
+    public double GetTotalPrice(Cart cart)
+    {
+
+        double total = 0;
+
+        foreach (var product in cart.Products)
+        {
+            total += product.Price;
+        }
+
+        return total;
     }
 }

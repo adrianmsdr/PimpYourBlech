@@ -38,14 +38,25 @@ public interface IAdminService
     List<Product> GetProducts();
      Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType, string description);
 
-     Task<Product> InsertProduct(Car car, Product p);
 
-     public Task <Product> RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel);
-     public Product RegisterRim(Product p, decimal diameter, decimal width);
+
+
+     public void RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel);
+
+
+     public void RegisterRim(Product p, decimal diameter, decimal width);
+
+
+     public void RegisterLights(Product p, int lumen, bool isLED);
+
+
+     public void RegisterColor(Product p, string colorName);
+
+
+     public Task<Product> InsertProduct(Product p);
      
-     public Product RegisterLights(Product p, int lumen, bool isLED);
+
      
-     public Product RegisterColor(Product p, Car c,string colorName);
      Task<Product> GetProductByIdAsync(int id);
    
      void DeleteProduct(Product p);

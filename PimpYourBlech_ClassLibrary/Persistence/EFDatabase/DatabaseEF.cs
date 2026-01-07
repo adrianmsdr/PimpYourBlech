@@ -31,5 +31,7 @@ public DbSet<CommunityAnswer> CommunityAnswers => _ctx.CommunityAnswers;
 
 public int SaveChanges() => _ctx.SaveChanges();
 
+public Task<int> SaveChangesAsync() => _ctx.SaveChangesAsync();
+
 public async Task<int> GetNextArticleNumberAsync() => await _ctx.GetNextArticleNumberAsync();
 }

@@ -8,7 +8,6 @@ namespace PimpYourBlech_ClassLibrary.Services.Orders;
 public class OrderService : IOrderService
 {
     private readonly ICustomerInventory _customerInventory;
-
     public OrderService(ICustomerInventory customerInventory)
     {
         _customerInventory = customerInventory;

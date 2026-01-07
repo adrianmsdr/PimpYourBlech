@@ -14,7 +14,7 @@
     <h3>Produktbilder bearbeiten</h3>
     <label><strong>Produkt:</strong></label>
     <select class="form-select" @bind="SelectedProductId">
-        <option value="0">-- Bitte w채hlen --</option>
+        <option value="0">-- Bitte wählen --</option>
         @foreach (var p in products)
         {
             <option value="@p.ProductId">@p.Name (@p.ProductId)</option>
@@ -29,7 +29,7 @@
     {
         <hr/>
 
-        <h4>Pr채sentationsbild:</h4>
+        <h4>Präsentationsbild:</h4>
         <img src="@ImageService.GetProductImageUrl(SelectedProductId)" style="max-width:320px;border-radius:12px;"/>
 
         <div style="margin-top:10px">

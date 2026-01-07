@@ -241,17 +241,19 @@
         {
             case ProductType.Engine:
                 Fuel fuel = Fuel.Benzin;
-                Gear gear = Gear.SixManual;
+                Gear gear = Gear.Manuell6Gang;
                 if (string.IsNullOrWhiteSpace(_ps) || string.IsNullOrWhiteSpace(_kw) || string.IsNullOrWhiteSpace(_selectedGear))
                 {
                     _errorMessage = "Bitte alle Motor-Details ausfüllen (PS, kW, Getriebeart).";
                     return;
                 }
+
                 if (!int.TryParse(_ps, out var psValue) || psValue < 0)
                 {
                     _errorMessage = "PS muss eine positive Ganzzahl sein.";
                     return;
                 }
+
                 if (!int.TryParse(_kw, out var kwValue) || kwValue < 0)
                 {
                     _errorMessage = "KW muss eine positive Ganzzahl sein.";
@@ -261,22 +263,22 @@
                 switch (_selectedGear)
                 {
                     case "5-Gang Manuell":
-                        gear = Gear.FifeManual;
+                        gear = Gear.Manuell5Gang;
                         break;
-                        
-                        case "6-Gang Manuell":
-                        gear = Gear.SixManual;
+
+                    case "6-Gang Manuell":
+                        gear = Gear.Manuell6Gang;
                         break;
-                        
+
                     case "6-Gang Automatik":
-                        gear = Gear.SixAutomatic;
+                        gear = Gear.Automatik6Gang;
                         break;
-                        
+
                     case "8-Gang Automatik":
-                        gear = Gear.EightAutomatic;
+                        gear = Gear.Automatik8Gang;
                         break;
                 }
-                
+
                 switch (_selectedFuel)
                 {
                     case "Benzin":
@@ -301,26 +303,29 @@
                         break;
                 }
 
-                p = await AdminService.RegisterEngine(p, psValue, kwValue, _displacement, gear,fuel);
+                AdminService.RegisterEngine(p, psValue, kwValue, _displacement, gear, fuel);
                 break;
 
-           case ProductType.Rim:
+            case ProductType.Rim:
                 if (string.IsNullOrEmpty(_diameter) || string.IsNullOrEmpty(_width))
                 {
                     _errorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
                     return;
-                }if (!decimal.TryParse(_diameter, out var diameterValue) || diameterValue < 0)
+                }
+
+                if (!decimal.TryParse(_diameter, out var diameterValue) || diameterValue < 0)
                 {
                     _errorMessage = "Durchmesser muss eine positive Zahl sein.";
                     return;
                 }
+
                 if (!decimal.TryParse(_width, out var widthValue) || widthValue < 0)
                 {
                     _errorMessage = "Breite muss eine positive Zahl sein.";
                     return;
                 }
 
-                p = AdminService.RegisterRim(p, diameterValue, widthValue);
+                AdminService.RegisterRim(p, diameterValue, widthValue);
                 break;
 
             case ProductType.Lights:
@@ -329,7 +334,7 @@
                     _errorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
                     return;
                 }
-                
+
                 if (!int.TryParse(_lumen, out var lumenValue) || lumenValue < 0)
                 {
                     _errorMessage = "Lumen muss eine positive Ganzzahl sein.";
@@ -347,18 +352,28 @@
                         break;
                 }
 
-                p = AdminService.RegisterLights(p, lumenValue, isLed);
+                AdminService.RegisterLights(p, lumenValue, isLed);
                 break;
-                
+
             case ProductType.Color:
-                p = AdminService.RegisterColor(p, AdminService.GetCarById(_selectedCarId), _displayName);
-                break;
-                
-                default:
-                p = await AdminService.InsertProduct(AdminService.GetCarById(_selectedCarId), p);
+                AdminService.RegisterColor(p, _displayName);
                 break;
         }
+        p = await AdminService.InsertProduct( p);
 
+        if (p.ProductId == 0)
+        {
+            _errorMessage = "Produkt konnte nicht gespeichert werden (keine gültige ID).";
+            return;
+        }
+
+        if (_uploadedProductImage != null)
+        {
+            await ImageService.SaveProductImagesAsync(p.ProductId, _uploadedProductImage);
+        }
+        
+        
+        
         if (_uploadedProductImage != null)
         {
             await ImageService.SaveProductImagesAsync(p.ProductId, _uploadedProductImage);

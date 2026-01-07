@@ -23,6 +23,7 @@ public partial class ConfiguratorMenu : ComponentBase
     private List<Product> availableEngines = new();
     private List<Product> availableRims = new();
     private List<Product> availableLights = new();
+    private List<Product> availableExtras = new();
 
     private Configuration? configuration;
     private double totalPrice;
@@ -54,7 +55,7 @@ public partial class ConfiguratorMenu : ComponentBase
         // 3) Produkte laden
         availableEngines = ConfiguratorService.GetAvailableEngines(Id) ?? new List<Product>();
         availableRims = ConfiguratorService.GetAvailableRims(Id) ?? new List<Product>();
-
+        availableExtras = ConfiguratorService.GetAvailableExtras(Id) ?? new List<Product>();
 
         // Default Farbe + Felge setzen (damit sofort 360° geht)
         if (availableColors.Count > 0)
@@ -66,7 +67,7 @@ public partial class ConfiguratorMenu : ComponentBase
         if (availableEngines.Count > 0)
             selectedEngine = availableEngines[0];
 
-        // Frames laden über neue Kombi-Logik
+        // Frames laden
         LoadFrames();
 
 
@@ -109,6 +110,11 @@ public partial class ConfiguratorMenu : ComponentBase
 
         if (product.ProductType == ProductType.Color)
             selectedColorId = product.ProductId;
+
+        if (product.ProductType == ProductType.Engine)
+        {
+            selectedEngine = product;
+        }
 
 
         LoadFrames();
@@ -183,6 +189,7 @@ public partial class ConfiguratorMenu : ComponentBase
     private void LoadFrames()
     {
         if (Car == null) return;
+        
         if (selectedColorId == 0 || selectedRimId == 0)
         {
             frameUrls = new List<string>();
@@ -191,6 +198,11 @@ public partial class ConfiguratorMenu : ComponentBase
         }
 
         frameUrls = ImageService.Get360ImageUrls(Car.Id, selectedColorId, selectedRimId) ?? new List<string>();
-        currentFrame = 0;
+        if (frameUrls.Count == 0)
+        {
+            CurrentImageUrl = ImageService.GetCarImageUrl(Car.Id);
+        }
+
+       
     }
 }

@@ -14,16 +14,14 @@ public class UserSession : IUserSession
 
     public Configuration? CurrentConfiguration { get; set; }
     
-    public Cart CurrentCart { get; set; }
+    public Cart CurrentCart { get; set; } = new Cart();
 
-    public DeliveryAddress? DeliveryAddress { get; set; }
     
     public PaymentValues? PaymentValues { get; set; }
 
     public void LogOut()
     {
         CurrentUser = null;
-        DeliveryAddress = null;
     }
 
     public void LogIn(Customer customer)
