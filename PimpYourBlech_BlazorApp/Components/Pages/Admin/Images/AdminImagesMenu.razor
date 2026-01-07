@@ -1,12 +1,28 @@
 @page "/administrator/images"
+@using PimpYourBlech_BlazorApp.Services
 <PageTitle>Bilder verwalten</PageTitle>
 @inject NavigationManager Nav
+@inject IImageService ImageService
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du dich wirklich ALLE Bilder löschen⁉️</h3>
+            <p class="pyb-modal-text">Diese Aktion kann nicht rückgängig gemacht werden.</p>
 
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Löschen️</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
 <div class="menu-container">
     <div class="button-column">
         <h3>Bilder verwalten</h3>
         <button class="buttons" @onclick="GoToEditCarImages">360° Bilder verwalten</button>
         <button class="buttons" @onclick="GoToEditProductImages">Produktbilder verwalten</button>
+        <button class="buttons" @onclick="OpenDeleteModal">Alle Bilder löschen</button>
     </div>
 </div>
 
@@ -21,5 +37,20 @@
     private void GoToEditProductImages()
     {
         Nav.NavigateTo("administrator/images/products");
+    }
+
+    
+    private bool showDeleteModal;
+
+    void OpenDeleteModal() => showDeleteModal = true;
+    void CloseDeleteModal() => showDeleteModal = false;
+
+    void ConfirmDelete()
+    {
+        
+        showDeleteModal = false;
+        ImageService.DeleteAllImages();
+        Nav.NavigateTo("/administrator/images");
+
     }
 }

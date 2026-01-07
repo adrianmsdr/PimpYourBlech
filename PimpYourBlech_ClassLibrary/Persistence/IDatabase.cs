@@ -24,6 +24,8 @@ public interface IDatabase
 
     int SaveChanges();
     
+    Task<int> SaveChangesAsync();
+    
     Task<int> GetNextArticleNumberAsync();
  
     }

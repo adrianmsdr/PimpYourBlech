@@ -7,19 +7,21 @@
 @inject IToastService ToastService
 @inject IUserSession UserSession
 @inject IOrderService OrderService
+@inject IEmailService EmailService
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
 @using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
 @using PimpYourBlech_ClassLibrary.Services.Orders
 
 <h1 class="headline">Übersicht</h1>
 <div class="container">
     <h4>Dein Warenkorb</h4>
 
-    @foreach (var item in CartService.CartProductsList)
+    @foreach (var item in UserSession.CurrentCart.Products)
     {
         <div class="cart-item">
             <img src="@ImageService.GetProductImageUrl(item.ProductId)"
@@ -96,16 +98,16 @@ else
 }
 
 @code {
-
+    Order _order = new Order();
     DeliveryAddress address = new DeliveryAddress();
     private async Task ConfirmPayment()
     {
-        Console.WriteLine(UserSession.CurrentUser.DeliveryAddress);
-        await OrderService.CreateOrderFromCart(
-            CartService.GetCart(),
+        
+       _order = await OrderService.CreateOrderFromCart(
+           UserSession.CurrentCart,
             UserSession.CurrentUser, UserSession.CurrentUser.DeliveryAddress
         );
-
+await EmailService.SendOrderReplyEmail(UserSession.CurrentUser, _order);
         Nav.NavigateTo("/BuySuccessfull");
     }
 

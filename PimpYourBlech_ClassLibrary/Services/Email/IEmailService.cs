@@ -9,4 +9,7 @@ public interface IEmailService
     bool IsValid(string email);
 
     bool ConfirmRegistrationChecker(string mailAddress, String confirm);
+    
+    public Task SendOrderReplyEmail(Customer customer,Order order);
+
 }

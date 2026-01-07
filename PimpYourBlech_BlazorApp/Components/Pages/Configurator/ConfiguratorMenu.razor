@@ -103,16 +103,16 @@ else
 
                 <div class="details-stats">
                     <div class="stat">
-                        <div class="statlabel">PS</div>
-                        <div class="statvalue">@selectedEngine.EngineDetail.Ps</div>
+                        <div class="stat__label">PS</div>
+                        <div class="stat__value">@selectedEngine.EngineDetail.Ps</div>
                     </div>
                     <div class="stat">
-                        <div class="statlabel">Kraftstoff</div>
-                        <div class="statvalue">@selectedEngine.EngineDetail.Fuel</div>
+                        <div class="stat__label">Kraftstoff</div>
+                        <div class="stat__value">@selectedEngine.EngineDetail.Fuel</div>
                     </div>
                     <div class="stat">
-                        <div class="statlabel">Getriebeart</div>
-                        <div class="statvalue">@selectedEngine.EngineDetail.Displacement</div>
+                        <div class="stat__label">Getriebeart</div>
+                        <div class="stat__value">@ConfiguratorService.GetGearDisplayName(selectedEngine.EngineDetail.Gear)</div>
                     </div>
                 </div>
                 
@@ -245,6 +245,46 @@ else
 
         <div class="row">
             @foreach (var product in availableRims)
+            {
+                var isSelected = configuration?.Products?.Any(p => p.ProductId == product.ProductId) == true;
+                <div class="col-4">
+                    <div class="combo-card-admin configurator-card @(isSelected ? "selected" : "")"
+                         role="button"
+                         tabindex="0"
+                         @onclick="() => HandleProduct(product)">
+
+                        <div class="card-media">
+                            <img class="product-img"
+                                 src="@ImageService.GetProductImageUrl(product.ProductId)"
+                                 alt="@product.Name"/>
+                        </div>
+                        <div class="selected-item">
+                            <div class="selected-item__text">
+                                <div class="selected-item__name">@product.Name</div>
+                                <div class="selected-item__price">@product.Price</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="config-strip">Extras wählen:</div>
+    
+    @if (availableRims.Count == 0)
+    {
+        <div class="col-4">
+            <div class="combo-card-admin configurator-card">
+                <p>Keine Produkte verfügbar.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+
+        <div class="row">
+            @foreach (var product in availableExtras)
             {
                 var isSelected = configuration?.Products?.Any(p => p.ProductId == product.ProductId) == true;
                 <div class="col-4">

@@ -6,5 +6,6 @@ namespace PimpYourBlech_ClassLibrary.Services.Orders;
 
 public interface IOrderService
 {
+
     Task<Order> CreateOrderFromCart(Cart cart, Customer customer, DeliveryAddress address);
 }

@@ -216,73 +216,65 @@ public class AdminService:IAdminService
     // ___________________________________Poducts____________________________________
     public Product CreateProduct(Car car, string name, string brand, int quantity, double price, ProductType productType, string description)
     {
-        Product temp  = new Product();
-        temp.Car = car;
-        temp.CarId = car.Id;
-        temp.Name = name;
-        temp.Brand = brand;
-        temp.Quantity = quantity;
-        temp.Price = price;
-        temp.ProductType = productType;
-        temp.Description = description;
-        
-        return temp;
-    }
-    
-    public async Task<Product> InsertProduct(Car car,Product p)
-    {
-
-        await _productRepository.InsertProduct(p);
-        return p;
+        return new Product
+        {
+            Car = car,
+            CarId = car.Id,
+            Name = name,
+            Brand = brand,
+            Quantity = quantity,
+            Price = price,
+            ProductType = productType,
+            Description = description
+        };
     }
 
-    public async Task<Product>RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel)
+    public void RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel)
     {
-        EngineDetail temp = new EngineDetail();
-        temp.Product = p;
-        temp.Ps = ps;
-        temp.Kw = kw;
-        temp.Displacement = displacement;
-        temp.Gear = gear;
-        temp.Fuel = fuel;
-        p.EngineDetail =  temp;
-        await _productRepository.InsertProduct(p);
-        return p;
+        p.EngineDetail = new EngineDetail
+        {
+            Product = p,
+            Ps = ps,
+            Kw = kw,
+            Displacement = displacement,
+            Gear = gear,
+            Fuel = fuel
+        };
     }
 
-    public Product RegisterRim(Product p, decimal diameter, decimal width)
+    public void RegisterRim(Product p, decimal diameter, decimal width)
     {
-        RimDetail temp = new RimDetail();
-        temp.Product = p;
-        temp.DiameterInInch = diameter;
-        temp.WidthInInch = width;
-        p.RimDetail = temp;
-        _productRepository.InsertProduct(p);
-        
-        return p;
+        p.RimDetail = new RimDetail
+        {
+            Product = p,
+            DiameterInInch = diameter,
+            WidthInInch = width
+        };
     }
 
-    public Product RegisterLights(Product p, int lumen, bool isLED)
+    public void RegisterLights(Product p, int lumen, bool isLED)
     {
-        LightsDetail temp = new LightsDetail();
-        temp.Product = p;
-        temp.Lumen = lumen;
-        temp.IsLed = isLED;
-        p.LightsDetail = temp;
-        _productRepository.InsertProduct(p);
-        return p;
+        p.LightsDetail = new LightsDetail
+        {
+            Product = p,
+            Lumen = lumen,
+            IsLed = isLED
+        };
     }
 
-    public Product RegisterColor(Product p, Car c,string colorName)
+    public void RegisterColor(Product p, string colorName)
     {
-        ColorDetail temp = new ColorDetail();
-        temp.ProductId = p.ProductId;
-        temp.Product = p;
-        temp.DisplayName = colorName;
-        p.ColorDetail = temp;
-        _productRepository.InsertProduct(p);
-        c.Colors.Add(p);
+        p.ColorDetail = new ColorDetail
+        {
+            Product = p,
+            DisplayName = colorName,
+            
+        };
+    }
 
+    public async Task<Product> InsertProduct(Product p)
+    {
+        await _productRepository.InsertProduct(p); // muss SaveChangesAsync machen
         return p;
     }
 

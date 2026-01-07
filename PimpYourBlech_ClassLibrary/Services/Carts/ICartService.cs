@@ -5,9 +5,9 @@ namespace PimpYourBlech_ClassLibrary.Services.Carts;
 
 public interface ICartService
 {
-    Cart GetCart();
-    Cart AddProduct(Product product);
-    void RemoveProduct(Product product);
+    Cart AddProduct(Cart cart, Product product);
+    void RemoveProduct(Cart cart, Product product);
 
-    List<Product> CartProductsList { get; }
+
+  public double GetTotalPrice(Cart cart);
 }

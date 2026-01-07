@@ -1,4 +1,5 @@
 using PimpYourBlech_ClassLibrary.Entities;
+using PimpYourBlech_ClassLibrary.Enums;
 
 namespace PimpYourBlech_ClassLibrary.Services.Configurator;
 
@@ -45,5 +46,9 @@ public interface IConfiguratorService
     public List<Product> GetAvailableRims(int Id);
     
     public Product GetProductById(int Id);
+
+    public string GetGearDisplayName(Gear gear);
+
+    public List<Product> GetAvailableExtras(int carId);
 
 }

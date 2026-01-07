@@ -18,7 +18,7 @@ public class Car
     
     public List<Product> Products { get; set; }
 
-    public List<Product> Colors { get; set; } = new List<Product>();
+   public List<Product> Colors { get; set; } = new List<Product>();
   
     
 

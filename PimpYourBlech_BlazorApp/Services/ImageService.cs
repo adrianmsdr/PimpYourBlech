@@ -174,26 +174,7 @@ public class ImageService: IImageService
             }
         }
 
-        public List<string> GetColorFrameUrls(int carId,int ProductId)
-        {
-            // System-Pfad zum Ordner des Autos bauen
-            // Beispiel:
-            // _env.WebRootPath ="/.../wwwroot"
-            // Path.Combine(…, "CarImages", car.Id (z.B. 1), product.ProductId (z.B. 1)) = "/.../wwwroot/CarImages/1/1"
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), ProductId.ToString());
-
-            // Wenn der Ordner nicht existiert, geben wir einfach eine leere Liste zurück
-            if (!Directory.Exists(folder))
-                return new List<string>();
-
-            // Alle Dateien im Ordner lesen, alphabetisch sortieren und in Web-URLs umwandeln
-            // Beispiel: "/.../wwwroot/CarImages/1/frame_00.webp"
-            // wird zur Web-URL: "/CarImages/1/frame_00.webp"
-            return Directory.GetFiles(folder)
-                .OrderBy(f => f) // sorgt dafür, dass frame_00 vor frame_01 kommt
-                .Select(f => $"/CarImages/{carId}/{ProductId}/{Path.GetFileName(f)}")
-                .ToList();
-        }
+       
         
         public async Task Delete360ImagesAsync(int carId, int colorId, int rimId)
         {
@@ -254,38 +235,76 @@ public class ImageService: IImageService
                 .Select(f => $"/CustomerImages/{Path.GetFileName(f)}")
                 .ToList();
         }
-        
+
+
         public async Task Save360ImagesAsync(int carId, int colorId, int rimId, IReadOnlyList<IBrowserFile> files)
         {
-            if (files is null || files.Count == 0)
-                throw new ArgumentException("No files uploaded.", nameof(files));
+            
+                const int MinFrames = 4;
+                if (files is null || files.Count == 0)
+                    throw new ArgumentException("Keine Dateien hochgeladen.", nameof(files));
 
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "Combos",
-                colorId.ToString(), rimId.ToString());
+                if (files.Count < MinFrames)
+                    throw new InvalidOperationException(
+                        $"Mindestens {MinFrames} Frames nötig, aktuell: {files.Count}.");
 
-            // Wenn schon welche vorhanden löschen
-            if (Directory.Exists(folder))
-                Directory.Delete(folder, recursive: true);
+                var targetFolder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "Combos",
+                    colorId.ToString(), rimId.ToString());
 
-            // 2) Neu anlegen
-            Directory.CreateDirectory(folder);
+                var tempFolder = targetFolder + "__tmp_" + Guid.NewGuid().ToString("N");
+                // Temp sauber machen
+                if (Directory.Exists(tempFolder))
+                    Directory.Delete(tempFolder, recursive: true);
 
-            // 3) Neu speichern (geordnet)
-            int index = 0;
-            foreach (var file in files)
+                try
+                {
+                Directory.CreateDirectory(tempFolder);
+
+
+                // 3) Neu speichern (geordnet)
+                int index = 0;
+                foreach (var file in files)
+                {
+                    var ext = Path.GetExtension(file.Name);
+                    if (string.IsNullOrWhiteSpace(ext)) ext = ".webp"; // optional fallback
+
+                    var fileName = $"frame_{index:D2}{ext}";
+                    var fullPath = Path.Combine(tempFolder, fileName);
+
+                    await using var fs = new FileStream(fullPath, FileMode.Create);
+                    await file.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024).CopyToAsync(fs);
+
+                    index++;
+                }
+
+                if (Directory.Exists(targetFolder))
+                    Directory.Delete(targetFolder, recursive: true);
+
+                Directory.Move(tempFolder, targetFolder);
+            }
+            catch
             {
-                var ext = Path.GetExtension(file.Name);
-                if (string.IsNullOrWhiteSpace(ext)) ext = ".webp"; // optional fallback
+                if (Directory.Exists(tempFolder))
+                    Directory.Delete(tempFolder, recursive: true);
 
-                var fileName = $"frame_{index:D2}{ext}";
-                var fullPath = Path.Combine(folder, fileName);
-
-                await using var fs = new FileStream(fullPath, FileMode.Create);
-                await file.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024).CopyToAsync(fs);
-
-                index++;
+                throw;
             }
         }
+        
 
+        public void DeleteAllImages()
+        {
+            DeleteFolderIfExists(Path.Combine(_env.WebRootPath, "CarImages"));
+            DeleteFolderIfExists(Path.Combine(_env.WebRootPath, "ProductImages"));
+            
+        }
+
+        private static void DeleteFolderIfExists(string folder)
+        {
+            if (!Directory.Exists(folder))
+                return;
+
+            Directory.Delete(folder, recursive: true);
+        }
 
 }

@@ -17,6 +17,7 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
     public int SaveChanges() => base.SaveChanges();
+    public Task<int> SaveChangesAsync()  => base.SaveChangesAsync();
 
     public DbSet<Car> Cars { get; set; }
     public DbSet<Configuration> Configurations { get; set; }
