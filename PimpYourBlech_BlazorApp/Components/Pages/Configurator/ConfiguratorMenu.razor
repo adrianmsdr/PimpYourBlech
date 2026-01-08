@@ -1,6 +1,7 @@
 @page "/configurator/{id:int}"
 <PageTitle>Configurator</PageTitle>
 
+@using System.Globalization
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
@@ -35,7 +36,7 @@ else
             <span class="config-strip-name">@configuration.Name</span>
         </div>
         <div class="config-strip-right">
-            <span class="config-strip-price">@totalPrice €</span>
+            <span class="config-strip-price">@totalPrice.ToString("C2",CultureInfo.GetCultureInfo("de-DE"))</span>
         </div>
     </div>
     <div class="row g-4t">
@@ -85,7 +86,7 @@ else
                 <div class="details-panel__header">
                     <div class="selected-item__name">@Car?.Brand @Car?.Model</div>
                 </div>
-
+               
                 <div class="details-stats">
                     <div class="stat">
                         <div class="stat__label">Basis</div>
@@ -101,23 +102,22 @@ else
                     </div>
                 </div>
 
-                <div class="details-stats">
-                    <div class="stat">
-                        <div class="stat__label">PS</div>
-                        <div class="stat__value">@selectedEngine.EngineDetail.Ps</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat__label">Kraftstoff</div>
-                        <div class="stat__value">@selectedEngine.EngineDetail.Fuel</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat__label">Getriebeart</div>
-                        <div class="stat__value">@ConfiguratorService.GetGearDisplayName(selectedEngine.EngineDetail.Gear)</div>
-                    </div>
-                </div>
-                
-                <div class="details-section">
+    <div class="details-stats">
+        <div class="stat">
+            <div class="stat__label">PS</div>
+            <div class="stat__value">@selectedEngine.EngineDetail.Ps</div>
+        </div>
+        <div class="stat">
+            <div class="stat__label">Kraftstoff</div>
+            <div class="stat__value">@selectedEngine.EngineDetail.Fuel</div>
+        </div>
+        <div class="stat">
+            <div class="stat__label">Getriebeart</div>
+            <div class="stat__value">@ConfiguratorService.GetGearDisplayName(selectedEngine.EngineDetail.Gear)</div>
+        </div>
+    </div>
                     <div class="details-section__title">Ausgewählt</div>
+                <div class="details-panel__body">
 
                     @if (configuration?.Products == null || configuration.Products.Count == 0)
                     {
@@ -138,10 +138,11 @@ else
                         </div>
                     }
                 </div>
+              
 
                 <div class="details-total">
                     <div class="details-total__label">Gesamt</div>
-                    <div class="details-total__value">@totalPrice €</div>
+                    <div class="details-total__value">@totalPrice.ToString("C2",CultureInfo.GetCultureInfo("de-DE"))</div>
                 </div>
 
             </aside>
