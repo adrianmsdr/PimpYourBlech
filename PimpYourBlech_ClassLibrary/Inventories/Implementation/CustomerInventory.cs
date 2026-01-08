@@ -18,7 +18,11 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         return database.Customers.ToList();
     }
 
-    
+    public async Task<List<Customer>> ListCustomersAsync()
+    {
+        return await database.Customers.ToListAsync();
+    }
+
 
     public void DeleteCustomers()
     {

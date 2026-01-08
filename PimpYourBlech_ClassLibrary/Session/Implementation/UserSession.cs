@@ -13,10 +13,19 @@ public class UserSession : IUserSession
     public bool IsAdmin { get; }
 
     public Configuration? CurrentConfiguration { get; set; }
+
+    public void UpdateCurrentCustomer(Customer customer)
+    {
+        CurrentUser = customer;
+    }
     
     public Cart CurrentCart { get; set; } = new Cart();
+    public async Task UpdateCurrentCartAsync(Cart cart)
+    {
+        Console.WriteLine("ToDo");
+    }
 
-    
+
     public PaymentValues? PaymentValues { get; set; }
 
     public void LogOut()

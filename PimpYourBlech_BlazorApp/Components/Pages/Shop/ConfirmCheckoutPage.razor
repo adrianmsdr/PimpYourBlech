@@ -100,14 +100,14 @@ else
 @code {
     Order _order = new Order();
     DeliveryAddress address = new DeliveryAddress();
+    
     private async Task ConfirmPayment()
     {
-        
        _order = await OrderService.CreateOrderFromCart(
            UserSession.CurrentCart,
             UserSession.CurrentUser, UserSession.CurrentUser.DeliveryAddress
         );
-await EmailService.SendOrderReplyEmail(UserSession.CurrentUser, _order);
+        await EmailService.SendOrderReplyEmail(UserSession.CurrentUser, _order);
         Nav.NavigateTo("/BuySuccessfull");
     }
 

@@ -109,6 +109,17 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             a.Property(x => x.Content).IsRequired();
             a.Property(x => x.CreatedAt).HasDefaultValueSql("NOW()");
         });
+        
+        modelBuilder.Entity<Customer>()
+            .HasOne(c => c.DeliveryAddress)
+            .WithOne(a => a.Customer)
+            .HasForeignKey<DeliveryAddress>(a => a.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Erzwingt 1:1, damit nicht mehrere DeliveryAddresses auf denselben Customer zeigen
+        modelBuilder.Entity<DeliveryAddress>()
+            .HasIndex(a => a.CustomerId)
+            .IsUnique();
     }
 
     int IDatabase.SaveChanges() => base.SaveChanges();

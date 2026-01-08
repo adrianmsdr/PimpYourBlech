@@ -16,6 +16,8 @@ public interface IUserSession
 
     Configuration? CurrentConfiguration { get; set; }
 
+    void UpdateCurrentCustomer(Customer customer);
+
     
     PaymentValues? PaymentValues { get; set; }
 
@@ -24,5 +26,7 @@ public interface IUserSession
     void LogIn(Customer customer);
 
     public Cart CurrentCart { get; set; } 
+    
+    Task UpdateCurrentCartAsync(Cart cart); //Adrian
 
 }

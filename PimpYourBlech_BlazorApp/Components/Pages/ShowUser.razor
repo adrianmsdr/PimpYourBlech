@@ -137,6 +137,7 @@
 
         // Persistieren (muss existieren)
         AdminService.UpdateCustomer(Customer);
+        UserSession.UpdateCurrentCustomer(AdminService.GetCustomerById(EditModel.Id));
 
        
         

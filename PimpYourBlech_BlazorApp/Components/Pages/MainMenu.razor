@@ -29,7 +29,7 @@
         </div>
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoToComparator">
-                <CarIcon />
+                <TwoCarsIcon></TwoCarsIcon>
             </button>
 
             <button class="btn-label" @onclick="GoToComparator">
@@ -47,7 +47,7 @@
         </div>
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoToShop">
-                <ShopIcon />
+                <ShoppingCartIcon />
             </button>
 
             <button class="btn-label" @onclick="GoToShop">
@@ -64,10 +64,24 @@
                 Administrator
             </button>
         </div>
-
+        
         <div class="button-row-menu">
-            <button class="btn-label2" @onclick="GoToFAQ">FAQ</button>
-            <button class="btn-label2" @onclick="GoAboutUs">About Us</button>
+            <button class="btn-icon" @onclick="GoToFAQ">
+                <QAndAIcon></QAndAIcon>
+            </button>
+            <button class="btn-label" @onclick="GoToFAQ">
+                Q&A
+            </button>
+            </div>
+        
+        <div class="button-row-menu">
+            <button class="btn-icon" @onclick="GoAboutUs">
+                <AboutUsIcon></AboutUsIcon>
+            </button>
+            
+            <button class="btn-label" @onclick="GoAboutUs">
+                Über uns
+            </button>
         </div>
     </div>
 </div>

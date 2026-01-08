@@ -4,6 +4,7 @@
     border-radius: 50%;
     border: 2px solid rgba(255, 0, 0, 0.5);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    align-items: center;
 }
 .button-row-menu{
     display: flex;
@@ -14,7 +15,7 @@
 
 /* linker Button: fix klein (Icon) */
 .btn-icon{
-    width: 44px;
+    width: 50px;
     height: 44px;
     padding: 0;
     display: flex;
@@ -41,12 +42,16 @@
 
 
 .btn-label{
-    width: 220px;
+    flex: 0 0 250px;
     padding: 10px 20px;
-    flex: 0 0 220px;
-    height: 48px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: Bahnschrift;
     font-size: 18px;
+    line-height: 1.2;
+    white-space: nowrap;
     color: white;
     background-image: url("ButtonsImage.png");
     background-repeat: no-repeat;
@@ -55,18 +60,20 @@
     border: 1px solid rgba(255, 0, 0, 0.7);
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-    transition: transform 0.25s ease, background-color 0.25s ease,
-    box-shadow 0.25s ease, border-color 0.25s ease;
     cursor: pointer;
+    transition: transform 0.25s ease, background-color 0.25s ease;
 }
 
 
 
 .btn-label2{
-    width: 132px;
     padding: 10px 20px;
     flex: 0 0 132px;
-    height: 48px;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: inline-flex;
+    text-align: center;
+    line-height: 1.2;
     font-family: Bahnschrift;
     font-size: 18px;
     color: white;

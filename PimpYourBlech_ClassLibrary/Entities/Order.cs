@@ -8,7 +8,7 @@ public class Order
     public Customer Customer { get; set; }
     
     public int CustomerId { get; set; }
-    public Product Product { get; set; }
+    public List <Product> Products { get; set; }
     public DateTime OrderDate { get; set; }
     public decimal TotalPrice { get; set; }
     public DeliveryAddress DeliveryAddress { get; set; }

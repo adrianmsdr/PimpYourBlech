@@ -11,6 +11,15 @@
 
 <PageTitle>LogIn</PageTitle>
 
+@if (isLoggingIn)
+{
+    <div class="upload-overlay">
+        <div class="upload-spinner">
+            Du wirst eingeloggt ...
+        </div>
+    </div>
+}
+
 @*EditForm um Enter drücken zum Anmelden zu ermöglichen*@
 <EditForm Model="@this">
     
@@ -58,8 +67,9 @@
     private string username = "";
     private string password = "";
     private string ErrorMessage = "";
+    private bool isLoggingIn;
 
-    private void LoginCustomer()
+    private async Task LoginCustomer()
     {
         // Passwort wird in Hashcode konvertiert für DB - Abgleich
         var hash = Convert.ToBase64String(
@@ -67,11 +77,13 @@
         );
 
         // AdminService führt den LoginCheck mit den Userdaten aus
-        if (AdminService.LoginAccepted(username, hash))
+        if (await AdminService.LoginAccepted(username, hash))
         {
             // Bei Erfolg: User wird als eingeloggt gesetzt + Hauptmenü erscheint
-            var c = AdminService.GetCustomer(username, hash);
+            var c = await AdminService.GetCustomer(username, hash);
             UserSession.LogIn(c);
+            isLoggingIn = false;
+            StateHasChanged();
             Nav.NavigateTo("/mainMenu", forceLoad: true); // entspricht Screens.MainMenu
         }
         else

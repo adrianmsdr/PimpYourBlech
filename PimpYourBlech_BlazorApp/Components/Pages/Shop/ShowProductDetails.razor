@@ -6,6 +6,7 @@
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
+@using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_ClassLibrary.Session
 @inject NavigationManager Nav
 @inject IImageService ImageService
@@ -58,7 +59,7 @@
                     </div>
                 </div>
 
-                <button class="buttons pyd-addToCartBtn" @onclick="()=> AddProduct(Product)">Zum Warenkorb hinzufügen</button>
+                <button class="buttons pyd-addToCartBtn" @onclick="()=> AddProduct(Product)"><AddToCartIcon/> Zum Warenkorb hinzufügen</button>
             </div>
         </div>
 

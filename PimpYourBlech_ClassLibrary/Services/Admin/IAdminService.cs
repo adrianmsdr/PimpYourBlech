@@ -15,9 +15,9 @@ public interface IAdminService
     Customer Login(string username, string passwordHash);
     bool isUsernameAvailable(string username);
     
-    bool LoginAccepted(string username, string passwordHash);
+    Task<bool> LoginAccepted(string username, string passwordHash);
     
-    Customer GetCustomer(string username, string passwordHash);
+    Task<Customer> GetCustomer(string username, string passwordHash);
     
     void DeleteAllCustomers();
     
