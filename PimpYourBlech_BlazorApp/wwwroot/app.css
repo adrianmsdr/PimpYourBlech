@@ -565,3 +565,26 @@ h1, h2, h3, h4 {
     border-color: #ff1a1a;
 }
 
+/*--------------------------------------------Admin-Bestell - Übersicht--------------------------------------------------------*/
+
+.admin-detail-grid{
+    display:grid;
+    grid-template-columns: 140px 1fr;
+    gap: 8px 14px;
+    align-items:start;
+}
+
+.admin-detail-grid .k{
+    opacity: 0.85;
+    font-weight: 600;
+}
+
+.admin-detail-grid .v{
+    overflow-wrap:anywhere;
+}
+
+.admin-details-section-divider{
+    height:1px;
+    background: rgba(255,255,255,0.12);
+    margin: 10px 0;
+}

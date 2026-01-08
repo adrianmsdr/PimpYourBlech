@@ -1,0 +1,87 @@
+@page "/administrator/orders/{id:int}"
+<PageTitle>Bestellung @Id</PageTitle>
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+@inject NavigationManager Nav
+
+<div class="menu-container ">
+    
+    <h3>Bestellübersicht</h3>
+    @if (Order is null)
+    {
+        <p>Lade Daten…</p>
+    }
+    else
+    {
+        <div class="detail-overview-admin">
+            <div class="combo-card-admin combo-card-wide"> <h5 class="headline-admin">Bestellung</h5>
+                <div class="admin-detail-grid">
+                    <div class="k">ID</div>
+                    <div class="v">@Order.OrderId</div>
+                    <div class="k">Bestelldatum</div>
+                    <div class="v">@Order.OrderDate</div>
+                    <div class="k">Gesamtpreis</div>
+                    <div class="v">@Order.TotalPrice</div>
+                </div>
+                <div class="admin-details-section-divider"></div>
+                <h5 class="headline-admin">Kundendaten</h5>
+                <div class="admin-detail-grid">
+                    <div class="k">Vorname</div>
+                    <div class="v">@Order.Customer?.FirstName</div>
+                    <div class="k">Nachname</div>
+                    <div class="v">@Order.Customer?.LastName</div>
+                    <div class="k">E-Mail</div>
+                    <div class="v">@Order.Customer?.MailAddress</div>
+                    <div class="k">Username</div>
+                    <div class="v">@Order.Customer?.Username</div>
+                    <div class="k">Telefon</div>
+                    <div class="v">@Order.Customer?.Telefon</div>
+                </div>
+                <div class="admin-details-section-divider"></div>
+                <h5 class="headline-admin">Lieferadresse</h5>
+                <div class="admin-detail-grid">
+                    <div class="k">Land</div>
+                    <div class="v">@Order.DeliveryAddress?.Country</div>
+                    <div class="k">PLZ</div>
+                    <div class="v">@Order.DeliveryAddress?.PostalCode</div>
+                    <div class="k">Stadt</div>
+                    <div class="v">@Order.DeliveryAddress?.Town</div>
+                    <div class="k">Straße</div>
+                    <div class="v">@Order.DeliveryAddress?.Street</div>
+                    <div class="k">Hausnummer</div>
+                    <div class="v">@Order.DeliveryAddress?.HouseNumber</div>
+                </div>
+            </div>
+            
+            <div class="combo-card-admin combo-card-wide">
+                <h5 class="headline-admin">Produkte</h5>
+                Noch nicht verfügbar ... 
+            </div>
+                <div class="button-column">
+                    <button class="buttons" @onclick="Cancel">Zurück</button>
+                </div>
+            </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    public Order? Order { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Order = await AdminService.GetOrderByIdAsync(Id);
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/administrator/orders");
+    }
+}<style>
+    
+    .combo-card-wide{
+        width: min(450px);
+    }
+   
+</style>

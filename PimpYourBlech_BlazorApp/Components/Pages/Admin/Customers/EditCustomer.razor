@@ -55,7 +55,13 @@
                             
                             <label>Username</label>
                             <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Username" />
-                        </div>
+                     
+                            @* <label>Admin-Rechte</label>
+                            <div class="text-inputPYB form-input-grid checkbox-box">
+                                <InputCheckbox class="admin-checkbox" @bind-Value="EditModel.AdminRights" />
+                            </div>*@
+                        
+                            </div>
 
                         <div class="button-column" style="margin-top:16px;">
                             <button type="submit" class="buttons">Speichern</button>
@@ -77,9 +83,9 @@
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Customer = AdminService.GetCustomerById(Id);
+        Customer = await AdminService.GetCustomerByIdAsync(Id);
         if (Customer is null)
         {
             
@@ -104,23 +110,13 @@
 
     
 
-    private void SaveEdits()
+    private async Task SaveEdits()
     {
         if (Customer is null) return;
 
-        // Original updaten
-        Customer.Id = EditModel.Id;
-        Customer.FirstName = EditModel.FirstName;
-        Customer.LastName = EditModel.LastName;
-        Customer.AdminRights = EditModel.AdminRights;
-        Customer.Configurations = EditModel.Configurations;
-        Customer.MailAddress = EditModel.MailAddress;
-        Customer.Telefon = EditModel.Telefon;
-        Customer.PasswordHash = EditModel.PasswordHash;
-        Customer.Username = EditModel.Username;
-
+       
         // Persistieren (muss existieren)
-        AdminService.UpdateCustomer(Customer);
+        await AdminService.UpdateCustomerAsync(EditModel);
 
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
 
@@ -133,3 +129,16 @@
 
     
 }
+<style>
+    .checkbox-box{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .admin-checkbox{
+        width:18px;
+        height:18px;
+        accent-color:#e50000; 
+    }
+</style>

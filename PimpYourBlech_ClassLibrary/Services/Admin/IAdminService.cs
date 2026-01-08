@@ -17,7 +17,7 @@ public interface IAdminService
     
     Task<bool> LoginAccepted(string username, string passwordHash);
     
-    Task<Customer> GetCustomer(string username, string passwordHash);
+    Task<Customer> GetCustomerAsync(string username, string passwordHash);
     
     void DeleteAllCustomers();
     
@@ -29,11 +29,11 @@ public interface IAdminService
     
     public Customer GetCustomerByNames(String firstName, String lastName);
 
-    public void UpdateCustomer(Customer customer);
+    public Task UpdateCustomerAsync(Customer customer);
 
     void UpdateCustomers();
     
-    Customer GetCustomerById(int id);
+    Task<Customer> GetCustomerByIdAsync(int id);
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
      Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType, string description);
@@ -77,4 +77,8 @@ public interface IAdminService
    
    public List<Product> GetAvailableRims(int id);
    public List<Product> GetAvailableColors(int id);
+   // __________________________________Orders____________________________________
+   public Task<List<Order>> GetOrdersAsync();
+   
+   public Task<Order> GetOrderByIdAsync(int id);
 }

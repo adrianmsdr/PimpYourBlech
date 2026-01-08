@@ -44,7 +44,7 @@
     }
     
     <div style="flex:1; min-width:320px;">
-        <div class="combo-card-admin">
+        <div class="combo-card-admin combo-card-wide">
             <EditForm Model="EditModel" OnValidSubmit="SaveUser">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
@@ -66,7 +66,27 @@
                     <InputText class="text-inputPYB form-input-grid" type="password" @bind-Value="EditModel.PasswordHash" />
                     
                 </div>
+                @*
+                <div class="admin-details-section-divider"></div>
+                <h4 class="headline-admin">Lieferadresse</h4>
 
+                <div class="form-grid-admin">
+                    <label>Land</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.Country" />
+
+                    <label>Postleitzahl</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.PostalCode" />
+
+                    <label>E-Mail</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.Town" />
+
+                    <label>Telefon</label>
+                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.Street" />
+
+                    <label>Passwort</label>
+                    <InputText class="text-inputPYB form-input-grid" type="password" @bind-Value="EditModel.DeliveryAddress.HouseNumber" />
+                    
+                </div>*@
                 
             </EditForm>
         </div>
@@ -89,55 +109,65 @@
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
-    private Customer Customer = new Customer();
+    private Customer? Customer = new Customer();
     private Customer EditModel = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Images = ImageService.GetCustomerImageUrl();
         Avatar1 = Images[0];
         Avatar2 = Images[1];
         Avatar3 = Images[2];
-        SelectedAvatar = UserSession.CurrentUser.ImagePath;
-        Customer = UserSession.CurrentUser;
-        EditModel = new Customer()
+        try
         {
-            Id = Customer.Id,
-            FirstName = Customer.FirstName,
-            LastName = Customer.LastName,
-            AdminRights = Customer.AdminRights, 
-            Configurations  = Customer.Configurations,
-            MailAddress = Customer.MailAddress,
-            Telefon = Customer.Telefon,
-            PasswordHash = Customer.PasswordHash,
-            Username = Customer.Username,
-            ImagePath = Customer.ImagePath
-        };
+            Customer = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUser.Id);
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = e.Message;
+        }
+
+        if (Customer != null)
+        {
+            SelectedAvatar = Customer.ImagePath;
+
+            Customer.DeliveryAddress ??= new DeliveryAddress { CustomerId = Customer.Id };
+            try
+            {
+                EditModel = new Customer()
+                {
+                    Id = Customer.Id,
+                    FirstName = Customer.FirstName,
+                    LastName = Customer.LastName,
+                    AdminRights = Customer.AdminRights,
+                    MailAddress = Customer.MailAddress,
+                    Telefon = Customer.Telefon,
+                    PasswordHash = Customer.PasswordHash,
+                    ImagePath = Customer.ImagePath,
+                    DeliveryAddress = Customer.DeliveryAddress
+                };
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = e.Message;
+            }
+        }
     }
-    
+
     public void Cancel()
     {
         Nav.NavigateTo("/mainMenu");
     }
-    public void SaveUser()
+    public async Task SaveUser()
     {
         if (Customer is null) return;
 
-        // Original updaten
-        Customer.Id = EditModel.Id;
-        Customer.FirstName = EditModel.FirstName;
-        Customer.LastName = EditModel.LastName;
-        Customer.AdminRights = EditModel.AdminRights;
-        Customer.Configurations = EditModel.Configurations;
-        Customer.MailAddress = EditModel.MailAddress;
-        Customer.Telefon = EditModel.Telefon;
-        Customer.PasswordHash = EditModel.PasswordHash;
-        Customer.Username = EditModel.Username;
-        Customer.ImagePath = EditModel.ImagePath;
+        
 
         // Persistieren (muss existieren)
-        AdminService.UpdateCustomer(Customer);
-        UserSession.UpdateCurrentCustomer(AdminService.GetCustomerById(EditModel.Id));
+       await AdminService.UpdateCustomerAsync(Customer);
+       UserSession.CurrentUser = await AdminService.GetCustomerByIdAsync(EditModel.Id);
+
 
        
         
@@ -206,6 +236,10 @@
         transform: scale(1.1);
         border-color: #ff3333;
         box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .combo-card-wide {
+        width: min(450px);
     }
 
 </style>

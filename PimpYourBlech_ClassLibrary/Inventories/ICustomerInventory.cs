@@ -13,9 +13,9 @@ public interface ICustomerInventory
   
     public void DeleteCustomers();
     
-   
+    Task<Customer> GetCustomerByIdAsync(int id);
     
-    public void UpdateCustomer(Customer customer);
+    public Task UpdateCustomerAsync(Customer customer);
     
     public void UpdateCustomers();
     
@@ -35,4 +35,9 @@ public interface ICustomerInventory
     public void DeleteConfiguration(Configuration config);
 
     void AddOrder(Order order);
+    
+     
+    Task<List<Order>> GetOrdersAsync();
+    
+    Task<Order> GetOrderByIdAsync(int id);
 }
