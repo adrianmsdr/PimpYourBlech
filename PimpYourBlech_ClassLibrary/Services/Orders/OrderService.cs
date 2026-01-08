@@ -22,7 +22,7 @@ public class OrderService : IOrderService
         var order = new Order
         {
             CustomerId = customer.Id,
-            Product = cart.Products.First(),
+            Products = cart.Products,
             DeliveryAddress = address,
             OrderDate = DateTime.UtcNow
         };

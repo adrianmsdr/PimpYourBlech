@@ -50,7 +50,7 @@
                         <p class="menu-item">
                             @item.Name – @item.Price.ToString("C")
                         </p>
-                        <p class="remove-icon" @onclick="() => RemoveItem(item)"></p>
+                        <p class="remove-icon" @onclick="() => RemoveItem(item)">❌</p>
                     </div>
                 }
 
@@ -136,17 +136,20 @@ else
     <div class="product-grid">
         @foreach (var product in products)
         {
-            <a class="product-card" href="@($"shop/details/{product.ProductId}")">
+            <a class="product-card">
                 <img loading ="lazy" src="@ImageService.GetProductImageUrl(product.ProductId)"
-                     alt="@product.Name"
+                     @onclick="() => ShowProduct(product)"
                      class="product-image"/>
                 <div class="product-info">
-                    <h4>@product.Name</h4>
+                    <h4 class="product-name"
+                        @onclick="() => ShowProduct(product)">
+                        @product.Name
+                    </h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
                     <button type="button" class="selectProduct"
                             @onclick="() => AddToCart(product)">
-                        <BuyIcon></BuyIcon> Kaufen
+                        <AddToCartIcon/> Zum Warenkorb
                     </button>
                 </div>
             </a>
@@ -351,9 +354,21 @@ else
         display: block;
         border-radius: 4px;
     }
+    
+    .product-image:hover {
+        cursor: pointer;
+    }
 
     .product-info {
         margin-top: 0.75rem;
+    }
+    
+    .product-name {
+        //
+    }
+    
+    .product-name:hover {
+        cursor: pointer;
     }
 
     .product-price {
@@ -624,7 +639,6 @@ else
     }
 
     .product-card:hover {
-
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
     }
 </style>

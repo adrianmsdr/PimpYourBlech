@@ -8,6 +8,8 @@ public interface ICustomerInventory
     
     public List<Customer> ListCustomers();
     
+    public Task<List<Customer>> ListCustomersAsync();
+    
   
     public void DeleteCustomers();
     

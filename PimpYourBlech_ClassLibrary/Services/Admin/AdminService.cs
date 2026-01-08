@@ -91,10 +91,10 @@ public class AdminService:IAdminService
         
     }
     
-    public bool LoginAccepted(string username, string passwordHash)
+    public async Task<bool> LoginAccepted(string username, string passwordHash)
     {
         bool login = false;
-        foreach (Customer c in _customerRepository.ListCustomers())
+        foreach (Customer c in await _customerRepository.ListCustomersAsync())
         { 
             if (c.Username == username && c.PasswordHash == passwordHash)
             {
@@ -106,10 +106,10 @@ public class AdminService:IAdminService
         return login;
     }
 
-    public Customer GetCustomer(string username, string passwordHash)
+    public async Task<Customer> GetCustomer(string username, string passwordHash)
     {
         Customer temp = null;
-        foreach (Customer c in _customerRepository.ListCustomers())
+        foreach (Customer c in await _customerRepository.ListCustomersAsync())
         {
             if (c.Username == username && c.PasswordHash == passwordHash)
             {

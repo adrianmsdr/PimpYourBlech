@@ -113,6 +113,7 @@
     {
         UserSession.CurrentUser.DeliveryAddress = new DeliveryAddress
         {
+            CustomerId = UserSession.CurrentUser.Id,
             Salutation  = salutation,
             Surname     = surname,
             Lastname    = lastname,
