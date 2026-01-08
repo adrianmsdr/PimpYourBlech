@@ -1,0 +1,115 @@
+@page "/administrator/orders"
+<PageTitle>administrator/orders</PageTitle>
+
+@using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@inject IAdminService AdminService
+@inject NavigationManager Nav
+
+
+<div class="menu-container">
+@if (orders == null || orders.Count == 0)
+{
+    <p>Keine Bestellungen vorhanden.</p>
+}
+else
+{
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Zeitstempel</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Gesamtpreis</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var o in orders)
+        {
+            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/orders/{o.OrderId}"))"
+                style="cursor: pointer">
+                <td>@o.OrderId</td>
+                <td>@o.OrderDate</td>
+                <td>@o.Customer.FirstName</td>
+                <td>@o.Customer.LastName</td>
+           
+                <td>@o.TotalPrice€</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@*
+@if (FoundCustomer != null)
+{
+    <div class="alert alert-info mt-3">
+        <strong>Gefunden:</strong><br />
+        Vorname: @FoundCustomer.FirstName <br />
+        Nachname: @FoundCustomer.LastName <br />
+        Username: @FoundCustomer.Username <br />
+        Email: @FoundCustomer.MailAddress
+    </div>
+}
+*@
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+<input class="text-inputPYB"
+       placeholder="Order suchen..."
+       @bind="searchValue" />
+<div class="button-column">
+    <button class="buttons" @onclick="Cancel">
+        Suche nach Bestellung ...<MagnifyingGlassIcon></MagnifyingGlassIcon>
+    </button>
+    <button class="buttons" @onclick="Cancel">Zurück</button>
+
+</div>
+
+</div>
+
+@code {
+    private List<Order> orders = new ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await AdminService.GetOrdersAsync();
+    }
+
+    private string searchValue = string.Empty;
+    private Customer FoundOrder;
+    private string ErrorMessage = "";
+
+  /*  private void SearchUsername()
+    {
+        if (orders == null || orders.Count == 0)
+        {
+            return;
+        }
+        FoundOrder = null;
+        ErrorMessage = "";
+
+        foreach (var o in orders)
+        {
+            if ( == searchValue)
+            {
+                FoundOrder = c;
+                ErrorMessage = "";
+                return;
+            }
+        }
+
+        ErrorMessage = "Kein Benutzer mit diesem Username gefunden.";
+        StateHasChanged();
+    }*/
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/administrator/");
+    }
+}

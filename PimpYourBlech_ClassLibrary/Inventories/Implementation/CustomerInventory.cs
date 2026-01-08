@@ -31,6 +31,19 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
      
     }
     
+    public async Task<Customer> GetCustomerByIdAsync(int id)
+    {
+
+        return await database.Customers
+            .Include(c => c.DeliveryAddress)
+            .Include(c => c.Orders)
+            .Include(c => c.Configurations)
+            .ThenInclude(cfg => cfg.Car)
+            .Include(c => c.Configurations)
+            .ThenInclude(cfg => cfg.Products)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }    
+
 
     public void DeleteCustomer(Customer c)
     {
@@ -38,10 +51,19 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         database.SaveChanges();
     }
 
-    public void UpdateCustomer(Customer c)
+    public async Task UpdateCustomerAsync(Customer c)
     {
-        database.Customers.Update(c);
-        database.SaveChanges();
+        var tracked = database.Customers.First(x => x.Id == c.Id);
+
+        tracked.FirstName = c.FirstName;
+        tracked.LastName = c.LastName;
+        tracked.MailAddress = c.MailAddress;
+        tracked.Telefon = c.Telefon;
+        tracked.PasswordHash = c.PasswordHash;
+        tracked.ImagePath = c.ImagePath; 
+        tracked.AdminRights = c.AdminRights;
+        tracked.DeliveryAddress = c.DeliveryAddress;
+        await database.SaveChangesAsync();
 
         
     }
@@ -109,6 +131,23 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         database.Orders.Add(order);
         database.SaveChanges();
     }
+    
+    public async Task<List<Order>> GetOrdersAsync()
+    {
+        return await database.Orders
+            .Include(o=>o.Customer)
+            .Include(o=>o.DeliveryAddress)
+
+            .ToListAsync();
+    }
+
+    public async Task<Order> GetOrderByIdAsync(int id)
+    {
+        return await database.Orders.Include(o => o.Customer)
+            .Include(o=> o.DeliveryAddress)
+            .FirstOrDefaultAsync(o => o.OrderId == id);
+    }
+
 
     public void RemoveOrder(Order order)
     {

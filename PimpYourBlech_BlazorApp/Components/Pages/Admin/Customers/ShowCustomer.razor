@@ -23,37 +23,161 @@
 <div class="menu-container">
 
 
-    <h3>Kundenübersicht</h3>
-@if (Customer == null)
-{
-    <p>Lade Daten…</p>
-}
-else
-{
-    <div class="detail-overview-admin"> 
-        <div class="combo-card-admin">
-            <p><strong>Vorname:</strong> @Customer.FirstName</p>
-            <p><strong>Nachname:</strong> @Customer.LastName</p>
-            <p><strong>Username:</strong> @Customer.Username</p>
-            <p><strong>E-Mail:</strong> @Customer.MailAddress</p>
+  <h3 class="headline-admin">Kundenübersicht</h3>
+
+    @if (Customer == null)
+    {
+        <p>Lade Daten…</p>
+    }
+    else
+    {
+        <div class="detail-overview-admin">
+            <div class="combo-card-admin combo-card-wide">
+                <h4 class="headline-admin">Nutzerdaten</h4>
+
+                <div class="admin-detail-grid">
+                    <div class="k">ID</div>
+                    <div class="v">@Customer.Id</div>
+                    <div class="k">Username</div>
+                    <div class="v">@Customer.Username</div>
+                    <div class="k">Administrator</div>
+                    <div class="v"></div>
+                </div>
+
+                <div class="admin-details-section-divider"></div>
+                <h4 class="headline-admin">Persönliche Daten</h4>
+                <div class="admin-detail-grid">
+                    <div class="k">Vorname</div>
+                    <div class="v">@Customer.FirstName</div>
+                    <div class="k">Nachname</div>
+                    <div class="v">@Customer.LastName</div>
+                    <div class="k">E-Mail</div>
+                    <div class="v">@Customer.MailAddress</div>
+                    <div class="k">Telefon</div>
+                    <div class="v">@Customer.Telefon</div>
+                </div>
+                @if (Customer.DeliveryAddress != null)
+                {
+                    <div class="admin-details-section-divider"></div>
+                    <h4 class="headline-admin">Registrierte Lieferadresse</h4>
+                    <div class="admin-detail-grid">
+                        <div class="k">Land</div>
+                        <div class="v">@Customer.DeliveryAddress.Country</div>
+                        <div class="k">PLZ</div>
+                        <div class="v">@Customer.DeliveryAddress.PostalCode</div>
+                        <div class="k">Stadt</div>
+                        <div class="v">@Customer.DeliveryAddress.Town</div>
+                        <div class="k">Straße</div>
+                        <div class="v">@Customer.DeliveryAddress.Street</div>
+                        <div class="k">Hausnummer</div>
+                        <div class="v">@Customer.DeliveryAddress.HouseNumber</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="admin-details-section-divider"></div>
+                    <p>
+                    <h4 class="headline-admin">Registrierte Lieferadresse</h4>
+                    Keine Lieferadresse Registriert ...
+                    </p>
+                }
+            </div>
         </div>
+        <div class="detail-overview-admin">
+            <div class="combo-card-admin combo-card-wide">
+                <h4 class="headline-admin">Bestellungen</h4>
+
+               
+                @if (Customer.Orders == null || Customer.Orders.Count == 0)
+                {
+                    <p>Keine Bestellungen vorhanden.</p>
+                }
+                else
+                {
+
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Zeitstempel</th>
+                            <th>Gesamtpreis</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        @foreach (var o in Customer.Orders)
+                        {
+                            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/orders/{o.OrderId}"))"
+                                style="cursor: pointer">
+                                <td>@o.OrderId</td>
+                                <td>@o.OrderDate</td>
+                                <td>@o.TotalPrice€</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+        
+        
+        
+        
+        <div class="detail-overview-admin">
+        <div class="combo-card-admin combo-card-wide">
+            <h4 class="headline-admin">Konfigurationen</h4>
+
+               
+            @if (Customer.Configurations == null || Customer.Configurations.Count == 0)
+            {
+                <p>Keine Konfigurationen vorhanden.</p>
+            }
+            else
+            {  
+        
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Auto</th>
+                        <th>Anzahl Produkte</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    @foreach (var c in Customer.Configurations)
+                    {
+                        <tr @onclick="@(() => Nav.NavigateTo($"/configurator/{c.CarId}/?configId={c.Id}"))"
+                            style="cursor: pointer">
+                            <td>@c.Name</td>
+                            <td>@c.Car.Name</td>
+                            <td>@c.Products.Count</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                
+            }
+        </div>
+        </div>
+        
         <div class="button-column">
             <button class="buttons" @onclick="LockCustomer">Sperren</button>
             <button class="buttons" @onclick="OpenDeleteModal">Löschen</button>
             <button class="buttons" @onclick="EditCustomer">Bearbeiten</button>
             <button class="buttons" @onclick="Cancel">Zurück</button>
         </div>
-    </div>
-}
+    }
 </div>
+
 @code {
     [Parameter] public int Id { get; set; }
 
     public Customer? Customer { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Customer = AdminService.GetCustomerById(Id);
+        Customer = await AdminService.GetCustomerByIdAsync(Id);
     }
 
     private void LockCustomer()
@@ -86,3 +210,8 @@ else
 
     }
 }
+<style>
+    .combo-card-wide {
+        width: min(450px);
+    }
+</style>

@@ -71,6 +71,9 @@
 
     private async Task LoginCustomer()
     {
+        if (isLoggingIn) return;
+        isLoggingIn = true;
+        StateHasChanged();
         // Passwort wird in Hashcode konvertiert für DB - Abgleich
         var hash = Convert.ToBase64String(
             SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
@@ -80,7 +83,7 @@
         if (await AdminService.LoginAccepted(username, hash))
         {
             // Bei Erfolg: User wird als eingeloggt gesetzt + Hauptmenü erscheint
-            var c = await AdminService.GetCustomer(username, hash);
+            var c = await AdminService.GetCustomerAsync(username, hash);
             UserSession.LogIn(c);
             isLoggingIn = false;
             StateHasChanged();

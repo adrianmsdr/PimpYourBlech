@@ -106,7 +106,7 @@ public class AdminService:IAdminService
         return login;
     }
 
-    public async Task<Customer> GetCustomer(string username, string passwordHash)
+    public async Task<Customer> GetCustomerAsync(string username, string passwordHash)
     {
         Customer temp = null;
         foreach (Customer c in await _customerRepository.ListCustomersAsync())
@@ -183,9 +183,9 @@ public class AdminService:IAdminService
         return temp;
     }
     
-    public void UpdateCustomer(Customer c)
+    public async Task UpdateCustomerAsync(Customer c)
     {
-        _customerRepository.UpdateCustomer(c);
+        await _customerRepository.UpdateCustomerAsync(c);
     }
     
     public void DeleteCustomer(Customer c)
@@ -199,17 +199,9 @@ public class AdminService:IAdminService
 
     }
     
-    public Customer GetCustomerById(int id)
+    public async Task<Customer> GetCustomerByIdAsync(int id)
     {
-        Customer temp = null;
-        foreach (Customer c in _customerRepository.ListCustomers())
-        {
-            if (c.Id == id)
-            {
-                temp = c;
-            }
-        }
-        return temp;
+        return await _customerRepository.GetCustomerByIdAsync(id);
     }
     
     
@@ -363,5 +355,17 @@ public class AdminService:IAdminService
         return GetProducts()
             .Where(p => p.CarId == carId && p.ProductType == ProductType.Color)
             .ToList();
+    }
+
+    // ___________________________________Orders____________________________________
+
+    public  async Task<List<Order>> GetOrdersAsync()
+    {
+        return await _customerRepository.GetOrdersAsync();
+    }
+
+    public async Task<Order> GetOrderByIdAsync(int id)
+    {
+        return await _customerRepository.GetOrderByIdAsync(id);
     }
 }
