@@ -161,23 +161,13 @@
     public async Task SaveUser()
     {
         if (Customer is null) return;
-
         
-
         // Persistieren (muss existieren)
-       await AdminService.UpdateCustomerAsync(Customer);
+       await AdminService.UpdateCustomerAsync(EditModel);
        UserSession.CurrentUser = await AdminService.GetCustomerByIdAsync(EditModel.Id);
-
-
        
-        
-        
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
         StateHasChanged();
-        
-        
-        
-        
     }
     public void ChangeImage()
     {
