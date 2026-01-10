@@ -53,18 +53,27 @@ public class ConfiguratorService : IConfiguratorService
     {
         if (product == null || configuration == null)
             return;
-
+        
         var existingProduct = configuration.Products
             .FirstOrDefault(p => p.ProductType == product.ProductType);
 
-        // exakt gleiches Produkt → nichts tun
-        if (existingProduct?.ProductId == product.ProductId)
-            return;
-
-        // gleicher ProductType → ersetzen
-        if (existingProduct != null)
-            configuration.Products.Remove(existingProduct);
-
+        if (product.ProductType == ProductType.Color
+            || product.ProductType == ProductType.Rim
+            || product.ProductType == ProductType.Engine)
+        {
+            if (existingProduct?.ProductId == product.ProductId)
+                return;
+            if (existingProduct != null)
+                configuration.Products.Remove(existingProduct);
+        }
+        else
+        {
+            if (existingProduct?.ProductId == product.ProductId)
+            {
+                configuration.Products.Remove(existingProduct);
+                return;
+            }
+        }
         configuration.Products.Add(product);
         SaveConfigurations();
     
