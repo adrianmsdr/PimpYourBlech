@@ -4,22 +4,23 @@ namespace PimpYourBlech_ClassLibrary.Inventories;
 
 public interface ICustomerInventory
 {
-    public void InsertCustomer(Customer customer);
+    public Task InsertCustomerAsync(Customer customer);
     
     public List<Customer> ListCustomers();
     
     public Task<List<Customer>> ListCustomersAsync();
     
-  
-    public void DeleteCustomers();
-    
-    Task<Customer> GetCustomerByIdAsync(int id);
+    Task<Customer> GetCustomerByIdIncludeAllAsync(int id);
+
+    Task<Customer?> GetCustomerByIdAsync(int id);
+
+    Task<Customer?> GetCustomerIncludeAdressesAsync(int id);
     
     public Task UpdateCustomerAsync(Customer customer);
     
     public void UpdateCustomers();
     
-    public void DeleteCustomer(Customer customer);
+    public Task DeleteCustomerAsync(Customer customer);
 
     public void AddConfiguration(Configuration config);
 
@@ -40,4 +41,12 @@ public interface ICustomerInventory
     Task<List<Order>> GetOrdersAsync();
     
     Task<Order> GetOrderByIdAsync(int id);
+    
+    Task<bool> UsernameExistsAsync(string username);
+
+    public Task<Customer?> GetCustomerByUsernameAsync(string username);
+
+    public Task<DeliveryAddress> GetDeliveryAddressAsync(int id);
+    
+    Task InsertDeliveryAddressAsync(DeliveryAddress address);
 }

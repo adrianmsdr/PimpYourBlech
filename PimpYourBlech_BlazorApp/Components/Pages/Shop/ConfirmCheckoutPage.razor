@@ -8,12 +8,14 @@
 @inject IUserSession UserSession
 @inject IOrderService OrderService
 @inject IEmailService EmailService
+@inject IAdminService AdminService
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
 @using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
 @using PimpYourBlech_ClassLibrary.Services.Orders
 
@@ -25,93 +27,102 @@
     {
         <div class="cart-item">
             <img src="@ImageService.GetProductImageUrl(item.ProductId)"
-                 alt="@item.Name"
+                 alt="@item.Product.Name"
                  class="cart-item-image"/>
 
             <p class="menu-item">
-                @item.Name – @item.Price.ToString("C")
+                @item.Product.Name – @item.Price.ToString("C")
             </p>
         </div>
     }
 </div>
 
-@if (UserSession.CurrentUser.DeliveryAddress is null)
-{
-    <p>Keine Lieferadresse vorhanden.</p>
-}
-else
-{
-    <div class="container">
-        <h4>Deine Lieferadresse</h4>
-
-        <p>
-            @UserSession.CurrentUser.DeliveryAddress.Salutation
-            @UserSession.CurrentUser.DeliveryAddress.Surname
-            @UserSession.CurrentUser.DeliveryAddress.Lastname
-        </p>
-
-        <p>
-            @UserSession.CurrentUser.DeliveryAddress.Street
-            @UserSession.CurrentUser.DeliveryAddress.HouseNumber
-        </p>
-
-        <p>
-            @UserSession.CurrentUser.DeliveryAddress.PostalCode
-            @UserSession.CurrentUser.DeliveryAddress.Town
-        </p>
-
-        <p>
-            @UserSession.CurrentUser.DeliveryAddress.Country
-        </p>
-    </div>
-
-    @if (UserSession.PaymentValues is null)
+    if (c is null || da is null)
     {
-        <p>Keine Bezahldaten vorhanden.</p>
+        <p>Lade…</p>
     }
     else
     {
-        <div class="container">
-            <h4>Deine Bezahlung</h4>
+       <div class="container">
+            <h4>Deine Lieferadresse</h4>
 
             <p>
-                <strong>Kontoinhaber:</strong>
-                @UserSession.PaymentValues.AccountOwner
+                @da.Salutation
+                @da.Surname
+                @da.Lastname
             </p>
 
             <p>
-                <strong>IBAN:</strong>
-                **** **** **** @UserSession.PaymentValues.Iban[^4..]
+                @da.Street
+                @da.HouseNumber
             </p>
 
             <p>
-                <strong>BIC:</strong>
-                @UserSession.PaymentValues.Bic
+                @da.PostalCode
+                @da.Town
+            </p>
+
+            <p>
+                @da.Country
             </p>
         </div>
-    }
 
-    <button class="checkout-button"
-            onclick="@ConfirmPayment">
-        Kauf bestätigen
-    </button>
+        @if (UserSession.PaymentValues is null)
+        {
+            <p>Keine Bezahldaten vorhanden.</p>
+        }
+        else
+        {
+            <div class="container">
+                <h4>Deine Bezahlung</h4>
+
+                <p>
+                    <strong>Kontoinhaber:</strong>
+                    @UserSession.PaymentValues.AccountOwner
+                </p>
+
+                <p>
+                    <strong>IBAN:</strong>
+                    **** **** **** @UserSession.PaymentValues.Iban[^4..]
+                </p>
+
+                <p>
+                    <strong>BIC:</strong>
+                    @UserSession.PaymentValues.Bic
+                </p>
+            </div>
+        }
+
+        <button class="checkout-button"
+                onclick="@ConfirmPayment">
+            Kauf bestÃ¤tigen
+        </button>
+    }
 }
 
-@code {
-    Order _order = new Order();
-    DeliveryAddress address = new DeliveryAddress();
-    
-    private async Task ConfirmPayment()
-    {
-       _order = await OrderService.CreateOrderFromCart(
-           UserSession.CurrentCart,
-            UserSession.CurrentUser, UserSession.CurrentUser.DeliveryAddress
-        );
-        await EmailService.SendOrderReplyEmail(UserSession.CurrentUser, _order);
-        Nav.NavigateTo("/BuySuccessfull");
-    }
+    @code {
+        Order _order = new Order();
+        Customer? c;
+        DeliveryAddress? da;
 
-}
+        private async Task ConfirmPayment()
+        {
+            da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
+            _order = await OrderService.CreateOrderFromCart(
+                UserSession.CurrentCart,
+                c, da);
+
+            await EmailService.SendOrderReplyEmail(c, _order);
+            Nav.NavigateTo("/BuySuccessfull");
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+            da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
+        }
+
+    }
 
 <style>
     

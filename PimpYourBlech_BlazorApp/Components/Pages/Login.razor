@@ -74,25 +74,24 @@
         if (isLoggingIn) return;
         isLoggingIn = true;
         StateHasChanged();
-        // Passwort wird in Hashcode konvertiert für DB - Abgleich
-        var hash = Convert.ToBase64String(
-            SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
-        );
 
         // AdminService führt den LoginCheck mit den Userdaten aus
-        if (await AdminService.LoginAccepted(username, hash))
+        try
         {
-            // Bei Erfolg: User wird als eingeloggt gesetzt + Hauptmenü erscheint
-            var c = await AdminService.GetCustomerAsync(username, hash);
+            var c = await AdminService.CustomerLoginAsync(username, password); 
             UserSession.LogIn(c);
-            isLoggingIn = false;
-            StateHasChanged();
-            Nav.NavigateTo("/mainMenu", forceLoad: true); // entspricht Screens.MainMenu
+            Nav.NavigateTo("/mainMenu");
         }
-        else
+
+        catch (Exception ex)
         {
             // Bei Fehler: Fehlermeldung wird gesetzt
-            ErrorMessage = "Anmeldung fehlgeschlagen.";
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            isLoggingIn = false;
+            StateHasChanged();
         }
     }
 

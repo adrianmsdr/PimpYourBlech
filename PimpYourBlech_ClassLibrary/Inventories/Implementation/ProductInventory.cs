@@ -8,7 +8,7 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
 {
     
     
-    public async Task InsertProduct(Product p)
+    public async Task InsertProductAsync(Product p)
     {
         int counter = await database.GetNextArticleNumberAsync();
         p.ArticleNumber = counter.ToString("D7");
@@ -26,16 +26,16 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         return await database.Products.FindAsync(id);
     }
     
-    public void DeleteProduct(Product p)
+    public async Task DeleteProductAsync(Product p)
     {
        database.Products.Remove(p);
-       database.SaveChanges();
+       await database.SaveChangesAsync();
     }
 
-    public void UpdateProduct(Product p)
+    public async Task UpdateProductAsync(Product p)
     {
         database.Products.Update(p);
-        database.SaveChanges();
+        await database.SaveChangesAsync();
     }
     
     public List<Product> ListEngines()

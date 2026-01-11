@@ -1,26 +1,44 @@
 @page "/mainMenu"
 @using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
 @inject NavigationManager Nav
 @inject IUserSession UserSession
+@inject IAdminService AdminService
+
 <PageTitle>Main Menu</PageTitle>
 
 <div class="menu-container">
-    <h2 class="headline-admin">Willkommen, @UserSession.CurrentUser.Username!</h2>
-
-    @if (UserSession.CurrentUser.ImagePath != null)
+    @if (_loading)
     {
-        <img src=@UserSession.CurrentUser.ImagePath class="user-image" @onclick="GoToUserSettings">
+        <div class="upload-overlay">
+            <div class="upload-spinner">
+                Lade ...
+            </div>
+        </div>
+    }
+    else if (c is null)
+    {
+        <p>Bitte anmelden…</p>
     }
     else
     {
-        <img src="benutzer.png" class="user-image" @onclick="GoToUserSettings">
+        <h2 class="headline-admin">Willkommen, @c.Username!</h2>
 
+        @if (c.ImagePath != null)
+        {
+            <img src=@c.ImagePath class="user-image" @onclick="GoToUserSettings">
+        }
+        else
+        {
+            <img src="benutzer.png" class="user-image" @onclick="GoToUserSettings">
+
+        }
     }
     <div class="button-column">
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoToConfigurator">
-                <CarIcon />
+                <CarIcon/>
             </button>
 
             <button class="btn-label" @onclick="GoToConfigurator">
@@ -38,7 +56,7 @@
         </div>
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoToConfigurations">
-                <CarIcon2 />
+                <CarIcon2/>
             </button>
 
             <button class="btn-label" @onclick="GoToConfigurations">
@@ -85,4 +103,5 @@
         </div>
     </div>
 </div>
+
 

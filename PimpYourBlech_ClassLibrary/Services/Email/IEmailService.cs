@@ -12,4 +12,5 @@ public interface IEmailService
     
     public Task SendOrderReplyEmail(Customer customer,Order order);
 
+    public Task SendConfigurationRequestEmail(Customer customer, Configuration config);
 }

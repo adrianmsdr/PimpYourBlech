@@ -4,6 +4,6 @@ namespace PimpYourBlech_ClassLibrary.ValueObjects;
 
 public class Cart
 {
-    public List<Product> Products { get; set; } = new List<Product>();
+    public List<CartPosition> Products { get; set; } = new();
     public Customer Customer { get; set; }
 }

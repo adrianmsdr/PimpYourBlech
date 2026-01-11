@@ -80,13 +80,6 @@ else
     }
     
 
-    private async Task DeleteCar()
-    {
-        await ImageService.DeleteCarImagesAsync(Car.Id);
-        AdminService.DeleteCar(Car);
-        Nav.NavigateTo("/administrator/cars");
-    }
-
     private async Task SaveCarImage()
     {
         if (Car.Id == 0 || uploadedCarImage is null) return;
@@ -113,7 +106,7 @@ else
     async Task ConfirmDelete()
     {
         await ImageService.DeleteCarImagesAsync(Car.Id);
-        AdminService.DeleteCar(Car);
+        await AdminService.DeleteCarAsync(Car);
         showDeleteModal = false;
         Nav.NavigateTo("/administrator/cars");
         

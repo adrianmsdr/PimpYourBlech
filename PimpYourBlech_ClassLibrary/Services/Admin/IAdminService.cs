@@ -8,22 +8,19 @@ public interface IAdminService
 {
     
     
-    public List<Customer> GetListCustomers();
-    
-    public Task RegisterCustomerAsync(string firstName, string lastName, string username, string passwordHash,
-     string passwordHashConfirm, string telefon, string mailAddress, string mailAdressConfirm, string ImagePath);
+ public Task<List<Customer>> GetListCustomersAsync();
+
+    public Task RegisterCustomerAsync(string firstName, string lastName, string username, string password,
+    string passwordConfirm, string telefon, string mailAddress, string mailAdressConfirm, string ImagePath);
     Customer Login(string username, string passwordHash);
-    bool isUsernameAvailable(string username);
-    
-    Task<bool> LoginAccepted(string username, string passwordHash);
-    
-    Task<Customer> GetCustomerAsync(string username, string passwordHash);
-    
-    void DeleteAllCustomers();
-    
-    void DeleteCustomer(Customer c);
-    
-    public Customer GetCustomerByUsername(String username);
+    Task EnsureUsernameAvailableAsync(string username);
+
+
+    Task<Customer> CustomerLoginAsync(string username, string password);
+
+    Task DeleteCustomerAsync(Customer c);
+
+    public Task<Customer> GetCustomerByUsernameAsync(string username);
     
     public Customer GetCustomerByTelefon(String telefone);
     
@@ -31,7 +28,7 @@ public interface IAdminService
 
     public Task UpdateCustomerAsync(Customer customer);
 
-    void UpdateCustomers();
+    Task<Customer> GetCustomerByIdIncludeAllAsync(int id);
     
     Task<Customer> GetCustomerByIdAsync(int id);
      // ___________________________________Poducts____________________________________
@@ -59,21 +56,21 @@ public interface IAdminService
      
      Task<Product> GetProductByIdAsync(int id);
    
-     void DeleteProduct(Product p);
+     Task DeleteProductAsync(Product p);
      
-     void UpdateProduct(Product p);
+     Task UpdateProductAsync(Product p);
 
      List<ProductType> GetProductTypes();
    // ___________________________________Cars____________________________________
   List<Car> GetCars();
    
-   Car RegisterCar(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price);
+   Task<Car> RegisterCarAsync(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price);
    
    Car GetCarById(int id);
    
-   void DeleteCar(Car car);
+   Task DeleteCarAsync(Car car);
    
-   public void UpdateCar(Car car);
+   public Task UpdateCarAsync(Car car);
    
    public List<Product> GetAvailableRims(int id);
    public List<Product> GetAvailableColors(int id);

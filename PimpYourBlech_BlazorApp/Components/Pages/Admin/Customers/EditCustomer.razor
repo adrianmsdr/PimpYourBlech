@@ -85,7 +85,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Customer = await AdminService.GetCustomerByIdAsync(Id);
+        Customer = await AdminService.GetCustomerByIdIncludeAllAsync(Id);
         if (Customer is null)
         {
             

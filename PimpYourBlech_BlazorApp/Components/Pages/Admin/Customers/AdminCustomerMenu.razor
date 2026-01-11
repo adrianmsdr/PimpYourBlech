@@ -71,9 +71,9 @@ else
 @code {
     private List<Customer> customers = new List<Customer>();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        customers = AdminService.GetListCustomers();
+        customers = await AdminService.GetListCustomersAsync();
     }
 
     private string searchValue = string.Empty;

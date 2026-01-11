@@ -105,13 +105,13 @@ public partial class ConfiguratorMenu : ComponentBase
 
         ConfiguratorService.AddProduct(configuration, product);
 
-        if (product.ProductType == ProductType.Rim)
+        if (product.ProductType == ProductType.Felge)
             selectedRimId = product.ProductId;
 
-        if (product.ProductType == ProductType.Color)
+        if (product.ProductType == ProductType.Lack)
             selectedColorId = product.ProductId;
 
-        if (product.ProductType == ProductType.Engine)
+        if (product.ProductType == ProductType.Motor)
         {
             selectedEngine = product;
         }
@@ -134,10 +134,10 @@ public partial class ConfiguratorMenu : ComponentBase
         totalPrice = ConfiguratorService.CalculateTotalPrice(configuration);
     }
 
-    private void StartConfiguration()
+    private async Task StartConfiguration()
     {
         name = configurationName;
-        configuration = ConfiguratorService.StartNewConfiguration(UserSession.CurrentUser, Car, name);
+        configuration = ConfiguratorService.StartNewConfiguration(await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId), Car, name);
 
         // Defaultfarbe + Defaultfelge als Produkt setzen
         if (availableColors.Count > 0)

@@ -25,7 +25,7 @@
 
   <h3 class="headline-admin">Kundenübersicht</h3>
 
-    @if (Customer == null)
+    @if (p == null)
     {
         <p>Lade Daten…</p>
     }
@@ -37,9 +37,9 @@
 
                 <div class="admin-detail-grid">
                     <div class="k">ID</div>
-                    <div class="v">@Customer.Id</div>
+                    <div class="v">@p.Id</div>
                     <div class="k">Username</div>
-                    <div class="v">@Customer.Username</div>
+                    <div class="v">@p.Username</div>
                     <div class="k">Administrator</div>
                     <div class="v"></div>
                 </div>
@@ -48,30 +48,35 @@
                 <h4 class="headline-admin">Persönliche Daten</h4>
                 <div class="admin-detail-grid">
                     <div class="k">Vorname</div>
-                    <div class="v">@Customer.FirstName</div>
+                    <div class="v">@p.FirstName</div>
                     <div class="k">Nachname</div>
-                    <div class="v">@Customer.LastName</div>
+                    <div class="v">@p.LastName</div>
                     <div class="k">E-Mail</div>
-                    <div class="v">@Customer.MailAddress</div>
+                    <div class="v">@p.MailAddress</div>
                     <div class="k">Telefon</div>
-                    <div class="v">@Customer.Telefon</div>
+                    <div class="v">@p.Telefon</div>
                 </div>
-                @if (Customer.DeliveryAddress != null)
+                @if (p.DeliveryAddresses != null)
                 {
-                    <div class="admin-details-section-divider"></div>
-                    <h4 class="headline-admin">Registrierte Lieferadresse</h4>
-                    <div class="admin-detail-grid">
-                        <div class="k">Land</div>
-                        <div class="v">@Customer.DeliveryAddress.Country</div>
-                        <div class="k">PLZ</div>
-                        <div class="v">@Customer.DeliveryAddress.PostalCode</div>
-                        <div class="k">Stadt</div>
-                        <div class="v">@Customer.DeliveryAddress.Town</div>
-                        <div class="k">Straße</div>
-                        <div class="v">@Customer.DeliveryAddress.Street</div>
-                        <div class="k">Hausnummer</div>
-                        <div class="v">@Customer.DeliveryAddress.HouseNumber</div>
-                    </div>
+
+                    foreach (DeliveryAddress d in p.DeliveryAddresses)
+                    {
+                        <div class="admin-details-section-divider"></div>
+
+                        <h4 class="headline-admin">Registrierte Lieferadressen</h4>
+                        <div class="admin-detail-grid">
+                            <div class="k">Land</div>
+                            <div class="v">@d.Country</div>
+                            <div class="k">PLZ</div>
+                            <div class="v">@d.PostalCode</div>
+                            <div class="k">Stadt</div>
+                            <div class="v">@d.Town</div>
+                            <div class="k">Straße</div>
+                            <div class="v">@d.Street</div>
+                            <div class="k">Hausnummer</div>
+                            <div class="v">@d.HouseNumber</div>
+                        </div>
+                    }
                 }
                 else
                 {
@@ -88,7 +93,7 @@
                 <h4 class="headline-admin">Bestellungen</h4>
 
                
-                @if (Customer.Orders == null || Customer.Orders.Count == 0)
+                @if (p.Orders == null || p.Orders.Count == 0)
                 {
                     <p>Keine Bestellungen vorhanden.</p>
                 }
@@ -105,7 +110,7 @@
                         </thead>
 
                         <tbody>
-                        @foreach (var o in Customer.Orders)
+                        @foreach (var o in p.Orders)
                         {
                             <tr @onclick="@(() => Nav.NavigateTo($"/administrator/orders/{o.OrderId}"))"
                                 style="cursor: pointer">
@@ -128,7 +133,7 @@
             <h4 class="headline-admin">Konfigurationen</h4>
 
                
-            @if (Customer.Configurations == null || Customer.Configurations.Count == 0)
+            @if (p.Configurations == null || p.Configurations.Count == 0)
             {
                 <p>Keine Konfigurationen vorhanden.</p>
             }
@@ -145,7 +150,7 @@
                     </thead>
 
                     <tbody>
-                    @foreach (var c in Customer.Configurations)
+                    @foreach (var c in p.Configurations)
                     {
                         <tr @onclick="@(() => Nav.NavigateTo($"/configurator/{c.CarId}/?configId={c.Id}"))"
                             style="cursor: pointer">
@@ -173,11 +178,11 @@
 @code {
     [Parameter] public int Id { get; set; }
 
-    public Customer? Customer { get; set; }
+    public Customer? p { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Customer = await AdminService.GetCustomerByIdAsync(Id);
+        p = await AdminService.GetCustomerByIdIncludeAllAsync(Id);
     }
 
     private void LockCustomer()
@@ -188,7 +193,7 @@
 
     private void EditCustomer()
     {
-        Nav.NavigateTo($"/administrator/customers/{Customer.Id}/edit");
+        Nav.NavigateTo($"/administrator/customers/{p.Id}/edit");
         
     } 
     
@@ -204,7 +209,7 @@
 
     async Task ConfirmDelete()
     {
-        AdminService.DeleteCustomer(Customer);
+        await AdminService.DeleteCustomerAsync(p);
         showDeleteModal = false;
         Nav.NavigateTo("/administrator/customers");
 

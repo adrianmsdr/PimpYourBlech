@@ -23,13 +23,13 @@ public class AdminService:IAdminService
         _emailService = email;
     }
 
-    public List<Customer> GetListCustomers()
+    public async Task<List<Customer>> GetListCustomersAsync()
     {
-        return _customerRepository.ListCustomers();
+        return await _customerRepository.ListCustomersAsync();
     }
-    
-    
-    public async Task RegisterCustomerAsync(string firstName, string lastName, string username, string passwordHash, string passwordHashConfirm, string telefon,
+
+
+    public async Task RegisterCustomerAsync(string firstName, string lastName, string username, string password, string passwordConfirm, string telefon,
         string mailAddress, string mailAddressConfirm,string ImagePath)
     {
         // Username darf nicht leer sein
@@ -47,14 +47,14 @@ public class AdminService:IAdminService
         _emailService.ConfirmRegistrationChecker(mailAddress, mailAddressConfirm);
 
         // Verfügbarkeit des Usernames checken
-        isUsernameAvailable(username);
+        EnsureUsernameAvailableAsync(username);
 
         // Passwörter auf Übereinstimmung checken
-        if (passwordHash != passwordHashConfirm)
+        if (password != passwordConfirm)
             throw new WrongPasswordException("Die Passwörter stimmen nicht überein.");
 
         var hash = Convert.ToBase64String(
-            SHA256.HashData(Encoding.UTF8.GetBytes(passwordHash ?? ""))
+            SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
         );
         Customer customer = new Customer();
         customer.FirstName = firstName;
@@ -64,7 +64,7 @@ public class AdminService:IAdminService
         customer.Telefon = telefon;
         customer.MailAddress = mailAddress;
         customer.ImagePath = ImagePath;
-        _customerRepository.InsertCustomer(customer);
+        await _customerRepository.InsertCustomerAsync(customer);
         _emailService.SendRegistrationEmail(customer);
     }
     
@@ -73,114 +73,68 @@ public class AdminService:IAdminService
         throw new NotImplementedException();
     }
 
-    public bool isUsernameAvailable(string username)
+    public async Task EnsureUsernameAvailableAsync(string username)
     {
-        bool usernameAccepted = true;
 
             if (username.Length < 8)
             {
                 throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
             }
-
-            foreach(Customer customer in _customerRepository.ListCustomers())
-            if (customer.Username == username)
+            
+            if (await _customerRepository.UsernameExistsAsync(username))
             {
                 throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
             }
-            return usernameAccepted;
+        
         
     }
     
-    public async Task<bool> LoginAccepted(string username, string passwordHash)
+    public async Task<Customer> CustomerLoginAsync(string username, string password)
     {
-        bool login = false;
-        foreach (Customer c in await _customerRepository.ListCustomersAsync())
-        { 
-            if (c.Username == username && c.PasswordHash == passwordHash)
-            {
-                return true;
-            }
 
+
+        // Passwort wird in Hashcode konvertiert für DB - Abgleich
+        var hash = Convert.ToBase64String(
+            SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
+        );
+
+        Customer?  customer = await _customerRepository.GetCustomerByUsernameAsync(username);
+
+        if (customer == null)
+        {
+            throw new NoCustomerFoundException("Kein User mit diesem Username gefunden.");
         }
 
-        return login;
+        if (customer.PasswordHash != hash)
+        {
+            throw new WrongPasswordException("Falsches Passwort. Bitte versuche es erneut.");
+        }
+
+        return customer;
+
     }
 
-    public async Task<Customer> GetCustomerAsync(string username, string passwordHash)
+    public async Task<Customer> GetCustomerByUsernameAsync(string username)
     {
-        Customer temp = null;
-        foreach (Customer c in await _customerRepository.ListCustomersAsync())
-        {
-            if (c.Username == username && c.PasswordHash == passwordHash)
-            {
-                temp = c;
-            }
+        var temp = await _customerRepository.GetCustomerByUsernameAsync(username);
 
-        }
-        return temp;
+        return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Username gefunden.");
     }
 
-    public void DeleteAllCustomers()
+    public Customer GetCustomerByTelefon(string telefon)
     {
-        _customerRepository.DeleteCustomers();
-    }
-    
-    public Customer GetCustomerByUsername(String username)
-    {
-        Customer temp = null;
-        foreach (Customer c in _customerRepository.ListCustomers())
-        {
-            if (c.Username == username)
-            {
-                temp = c;
-            }
-        }
+        var temp = _customerRepository.ListCustomers().FirstOrDefault(c => c.Telefon == telefon);
 
-        if (temp == null)
-        {
-            throw new NoCustomerFoundException("Kein Benutzer mit diesem Username gefunden.");
-        }
-        return temp;
+        return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Username gefunden.");
     }
 
-   
-
-    public Customer GetCustomerByTelefon(String telefon)
+    public Customer GetCustomerByNames(string firstName, string lastName)
     {
-        Customer temp = null;
-        foreach (Customer c in _customerRepository.ListCustomers())
-        {
-            if (c.Telefon == telefon)
-            {
-                temp = c;
-            }
-        }
-        
-        if (temp == null)
-        {
-            throw new NoCustomerFoundException("Kein Benutzer mit dieser Telefonnummer gefunden.");
-        }
+        var temp = _customerRepository.ListCustomers()
+            .FirstOrDefault(c => c.FirstName == firstName && c.LastName == lastName);
 
-        return temp;
-    }
-    
-    public Customer GetCustomerByNames(String firstName, String lastName)
-    {
-        Customer temp = null;
-        foreach (Customer c in _customerRepository.ListCustomers())
-        {
-            if (c.FirstName== firstName&&c.LastName==lastName)
-            {
-                temp = c;
-            }
-            
-            if (temp == null)
-            {
-                throw new NoCustomerFoundException("Kein Benutzer mit diesen Namen gefunden.");
-            }
-        }
+        return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Namen gefunden.");
 
-        return temp;
     }
     
     public async Task UpdateCustomerAsync(Customer c)
@@ -188,15 +142,14 @@ public class AdminService:IAdminService
         await _customerRepository.UpdateCustomerAsync(c);
     }
     
-    public void DeleteCustomer(Customer c)
+    public async Task DeleteCustomerAsync(Customer c)
     {
-        _customerRepository.DeleteCustomer(c);
+        await _customerRepository.DeleteCustomerAsync(c);
     }
-    
-    public void UpdateCustomers()
-    {
-        _customerRepository.UpdateCustomers();
 
+    public async Task<Customer> GetCustomerByIdIncludeAllAsync(int id)
+    {
+        return await _customerRepository.GetCustomerByIdIncludeAllAsync(id);
     }
     
     public async Task<Customer> GetCustomerByIdAsync(int id)
@@ -225,7 +178,7 @@ public class AdminService:IAdminService
     {
         p.EngineDetail = new EngineDetail
         {
-            Product = p,
+            ProductId = p.ProductId,
             Ps = ps,
             Kw = kw,
             Displacement = displacement,
@@ -238,7 +191,7 @@ public class AdminService:IAdminService
     {
         p.RimDetail = new RimDetail
         {
-            Product = p,
+            ProductId = p.ProductId,
             DiameterInInch = diameter,
             WidthInInch = width
         };
@@ -248,7 +201,7 @@ public class AdminService:IAdminService
     {
         p.LightsDetail = new LightsDetail
         {
-            Product = p,
+            ProductId = p.ProductId,
             Lumen = lumen,
             IsLed = isLED
         };
@@ -258,7 +211,7 @@ public class AdminService:IAdminService
     {
         p.ColorDetail = new ColorDetail
         {
-            Product = p,
+            ProductId = p.ProductId,
             DisplayName = colorName,
             
         };
@@ -266,7 +219,7 @@ public class AdminService:IAdminService
 
     public async Task<Product> InsertProduct(Product p)
     {
-        await _productRepository.InsertProduct(p); // muss SaveChangesAsync machen
+        await _productRepository.InsertProductAsync(p); // muss SaveChangesAsync machen
         return p;
     }
 
@@ -281,15 +234,15 @@ public class AdminService:IAdminService
         
     }
 
-    public void DeleteProduct(Product p)
+    public async Task DeleteProductAsync(Product p)
     {
-        _productRepository.DeleteProduct(p);
+        await _productRepository.DeleteProductAsync(p);
 
     }
 
-    public void UpdateProduct(Product p)
+    public async Task UpdateProductAsync(Product p)
     {
-        _productRepository.UpdateProduct(p);
+        await _productRepository.UpdateProductAsync(p);
     }
     
     public List<ProductType> GetProductTypes()
@@ -304,7 +257,7 @@ public class AdminService:IAdminService
     {
         return _carRepository.ListCars();
     }
-    public Car RegisterCar(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity,
+    public async Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity,
         double price)
     {
         Car c = new Car();
@@ -316,7 +269,7 @@ public class AdminService:IAdminService
         c.PS = ps;
         c.Quantity = quantity;
         c.Price = price;
-        _carRepository.InsertCar(c);
+        await _carRepository.InsertCarAsync(c);
         return c;
     }
     
@@ -333,27 +286,27 @@ public class AdminService:IAdminService
         return temp;
     }
 
-    public void DeleteCar(Car car)
+    public async Task DeleteCarAsync(Car car)
     {
-        _carRepository.DeleteCar(car);
+        await _carRepository.DeleteCarAsync(car);
     }
 
-    public void UpdateCar(Car car)
+    public async Task UpdateCarAsync(Car car)
     {
-        _carRepository.UpdateCar(car);
+        await  _carRepository.UpdateCarAsync(car);
     }
     
     public List<Product> GetAvailableRims(int carId)
     {
         return GetProducts()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Rim)
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Felge)
             .ToList();
     }
 
     public List<Product> GetAvailableColors(int carId)
     {
         return GetProducts()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Color)
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Lack)
             .ToList();
     }
 

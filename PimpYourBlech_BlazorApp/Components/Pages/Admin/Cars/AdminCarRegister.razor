@@ -128,7 +128,7 @@
         }
 
         // Auto in DB speichern
-        Car car = AdminService.RegisterCar(
+        Car car = await AdminService.RegisterCarAsync(
             name, dateProduction, datePermit, brand, model, psValue,
             quantityValue, priceValue
         );

@@ -107,7 +107,7 @@
     }
 
 
-    private void SaveEdits()
+    private async Task SaveEdits()
     {
         if (Product is null) return;
 
@@ -121,7 +121,7 @@
         Product.Description = EditModel.Description;
 
         // Persistieren
-        AdminService.UpdateProduct(Product);
+        await AdminService.UpdateProductAsync(Product);
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
     }
 

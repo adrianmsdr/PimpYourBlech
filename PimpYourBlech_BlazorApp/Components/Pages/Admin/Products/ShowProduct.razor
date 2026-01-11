@@ -80,7 +80,7 @@ else
     {
         Car c = AdminService.GetCarById(Product.CarId);
         await ImageService.DeleteProductImagesAsync(Product.ProductId);
-        if (Product.ProductType == ProductType.Color)
+        if (Product.ProductType == ProductType.Lack)
         {
             foreach (var r in AdminService.GetAvailableRims(c.Id))
             {
@@ -88,7 +88,7 @@ else
             }
         }
 
-        if (Product.ProductType == ProductType.Rim)
+        if (Product.ProductType == ProductType.Felge)
         {
             foreach (var color in AdminService.GetAvailableColors(c.Id))
             {
@@ -96,7 +96,7 @@ else
             }
         }
 
-        AdminService.DeleteProduct(Product);
+        await AdminService.DeleteProductAsync(Product);
        
     }
 

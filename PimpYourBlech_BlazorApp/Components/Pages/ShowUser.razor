@@ -120,7 +120,7 @@
         Avatar3 = Images[2];
         try
         {
-            Customer = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUser.Id);
+            Customer = await AdminService.GetCustomerByIdIncludeAllAsync(UserSession.CurrentUserId);
         }
         catch (Exception e)
         {
@@ -130,8 +130,7 @@
         if (Customer != null)
         {
             SelectedAvatar = Customer.ImagePath;
-
-            Customer.DeliveryAddress ??= new DeliveryAddress { CustomerId = Customer.Id };
+            
             try
             {
                 EditModel = new Customer()
@@ -144,7 +143,7 @@
                     Telefon = Customer.Telefon,
                     PasswordHash = Customer.PasswordHash,
                     ImagePath = Customer.ImagePath,
-                    DeliveryAddress = Customer.DeliveryAddress
+                    DeliveryAddresses = Customer.DeliveryAddresses
                 };
             }
             catch (Exception e)
@@ -162,9 +161,7 @@
     {
         if (Customer is null) return;
         
-        // Persistieren (muss existieren)
        await AdminService.UpdateCustomerAsync(EditModel);
-       UserSession.CurrentUser = await AdminService.GetCustomerByIdAsync(EditModel.Id);
        
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
         StateHasChanged();

@@ -8,16 +8,30 @@ public class CartService : ICartService
    
     public Cart AddProduct(Cart cart,Product product)
     {
-        if (product != null)
-            cart.Products.Add(product);
-
+        CartPosition? cp = cart.Products.Find(x => x.ProductId == product.ProductId);
+        if (cp == null)
+        {
+            cp = new CartPosition();
+            cp.ProductId = product.ProductId;
+            cp.Product = product;
+            cp.Quantity = 1;
+            cp.Price = (decimal)product.Price;
+            cart.Products.Add(cp);
+        }
+        else
+        {
+            cp.Quantity++;
+            cp.Price = (decimal)product.Price*cp.Quantity;
+        }
         return cart;
+
     }
 
-    public void RemoveProduct(Cart cart, Product product)
+    public void RemoveProduct(Cart cart, CartPosition? cartPosition)
     {
-        if (product != null)
-            cart.Products.Remove(product);
+        if(cartPosition != null){
+            cart.Products.Remove(cartPosition);
+        }
     }
     
     public double GetTotalPrice(Cart cart)
@@ -27,7 +41,7 @@ public class CartService : ICartService
 
         foreach (var product in cart.Products)
         {
-            total += product.Price;
+            total = total+(double)product.Price*product.Quantity;
         }
 
         return total;

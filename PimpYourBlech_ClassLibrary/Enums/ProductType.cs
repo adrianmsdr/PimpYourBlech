@@ -2,11 +2,11 @@ namespace PimpYourBlech_ClassLibrary.Enums;
 
 public enum ProductType
 {
-    Engine,
-    Rim,
-    Lights,
+    Motor,
+    Felge,
+    Lichter,
     Auspuff,
-    Color,
+    Lack,
     Ölfilter,
     Innenraumfilter,
     Kraftstofffilter,
