@@ -57,9 +57,9 @@ public class ConfiguratorService : IConfiguratorService
         var existingProduct = configuration.Products
             .FirstOrDefault(p => p.ProductType == product.ProductType);
 
-        if (product.ProductType == ProductType.Color
-            || product.ProductType == ProductType.Rim
-            || product.ProductType == ProductType.Engine)
+        if (product.ProductType == ProductType.Lack
+            || product.ProductType == ProductType.Felge
+            || product.ProductType == ProductType.Motor)
         {
             if (existingProduct?.ProductId == product.ProductId)
                 return;
@@ -153,14 +153,14 @@ public class ConfiguratorService : IConfiguratorService
     public List<Product> GetAvailableEngines(int carId)
     {
         return ListEngines()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Engine)
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Motor)
             .ToList();
     }
 
     public List<Product> GetAvailableRims(int carId)
     {
         return ListRims()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Rim)
+            .Where(p => p.CarId == carId && p.ProductType == ProductType.Felge)
             .ToList();
     }
     public Product GetProductById(int Id)
@@ -179,6 +179,6 @@ public class ConfiguratorService : IConfiguratorService
     public List<Product> GetAvailableExtras(int carId)
     {
         return productInventory.ListProducts().Where(p => p.CarId == carId)
-            .Where(p=>p.ProductType!=ProductType.Color&&p.ProductType!=ProductType.Engine&&p.ProductType!=ProductType.Rim).ToList();
+            .Where(p=>p.ProductType!=ProductType.Lack&&p.ProductType!=ProductType.Motor&&p.ProductType!=ProductType.Felge).ToList();
     }
 }

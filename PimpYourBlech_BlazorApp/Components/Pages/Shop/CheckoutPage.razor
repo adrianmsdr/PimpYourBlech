@@ -6,90 +6,122 @@
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Orders
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
 @inject ICartService CartService
 @inject IToastService ToastService
 @inject IUserSession UserSession
+@inject IOrderService OrderService
+@inject IAdminService AdminService
 
 
 <div class="checkout-container">
-    
-    <h1 class="font">Kasse</h1>
-    <h5 class="font">Wohin sollen wir deine Bestellung liefern?</h5>
-    
-    <div class="mb-3">
-        <select class="text-inputPYB" @bind="salutation">
-            <option value="">Anrede wählen</option>
-            <option value="Herr">Herr</option>
-            <option value="Frau">Frau</option>
-            <option value="Divers">Divers</option>
-        </select>
-    </div>
 
-    <div class="mb-3">
-        <input class="text-inputPYB"
-               placeholder="Vorname"
-               @bind="surname"/>
-    </div>
+@if (c is null)
+    {
+        <p class="font">Lade…</p>
+    }
+    else
+    {
+        <h1 class="font">Kasse</h1>
+        <h5 class="font">Wohin sollen wir deine Bestellung liefern?</h5>
 
-    <div class="mb-3">
-        <input class="text-inputPYB"
-               placeholder="Nachname"
-               @bind="lastname"/>
-    </div>
+        <div class="mb-3">
+            @*<label class="form-label"><strong>Lieferadresse wählen:</strong></label>*@
 
-    <div class="mb-3">
-        <input class="text-inputPYB"
-               placeholder="Straße"
-               @bind="street"/>
-    </div>
+            <select class="form-select" @bind="selectedDeliveryAddressId">
+                <option value="0">Lieferadresse wählen:</option>
+                @foreach (var a in _addresses)
+                {
+                    <option value="@a.Id">@a.Lastname, @a.PostalCode, @a.Town, @a.Street @a.HouseNumber</option>
+                }
+            </select>
 
-    <div class="mb-3">
-        <input class="text-inputPYB"
-               placeholder="Hausnummer"
-               @bind="housenumber"/>
-    </div>
+        </div>
+        <div class="mb-3">
+            <select class="text-inputPYB" @bind="salutation"
+                    disabled="@isDisabled">
+                <option value="">Anrede wählen</option>
+                <option value="Herr">Herr</option>
+                <option value="Frau">Frau</option>
+                <option value="Divers">Divers</option>
+            </select>
+        </div>
 
-    <div class="mb-3">
-        <input class="text-inputPYB"
-               placeholder="Ort"
-               @bind="town"/>
-    </div>
+        <div class="mb-3">
+            <input class="text-inputPYB"
+                   disabled="@isDisabled"
+                   placeholder="Vorname"
+                   @bind="surname"/>
+        </div>
 
-    <div class="mb-3">
-        <input class="text-inputPYB"
-               placeholder="Postleitzahl"
-               @bind="postalcode"/>
-    </div>
+        <div class="mb-3">
+            <input class="text-inputPYB"
+                   disabled="@isDisabled"
+                   placeholder="Nachname"
+                   @bind="lastname"/>
+        </div>
 
-    <div class="mb-3">
-        <select class="text-inputPYB" @bind="country">
-            <option value="">Land wählen</option>
-            <option value="DE">🇩🇪 Deutschland</option>
-            <option value="AT">🇦🇹 Österreich</option>
-            <option value="CH">🇨🇭 Schweiz</option>
-        </select>
-    </div>
+        <div class="mb-3">
+            <input class="text-inputPYB"
+                   disabled="@isDisabled"
+                   placeholder="Straße"
+                   @bind="street"/>
+        </div>
 
-    <p class="font">Womit möchtest du bezahlen?</p>
+        <div class="mb-3">
+            <input class="text-inputPYB"
+                   disabled="@isDisabled"
+                   placeholder="Hausnummer"
+                   @bind="housenumber"/>
+        </div>
 
-    <div class="d-flex gap-3">
-        <button class="buttons"
-                disabled="@IsCheckoutDisabled">
-            <PayPalIcon/> Mit Paypal bezahlen
-        </button>
+        <div class="mb-3">
+            <input class="text-inputPYB"
+                   disabled="@isDisabled"
+                   placeholder="Ort"
+                   @bind="town"/>
+        </div>
 
-        <button class="buttons"
-                disabled="@IsCheckoutDisabled"
-                onclick="@NavigateToConfirm">
-            <CreditCardIcon/> Per Lastschrift bezahlen
-        </button>
-    </div>
+        <div class="mb-3">
+            <input class="text-inputPYB"
+                   disabled="@isDisabled"
+                   placeholder="Postleitzahl"
+                   @bind="postalcode"/>
+        </div>
+
+        <div class="mb-3">
+            <select class="text-inputPYB" @bind="country" disabled="@isDisabled">
+                <option value="">Land wählen</option>
+                <option value="DE">🇩🇪 Deutschland</option>
+                <option value="AT">🇦🇹 Österreich</option>
+                <option value="CH">🇨🇭 Schweiz</option>
+            </select>
+        </div>
+
+        <p class="font">Womit möchtest du bezahlen?</p>
+
+        <div class="d-flex gap-3">
+            <button class="buttons">
+                <PayPalIcon/> Mit Paypal bezahlen
+            </button>
+
+            <button class="buttons"
+
+                    onclick="@NavigateToConfirm">
+                <CreditCardIcon/> Per Lastschrift bezahlen
+            </button>
+
+        </div>
+    }
 </div>
 
 @code {
+    private Customer? c;
     private string salutation  = string.Empty;
     private string surname     = string.Empty;
     private string lastname    = string.Empty;
@@ -98,7 +130,18 @@
     private string town        = string.Empty;
     private string postalcode  = string.Empty;
     private string country     = string.Empty;
-    
+    private List<DeliveryAddress> _addresses = new List<DeliveryAddress>();
+    private int _selectedDeliveryAddressId;
+    private int selectedDeliveryAddressId
+    {
+        get => _selectedDeliveryAddressId;
+        set
+        {
+            _selectedDeliveryAddressId = value;
+            ApplySelectedAddress();
+        }
+    }
+    /*
     private bool IsCheckoutDisabled =>
             string.IsNullOrWhiteSpace(salutation) ||
             string.IsNullOrWhiteSpace(country)    ||
@@ -109,25 +152,82 @@
             string.IsNullOrWhiteSpace(town)       ||
             string.IsNullOrWhiteSpace(postalcode);
 
-    private void NavigateToConfirm()
+*/
+
+    private DeliveryAddress? SelectedAddress =>
+        c?.DeliveryAddresses?.FirstOrDefault(x => x.Id == selectedDeliveryAddressId);
+
+    private bool isDisabled => SelectedAddress != null;
+    
+    private async Task NavigateToConfirm()
     {
-        UserSession.CurrentUser.DeliveryAddress = new DeliveryAddress
+        if (SelectedAddress == null || selectedDeliveryAddressId == 0)
         {
-            CustomerId = UserSession.CurrentUser.Id,
-            Salutation  = salutation,
-            Surname     = surname,
-            Lastname    = lastname,
-            Street      = street,
-            HouseNumber = housenumber,
-            Town        = town,
-            PostalCode  = postalcode,
-            Country     = country
-        };
+            DeliveryAddress da= new DeliveryAddress
+            {
+                CustomerId = c.Id,
+                Salutation = salutation,
+                Surname = surname,
+                Lastname = lastname,
+                Street = street,
+                HouseNumber = housenumber,
+                Town = town,
+                PostalCode = postalcode,
+                Country = country
+            };
+            await OrderService.InsertDeliveryAddressAsync(da);
+            UserSession.CurrentDeliveryAddressId = da.Id;
+
+        }
+        else
+        {
+            UserSession.CurrentDeliveryAddressId = SelectedAddress.Id;
+        }
+
+
 
         Nav.NavigateTo("/SepaPaymentPage");
+        
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        c = await AdminService.GetCustomerByIdIncludeAllAsync(UserSession.CurrentUserId);
+        
+        _addresses = c.DeliveryAddresses ?? new List<DeliveryAddress>();
+
+        if (_addresses.Count == 1)
+        {
+            selectedDeliveryAddressId = _addresses[0].Id;
+        }
+    }
     
+    private void ApplySelectedAddress()
+    {
+        var a = SelectedAddress;
+
+        if (a is null)
+        {
+            salutation  = string.Empty;
+            surname     = string.Empty;
+            lastname    = string.Empty;
+            street      = string.Empty;
+            housenumber = string.Empty;
+            town        = string.Empty;
+            postalcode  = string.Empty;
+            country     = string.Empty;
+            return;
+        }
+
+        salutation  = a.Salutation;
+        surname     = a.Surname;
+        lastname    = a.Lastname;
+        street      = a.Street;
+        housenumber = a.HouseNumber;
+        town        = a.Town;
+        postalcode  = a.PostalCode;
+        country     = a.Country;
+    }
 }
 
 <style>

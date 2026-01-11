@@ -1,6 +1,9 @@
 ﻿@page "/BuySuccessfull"
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Carts
+@using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @inject NavigationManager Nav
@@ -8,35 +11,51 @@
 @inject IShopService ShopService
 @inject ICartService CartService
 @inject IUserSession UserSession
+@inject IOrderService OrderService
+@inject IAdminService AdminService
 
 <PageTitle>Kauf erfolgreich</PageTitle>
 
 <div class="success-container">
-    <h1>🚗💥 </h1>
-    <h1>Kauf erfolgreich!</h1>
+    @if (c is null)
+    {
+        <p class="font">Lade…</p>
+    }
+    else
+    {
+        <h1>🚗💥 </h1>
+        <h1>Kauf erfolgreich!</h1>
 
-    <h2>Danke, @UserSession.CurrentUser.FirstName! Dein Setup ist unterwegs 🔧🔥</h2>
+        <h2>Danke, @c.FirstName! Dein Setup ist unterwegs 🔧🔥</h2>
 
-    <p>
-        Deine Bestellung ist erfolgreich bei uns eingegangen und wird gerade für dich vorbereitet.
-        Schon bald kannst du dein Blech auf das nächste Level bringen.
-    </p>
+        <p>
+            Deine Bestellung ist erfolgreich bei uns eingegangen und wird gerade für dich vorbereitet.
+            Schon bald kannst du dein Blech auf das nächste Level bringen.
+        </p>
 
-    <p>
-        📬 Eine Bestätigungsmail landet gleich in deinem Postfach.
-    </p>
+        <p>
+            📬 Eine Bestätigungsmail landet gleich in deinem Postfach.
+        </p>
 
-    <p>
-        Danke, dass du mit <strong>PimpYourBlech</strong> pimpen gehst –
-        wir wünschen dir maximalen Fahrspaß! 🏁
-    </p>
-    <button class="go-back-button"
-            @onclick="GoBackToHomepage">Zurück zur Homepage</button>
+        <p>
+            Danke, dass du mit <strong>PimpYourBlech</strong> pimpen gehst –
+            wir wünschen dir maximalen Fahrspaß! 🏁
+        </p>
+        <button class="go-back-button"
+                @onclick="GoBackToHomepage">Zurück zur Homepage</button>
+    }
 </div>
 
 
 @code {
 
+    Customer c;
+
+    protected override async Task OnInitializedAsync()
+    {
+        c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+    }
+    
     private void GoBackToHomepage()
     {
         Nav.NavigateTo("/MainMenu");

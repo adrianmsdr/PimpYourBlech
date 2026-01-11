@@ -8,4 +8,10 @@ public interface IOrderService
 {
 
     Task<Order> CreateOrderFromCart(Cart cart, Customer customer, DeliveryAddress address);
+    
+    Task<Customer> GetCustomerByIdAsync(int id);
+
+    Task<DeliveryAddress> GetDeliveryAddressAsync(int id);
+    
+    Task InsertDeliveryAddressAsync(DeliveryAddress address);
 }

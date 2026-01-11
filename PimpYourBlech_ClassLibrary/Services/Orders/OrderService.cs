@@ -22,12 +22,52 @@ public class OrderService : IOrderService
         var order = new Order
         {
             CustomerId = customer.Id,
-            Products = cart.Products,
-            DeliveryAddress = address,
-            OrderDate = DateTime.UtcNow
+            OrderDate = DateTime.UtcNow,
+            Items = new List<OrderPosition>(),
+            TotalPrice = cart.Products.Sum(p => p.Price)
         };
+
+        foreach (var p in cart.Products)
+        {
+            order.Items.Add(new OrderPosition
+            {
+                ProductId = p.ProductId,
+                Quantity = p.Quantity,
+                UnitPrice = (decimal)p.Price
+            });
+        }
+
+        var existingAddress = customer.DeliveryAddresses;
+
+        if (existingAddress.Contains(address))
+        {
+            order.DeliveryAddressId = address.Id;
+        }
+        else
+        {
+            address.CustomerId = customer.Id;
+            address.Customer = null;
+            order.DeliveryAddress = address;
+        }
 
         _customerInventory.AddOrder(order);
         return order;
+    }
+
+
+
+    public async Task<Customer> GetCustomerByIdAsync(int id)
+    {
+        return await _customerInventory.GetCustomerIncludeAdressesAsync(id);
+    }
+
+    public async Task<DeliveryAddress> GetDeliveryAddressAsync(int id)
+    {
+        return await _customerInventory.GetDeliveryAddressAsync(id);
+    }
+    
+    public async Task InsertDeliveryAddressAsync(DeliveryAddress address)
+    {
+        await _customerInventory.InsertDeliveryAddressAsync(address);
     }
 }

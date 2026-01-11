@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Exceptions;
 using PimpYourBlech_ClassLibrary.ValueObjects;
@@ -51,7 +52,34 @@ public class EmailService : IEmailService
 
     public async Task SendOrderReplyEmail(Customer customer,Order order)
     {
+       StringBuilder sb = new StringBuilder();
+        foreach (var p in  order.Items)
+        {
+            sb.Append(p.Product.Name + "\n\n" + p.Product.ArticleNumber + "\n\n" + p.Product.Brand + "\n\n" + p.Product.Price + "\n\n");
+        }
         string subject = "Deine Bestellung bei PimpYourBlech";
+        string message = "Hallo " + customer.FirstName + ",\n\n" +
+                         "deine Bestellung bei PimpYourBlech war erfolgreich.\n" +
+                         "Du kannst deine Bestellungen auch jederzeit in deinem Profil verwalten.\n\n" +
+                         "Bestellübersicht: \n\n" + sb;
+
+        using var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential("pimpyourblech@gmail.com", "yswx nobp xhgk sjzv")
+            }
+            ;
+        if (customer.MailAddress != null)
+        {
+            using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
+                to: customer.MailAddress, subject, message);
+            await client.SendMailAsync(mail);
+        }
+    }
+
+    public async Task SendConfigurationRequestEmail(Customer customer, Configuration config)
+    {
+        string subject = "Deine Konfigurationsübersicht (ID: " + config.Id + ")";
         string message = "Hallo " + customer.FirstName + ",\n\n" +
                          "deine Bestellung bei PimpYourBlech war erfolgreich.\n" +
                          "Du kannst deine Bestellungen auch jederzeit in deinem Profil verwalten.\n\n" +

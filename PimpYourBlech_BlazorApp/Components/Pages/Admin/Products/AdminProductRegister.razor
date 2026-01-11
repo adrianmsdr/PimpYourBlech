@@ -79,7 +79,7 @@
           @bind="_description"></textarea>
     <div class="text-muted mt-1">@_description.Length / 1000</div>
     
-    @if (_selectedProductType == ProductType.Engine)
+    @if (_selectedProductType == ProductType.Motor)
     {
     <input class="text-inputPYB"
            placeholder="PS..."
@@ -111,7 +111,7 @@
         <option value="Elektro">Elektro</option>
     </select>
     
-    }else if (_selectedProductType == ProductType.Rim)
+    }else if (_selectedProductType == ProductType.Felge)
     {
         
     <input class="text-inputPYB"
@@ -124,7 +124,7 @@
    
     }
 
-    else if (_selectedProductType == ProductType.Lights)
+    else if (_selectedProductType == ProductType.Lichter)
     {
         <input class="text-inputPYB"
                placeholder="Lumen..."
@@ -141,7 +141,7 @@
 
         </div>
 
-    }else if (_selectedProductType == ProductType.Color)
+    }else if (_selectedProductType == ProductType.Lack)
     {
         <input class="text-inputPYB"
                placeholder="Farbenname"
@@ -167,7 +167,7 @@
 @code {
 
     // Felder 
-    private ProductType _selectedProductType = ProductType.Engine;
+    private ProductType _selectedProductType = ProductType.Motor;
     private string _selectedGear = "6-Gang Manuell";
     public string _selectedFuel = "Benzin";
     private string _isLed = "True";
@@ -239,7 +239,7 @@
 
         switch (_selectedProductType)
         {
-            case ProductType.Engine:
+            case ProductType.Motor:
                 Fuel fuel = Fuel.Benzin;
                 Gear gear = Gear.Manuell6Gang;
                 if (string.IsNullOrWhiteSpace(_ps) || string.IsNullOrWhiteSpace(_kw) || string.IsNullOrWhiteSpace(_selectedGear))
@@ -306,7 +306,7 @@
                 AdminService.RegisterEngine(p, psValue, kwValue, _displacement, gear, fuel);
                 break;
 
-            case ProductType.Rim:
+            case ProductType.Felge:
                 if (string.IsNullOrEmpty(_diameter) || string.IsNullOrEmpty(_width))
                 {
                     _errorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
@@ -328,7 +328,7 @@
                 AdminService.RegisterRim(p, diameterValue, widthValue);
                 break;
 
-            case ProductType.Lights:
+            case ProductType.Lichter:
                 if (string.IsNullOrEmpty(_lumen))
                 {
                     _errorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
@@ -355,7 +355,7 @@
                 AdminService.RegisterLights(p, lumenValue, isLed);
                 break;
 
-            case ProductType.Color:
+            case ProductType.Lack:
                 AdminService.RegisterColor(p, _displayName);
                 break;
         }

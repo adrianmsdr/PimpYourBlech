@@ -4,17 +4,17 @@ using PimpYourBlech_ClassLibrary.Persistence;
 
 namespace PimpYourBlech_ClassLibrary.Inventories.Implementation;
 
-public sealed class CarInventory(IDatabase database):ICarInventory
+public sealed class CarInventory(IDatabase database) : ICarInventory
 {
-    
-    public void InsertCar(Car c)
+
+    public async Task InsertCarAsync(Car c)
     {
-       
+
         database.Cars.Add(c);
-        database.SaveChanges();
-    
+        await database.SaveChangesAsync();
+
     }
-    
+
     public List<Car> ListCars()
     {
         return database.Cars.ToList();
@@ -28,18 +28,18 @@ public sealed class CarInventory(IDatabase database):ICarInventory
             .Where(p => p.CarId == Id && p.ColorDetail != null)
             .Include(p => p.ColorDetail)
             .ToList();
-            
+
     }
 
-    public void DeleteCar(Car car)
+    public async Task DeleteCarAsync(Car car)
     {
         database.Cars.Remove(car);
-        database.SaveChanges();
+        await database.SaveChangesAsync();
     }
 
-    public void UpdateCar(Car car)
+    public async Task UpdateCarAsync(Car car)
     {
         database.Cars.Update(car);
-        database.SaveChanges();
+        await database.SaveChangesAsync();
     }
 }

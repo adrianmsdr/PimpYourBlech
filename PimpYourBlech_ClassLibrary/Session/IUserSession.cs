@@ -8,17 +8,16 @@ using PimpYourBlech_ClassLibrary.Entities;
 
 public interface IUserSession
 {
-    Customer? CurrentUser { get; set; }
+    public int CurrentUserId { get; set; }
 
     bool IsLoggedIn { get; }
 
     bool IsAdmin { get; }
 
     Configuration? CurrentConfiguration { get; set; }
-
-    void UpdateCurrentCustomer(Customer customer);
-
     
+
+    int CurrentDeliveryAddressId { get; set; }
     PaymentValues? PaymentValues { get; set; }
 
     void LogOut();

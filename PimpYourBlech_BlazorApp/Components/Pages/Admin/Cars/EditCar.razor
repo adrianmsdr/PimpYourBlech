@@ -109,7 +109,7 @@
 
     
 
-    private void SaveEdits()
+    private async Task SaveEdits()
     {
         if (Car is null) return;
 
@@ -125,7 +125,7 @@
         
 
         // Persistieren (muss existieren)
-        AdminService.UpdateCar(Car);
+        await AdminService.UpdateCarAsync(Car);
 
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
 

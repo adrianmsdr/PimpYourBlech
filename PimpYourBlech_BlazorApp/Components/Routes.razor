@@ -10,7 +10,7 @@
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)"/>
 
         <FocusOnNavigate RouteData="routeData" Selector="h1"/>
-        @if (!IsAnonymus(routeData.PageType) && UserSession.CurrentUser == null)
+        @if (!IsAnonymus(routeData.PageType) && UserSession.CurrentUserId == 0)
         {
             Nav.NavigateTo("/login", forceLoad: true);
         }

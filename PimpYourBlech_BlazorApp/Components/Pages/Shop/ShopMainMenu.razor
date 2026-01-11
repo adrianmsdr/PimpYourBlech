@@ -8,6 +8,7 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.ValueObjects
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
@@ -44,11 +45,11 @@
                 {
                     <div class="cart-item">
                         <img src="@ImageService.GetProductImageUrl(item.ProductId)"
-                             alt="@item.Name"
+                             alt="@item.Product.Name"
                              class="cart-item-image" />
 
                         <p class="menu-item">
-                            @item.Name – @item.Price.ToString("C")
+                            @item.Product.Name – Häufigkeit: @item.Quantity – @item.Price.ToString("C")
                         </p>
                         <p class="remove-icon" @onclick="() => RemoveItem(item)">❌</p>
                     </div>
@@ -203,15 +204,15 @@ else
     
     private void AddToCart(Product product)
     {
-        CartService.AddProduct(UserSession.CurrentCart,product);
+        UserSession.CurrentCart = CartService.AddProduct(UserSession.CurrentCart,product);
         ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");
         StateHasChanged();
     }
 
-    private void RemoveItem(Product product)
+    private void RemoveItem(CartPosition product)
     {
         CartService.RemoveProduct(UserSession.CurrentCart,product);
-        ToastService.ShowInfo($"{product.Name} wurde aus dem Warenkorb entfernt");
+        ToastService.ShowInfo($"{product.Product.Name} wurde aus dem Warenkorb entfernt");
         StateHasChanged();
     }
 

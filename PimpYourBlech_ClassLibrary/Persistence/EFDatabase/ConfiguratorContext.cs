@@ -28,6 +28,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<ColorDetail> Colors { get; set; }
     public DbSet<Order> Orders { get; set; }
     
+    public DbSet<OrderPosition> OrderPositions { get; set; }
+
     public DbSet<CommunityQuestion> CommunityQuestions { get; set; }
     public DbSet<CommunityAnswer> CommunityAnswers { get; set; }
     
@@ -111,15 +113,28 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
         });
         
         modelBuilder.Entity<Customer>()
-            .HasOne(c => c.DeliveryAddress)
-            .WithOne(a => a.Customer)
-            .HasForeignKey<DeliveryAddress>(a => a.CustomerId)
+            .HasMany(c => c.DeliveryAddresses)
+            .WithOne(d => d.Customer)
+            .HasForeignKey(d => d.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Erzwingt 1:1, damit nicht mehrere DeliveryAddresses auf denselben Customer zeigen
-        modelBuilder.Entity<DeliveryAddress>()
-            .HasIndex(a => a.CustomerId)
-            .IsUnique();
+        modelBuilder.Entity<OrderPosition>()
+            .HasOne(i => i.Order)
+            .WithMany(o => o.Items)
+            .HasForeignKey(i => i.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<OrderPosition>()
+            .HasOne(i => i.Product)
+            .WithMany()
+            .HasForeignKey(i => i.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.DeliveryAddress)
+            .WithMany() // Adresse kennt ihre Orders NICHT
+            .HasForeignKey(o => o.DeliveryAddressId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     int IDatabase.SaveChanges() => base.SaveChanges();

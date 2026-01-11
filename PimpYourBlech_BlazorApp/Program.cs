@@ -74,7 +74,7 @@ builder.Services.AddScoped<IFaqService, FaqService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 // 7) UserSession
-builder.Services.AddSingleton<IUserSession, UserSession>();
+builder.Services.AddScoped<IUserSession, UserSession>();
 
 //8) ToastNotification
 builder.Services.AddBlazoredToast();

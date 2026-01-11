@@ -12,7 +12,7 @@ public class ShopService(IProductInventory productInventory, ICartService cartSe
     private readonly ICartService _cartService = cartService;
     public List<Product> GetProducts()
     {
-        return productInventory.ListProducts().Where(p=>p.ProductType!=ProductType.Color).ToList();
+        return productInventory.ListProducts().Where(p=>p.ProductType!=ProductType.Lack).ToList();
     }
 
     public List<Product> SearchProducts(string searchString)

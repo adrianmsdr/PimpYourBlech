@@ -51,7 +51,7 @@
         protected override void OnInitialized()
         {
             
-            var customerId = UserSession.CurrentUser.Id;
+            var customerId = UserSession.CurrentUserId;
             if (customerId != null)
             {
                 configurations = ConfiguratorService

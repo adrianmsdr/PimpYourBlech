@@ -4,14 +4,15 @@ using PimpYourBlech_ClassLibrary.Persistence;
 
 namespace PimpYourBlech_ClassLibrary.Inventories.Implementation;
 
-public sealed class CustomerInventory(IDatabase database):ICustomerInventory
+public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
 {
-    public void InsertCustomer(Customer c)
+    public async Task InsertCustomerAsync(Customer c)
     {
         database.Customers.Add(c);
-        database.SaveChanges();
+        await database.SaveChangesAsync();
         
     }
+    
     public List<Customer> ListCustomers()
     {
 
@@ -22,20 +23,13 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     {
         return await database.Customers.ToListAsync();
     }
-
-
-    public void DeleteCustomers()
-    {
-        database.Customers.RemoveRange(database.Customers);
-        database.SaveChanges();
-     
-    }
     
-    public async Task<Customer> GetCustomerByIdAsync(int id)
+    
+    public async Task<Customer> GetCustomerByIdIncludeAllAsync(int id)
     {
 
         return await database.Customers
-            .Include(c => c.DeliveryAddress)
+            .Include(c => c.DeliveryAddresses)
             .Include(c => c.Orders)
             .Include(c => c.Configurations)
             .ThenInclude(cfg => cfg.Car)
@@ -45,11 +39,22 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     }    
 
 
-    public void DeleteCustomer(Customer c)
+    public async Task<Customer?> GetCustomerByIdAsync(int id)
+    {
+        return await database.Customers.FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<Customer?> GetCustomerIncludeAdressesAsync(int id)
+    {
+        return await database.Customers.Include(c => c.DeliveryAddresses).FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task DeleteCustomerAsync(Customer c)
     {
         database.Customers.Remove(c);
-        database.SaveChanges();
+        await database.SaveChangesAsync();
     }
+
 
     public async Task UpdateCustomerAsync(Customer c)
     {
@@ -62,7 +67,7 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
         tracked.PasswordHash = c.PasswordHash;
         tracked.ImagePath = c.ImagePath; 
         tracked.AdminRights = c.AdminRights;
-        tracked.DeliveryAddress = c.DeliveryAddress;
+        tracked.DeliveryAddresses = c.DeliveryAddresses;
         await database.SaveChangesAsync();
 
         
@@ -153,6 +158,28 @@ public sealed class CustomerInventory(IDatabase database):ICustomerInventory
     {
         database.Orders.Remove(order);
         database.SaveChanges();
+    }
+    
+    public async Task<bool> UsernameExistsAsync(string username)
+    {
+        return await database.Customers.AnyAsync(c => c.Username == username);
+    }
+
+
+    public async Task<Customer?> GetCustomerByUsernameAsync(string username)
+    {
+        return await database.Customers.FirstOrDefaultAsync(c => c.Username == username);
+    }
+
+    public async Task<DeliveryAddress> GetDeliveryAddressAsync(int id)
+    {
+        return await database.DeliveryAddresses.FirstOrDefaultAsync(d => d.Id == id);
+    }
+    
+    public async Task InsertDeliveryAddressAsync(DeliveryAddress address)
+    {
+        database.DeliveryAddresses.Add(address);
+        await database.SaveChangesAsync();
     }
 }
 

@@ -1,13 +1,15 @@
 ﻿@inherits LayoutComponentBase
 @using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
 @inject IUserSession UserSession
 @inject NavigationManager Nav
+@inject IAdminService AdminService
 
 <nav class="navbar">
     <div class="navbar-left">
-        @if (UserSession.CurrentUser == null)
+        @if (c == null)
         {
             <NavLink href="/aboutUs" class="nav-merged">
                 <span class="nav-mergedlabel">Über uns</span>
@@ -24,7 +26,7 @@
     </div>
 
     <div class="navbar-right">
-        @if (UserSession.CurrentUser == null)
+        @if (c == null)
         {
             <NavLink href="/" class="nav-btn">Startmenü</NavLink>
             <NavLink href="/login" class="nav-btn">Anmelden</NavLink>
@@ -89,7 +91,7 @@
 
 @code {
     private bool menuOpen;
-
+    private Customer c;
     private void ToggleMenu() => menuOpen = !menuOpen;
     private void CloseMenu() => menuOpen = false;
 
@@ -107,6 +109,12 @@
         Nav.NavigateTo("/");
 
     }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+    }
+    
 }
 
 <style>

@@ -6,18 +6,13 @@ namespace PimpYourBlech_ClassLibrary.Session.Implementation;
 
 public class UserSession : IUserSession
 {
-    public Customer? CurrentUser { get; set; }
+    public int CurrentUserId { get; set; }
 
-    public bool IsLoggedIn => CurrentUser != null;
+    public bool IsLoggedIn => CurrentUserId != 0;
 
     public bool IsAdmin { get; }
 
     public Configuration? CurrentConfiguration { get; set; }
-
-    public void UpdateCurrentCustomer(Customer customer)
-    {
-        CurrentUser = customer;
-    }
     
     public Cart CurrentCart { get; set; } = new Cart();
     public async Task UpdateCurrentCartAsync(Cart cart)
@@ -26,15 +21,16 @@ public class UserSession : IUserSession
     }
 
 
+    public int CurrentDeliveryAddressId { get; set; }
     public PaymentValues? PaymentValues { get; set; }
 
     public void LogOut()
     {
-        CurrentUser = null;
+        CurrentUserId = 0;
     }
 
     public void LogIn(Customer customer)
     {
-        CurrentUser = customer;
+        CurrentUserId = customer.Id;
     }
 }

@@ -101,25 +101,32 @@
     // Felder für die Fehler-/Erfolgsmeldungen
     private string ErrorMessage = "";
     private string SuccessMessage = "";
+    private bool isRegistering;
 
     // Registrieren eines Kunden
     private async Task RegisterCustomer()
     {
+        if (isRegistering) return;
+        isRegistering = true;
         ErrorMessage = "";
         SuccessMessage = "";
 
         try
         {
-            await AdminService.RegisterCustomerAsync(firstName,lastName,username,password,passwordConfirm,phone,email,emailConfirm,SelectedAvatar);
+            await AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar);
             SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
         }
         catch (Exception ex) when (
             ex is WrongInputException ||  
-                    ex is WrongPasswordException ||
-                ex is UsernameNotAvailableException
+            ex is WrongPasswordException ||
+            ex is UsernameNotAvailableException
         )
         {
             ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            isRegistering = false;
         }
     }
     

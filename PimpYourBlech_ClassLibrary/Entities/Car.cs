@@ -17,8 +17,6 @@ public class Car
     public double Price {get; set;}
     
     public List<Product> Products { get; set; }
-
-   public List<Product> Colors { get; set; } = new List<Product>();
   
     
 
