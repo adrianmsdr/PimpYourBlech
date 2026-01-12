@@ -17,7 +17,7 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
     public int SaveChanges() => base.SaveChanges();
-    public Task<int> SaveChangesAsync()  => base.SaveChangesAsync();
+    public async Task<int> SaveChangesAsync()  => await base.SaveChangesAsync();
 
     public DbSet<Car> Cars { get; set; }
     public DbSet<Configuration> Configurations { get; set; }
@@ -34,6 +34,7 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     public DbSet<CommunityAnswer> CommunityAnswers { get; set; }
     
     public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
+    
     
     public async Task<int> GetNextArticleNumberAsync()
     {
@@ -132,7 +133,7 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
 
         modelBuilder.Entity<Order>()
             .HasOne(o => o.DeliveryAddress)
-            .WithMany() // Adresse kennt ihre Orders NICHT
+            .WithMany()
             .HasForeignKey(o => o.DeliveryAddressId)
             .OnDelete(DeleteBehavior.Restrict);
     }

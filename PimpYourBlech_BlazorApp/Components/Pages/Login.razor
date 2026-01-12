@@ -4,6 +4,7 @@
 @using System.Text
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.Session.State
 @inject IAdminService AdminService
 @inject IUserSession UserSession
 @inject NavigationManager Nav
@@ -80,6 +81,8 @@
         {
             var c = await AdminService.CustomerLoginAsync(username, password); 
             UserSession.LogIn(c);
+            LoginState.CurrentUserId = c.Id;
+           
             Nav.NavigateTo("/mainMenu");
         }
 

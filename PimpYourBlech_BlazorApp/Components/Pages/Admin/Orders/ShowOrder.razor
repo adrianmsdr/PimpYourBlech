@@ -6,7 +6,7 @@
 @inject NavigationManager Nav
 
 <div class="menu-container ">
-    
+
     <h3>Bestellübersicht</h3>
     @if (Order is null)
     {
@@ -14,8 +14,7 @@
     }
     else
     {
-        <div class="detail-overview-admin">
-            <div class="combo-card-admin combo-card-wide"> <h5 class="headline-admin">Bestellung</h5>
+            <div class="combo-card-admin combo-card-wide"><h5 class="headline-admin">Bestellung</h5>
                 <div class="admin-detail-grid">
                     <div class="k">ID</div>
                     <div class="v">@Order.OrderId</div>
@@ -53,35 +52,81 @@
                     <div class="v">@Order.DeliveryAddress?.HouseNumber</div>
                 </div>
             </div>
-            
+
             <div class="combo-card-admin combo-card-wide">
                 <h5 class="headline-admin">Produkte</h5>
-                Noch nicht verfügbar ... 
-            </div>
-                <div class="button-column">
-                    <button class="buttons" @onclick="Cancel">Zurück</button>
+                @if (products == null || products.Count == 0)
+                {
+                    <p>Keine Bestellungen vorhanden.</p>
+                }
+                else
+                {
+
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Hersteller</th>
+                            <th>Artikelnummer</th>
+                            <th>Häufigkeit</th>
+                            <th>Preis</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        @foreach (var p in products)
+                        {
+                            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/products/{p.OrderId}"))"
+                                style="cursor: pointer">
+                                <td>@p.ProductId</td>
+                                <td>@p.Product.Name</td>
+                                <td>@p.Product.Brand</td>
+                                <td>@p.Product.ArticleNumber</td>
+                                <td>@p.Quantity</td>
+                                <td>@p.UnitPrice</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            
+            
                 </div>
+            
+            
+            
+            
+            
+            <div class="button-column">
+                <button class="buttons" @onclick="Cancel">Zurück</button>
             </div>
+       
     }
 </div>
 
 @code {
     [Parameter] public int Id { get; set; }
     public Order? Order { get; set; }
+    private List<OrderPosition> products;
 
     protected override async Task OnInitializedAsync()
     {
         Order = await AdminService.GetOrderByIdAsync(Id);
+        products = await AdminService.GetOrderItemsAsync(Order.OrderId);
     }
 
     private void Cancel()
     {
         Nav.NavigateTo("/administrator/orders");
     }
-}<style>
-    
-    .combo-card-wide{
+
+}
+
+<style>
+
+    .combo-card-wide {
         width: min(450px);
     }
-   
+
 </style>

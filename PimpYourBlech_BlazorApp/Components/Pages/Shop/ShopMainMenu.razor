@@ -7,11 +7,16 @@
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
+@using PimpYourBlech_ClassLibrary.DTO
+@using PimpYourBlech_ClassLibrary.Enums
+@using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.Session.State
 @using PimpYourBlech_ClassLibrary.ValueObjects
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
+@inject IConfiguratorService ConfiguratorService
 @inject ICartService CartService
 @inject IToastService ToastService
 @inject IUserSession UserSession
@@ -75,29 +80,7 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
 - sollte man später auch anklicken können + warenkorb und alles drum und dran
 *@
 <div class="search-container">
-    <h2 class="fields">Filter</h2>
-    <div class="d-flex align-items-center gap-3">
-        <label class="fields">Kategorie:</label>
-        <select class="search-select" style="width: 200px"
-                @bind="selectedCategory">
-            <option value="All">Alle</option>
-            <option value="Engine">Motor</option>
-            <option value="Rim">Felge</option>
-            <option value="Lights">Lichtanlage</option>
-        </select>
-    </div>
-
-    <div class="sorting-label">
-        <label class="fields">Sortieren nach:</label>
-        <select class="form-select" style="width: 220px"
-                @bind="selectedSortOption">
-            <option value="NameAscending">Name (A–Z)</option>
-            <option value="NameDescending">Name (Z–A)</option>
-            <option value="PriceAscending">Preis (aufsteigend)</option>
-            <option value="PriceDescending">Preis (absteigend)</option>
-        </select>
-    </div>
-
+    
     <div class="search-row">
         <input class="search-input"
                placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
@@ -118,6 +101,52 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
                 </span>
             </span>Warenkorb
         </p>
+    </div>
+
+    <div class="button-row">
+    <div class="d-flex align-items-center gap-3">
+        <label class="fields">Kategorie:</label>
+        <select class="form-select" style="width: 200px"
+                @bind="selectedCategory" @bind:after="LoadProductsAsync">
+            <option value="">Alle</option>
+            @foreach (var c in Enum.GetValues<ProductType>())
+            {
+                <option value="@c">@c</option>
+            }
+        </select>
+       
+        
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+        <label class="fields">Sortieren nach:</label>
+        <select class="form-select" style="width: 200px"
+                @bind="selectedSortOption" @bind:after="LoadProductsAsync">
+            <option value="@ProductSort.NameAsc">Standard</option>
+            <option value="@ProductSort.NameAsc">Name (A–Z)</option>
+            <option value="@ProductSort.NameDesc">Name (Z–A)</option>
+            <option value="@ProductSort.PriceAsc">Preis (aufsteigend)</option>
+            <option value="@ProductSort.PriceDesc">Preis (absteigend)</option>
+        </select>
+    </div>
+    
+    @if (cars != null)
+    {
+        <div class="d-flex align-items-center gap-3">
+            <label class="fields">Fahrzeug:</label>
+
+            <select class="form-select" style="width: 200px"
+                    @bind="selectedCarId" @bind:after="LoadProductsAsync">
+
+                <option value="0">Alle</option>
+
+                @foreach (var c in cars)
+                {
+                    <option value="@c.Id">@c.Name</option>
+                }
+            </select>
+        </div>
+    }
     </div>
 
 
@@ -164,27 +193,37 @@ else
 
 @code {
     private List<Product> products;
-    private string selectedCategory = "All";
-    private string selectedSortOption = "NameAufsteigend";
+    private List<Car> cars;
+    private ProductType? selectedCategory = null; // null = Alle
+    private ProductSort selectedSortOption = ProductSort.NameAsc;
     private string searchText = string.Empty;
     private Product selectedProduct = new Product();
+    private int selectedCarId = 0;
     
     // Damit wird die methode automatisch aufgerufen beim laden der seite (also alle produkte geholt)
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        LoadProducts();
+        await LoadProductsAsync();
+       cars =  await ConfiguratorService.ListCarsAsync();
     }
-    //  |
-    //  v
-    public void LoadProducts()
+
+    private async Task LoadProductsAsync()
     {
-        products = ShopService.GetProducts();
+        var q = new ProductListQuery
+        {
+            Type = selectedCategory,
+            SortBy = selectedSortOption,
+            NameContains = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
+            CarId = selectedCarId == 0 ? null : selectedCarId 
+        };
+
+        products = await ShopService.GetProductsAsync(q);
     }
     
-    private void ApplySearch()
+    
+    private async Task ApplySearch()
     {
-       products = ShopService.SearchProducts(searchText);
-        
+        await LoadProductsAsync();
     }
 
     // Hier soll er sich später das Bild holen

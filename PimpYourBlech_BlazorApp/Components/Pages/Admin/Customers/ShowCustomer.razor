@@ -56,14 +56,16 @@
                     <div class="k">Telefon</div>
                     <div class="v">@p.Telefon</div>
                 </div>
+                <div class="admin-details-section-divider"></div>
                 @if (p.DeliveryAddresses != null)
                 {
+                    <h4 class="headline-admin">Registrierte Lieferadressen</h4>
 
                     foreach (DeliveryAddress d in p.DeliveryAddresses)
                     {
-                        <div class="admin-details-section-divider"></div>
+                     
 
-                        <h4 class="headline-admin">Registrierte Lieferadressen</h4>
+                       
                         <div class="admin-detail-grid">
                             <div class="k">Land</div>
                             <div class="v">@d.Country</div>
@@ -76,15 +78,18 @@
                             <div class="k">Hausnummer</div>
                             <div class="v">@d.HouseNumber</div>
                         </div>
+                        <div class="admin-details-section-divider"></div>
                     }
                 }
                 else
                 {
                     <div class="admin-details-section-divider"></div>
                     <p>
-                    <h4 class="headline-admin">Registrierte Lieferadresse</h4>
-                    Keine Lieferadresse Registriert ...
+                        <h4 class="headline-admin">Registrierte Lieferadresse</h4>
+                        Keine Lieferadresse Registriert ...
                     </p>
+                    
+                    
                 }
             </div>
         </div>

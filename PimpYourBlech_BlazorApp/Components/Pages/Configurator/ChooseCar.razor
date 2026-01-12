@@ -51,9 +51,9 @@ else
 @code {
     private List<Car> cars = new();
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        cars = ConfiguratorService.ListCars();
+        cars = await ConfiguratorService.ListCarsAsync();
     }
 }
 <style>

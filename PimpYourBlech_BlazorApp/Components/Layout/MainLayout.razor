@@ -3,13 +3,14 @@
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.Session.State
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 
 <nav class="navbar">
     <div class="navbar-left">
-        @if (c == null)
+        @if (UserSession.CurrentUserId == 0)
         {
             <NavLink href="/aboutUs" class="nav-merged">
                 <span class="nav-mergedlabel">Über uns</span>
@@ -26,7 +27,7 @@
     </div>
 
     <div class="navbar-right">
-        @if (c == null)
+        @if (UserSession.CurrentUserId == 0)
         {
             <NavLink href="/" class="nav-btn">Startmenü</NavLink>
             <NavLink href="/login" class="nav-btn">Anmelden</NavLink>
@@ -91,7 +92,6 @@
 
 @code {
     private bool menuOpen;
-    private Customer c;
     private void ToggleMenu() => menuOpen = !menuOpen;
     private void CloseMenu() => menuOpen = false;
 
@@ -106,14 +106,12 @@
         CloseMenu();
         showDeleteModal = false;
         UserSession.LogOut();
+        LoginState.CurrentUserId = 0;
         Nav.NavigateTo("/");
 
     }
     
-    protected override async Task OnInitializedAsync()
-    {
-        c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
-    }
+    
     
 }
 

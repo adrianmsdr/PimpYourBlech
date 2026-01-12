@@ -5,7 +5,7 @@ namespace PimpYourBlech_ClassLibrary.Services.Configurator;
 
 public interface IConfiguratorService
 {
-    Car GetCarById(int carId);
+    Task<Car> GetCarByIdAsync(int carId);
     // Konfiguration starten
     Configuration StartNewConfiguration(Customer customer, Car car,string name);
 
@@ -36,7 +36,7 @@ public interface IConfiguratorService
     public List<Product> ListRims();
 
     
-    public List<Car> ListCars();
+    public Task<List<Car>> ListCarsAsync();
     
     Configuration GetConfigurationById(int Id);
     

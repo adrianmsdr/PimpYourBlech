@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Routing
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.Session.State
 
 @inject NavigationManager Nav
 @inject IUserSession UserSession
@@ -10,9 +11,13 @@
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)"/>
 
         <FocusOnNavigate RouteData="routeData" Selector="h1"/>
-        @if (!IsAnonymus(routeData.PageType) && UserSession.CurrentUserId == 0)
+        @if (!IsAnonymus(routeData.PageType) && LoginState.CurrentUserId == 0)
         {
             Nav.NavigateTo("/login", forceLoad: true);
+        }
+        else
+        {
+            UserSession.LogIn(LoginState.CurrentUserId);
         }
     </Found>
 </Router>
@@ -23,6 +28,7 @@
 
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
     public sealed class AllowAnonymousAttribute : Attribute{}
+    
 
 
 }

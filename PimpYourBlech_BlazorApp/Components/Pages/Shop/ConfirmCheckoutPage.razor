@@ -37,7 +37,7 @@
     }
 </div>
 
-    if (c is null || da is null)
+    @if (c is null || da is null)
     {
         <p>Lade…</p>
     }
@@ -67,7 +67,7 @@
             </p>
         </div>
 
-        @if (UserSession.PaymentValues is null)
+        if (UserSession.PaymentValues is null)
         {
             <p>Keine Bezahldaten vorhanden.</p>
         }

@@ -22,6 +22,8 @@ public interface IDatabase
     DbSet<CommunityQuestion> CommunityQuestions { get; }
     DbSet<CommunityAnswer> CommunityAnswers { get; }
     DbSet<DeliveryAddress> DeliveryAddresses { get; }
+    
+    DbSet<OrderPosition> OrderPositions { get; }
     int SaveChanges();
     
     Task<int> SaveChangesAsync();

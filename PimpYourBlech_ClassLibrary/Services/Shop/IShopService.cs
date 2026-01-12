@@ -1,3 +1,4 @@
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 
 namespace PimpYourBlech_ClassLibrary.Services.Shop;
@@ -12,4 +13,6 @@ public interface IShopService
     public List<Product> SearchProducts(string searchString);
 
     public List<Product> FilterProducts(string selectedCategory);
+
+    public Task<List<Product>> GetProductsAsync(ProductListQuery q);
 }

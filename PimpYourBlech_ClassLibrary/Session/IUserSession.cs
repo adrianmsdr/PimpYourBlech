@@ -23,6 +23,7 @@ public interface IUserSession
     void LogOut();
 
     void LogIn(Customer customer);
+    void LogIn(int customerId);
 
     public Cart CurrentCart { get; set; } 
     

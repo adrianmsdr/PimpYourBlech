@@ -62,11 +62,11 @@ public interface IAdminService
 
      List<ProductType> GetProductTypes();
    // ___________________________________Cars____________________________________
-  List<Car> GetCars();
+  Task<List<Car>> GetCarsAsync();
    
    Task<Car> RegisterCarAsync(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price);
    
-   Car GetCarById(int id);
+   Task<Car> GetCarByIdAsync(int id);
    
    Task DeleteCarAsync(Car car);
    
@@ -78,4 +78,6 @@ public interface IAdminService
    public Task<List<Order>> GetOrdersAsync();
    
    public Task<Order> GetOrderByIdAsync(int id);
+
+   public Task<List<OrderPosition>> GetOrderItemsAsync(int id);
 }

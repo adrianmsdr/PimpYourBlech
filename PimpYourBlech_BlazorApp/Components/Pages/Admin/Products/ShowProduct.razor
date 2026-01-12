@@ -78,7 +78,7 @@ else
 
     private async Task DeleteProduct()
     {
-        Car c = AdminService.GetCarById(Product.CarId);
+        Car c = await AdminService.GetCarByIdAsync(Product.CarId);
         await ImageService.DeleteProductImagesAsync(Product.ProductId);
         if (Product.ProductType == ProductType.Lack)
         {

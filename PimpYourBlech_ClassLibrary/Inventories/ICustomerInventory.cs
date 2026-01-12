@@ -48,5 +48,8 @@ public interface ICustomerInventory
 
     public Task<DeliveryAddress> GetDeliveryAddressAsync(int id);
     
-    Task InsertDeliveryAddressAsync(DeliveryAddress address);
+    Task<int> InsertDeliveryAddressAsync(DeliveryAddress address);
+    
+    Task<List<OrderPosition>> GetOrderItemsAsync(int id);
+   
 }

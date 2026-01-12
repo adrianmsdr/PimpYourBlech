@@ -253,9 +253,9 @@ public class AdminService:IAdminService
     // ___________________________________Cars____________________________________
 
 
-    public List<Car> GetCars()
+    public async Task<List<Car>> GetCarsAsync()
     {
-        return _carRepository.ListCars();
+        return await _carRepository.ListCarsAsync();
     }
     public async Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity,
         double price)
@@ -273,17 +273,9 @@ public class AdminService:IAdminService
         return c;
     }
     
-    public Car GetCarById(int id)
+    public async Task<Car> GetCarByIdAsync(int id)
     {
-        Car temp = null;
-        foreach (Car c in _carRepository.ListCars())
-        {
-            if (c.Id == id)
-            {
-                temp = c;
-            }
-        }
-        return temp;
+        return await _carRepository.GetCarByIdAsync(id);
     }
 
     public async Task DeleteCarAsync(Car car)
@@ -320,5 +312,10 @@ public class AdminService:IAdminService
     public async Task<Order> GetOrderByIdAsync(int id)
     {
         return await _customerRepository.GetOrderByIdAsync(id);
+    }
+
+    public async Task<List<OrderPosition>> GetOrderItemsAsync(int id)
+    {
+        return await _customerRepository.GetOrderItemsAsync(id);
     }
 }

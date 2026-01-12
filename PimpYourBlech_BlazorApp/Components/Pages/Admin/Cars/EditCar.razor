@@ -81,9 +81,9 @@
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Car = AdminService.GetCarById(Id);
+        Car = await AdminService.GetCarByIdAsync(Id);
         if (Car is null)
         {
             ErrorMessage = "Fahrzeug nicht gefunden.";
