@@ -49,9 +49,9 @@
     private List<Car> cars = new();
     private List<Car> selectedCars = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        cars = ConfiguratorService.ListCars();
+        cars = await ConfiguratorService.ListCarsAsync();
     }
 
     private void ToggleCar(Car car)

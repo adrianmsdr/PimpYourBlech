@@ -15,9 +15,9 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
 
     }
 
-    public List<Car> ListCars()
+    public async Task<List<Car>> ListCarsAsync()
     {
-        return database.Cars.ToList();
+        return await database.Cars.ToListAsync();
 
         //  return _cars;
     }
@@ -41,5 +41,10 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
     {
         database.Cars.Update(car);
         await database.SaveChangesAsync();
+    }
+
+    public async Task<Car?> GetCarByIdAsync(int Id)
+    {
+        return await database.Cars.FindAsync(Id);
     }
 }

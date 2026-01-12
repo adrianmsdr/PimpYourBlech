@@ -150,7 +150,7 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
     {
         return await database.Orders.Include(o => o.Customer)
             .Include(o=> o.DeliveryAddress)
-            .FirstOrDefaultAsync(o => o.OrderId == id);
+            .FirstOrDefaultAsync(o => o.OrderId == id); 
     }
 
 
@@ -176,10 +176,16 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
         return await database.DeliveryAddresses.FirstOrDefaultAsync(d => d.Id == id);
     }
     
-    public async Task InsertDeliveryAddressAsync(DeliveryAddress address)
+    public async Task<int> InsertDeliveryAddressAsync(DeliveryAddress address)
     {
         database.DeliveryAddresses.Add(address);
         await database.SaveChangesAsync();
+        return address.Id;
+    }
+
+    public async Task<List<OrderPosition>> GetOrderItemsAsync(int id)
+    {
+        return await database.OrderPositions.Where(o => o.OrderId == id).ToListAsync();
     }
 }
 

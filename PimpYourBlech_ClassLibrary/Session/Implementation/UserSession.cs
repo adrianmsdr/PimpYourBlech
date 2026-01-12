@@ -13,7 +13,12 @@ public class UserSession : IUserSession
     public bool IsAdmin { get; }
 
     public Configuration? CurrentConfiguration { get; set; }
-    
+
+    public void LogIn(int customerId)
+    {
+        CurrentUserId = customerId;
+    }
+
     public Cart CurrentCart { get; set; } = new Cart();
     public async Task UpdateCurrentCartAsync(Cart cart)
     {

@@ -46,7 +46,7 @@ public partial class ConfiguratorMenu : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         // 1) Auto laden (einmal)
-        Car = ConfiguratorService.GetCarById(Id);
+        Car = await ConfiguratorService.GetCarByIdAsync(Id);
         if (Car == null) return;
 
         // 2) Farben laden

@@ -39,13 +39,10 @@ public class ConfiguratorService : IConfiguratorService
     {
         return _customerInventory.GetConfigurationsForCustomer(customerId);
     }
-    public Car? GetCarById(int carId)
+    public async Task<Car> GetCarByIdAsync(int carId)
     {
-        var c = carInventory.ListCars().FirstOrDefault(c => c.Id == carId);
-
-        if (c == null) return null;
-
-        return c;
+        return await carInventory.GetCarByIdAsync(carId);
+        
 
     }
     
@@ -134,9 +131,9 @@ public class ConfiguratorService : IConfiguratorService
        return productInventory.ListRims();
     }
 
-    public List<Car> ListCars()
+    public async Task<List<Car>> ListCarsAsync()
     {
-        return carInventory.ListCars();
+        return await carInventory.ListCarsAsync();
     }
 
     public Configuration GetConfigurationById(int Id)

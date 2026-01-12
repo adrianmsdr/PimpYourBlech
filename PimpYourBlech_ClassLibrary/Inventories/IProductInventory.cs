@@ -1,3 +1,4 @@
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 
 namespace PimpYourBlech_ClassLibrary.Inventories;
@@ -17,5 +18,7 @@ public interface IProductInventory
     public List<Product> ListRims();
     
     Task<Product?> GetProductByIdAsync(int id);
+    
+    Task<List<Product>> QueryAsync(ProductListQuery q);
  
 }

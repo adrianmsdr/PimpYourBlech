@@ -13,5 +13,5 @@ public interface IOrderService
 
     Task<DeliveryAddress> GetDeliveryAddressAsync(int id);
     
-    Task InsertDeliveryAddressAsync(DeliveryAddress address);
+    Task<int> InsertDeliveryAddressAsync(DeliveryAddress address);
 }

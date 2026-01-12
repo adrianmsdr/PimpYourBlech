@@ -66,8 +66,8 @@ public class OrderService : IOrderService
         return await _customerInventory.GetDeliveryAddressAsync(id);
     }
     
-    public async Task InsertDeliveryAddressAsync(DeliveryAddress address)
+    public async Task<int> InsertDeliveryAddressAsync(DeliveryAddress address)
     {
-        await _customerInventory.InsertDeliveryAddressAsync(address);
+        return await _customerInventory.InsertDeliveryAddressAsync(address);
     }
 }

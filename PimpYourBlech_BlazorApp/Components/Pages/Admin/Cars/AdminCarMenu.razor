@@ -97,9 +97,9 @@
 
     private string ErrorMessage = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        cars = AdminService.GetCars();
+        cars = await AdminService.GetCarsAsync();
         filteredCars = cars;
     }
 

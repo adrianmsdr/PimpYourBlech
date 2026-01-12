@@ -1,3 +1,4 @@
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Inventories;
 using PimpYourBlech_ClassLibrary.Services.Carts;
@@ -69,6 +70,10 @@ public class ShopService(IProductInventory productInventory, ICartService cartSe
         return filteredProducts;
     }
 
-    
+    public Task<List<Product>> GetProductsAsync(ProductListQuery q)
+    {
+        // optional: q.NameContains trimmen etc.
+        return _productInventory.QueryAsync(q);
+    }
 
 }

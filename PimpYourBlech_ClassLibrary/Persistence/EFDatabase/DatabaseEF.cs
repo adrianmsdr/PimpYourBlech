@@ -27,7 +27,8 @@ public DbSet<Order> Orders => _ctx.Orders;
 
 public DbSet<CommunityQuestion> CommunityQuestions => _ctx.CommunityQuestions;
 public DbSet<CommunityAnswer> CommunityAnswers => _ctx.CommunityAnswers;
-public DbSet<DeliveryAddress> DeliveryAddresses => _ctx.   DeliveryAddresses;
+public DbSet<DeliveryAddress> DeliveryAddresses => _ctx.DeliveryAddresses;
+public DbSet<OrderPosition> OrderPositions => _ctx.OrderPositions;
 
 public int SaveChanges() => _ctx.SaveChanges();
 

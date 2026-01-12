@@ -1,5 +1,6 @@
 @page "/administrator/products/new"
 <PageTitle>Administrator/products/new</PageTitle>
+@using System.Runtime.CompilerServices
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Enums
@@ -201,9 +202,9 @@
     private string _errorMessage = "";
     private string _successMessage = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _cars = AdminService.GetCars();
+        _cars = await AdminService.GetCarsAsync();
         _categories = AdminService.GetProductTypes();
     }
 
@@ -235,7 +236,7 @@
             return;
         }
         
-        Product p = AdminService.CreateProduct(AdminService.GetCarById(_selectedCarId),_name, _brand, quantityValue, priceValue,_selectedProductType, _description);
+        Product p = AdminService.CreateProduct(await AdminService.GetCarByIdAsync(_selectedCarId),_name, _brand, quantityValue, priceValue,_selectedProductType, _description);
 
         switch (_selectedProductType)
         {
