@@ -201,6 +201,10 @@ Temporary Items
 PimpYourBlech_BlazorApp/wwwroot/CarImages/
 PimpYourBlech_BlazorApp/wwwroot/ProductImages/
 
+# Serilog / Runtime Logs
+Logs/
+logs/
+
 # JetBrains Rider / ReSharper user-specific
 *.DotSettings.user
 *.sln.DotSettings.user

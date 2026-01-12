@@ -69,8 +69,6 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
         tracked.AdminRights = c.AdminRights;
         tracked.DeliveryAddresses = c.DeliveryAddresses;
         await database.SaveChangesAsync();
-
-        
     }
     public void UpdateCustomers()
     {

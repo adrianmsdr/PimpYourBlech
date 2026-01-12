@@ -9,6 +9,8 @@
 @inject IImageService ImageService
 @inject IAdminService AdminService
 @inject IToastService ToastService
+@inject ILogger<ChangeProductImages> Logger
+
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 <div class="menu-container">
     <h3>Produktbilder bearbeiten</h3>
@@ -38,34 +40,44 @@
         </div>
     }
 </div>
+@code {
+    private List<Product> products = new();
+    private int SelectedProductId;
 
-    @code {
-           
-            private List<Product> products = new();
-            private int SelectedProductId;
+    private int CarId;
 
-            private int CarId;
+    private IBrowserFile? uploadedProductImage;
 
-            private IBrowserFile? uploadedProductImage;
-    
-            private string ErrorMessage = "";
-            private string SuccessMessage = "";
-            
-            protected override void OnInitialized()
-            {
-                products = AdminService.GetProducts();
-            }
-            
-            private void OnProductImageSelected(InputFileChangeEventArgs e)
-            {
-                uploadedProductImage = e.File;
-            }
-            
-            private async Task SaveCarImage()
-            {
-                if (SelectedProductId == 0 || uploadedProductImage is null) return;
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
 
-                await ImageService.SaveProductImagesAsync(SelectedProductId, uploadedProductImage);
-                ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
-            }
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Admin opened product image management page");
+        products = AdminService.GetProducts();
     }
+
+    private void OnProductImageSelected(InputFileChangeEventArgs e)
+    {
+        uploadedProductImage = e.File;
+    }
+
+    private async Task SaveCarImage()
+    {
+        if (SelectedProductId == 0 || uploadedProductImage is null) return;
+        
+        Logger.LogInformation(
+            "Admin started uploading product image for ProductId={ProductId}",
+            SelectedProductId
+        );
+
+        await ImageService.SaveProductImagesAsync(SelectedProductId, uploadedProductImage);
+
+        ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
+        
+        Logger.LogInformation(
+            "Admin successfully uploaded product image for ProductId={ProductId}",
+            SelectedProductId
+        );
+    }
+}

@@ -1,5 +1,6 @@
 @page "/login"
 
+@using System.Diagnostics.Metrics
 @using System.Security.Cryptography
 @using System.Text
 @using PimpYourBlech_ClassLibrary.Services.Admin
@@ -7,6 +8,7 @@
 @using PimpYourBlech_ClassLibrary.Session.State
 @inject IAdminService AdminService
 @inject IUserSession UserSession
+@inject ILogger<Login> Logger
 @inject NavigationManager Nav
 @attribute [Routes.AllowAnonymous]
 
@@ -73,6 +75,13 @@
     private async Task LoginCustomer()
     {
         if (isLoggingIn) return;
+        
+        Logger.LogInformation(
+            "Login attempt for username {Username}",
+            username
+        );
+        
+        
         isLoggingIn = true;
         StateHasChanged();
 
@@ -82,12 +91,23 @@
             var c = await AdminService.CustomerLoginAsync(username, password); 
             UserSession.LogIn(c);
             LoginState.CurrentUserId = c.Id;
+            
+            Logger.LogInformation(
+                "Login successful for user {UserId}",
+                c.Id
+            );
            
             Nav.NavigateTo("/mainMenu");
         }
 
         catch (Exception ex)
         {
+            
+            Logger.LogWarning(
+                ex,
+                "Login failed for username {Username}",
+                username
+            );
             // Bei Fehler: Fehlermeldung wird gesetzt
             ErrorMessage = ex.Message;
         }

@@ -17,6 +17,7 @@
 @inject IUserSession UserSession
 @inject IOrderService OrderService
 @inject IAdminService AdminService
+@inject ILogger<CheckoutPage> Logger
 
 
 <div class="checkout-container">
@@ -120,6 +121,7 @@
     }
 </div>
 
+
 @code {
     private Customer? c;
     private string salutation  = string.Empty;
@@ -130,8 +132,10 @@
     private string town        = string.Empty;
     private string postalcode  = string.Empty;
     private string country     = string.Empty;
-    private List<DeliveryAddress> _addresses = new List<DeliveryAddress>();
+
+    private List<DeliveryAddress> _addresses = new();
     private int _selectedDeliveryAddressId;
+
     private int selectedDeliveryAddressId
     {
         get => _selectedDeliveryAddressId;
@@ -141,29 +145,39 @@
             ApplySelectedAddress();
         }
     }
-    /*
-    private bool IsCheckoutDisabled =>
-            string.IsNullOrWhiteSpace(salutation) ||
-            string.IsNullOrWhiteSpace(country)    ||
-            string.IsNullOrWhiteSpace(surname)    ||
-            string.IsNullOrWhiteSpace(lastname)   ||
-            string.IsNullOrWhiteSpace(street)     ||
-            string.IsNullOrWhiteSpace(housenumber)||
-            string.IsNullOrWhiteSpace(town)       ||
-            string.IsNullOrWhiteSpace(postalcode);
-
-*/
 
     private DeliveryAddress? SelectedAddress =>
         c?.DeliveryAddresses?.FirstOrDefault(x => x.Id == selectedDeliveryAddressId);
 
     private bool isDisabled => SelectedAddress != null;
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation(
+            "Checkout page opened by UserId={UserId}",
+            UserSession.CurrentUserId
+        );
+
+        c = await AdminService.GetCustomerByIdIncludeAllAsync(UserSession.CurrentUserId);
+
+        _addresses = c.DeliveryAddresses ?? new List<DeliveryAddress>();
+
+        if (_addresses.Count == 1)
+        {
+            selectedDeliveryAddressId = _addresses[0].Id;
+        }
+    }
+
     private async Task NavigateToConfirm()
     {
+        Logger.LogInformation(
+            "User {UserId} proceeds from checkout to payment",
+            UserSession.CurrentUserId
+        );
+
         if (SelectedAddress == null || selectedDeliveryAddressId == 0)
         {
-            DeliveryAddress da= new DeliveryAddress
+            DeliveryAddress da = new DeliveryAddress
             {
                 CustomerId = c.Id,
                 Salutation = salutation,
@@ -175,33 +189,30 @@
                 PostalCode = postalcode,
                 Country = country
             };
+
             await OrderService.InsertDeliveryAddressAsync(da);
             UserSession.CurrentDeliveryAddressId = da.Id;
-
+            
+            Logger.LogInformation(
+                "New delivery address created for UserId={UserId}, AddressId={AddressId}",
+                UserSession.CurrentUserId,
+                da.Id
+            );
         }
         else
         {
             UserSession.CurrentDeliveryAddressId = SelectedAddress.Id;
+
+            Logger.LogInformation(
+                "Existing delivery address selected for UserId={UserId}, AddressId={AddressId}",
+                UserSession.CurrentUserId,
+                SelectedAddress.Id
+            );
         }
-
-
 
         Nav.NavigateTo("/SepaPaymentPage");
-        
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        c = await AdminService.GetCustomerByIdIncludeAllAsync(UserSession.CurrentUserId);
-        
-        _addresses = c.DeliveryAddresses ?? new List<DeliveryAddress>();
-
-        if (_addresses.Count == 1)
-        {
-            selectedDeliveryAddressId = _addresses[0].Id;
-        }
-    }
-    
     private void ApplySelectedAddress()
     {
         var a = SelectedAddress;

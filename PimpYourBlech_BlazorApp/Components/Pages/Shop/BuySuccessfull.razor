@@ -13,6 +13,7 @@
 @inject IUserSession UserSession
 @inject IOrderService OrderService
 @inject IAdminService AdminService
+@inject ILogger<BuySuccessfull> Logger
 
 <PageTitle>Kauf erfolgreich</PageTitle>
 
@@ -48,16 +49,26 @@
 
 
 @code {
-
+    
     Customer c;
 
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation(
+            "BuySuccessfull page opened for UserId={UserId}",
+            UserSession.CurrentUserId
+        );
+
         c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
     }
-    
+
     private void GoBackToHomepage()
     {
+        Logger.LogInformation(
+            "User {UserId} navigated back to MainMenu after successful purchase",
+            UserSession.CurrentUserId
+        );
+
         Nav.NavigateTo("/MainMenu");
     }
 }

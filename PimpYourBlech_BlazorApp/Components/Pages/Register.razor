@@ -10,6 +10,7 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IImageService ImageService
+@inject ILogger<Register> Logger
 @attribute [Routes.AllowAnonymous]
 
 <PageTitle>Registration</PageTitle>
@@ -110,10 +111,21 @@
         isRegistering = true;
         ErrorMessage = "";
         SuccessMessage = "";
+        
+        Logger.LogInformation(
+            "Registration attempt for username {Username}",
+            username
+        );
 
         try
         {
             await AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar);
+            
+            Logger.LogInformation(
+                "Registration successful for username {Username}",
+                username
+            );
+            
             SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
         }
         catch (Exception ex) when (
@@ -122,6 +134,12 @@
             ex is UsernameNotAvailableException
         )
         {
+            Logger.LogWarning(
+                ex,
+                "Registration failed for username {Username}",
+                username
+            );
+            
             ErrorMessage = ex.Message;
         }
         finally

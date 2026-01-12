@@ -9,6 +9,8 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
+@inject ILogger<EditCar> Logger
+
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
@@ -83,9 +85,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation(
+            "Admin opened edit page for CarId={CarId}",
+            Id
+        );
+        
         Car = await AdminService.GetCarByIdAsync(Id);
         if (Car is null)
         {
+            Logger.LogWarning(
+                "Admin tried to edit non-existing car with Id={CarId}",
+                Id
+            );
+            
             ErrorMessage = "Fahrzeug nicht gefunden.";
             return;
         }
@@ -106,12 +118,15 @@
             
         };
     }
-
     
-
     private async Task SaveEdits()
     {
         if (Car is null) return;
+        
+        Logger.LogInformation(
+            "Admin started updating car with Id={CarId}",
+            Car.Id
+        );
 
         // Original updaten
         Car.Name = EditModel.Name;
@@ -122,19 +137,25 @@
         Car.DatePermit = EditModel.DatePermit;
         Car.DateProduction = EditModel.DateProduction;
         
-        
-
         // Persistieren (muss existieren)
         await AdminService.UpdateCarAsync(Car);
+        
+        Logger.LogInformation(
+            "Admin successfully updated car with Id={CarId}",
+            Car.Id
+        );
+        
 
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
-
     }
 
     private void Cancel()
     {
+        Logger.LogInformation(
+            "Admin cancelled editing car with Id={CarId}",
+            Car?.Id
+        );
+        
         Nav.NavigateTo($"/administrator/cars/{Car.Id}");
     }
-
-    
 }

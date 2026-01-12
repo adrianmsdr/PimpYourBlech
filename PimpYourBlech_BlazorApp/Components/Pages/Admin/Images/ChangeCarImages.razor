@@ -9,6 +9,7 @@
 @inject Services.IImageService ImageService
 @inject NavigationManager Nav
 @inject IToastService ToastService
+@inject ILogger<ChangeCarImages> Logger
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 @if (isUploading)
 {
@@ -165,11 +166,18 @@
             if (selectedCarId == value) return;
             selectedCarId = value;
             OnCarChanged();
+            
+            Logger.LogInformation(
+                "Admin selected car for image management: CarId={CarId}",
+                selectedCarId
+            );
+            
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation("Admin opened 360 image management page");
         cars = await AdminService.GetCarsAsync();
     }
 
@@ -196,7 +204,6 @@
     {
        uploadedCarImage = e.File;
     }
-   
 
     private async Task SaveCarImage()
     {
@@ -204,26 +211,55 @@
 
         await ImageService.SaveCarImageAsync(SelectedCarId, uploadedCarImage);
         ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
+        
+        Logger.LogInformation(
+            "Admin uploaded car image for CarId={CarId}",
+            SelectedCarId
+        );
+        
     }
     
-
     private async Task SaveColorFrames(int colorId, int rimId)
     {
             if (isUploading) return;
             if (SelectedCarId == 0) return;
             isUploading = true;
             StateHasChanged(); 
+            
+            Logger.LogInformation(
+                "Admin started uploading 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
+                SelectedCarId,
+                colorId,
+                rimId
+            );
+
+            
 
             try
             {
                 await ImageService.Save360ImagesAsync(selectedCarId, colorId, rimId,uploadedFiles);
                 ToastService.ShowSuccess("360°-Bilder gespeichert.");
+                
+                Logger.LogInformation(
+                    "Admin successfully uploaded 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
+                    SelectedCarId,
+                    colorId,
+                    rimId
+                );
+
              
             }
             catch (Exception ex)
             {
                 ToastService.ShowError(ex.Message);
                 
+                Logger.LogError(
+                    ex,
+                    "Error uploading 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
+                    SelectedCarId,
+                    colorId,
+                    rimId
+                );
             }
             finally
             {
@@ -231,31 +267,33 @@
                 StateHasChanged(); // Overlay weg
             }
         }
-       
-        
-
     
-
     private async Task DeleteColorFrames(int colorId, int rimId)
     {
         if (SelectedCarId == 0) return;
 
         await ImageService.Delete360ImagesAsync(SelectedCarId, colorId, rimId);
-           ToastService.ShowError("Frames wurden gelöscht");     
+           ToastService.ShowError("Frames wurden gelöscht"); 
+           
+           Logger.LogInformation(
+               "Admin deleted 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
+               SelectedCarId,
+               colorId,
+               rimId
+           );
     }
     
-}<style>
+}
+<style>
     .upload-overlay {
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.35);
         backdrop-filter: blur(6px);
         z-index: 9999;
-
         display: flex;
         align-items: center;
         justify-content: center;
-
         pointer-events: all; /* blockiert Klicks */
     }
 
