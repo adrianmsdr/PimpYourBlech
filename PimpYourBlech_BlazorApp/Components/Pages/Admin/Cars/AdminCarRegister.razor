@@ -7,6 +7,7 @@
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 @inject IImageService ImageService
+@inject ILogger<AdminCarRegister> Logger
 
 
 <div class="menu-container">
@@ -100,6 +101,13 @@
         ErrorMessage = "";
         SuccessMessage = "";
         
+        Logger.LogInformation(
+            "Admin started car registration: Name={Name}, Model={Model}, Brand={Brand}",
+            name,
+            model,
+            brand
+        );
+        
         
         if (string.IsNullOrWhiteSpace(name) ||
             string.IsNullOrWhiteSpace(model))
@@ -132,6 +140,12 @@
             name, dateProduction, datePermit, brand, model, psValue,
             quantityValue, priceValue
         );
+        
+        Logger.LogInformation(
+            "Admin registered car successfully with Id={CarId}, Name={Name}",
+            car.Id,
+            name
+        );
 
         // Falls Bilder ausgewählt speichern
         try
@@ -139,6 +153,11 @@
                 if (uploadedCarImage != null)
                 {
                     var folder = await ImageService.SaveCarImageAsync(car.Id, uploadedCarImage);
+                    
+                    Logger.LogInformation(
+                        "Car image uploaded for CarId={CarId}",
+                        car.Id
+                    );
                 }
             
 
@@ -148,11 +167,18 @@
         {
             ErrorMessage = $"Fehler beim Speichern der Bilder: {ex.Message}";
             Console.WriteLine(ex);
+            
+            Logger.LogError(
+                ex,
+                "Error while uploading car image for CarId={CarId}",
+                car.Id
+            );
         }
     }
 
     private void Cancel()
     {
+        Logger.LogInformation("Admin cancelled car registration");
         Nav.NavigateTo("/administrator/cars");
     }
 }

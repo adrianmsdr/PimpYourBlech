@@ -4,6 +4,7 @@
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.Implementation
 @inject IUserSession UserSession
+@inject ILogger<SepaPaymentPage> Logger
 
 
 <div class="sepa-container">
@@ -54,6 +55,11 @@
 
     private void NavigateToConfirm()
     {
+        Logger.LogInformation(
+            "User {UserId} entered SEPA payment data and proceeds to confirmation",
+            UserSession.CurrentUserId
+        );
+
         UserSession.PaymentValues = new PaymentValues
         {
             AccountOwner = $"{surname} {lastname}",
@@ -61,9 +67,15 @@
             Bic = bic
         };
 
+        Logger.LogInformation(
+            "SEPA payment data stored in session for UserId={UserId}",
+            UserSession.CurrentUserId
+        );
+
         Nav.NavigateTo("/ConfirmCheckoutPage");
     }
 }
+
 <style>
 
     .sepa-container {

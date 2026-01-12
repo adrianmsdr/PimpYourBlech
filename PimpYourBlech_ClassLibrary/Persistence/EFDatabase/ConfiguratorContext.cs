@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Session;
+using Microsoft.Extensions.Logging;
+
 
 namespace PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 

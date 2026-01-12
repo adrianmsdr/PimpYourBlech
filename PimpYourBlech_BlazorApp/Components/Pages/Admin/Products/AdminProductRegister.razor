@@ -9,7 +9,7 @@
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 @inject IImageService ImageService
-
+@inject ILogger<AdminService> Logger
 
 
 
@@ -175,7 +175,6 @@
     private string _searchValue = string.Empty;
 
     private string _name = "";
-    
     private string _brand = "";
     private string _quantity = "";
     private string _price = "";
@@ -191,8 +190,7 @@
     private string _lumen = "";
 
     private string _displayName = "";
-    
-    
+
     private IBrowserFile? _uploadedProductImage;
 
     private List<Car> _cars = new();
@@ -204,20 +202,29 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation("Admin opened product registration page");
+
         _cars = await AdminService.GetCarsAsync();
         _categories = AdminService.GetProductTypes();
     }
 
     private void HandleProductImageSelected(InputFileChangeEventArgs e)
     {
-        _uploadedProductImage = e.File; // 
+        _uploadedProductImage = e.File;
     }
-    
+
     private async Task RegisterProduct()
     {
         _errorMessage = "";
         _successMessage = "";
         
+        Logger.LogInformation(
+            "Admin started product registration: Name={Name}, Type={ProductType}, CarId={CarId}",
+            _name,
+            _selectedProductType,
+            _selectedCarId
+        );
+
         if (string.IsNullOrWhiteSpace(_name))
         {
             _errorMessage = "Name darf nicht leer sein.";
@@ -235,14 +242,23 @@
             _errorMessage = "Preis muss eine positive Zahl sein.";
             return;
         }
-        
-        Product p = AdminService.CreateProduct(await AdminService.GetCarByIdAsync(_selectedCarId),_name, _brand, quantityValue, priceValue,_selectedProductType, _description);
+
+        Product p = AdminService.CreateProduct(
+            await AdminService.GetCarByIdAsync(_selectedCarId),
+            _name,
+            _brand,
+            quantityValue,
+            priceValue,
+            _selectedProductType,
+            _description
+        );
 
         switch (_selectedProductType)
         {
             case ProductType.Motor:
                 Fuel fuel = Fuel.Benzin;
                 Gear gear = Gear.Manuell6Gang;
+
                 if (string.IsNullOrWhiteSpace(_ps) || string.IsNullOrWhiteSpace(_kw) || string.IsNullOrWhiteSpace(_selectedGear))
                 {
                     _errorMessage = "Bitte alle Motor-Details ausfüllen (PS, kW, Getriebeart).";
@@ -263,45 +279,19 @@
 
                 switch (_selectedGear)
                 {
-                    case "5-Gang Manuell":
-                        gear = Gear.Manuell5Gang;
-                        break;
-
-                    case "6-Gang Manuell":
-                        gear = Gear.Manuell6Gang;
-                        break;
-
-                    case "6-Gang Automatik":
-                        gear = Gear.Automatik6Gang;
-                        break;
-
-                    case "8-Gang Automatik":
-                        gear = Gear.Automatik8Gang;
-                        break;
+                    case "5-Gang Manuell": gear = Gear.Manuell5Gang; break;
+                    case "6-Gang Manuell": gear = Gear.Manuell6Gang; break;
+                    case "6-Gang Automatik": gear = Gear.Automatik6Gang; break;
+                    case "8-Gang Automatik": gear = Gear.Automatik8Gang; break;
                 }
 
                 switch (_selectedFuel)
                 {
-                    case "Benzin":
-                        fuel = Fuel.Benzin;
-                        break;
-
-                    case "Diesel":
-                        fuel = Fuel.Diesel;
-                        break;
-
-                    case "Hybrid":
-                        fuel = Fuel.Hybrid;
-                        break;
-
-                    case "Gas":
-                        fuel = Fuel.Gas;
-                        break;
-
-
-                    case "Elektro":
-                        fuel = Fuel.Elektro;
-                        break;
+                    case "Benzin": fuel = Fuel.Benzin; break;
+                    case "Diesel": fuel = Fuel.Diesel; break;
+                    case "Hybrid": fuel = Fuel.Hybrid; break;
+                    case "Gas": fuel = Fuel.Gas; break;
+                    case "Elektro": fuel = Fuel.Elektro; break;
                 }
 
                 AdminService.RegisterEngine(p, psValue, kwValue, _displacement, gear, fuel);
@@ -342,17 +332,7 @@
                     return;
                 }
 
-                bool isLed = false;
-                switch (_isLed)
-                {
-                    case "True":
-                        isLed = true;
-                        break;
-
-                    case "False":
-                        break;
-                }
-
+                bool isLed = _isLed == "True";
                 AdminService.RegisterLights(p, lumenValue, isLed);
                 break;
 
@@ -360,33 +340,38 @@
                 AdminService.RegisterColor(p, _displayName);
                 break;
         }
-        p = await AdminService.InsertProduct( p);
+
+        p = await AdminService.InsertProduct(p);
 
         if (p.ProductId == 0)
         {
             _errorMessage = "Produkt konnte nicht gespeichert werden (keine gültige ID).";
             return;
         }
+        
+        Logger.LogInformation(
+            "Admin successfully registered product with ProductId={ProductId}, Type={ProductType}",
+            p.ProductId,
+            _selectedProductType
+        );
 
         if (_uploadedProductImage != null)
         {
             await ImageService.SaveProductImagesAsync(p.ProductId, _uploadedProductImage);
-        }
-        
-        
-        
-        if (_uploadedProductImage != null)
-        {
-            await ImageService.SaveProductImagesAsync(p.ProductId, _uploadedProductImage);
+            
+            Logger.LogInformation(
+                "Admin uploaded product image for ProductId={ProductId}",
+                p.ProductId
+            );
         }
 
         _successMessage = "Fahrzeugteil erfolgreich registriert.";
-
-     
     }
 
     private void Cancel()
     {
+        Logger.LogInformation("Admin cancelled product registration");
+
         Nav.NavigateTo("/administrator/products");
     }
 
@@ -399,9 +384,8 @@
 
         var term = _searchValue.Trim().ToLower();
     }
-
-
 }
+
 
 <style>
     /* 1) Texte/Labels besser lesbar */

@@ -10,6 +10,8 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
+@inject ILogger<EditCustomer> Logger
+
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
@@ -85,9 +87,18 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation(
+            "Admin opened edit page for CustomerId={CustomerId}",
+            Id
+        );
+        
         Customer = await AdminService.GetCustomerByIdIncludeAllAsync(Id);
         if (Customer is null)
         {
+            Logger.LogWarning(
+                "Admin tried to edit non-existing customer with Id={CustomerId}",
+                Id
+            );
             
             ErrorMessage = "User nicht gefunden.";
             return;
@@ -107,27 +118,39 @@
            Username = Customer.Username
         };
     }
-
     
-
     private async Task SaveEdits()
     {
         if (Customer is null) return;
 
-       
+        // 🔹 LOG: Admin speichert Änderungen am Customer
+        Logger.LogInformation(
+            "Admin started updating customer with Id={CustomerId}",
+            Customer.Id
+        );
+
         // Persistieren (muss existieren)
         await AdminService.UpdateCustomerAsync(EditModel);
 
-        ToastService.ShowSuccess("Änderungen wurden gespeichert.");
+        // 🔹 LOG: Update erfolgreich
+        Logger.LogInformation(
+            "Admin successfully updated customer with Id={CustomerId}",
+            Customer.Id
+        );
 
+        ToastService.ShowSuccess("Änderungen wurden gespeichert.");
     }
 
     private void Cancel()
     {
+        // 🔹 LOG: Admin bricht Bearbeiten ab
+        Logger.LogInformation(
+            "Admin cancelled editing customer with Id={CustomerId}",
+            Id
+        );
+
         Nav.NavigateTo($"/administrator/customers/{Id}");
     }
-
-    
 }
 <style>
     .checkbox-box{

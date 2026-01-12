@@ -9,6 +9,7 @@
 @inject IOrderService OrderService
 @inject IEmailService EmailService
 @inject IAdminService AdminService
+@inject ILogger<ConfirmCheckoutPage> Logger
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Shop
@@ -98,31 +99,66 @@
             Kauf bestÃ¤tigen
         </button>
     }
-}
 
-    @code {
-        Order _order = new Order();
-        Customer? c;
-        DeliveryAddress? da;
+@code {
+    Order _order = new Order();
+    Customer? c;
+    DeliveryAddress? da;
 
-        private async Task ConfirmPayment()
+    private async Task ConfirmPayment()
+    {
+        Logger.LogInformation(
+            "User {UserId} started order confirmation",
+            UserSession.CurrentUserId
+        );
+
+        try
         {
             da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
+
             _order = await OrderService.CreateOrderFromCart(
                 UserSession.CurrentCart,
-                c, da);
+                c,
+                da
+            );
+
+            Logger.LogInformation(
+                "Order {OrderId} successfully created for UserId={UserId}",
+                UserSession.CurrentUserId
+            );
 
             await EmailService.SendOrderReplyEmail(c, _order);
+
+            Logger.LogInformation(
+                "Order confirmation email sent for OrderId={OrderId}",
+                UserSession.CurrentUserId
+            );
+
             Nav.NavigateTo("/BuySuccessfull");
         }
-
-        protected override async Task OnInitializedAsync()
+        catch (Exception ex)
         {
-            c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
-            da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
-        }
+            Logger.LogError(
+                ex,
+                "Error while confirming order for UserId={UserId}",
+                UserSession.CurrentUserId
+            );
 
+            ToastService.ShowError("Fehler beim Abschließen der Bestellung.");
+        }
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation(
+            "ConfirmCheckoutPage initialized for UserId={UserId}",
+            UserSession.CurrentUserId
+        );
+
+        c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
+    }
+}
 
 <style>
     

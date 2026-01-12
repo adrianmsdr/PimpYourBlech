@@ -9,6 +9,7 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
+@inject ILogger<EditProduct> Logger
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <div class="menu-container">
@@ -84,9 +85,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation(
+            "Admin opened edit page for ProductId={ProductId}",
+            Id
+        );
+
         Product = await AdminService.GetProductByIdAsync(Id);
         if (Product is null)
         {
+            Logger.LogWarning(
+                "Admin tried to edit non-existing product with ProductId={ProductId}",
+                Id
+            );
+
             ErrorMessage = "Produkt nicht gefunden.";
             return;
         }
@@ -106,10 +117,14 @@
         };
     }
 
-
     private async Task SaveEdits()
     {
         if (Product is null) return;
+        
+        Logger.LogInformation(
+            "Admin started updating product with ProductId={ProductId}",
+            Product.ProductId
+        );
 
         // Original updaten
         Product.Name = EditModel.Name;
@@ -122,15 +137,26 @@
 
         // Persistieren
         await AdminService.UpdateProductAsync(Product);
+        
+        Logger.LogInformation(
+            "Admin successfully updated product with ProductId={ProductId}",
+            Product.ProductId
+        );
+
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
     }
 
     private void Cancel()
     {
+        Logger.LogInformation(
+            "Admin cancelled editing product with ProductId={ProductId}",
+            Id
+        );
+
         Nav.NavigateTo($"/administrator/products/{Id}");
     }
-
 }
+
 <style>
     .form-textarea-admin {
         margin-top: 20px;

@@ -20,6 +20,7 @@ using PimpYourBlech_ClassLibrary.Session.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Comparator;
 using PimpYourBlech_ClassLibrary.Services.Comparator.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Orders;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,7 +80,21 @@ builder.Services.AddScoped<IUserSession, UserSession>();
 //8) ToastNotification
 builder.Services.AddBlazoredToast();
 
+//9) Serilog
+// 9.1 Serilog Konfiguration laden (optional: über appsettings.json)
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+// 9.2 Serilog Logger erstellen
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration) // Liest Konfiguration aus appsettings.json
+    .Enrich.FromLogContext()
+    .CreateLogger();
+// 9.3 Serilog als Logging-Provider für den Host verwenden
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog(); 
 
+Log.Information("Application starting");
 
 var app = builder.Build();
 

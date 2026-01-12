@@ -1,5 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Exceptions;
@@ -14,13 +16,15 @@ public class AdminService:IAdminService
     private readonly IProductInventory _productRepository;
     private readonly ICarInventory _carRepository;
     private readonly IEmailService _emailService;
+    private readonly ILogger<AdminService> _logger;
    
-    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car,  IEmailService email)
+    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car,  IEmailService email, ILogger<AdminService> logger)
     {
         _customerRepository  = costumers;
         _productRepository = products;
         _carRepository = car;
         _emailService = email;
+        _logger = logger;
     }
 
     public async Task<List<Customer>> GetListCustomersAsync()
@@ -66,6 +70,11 @@ public class AdminService:IAdminService
         customer.ImagePath = ImagePath;
         await _customerRepository.InsertCustomerAsync(customer);
         _emailService.SendRegistrationEmail(customer);
+        
+        _logger.LogInformation(
+            "Registering new customer with Username={Username}",
+            username
+        );
     }
     
     public Customer Login(string username, string passwordHash)
@@ -75,7 +84,6 @@ public class AdminService:IAdminService
 
     public async Task EnsureUsernameAvailableAsync(string username)
     {
-
             if (username.Length < 8)
             {
                 throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
@@ -85,8 +93,6 @@ public class AdminService:IAdminService
             {
                 throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
             }
-        
-        
     }
     
     public async Task<Customer> CustomerLoginAsync(string username, string password)
@@ -109,6 +115,13 @@ public class AdminService:IAdminService
         {
             throw new WrongPasswordException("Falsches Passwort. Bitte versuche es erneut.");
         }
+        
+        _logger.LogInformation(
+            "Customer logged in successfully. CustomerId={CustomerId}, Username={Username}",
+            customer.Id,
+            customer.Username
+        );
+
 
         return customer;
 
@@ -161,6 +174,13 @@ public class AdminService:IAdminService
     // ___________________________________Poducts____________________________________
     public Product CreateProduct(Car car, string name, string brand, int quantity, double price, ProductType productType, string description)
     {
+        _logger.LogInformation(
+            "Product instance created. Name={Name}, CarId={CarId}, Type={Type}",
+            name,
+            car.Id,
+            productType
+        );
+
         return new Product
         {
             Car = car,
@@ -185,6 +205,7 @@ public class AdminService:IAdminService
             Gear = gear,
             Fuel = fuel
         };
+        _logger.LogInformation("Engine registered for product {ProductId}.", p.ProductId);
     }
 
     public void RegisterRim(Product p, decimal diameter, decimal width)
@@ -195,6 +216,7 @@ public class AdminService:IAdminService
             DiameterInInch = diameter,
             WidthInInch = width
         };
+        _logger.LogInformation("Rim registered for product {ProductId}.", p.ProductId);
     }
 
     public void RegisterLights(Product p, int lumen, bool isLED)
@@ -205,6 +227,7 @@ public class AdminService:IAdminService
             Lumen = lumen,
             IsLed = isLED
         };
+        _logger.LogInformation("Light registered for product {ProductId}", p.ProductId);
     }
 
     public void RegisterColor(Product p, string colorName)
@@ -213,13 +236,14 @@ public class AdminService:IAdminService
         {
             ProductId = p.ProductId,
             DisplayName = colorName,
-            
         };
+        _logger.LogInformation("Color registered for product {ProductId}.", p.ProductId);
     }
 
     public async Task<Product> InsertProduct(Product p)
     {
         await _productRepository.InsertProductAsync(p); // muss SaveChangesAsync machen
+        _logger.LogInformation($"Inserted product {p.ProductId}");
         return p;
     }
 
@@ -231,18 +255,18 @@ public class AdminService:IAdminService
     public async Task<Product> GetProductByIdAsync(int id)
     {
         return await _productRepository.GetProductByIdAsync(id);
-        
     }
 
     public async Task DeleteProductAsync(Product p)
     {
         await _productRepository.DeleteProductAsync(p);
-
+        _logger.LogWarning("Product deleted");
     }
 
     public async Task UpdateProductAsync(Product p)
     {
         await _productRepository.UpdateProductAsync(p);
+        _logger.LogInformation("Product updated");
     }
     
     public List<ProductType> GetProductTypes()
@@ -281,11 +305,18 @@ public class AdminService:IAdminService
     public async Task DeleteCarAsync(Car car)
     {
         await _carRepository.DeleteCarAsync(car);
+        _logger.LogInformation("Car deleted");
     }
 
     public async Task UpdateCarAsync(Car car)
     {
         await  _carRepository.UpdateCarAsync(car);
+        _logger.LogInformation(
+            "Car updated. CarId={CarId}, Name={Name}",
+            car.Id,
+            car.Name
+        );
+
     }
     
     public List<Product> GetAvailableRims(int carId)
