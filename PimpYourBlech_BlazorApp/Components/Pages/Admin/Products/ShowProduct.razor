@@ -24,32 +24,49 @@
 }
 
 
-<div class="menu-container">
-<h3>Produktübersicht</h3>
-@if (Product == null)
-{
-    <p>Lade Daten…</p>
-}
-else
-{
-    <div class="detail-overview-admin">
-        <img class="detail-image-admin" src="@ImageService.GetProductImageUrl(Product.ProductId)" />
+<div class="menu-container wide">
+    <h3>Produktübersicht</h3>
+    @if (Product == null)
+    {
+        <p>Lade Daten…</p>
+    }
+    else
+    {
+        <div class="detail-overview-admin">
+            <img class="detail-image-admin" src="@ImageService.GetProductImageUrl(Product.ProductId)"/>
 
-        <div class="upload-row-admin">
-            <InputFile OnChange="OnProductImageSelected" accept="image/*" />
-            <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedProductImage is null)">
-                Speichern
-            </button>
-        </div>
+            <div class="upload-row-admin">
+                <InputFile OnChange="OnProductImageSelected" accept="image/*"/>
+                <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedProductImage is null)">
+                    Speichern
+                </button>
+            </div>
 
-        <div class="combo-card-admin">
-            <p><strong>Name:</strong> @Product.Name</p>
-            <p><strong>Artikelnummer:</strong> @Product.ArticleNumber</p>
-            <p><strong>Hersteller:</strong> @Product.Brand</p>
-            <p><strong>Preis:</strong> @Product.Price</p>
-            <p><strong>Auf Lager:</strong> @Product.Quantity</p>
-            <p><strong>Kategorie:</strong> @Product.ProductType</p>
-        </div>
+            <div class="combo-card-admin wide">
+                <div class="section">
+                    <h5 class="section-title">Produktübersicht</h5>
+                    <div class="admin-details-section-divider"></div>
+
+                    <div class="admin-detail-grid wide">
+                        <div class="k">ID</div>
+                        <div class="v">@Product.ProductId</div>
+                        <div class="k">Name</div>
+                        <div class="v">@Product.Name</div>
+                        <div class="k">Artikelnummer</div>
+                        <div class="v">@Product.ArticleNumber</div>
+                        <div class="k">Hersteller</div>
+                        <div class="v">@Product.Brand</div>
+                        <div class="k">Preis</div>
+                        <div class="v">@Product.Price</div>
+                        <div class="k">Lagerbestand</div>
+                        <div class="v">@Product.Quantity</div>
+                        <div class="k">Kategorie</div>
+                        <div class="v">@Product.ProductType</div>
+                    </div>
+            
+
+                </div>
+            </div>
 
 
             <div class="button-column">
@@ -58,9 +75,9 @@ else
                 <button class="buttons" @onclick="Cancel">Zurück</button>
             </div>
         </div>
-        }
-    </div>
-    
+    }
+</div>
+
 @code {
     [Parameter] public int Id { get; set; }
 
@@ -97,7 +114,6 @@ else
         }
 
         await AdminService.DeleteProductAsync(Product);
-       
     }
 
     private void OnProductImageSelected(InputFileChangeEventArgs e)
@@ -122,7 +138,7 @@ else
     {
         Nav.NavigateTo("administrator/products/");
     }
-    
+
     private bool showDeleteModal;
 
     void OpenDeleteModal() => showDeleteModal = true;
@@ -133,7 +149,6 @@ else
         await DeleteProduct();
         showDeleteModal = false;
         Nav.NavigateTo("/administrator/products");
-
     }
 
 }

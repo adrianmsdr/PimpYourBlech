@@ -7,73 +7,15 @@ using PimpYourBlech_ClassLibrary.Enums;
 
 namespace PimpYourBlech_ClassLibrary.Services.Shop.Implementation;
 
-public class ShopService(IProductInventory productInventory, ICartService cartService):IShopService
+public class ShopService(IProductInventory productInventory):IShopService
 {
-    private readonly IProductInventory _productInventory = productInventory;
-    private readonly ICartService _cartService = cartService;
-    public List<Product> GetProducts()
-    {
-        return productInventory.ListProducts().Where(p=>p.ProductType!=ProductType.Lack).ToList();
-    }
 
-    public List<Product> SearchProducts(string searchString)
-    {
-        List<Product> products = new List<Product>();
-        
-        foreach (Product p in productInventory.ListProducts() )
-        {
-            if (p.Brand.Equals(searchString) ||
-                p.ArticleNumber.Equals(searchString) ||
-                p.Name.Equals(searchString))
-            {
-                products.Add(p);
-            }
-        }
-        return products;
-    }
-
-    public List<Product> FilterProducts(string selectedCategory)
-    {
-        List<Product> filteredProducts = new List<Product>();
-        foreach (Product p in productInventory.ListProducts())
-        {
-            switch (selectedCategory)
-            {
-                case "All":
-                    filteredProducts.Add(p);
-                    break;
-                
-                case "Engine":
-                    if (p.EngineDetail != null)
-                    {
-                        filteredProducts.Add(p);
-                    }
-
-                    break;
-
-                case "Rim":
-                    if (p.RimDetail != null)
-                    {
-                        filteredProducts.Add(p);
-                    }
-                    break;
-
-                case "Lights":
-                    if (p.LightsDetail != null)
-                    {
-                        filteredProducts.Add(p);
-                    }
-
-                    break;
-            }
-        }
-        return filteredProducts;
-    }
+    
 
     public Task<List<Product>> GetProductsAsync(ProductListQuery q)
     {
         // optional: q.NameContains trimmen etc.
-        return _productInventory.QueryAsync(q);
+        return productInventory.QueryAsync(q);
     }
 
 }

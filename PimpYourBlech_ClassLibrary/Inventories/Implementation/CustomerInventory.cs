@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
+using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Persistence;
 
 namespace PimpYourBlech_ClassLibrary.Inventories.Implementation;
@@ -202,6 +204,37 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
     public async Task<List<PaymentValue>> GetPaymentValuesAsync(int id)
     {
         return await database.PaymentValues.Where(p => p.CustomerId == id).ToListAsync();
+    }
+
+    public async Task<List<Customer>> QueryCustomersAsync(CustomerListQuery q)
+    {
+        
+        IQueryable<Customer> query = database.Customers.AsNoTracking();
+
+        if (q.CustomerId is not null)
+            query = query.Where(c => c.Id == q.CustomerId.Value);
+  
+        if (!string.IsNullOrWhiteSpace(q.SearchTerm))
+        {
+            var term = q.SearchTerm.Trim();
+            query = query.Where(c =>
+                (c.FirstName != null && c.FirstName.Contains(term)) ||
+                (c.LastName  != null && c.LastName.Contains(term)) ||
+                (c.Username  != null && c.Username.Contains(term)) ||
+                (c.MailAddress != null && c.MailAddress.Contains(term))
+            );
+        }
+        
+        if (!string.IsNullOrWhiteSpace(q.PhoneContains))
+            query = query.Where(c => c.Telefon == q.PhoneContains);
+
+        query = q.SortBy switch
+        {
+            CustomerSort.NameDesc  => query.OrderByDescending(p => p.Username),
+            CustomerSort.NameAsc   => query.OrderBy(p => p.Username),
+        };
+
+        return await query.ToListAsync();
     }
 }
 

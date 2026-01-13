@@ -1,3 +1,4 @@
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 
 namespace PimpYourBlech_ClassLibrary.Inventories;
@@ -56,5 +57,7 @@ public interface ICustomerInventory
     Task<List<OrderPosition>> GetOrderItemsAsync(int id);
     
     Task<List<PaymentValue>> GetPaymentValuesAsync(int customerId);
+    
+    Task<List<Customer>> QueryCustomersAsync(CustomerListQuery q);
    
 }

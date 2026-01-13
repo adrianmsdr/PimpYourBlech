@@ -85,7 +85,7 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
         <input class="search-input"
                placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
                @bind="searchText"/>
-        <button class="buttons" @onclick="ApplySearch">
+        <button class="buttons" @onclick="LoadProductsAsync">
             Suchen <MagnifyingGlassIcon/>
         </button>
         <p class="GoToShoppingCart" @onclick="ToggleSidebar">
@@ -199,6 +199,8 @@ else
     private string searchText = string.Empty;
     private Product selectedProduct = new Product();
     private int selectedCarId = 0;
+    private bool IsOpen = false;
+
     
     // Damit wird die methode automatisch aufgerufen beim laden der seite (also alle produkte geholt)
     protected override async Task OnInitializedAsync()
@@ -213,28 +215,13 @@ else
         {
             Type = selectedCategory,
             SortBy = selectedSortOption,
-            NameContains = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
+            SearchTerm = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
             CarId = selectedCarId == 0 ? null : selectedCarId 
         };
 
         products = await ShopService.GetProductsAsync(q);
     }
     
-    
-    private async Task ApplySearch()
-    {
-        await LoadProductsAsync();
-    }
-
-    // Hier soll er sich später das Bild holen
-    private string GetImage(Product p)
-    {
-        return string.IsNullOrWhiteSpace(p.ImageUrl)
-            ? "/images/placeholder.png"
-            : p.ImageUrl;
-    }
-    
-    private bool IsOpen = false;
 
     private void ToggleSidebar()
     {
@@ -259,13 +246,7 @@ else
     {
         Nav.NavigateTo("/CheckoutPage");
     }
-
     
-    // Führt zum Hauptmenü
-    private void Cancel()
-    {
-        Nav.NavigateTo("/mainMenu");
-    }
     
     private void ShowProduct(Product product)
     {
@@ -289,53 +270,7 @@ else
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
     }
 
-    .search-container, .product-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin: 25px 0 30px 0;
-        padding: 18px 22px;
-        background: rgba(40, 0, 0, 0.55);
-        border-radius: 25px;
-        border: 1px solid rgba(255, 0, 0, 0.35);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(8px);
-    }
-
-    .search-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .search-input {
-        flex: 1;
-        height: 45px;
-        padding: 0 14px;
-        font-family: Bahnschrift;
-        font-size: 16px;
-        color: white;
-        background: rgba(20, 0, 0, 0.8);
-        border: 2px solid #ff1a1a;
-        border-radius: 12px;
-        outline: none;
-    }
-
-    .search-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
-
-    .search-select {
-        height: 42px;
-        padding: 0 10px;
-        font-family: Bahnschrift;
-        font-size: 15px;
-        color: white;
-        background: rgba(20, 0, 0, 0.8);
-        border: 2px solid #ff1a1a;
-        border-radius: 10px;
-        cursor: pointer;
-    }
+    
 
 
     .buttons {

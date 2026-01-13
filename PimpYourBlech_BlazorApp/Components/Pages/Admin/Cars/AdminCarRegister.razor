@@ -1,30 +1,22 @@
 ﻿@page "/administrator/cars/new"
 <PageTitle>Administrator/cars/new</PageTitle>
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject NavigationManager Nav
+@inject IToastExecutor Executor
 @inject IAdminService AdminService
 @inject IImageService ImageService
+@inject IToastService ToastService
 @inject ILogger<AdminCarRegister> Logger
 
 
 <div class="menu-container wide">
-    <h3 class="headline-admin">Neues Fahrzeug registrieren:</h3>
+    <h3 class="headline-admin">Neues Fahrzeug registrieren</h3>
     
-    @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
-    @if (!string.IsNullOrEmpty(ErrorMessage))
-    {
-        <div class="alert alert-danger">@ErrorMessage</div>
-    }
-    @if (!string.IsNullOrEmpty(SuccessMessage))
-    {
-        <div class="alert alert-success">@SuccessMessage</div>
-    }
-
-    @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
-    <input class="text-inputPYB"
+<input class="text-inputPYB"
            placeholder="Name"
            @bind="name"/>
 
@@ -50,7 +42,7 @@
            @bind="ps"/>
 
     <input class="text-inputPYB"
-           placeholder="Häufigkeit..."
+           placeholder="Bestand..."
            @bind="quantity"/>
 
     <input class="text-inputPYB"
@@ -60,11 +52,6 @@
     <div class="mb-3">
         <label><strong>Fahrzeugbild auswählen:</strong></label>
         <InputFile OnChange="HandleCarImageSelected" accept="image/*"/>
-
-        @if (uploadedCarImage != null)
-        {
-            <div class="text-muted mt-1">1 Bild ausgewählt: @uploadedCarImage.Name</div>
-        }
     </div>
     <button class="text-inputPYB" @onclick="RegisterCar">Registrieren</button>
     <button class="buttons" @onclick="Cancel">Abbrechen</button>
@@ -84,12 +71,7 @@
 
     private IBrowserFile? uploadedCarImage;
 
-    // Wird gesetzt, wenn der Admin Dateien auswählt
-    private IReadOnlyList<IBrowserFile> uploadedFiles = Array.Empty<IBrowserFile>();
-
-    private string ErrorMessage = "";
-    private string SuccessMessage = "";
-
+   
     // Wird ausgelöst, wenn der Admin Dateien auswählt:
     private void HandleCarImageSelected(InputFileChangeEventArgs e)
     {
@@ -98,81 +80,49 @@
     
     private async Task RegisterCar()
     {
-        ErrorMessage = "";
-        SuccessMessage = "";
-        
         Logger.LogInformation(
             "Admin started car registration: Name={Name}, Model={Model}, Brand={Brand}",
             name,
             model,
             brand
         );
+
+        Car? car = await Executor.RunReturnAsync(()=> (AdminService.RegisterCarAsync(
+            name, dateProduction, datePermit, brand, model, ps,
+            quantity, price
+        )),successMessage:"Fahrzeug erfolgreich hinzugefügt.",logError:"Registrieren eines neuen Fahrzeugs fehlgeschlagen.");
         
-        
-        if (string.IsNullOrWhiteSpace(name) ||
-            string.IsNullOrWhiteSpace(model))
+        if (car is not null)
         {
-            ErrorMessage = "Name und Artikelnummer dürfen nicht leer sein.";
-            return;
-        }
-
-        if (!int.TryParse(quantity, out var quantityValue) || quantityValue < 0)
-        {
-            ErrorMessage = "Bestand muss eine positive Ganzzahl sein.";
-            return;
-        }
-
-        if (!decimal.TryParse(price, out var priceValue) || priceValue < 0)
-        {
-            ErrorMessage = "Preis muss eine positive Zahl sein.";
-            return;
-        }
-
-              
-        if (!int.TryParse(ps, out var psValue) || psValue < 0)
-        {
-            ErrorMessage = "PS muss eine positive Ganzzahl sein.";
-            return;
-        }
-
-        // Auto in DB speichern
-        Car car = await AdminService.RegisterCarAsync(
-            name, dateProduction, datePermit, brand, model, psValue,
-            quantityValue, priceValue
-        );
-        
-        Logger.LogInformation(
-            "Admin registered car successfully with Id={CarId}, Name={Name}",
-            car.Id,
-            name
-        );
-
-        // Falls Bilder ausgewählt speichern
-        try
-        {
-                if (uploadedCarImage != null)
-                {
-                    var folder = await ImageService.SaveCarImageAsync(car.Id, uploadedCarImage);
-                    
-                    Logger.LogInformation(
-                        "Car image uploaded for CarId={CarId}",
-                        car.Id
-                    );
-                }
-            
-
-            SuccessMessage = "Fahrzeug erfolgreich hinzugefügt.";
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"Fehler beim Speichern der Bilder: {ex.Message}";
-            Console.WriteLine(ex);
-            
-            Logger.LogError(
-                ex,
-                "Error while uploading car image for CarId={CarId}",
-                car.Id
+            Logger.LogInformation(
+                "Admin registered car successfully with Id={CarId}, Name={Name}",
+                car.Id,
+                name
             );
+        }
+        if (uploadedCarImage != null)
+        {
+            // Falls Bilder ausgewählt speichern
+            try
+            {
+                var folder = await ImageService.SaveCarImageAsync(car.Id, uploadedCarImage);
+
+                Logger.LogInformation(
+                    "Car image uploaded for CarId={CarId}",
+                    car.Id
+                );
+                ToastService.ShowSuccess("Fahrzeugbilder erfolgreich hinzugefügt.");
+                
+            }
+            catch (Exception ex)
+            {
+                ToastService.ShowError($"Fehler beim Speichern der Bilder: {ex.Message}");
+                Logger.LogError(
+                    ex,
+                    "Error while uploading car image for CarId={CarId}",
+                    car.Id
+                );
+            }
         }
     }
 
@@ -181,4 +131,5 @@
         Logger.LogInformation("Admin cancelled car registration");
         Nav.NavigateTo("/administrator/cars");
     }
+
 }

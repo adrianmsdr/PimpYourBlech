@@ -13,10 +13,12 @@
 
 
 
-<div class="menu-container">
+<div class="menu-container wide">
+
+    
     <h3 class="headline-admin">Neues Fahrzeugteil registrieren:</h3>
 
- @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
+    @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
     @if (!string.IsNullOrEmpty(_errorMessage))
     {
         <div class="alert alert-danger">@_errorMessage</div>
@@ -25,7 +27,7 @@
     {
         <div class="alert alert-success">@_successMessage</div>
     }
-    
+
     <div class="mb-3">
         <label class="form-label"><strong>Fahrzeug auswählen:</strong></label>
 
@@ -36,135 +38,137 @@
                 <option value="@c.Id">@c.Name (@c.Id)</option>
             }
         </select>
-
-        @if (_selectedCarId == 0)
-        {
-            <h4 class="headline-admin">Bitte wähle ein Fahrzeug aus.</h4>
-        }
     </div>
-    
-    <div class="d-flex align-items-center">
-        <span class="me-2">Produkttyp:</span>
+    @if (_selectedCarId == 0)
+    {
+        <div>Bitte wähle ein Fahrzeug aus.</div>
+    }
+    else
+    {
 
-        <select class="form-select me-2" style="width:auto"
-                @bind="_selectedProductType">
-            @foreach (ProductType T in _categories)
-            {
-                <option value="@T">@T</option>
-            }
-        </select>
-    </div>
 
-    @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
-    <input class="text-inputPYB"
-           placeholder="Name"
-           @bind="_name"/>
-    
+        <div class="d-flex align-items-center">
+            <span class="me-2">Produkttyp:</span>
 
-    <input class="text-inputPYB"
-           placeholder="Hersteller..."
-           @bind="_brand"/>
+            <select class="form-select me-2" style="width:auto"
+                    @bind="_selectedProductType">
+                @foreach (ProductType T in _categories)
+                {
+                    <option value="@T">@T</option>
+                }
+            </select>
+        </div>
 
-    
-    <input class="text-inputPYB"
-           placeholder="Bestand..."
-           @bind="_quantity"/>
+        @*Alle Eingabefelder (Daten werden mit @bind in Variable gespeichert zum Weiterverwenden)*@
+        <input class="text-inputPYB"
+               placeholder="Name"
+               @bind="_name"/>
 
-    <input class="text-inputPYB"
-           placeholder="Preis..."
-           @bind="_price"/>
 
-    <textarea class="text-areaPYB"
+        <input class="text-inputPYB"
+               placeholder="Hersteller..."
+               @bind="_brand"/>
+
+
+        <input class="text-inputPYB"
+               placeholder="Bestand..."
+               @bind="_quantity"/>
+
+        <input class="text-inputPYB"
+               placeholder="Preis..."
+               @bind="_price"/>
+
+        <textarea class="text-areaPYB"
           placeholder="Beschreibung (nur Shop)..."
           maxlength="1000"
           @bind="_description"></textarea>
-    <div class="text-muted mt-1">@_description.Length / 1000</div>
-    
-    @if (_selectedProductType == ProductType.Motor)
-    {
-    <input class="text-inputPYB"
-           placeholder="PS..."
-           @bind="_ps"/>
+        <div class="text-muted mt-1">@_description.Length / 1000</div>
 
-    <input class="text-inputPYB"
-           placeholder="KW..."
-           @bind="_kw"/>
+        @if (_selectedProductType == ProductType.Motor)
+        {
+            <input class="text-inputPYB"
+                   placeholder="PS..."
+                   @bind="_ps"/>
 
-    <input class="text-inputPYB"
-           placeholder="Hubraum..."
-           @bind="_displacement"/>
-    
-    <span class="me-2">Getriebeart:</span>
+            <input class="text-inputPYB"
+                   placeholder="KW..."
+                   @bind="_kw"/>
 
-    <select class="form-select me-2" style="width:auto"
-            @bind="_selectedGear">
-        <option value="5-Gang Manuell">5-Gang Manuell</option>
-        <option value="6-Gang Manuell">6-Gang Manuell</option>
-        <option value="6-Gang Automatik">6-Gang Automatik</option>
-        <option value="8-Gang Automatik">8-Gang Automatik</option>
-    </select>
-    <select class="form-select me-2" style="width:auto"
-            @bind="_selectedFuel">
-        <option value="Benzin">Benzin</option>
-        <option value="Diesel">Diesel</option>
-        <option value="Hybrid">Hybrid</option>
-        <option value="Gas">Gas</option>
-        <option value="Elektro">Elektro</option>
-    </select>
-    
-    }else if (_selectedProductType == ProductType.Felge)
-    {
-        
-    <input class="text-inputPYB"
-           placeholder="Durchmesser(Zoll)..."
-           @bind="_diameter"/>
+            <input class="text-inputPYB"
+                   placeholder="Hubraum..."
+                   @bind="_displacement"/>
 
-    <input class="text-inputPYB"
-           placeholder="Breite(Zoll)..."
-           @bind="_width"/>
-   
-    }
-
-    else if (_selectedProductType == ProductType.Lichter)
-    {
-        <input class="text-inputPYB"
-               placeholder="Lumen..."
-               @bind="_lumen"/>
-
-        <div class="mb-3">
-            <span class="me-2">LED?:</span>
+            <span class="me-2">Getriebeart:</span>
 
             <select class="form-select me-2" style="width:auto"
-                    @bind="_isLed">
-                <option value="True">Ja</option>
-                <option value="False">Nein</option>
+                    @bind="_selectedGear">
+                <option value="5-Gang Manuell">5-Gang Manuell</option>
+                <option value="6-Gang Manuell">6-Gang Manuell</option>
+                <option value="6-Gang Automatik">6-Gang Automatik</option>
+                <option value="8-Gang Automatik">8-Gang Automatik</option>
+            </select>
+            <select class="form-select me-2" style="width:auto"
+                    @bind="_selectedFuel">
+                <option value="Benzin">Benzin</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Gas">Gas</option>
+                <option value="Elektro">Elektro</option>
             </select>
 
+        }
+        else if (_selectedProductType == ProductType.Felge)
+        {
+
+            <input class="text-inputPYB"
+                   placeholder="Durchmesser(Zoll)..."
+                   @bind="_diameter"/>
+
+            <input class="text-inputPYB"
+                   placeholder="Breite(Zoll)..."
+                   @bind="_width"/>
+
+        }
+
+        else if (_selectedProductType == ProductType.Lichter)
+        {
+            <input class="text-inputPYB"
+                   placeholder="Lumen..."
+                   @bind="_lumen"/>
+
+            <div class="mb-3">
+                <span class="me-2">LED?:</span>
+
+                <select class="form-select me-2" style="width:auto"
+                        @bind="_isLed">
+                    <option value="True">Ja</option>
+                    <option value="False">Nein</option>
+                </select>
+
+            </div>
+
+        }
+        else if (_selectedProductType == ProductType.Lack)
+        {
+            <input class="text-inputPYB"
+                   placeholder="Farbenname"
+                   @bind="_displayName"/>
+        }
+
+        <div class="mb-3">
+            <label><strong>Produktbild auswählen:</strong></label>
+            <InputFile OnChange="HandleProductImageSelected" accept="image/*"/>
+            
         </div>
 
-    }else if (_selectedProductType == ProductType.Lack)
-    {
-        <input class="text-inputPYB"
-               placeholder="Farbenname"
-               @bind="_displayName"/>
+
+        <div class="button-column">
+            <button class="buttons" @onclick="RegisterProduct">Fahrzeugteil registrieren</button>
+            <button class="buttons" @onclick="Cancel">Abbrechen</button>
+        </div>
     }
-
-    <div class="mb-3">
-        <label><strong>Produktbild auswählen:</strong></label>
-        <InputFile OnChange="HandleProductImageSelected" accept="image/*" />
-    
-        @if (_uploadedProductImage != null)
-        {
-            <div class="text-muted mt-1">1 Bild ausgewählt: @_uploadedProductImage.Name</div>
-        }
-    </div>
-
-    
-    <div class="button-column">
-        <button class="buttons" @onclick="RegisterProduct">Fahrzeugteil registrieren</button>
-        <button class="buttons" @onclick="Cancel">Abbrechen</button>
-    </div>
 </div>
+
 @code {
 
     // Felder 
@@ -172,8 +176,6 @@
     private string _selectedGear = "6-Gang Manuell";
     public string _selectedFuel = "Benzin";
     private string _isLed = "True";
-    private string _searchValue = string.Empty;
-
     private string _name = "";
     private string _brand = "";
     private string _quantity = "";
@@ -374,16 +376,6 @@
 
         Nav.NavigateTo("/administrator/products");
     }
-
-    private void ApplyFilter()
-    {
-        if (string.IsNullOrWhiteSpace(_searchValue))
-        {
-            return;
-        }
-
-        var term = _searchValue.Trim().ToLower();
-    }
 }
 
 
@@ -507,7 +499,7 @@
     }
 
     .text-areaPYB{
-        width: 380px;
+        width: 780px;
         min-height: 140px;
         resize: vertical;
         font-family: Bahnschrift;
@@ -521,9 +513,7 @@
         transition: 0.25s ease;
     }
 
-    .text-areaPYB:hover{
-        transform: scale(1.05);
-    }
+  
 
     .text-areaPYB:focus{
         border-color: #ff3333;
@@ -533,5 +523,7 @@
     .text-areaPYB::placeholder{
         color: rgba(255,255,255,.65);
     }
+    
+    
 
 </style>
