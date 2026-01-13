@@ -23,16 +23,40 @@ public class ComparatorService : IComparatorService
             }
         };
     }
-
-    private ComparisonRow Row(
+    
+    public ComparisonResult CompareConfigurations(
+        List<Configuration> configurations)
+    {
+        return new ComparisonResult
+        {
+            Configurations = configurations,
+            Rows = new List<ComparisonRow>
+            {
+                Row("Name", configurations, c => c.Car.Name),
+                Row("Marke", configurations, c => c.Car.Brand),
+                Row("Modell", configurations, c => c.Car.Model),
+                Row("Baujahr", configurations, c => c.Car.DateProduction),
+                Row("Erstzulassung", configurations, c => c.Car.DatePermit),
+                Row("Leistung", configurations, c => $"{c.PS} PS"),
+                Row("Preis", configurations, c => $"{c.TotalPrice:N0} €"),
+                Row(
+                    "Verfügbarkeit",
+                    configurations,
+                    c => c.Car.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar"
+                )
+            }
+        };
+    }
+    private ComparisonRow Row<T>(
         string label,
-        List<Car> cars,
-        Func<Car, string> selector)
+        List<T> items,
+        Func<T, string> selector)
     {
         return new ComparisonRow
         {
             Label = label,
-            Values = cars.Select(selector).ToList()
+            Values = items.Select(selector).ToList()
         };
     }
+
 }

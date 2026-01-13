@@ -6,4 +6,5 @@ using PimpYourBlech_ClassLibrary.Services.Comparator.Models;
 public interface IComparatorService
 {
     ComparisonResult CompareCars(List<Car> cars);
+    ComparisonResult CompareConfigurations(List<Configuration> configurations);
 }

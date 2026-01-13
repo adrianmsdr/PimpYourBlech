@@ -1,0 +1,108 @@
+@page "/configurations/compare"
+
+@using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Comparator
+@using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Session
+@inject IUserSession UserSession
+@inject IConfiguratorService ConfiguratorService
+@inject IImageService ImageService
+
+<PageTitle>Konfigurationen vergleichen</PageTitle>
+
+<h3>Konfigurationen vergleichen</h3>
+<p>Bitte mindestens zwei Konfigurationen auswählen.</p>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Bild</th>
+            <th>Name</th>
+            <th>Marke</th>
+            <th>Modell</th>
+            <th>Anzahl Produkte</th>
+            <th>Gesamtpreis</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var c in configurations)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox"
+                           checked="@selectedConfigurations.Any(x => x.Id == c.Id)"
+                           disabled="@(selectedConfigurations.Count >= MaxCompareItems 
+                                     && !selectedConfigurations.Any(x => x.Id == c.Id))"
+                           @onchange="() => ToggleConfiguration(c)" />
+                   </td>
+                    <td>
+                        <img src="@ImageService.GetCarImageUrl(c.Car.Id)"
+                             style="width:120px; height:70px; object-fit:cover;" />
+                    </td>
+                    
+                <td>@c.Name</td>
+                <td>@c.Car.Brand</td>
+                <td>@c.Car.Model</td>
+                <td>@c.Products.Count</td>
+                <td>@c.TotalPrice €</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <ConfigurationComparator
+        SelectedConfigurations="@selectedConfigurations" />
+}
+
+@code {
+    private const int MaxCompareItems = 3;
+    
+    private List<Configuration> configurations = new();
+    private List<Configuration> selectedConfigurations = new();
+    private string ErrorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        var customerId = UserSession.CurrentUserId;
+
+        if (customerId <= 0)
+        {
+            ErrorMessage = "Bitte zuerst anmelden.";
+            return;
+        }
+
+        configurations =
+            ConfiguratorService.GetAllConfigurationsForCustomer(customerId);
+
+        if (!configurations.Any())
+        {
+            ErrorMessage = "Keine Konfigurationen vorhanden.";
+        }
+    }
+
+    private void ToggleConfiguration(Configuration config)
+    {
+        // bereits ausgewählt → entfernen
+        if (selectedConfigurations.Any(c => c.Id == config.Id))
+        {
+            selectedConfigurations.RemoveAll(c => c.Id == config.Id);
+            return;
+        }
+
+        // ❗ Limit erreicht → nichts hinzufügen
+        if (selectedConfigurations.Count >= MaxCompareItems)
+        {
+            return;
+        }
+
+        selectedConfigurations.Add(config);
+    }
+}
