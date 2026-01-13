@@ -1,0 +1,42 @@
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Comparator
+@using PimpYourBlech_ClassLibrary.Services.Comparator.Models
+@inject IComparatorService ComparatorService
+
+@if (SelectedConfigurations == null || SelectedConfigurations.Count < 2)
+{
+    <p>Bitte mindestens zwei Konfigurationen auswählen</p>
+}
+else
+{
+    var comparison =
+        ComparatorService.CompareConfigurations(SelectedConfigurations);
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Merkmal</th>
+            @foreach (var config in comparison.Configurations)
+            {
+                <th>@config.Name</th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var row in comparison.Rows)
+        {
+            <tr>
+                <td>@row.Label</td>
+                @foreach (var value in row.Values)
+                {
+                    <td>@value</td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@code {
+    [Parameter]
+    public List<Configuration> SelectedConfigurations { get; set; } = new();
+}

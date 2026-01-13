@@ -6,5 +6,6 @@ using PimpYourBlech_ClassLibrary.Entities;
 public class ComparisonResult
 {
     public List<Car> Cars { get; set; } = new();
+    public List<Configuration> Configurations { get; set; } = new();
     public List<ComparisonRow> Rows { get; set; } = new();
 }
