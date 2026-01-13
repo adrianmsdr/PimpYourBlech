@@ -5,7 +5,7 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 
-<div class="menu-container ">
+<div class="menu-container wide">
 
     <h3 class="headline-admin">Bestellübersicht</h3>
     @if (Order is null)
@@ -14,13 +14,12 @@
     }
     else
     {
-        <div class="combo-card-admin">
+        <div class="combo-card-admin wide">
             <div class="section">
                 <h5 class="section-title">Bestellung</h5>
                 <div class="admin-details-section-divider"></div>
 
-                <div class="admin-detail-grid">
-                   
+                <div class="admin-detail-grid wide">
                     <div class="k">ID</div>
                     <div class="v">@Order.OrderId</div>
                     <div class="k">Bestelldatum</div>
@@ -33,7 +32,7 @@
             <h5 class="section-title">Kundendaten</h5>
             <div class="admin-details-section-divider"></div>
 
-            <div class="admin-detail-grid">
+            <div class="admin-detail-grid wide">
                 <div class="k">Vorname</div>
                 <div class="v">@Order.Customer?.FirstName</div>
                 <div class="k">Nachname</div>
@@ -50,7 +49,7 @@
             <h5 class="section-title">Lieferadresse</h5>
             <div class="admin-details-section-divider"></div>
 
-            <div class="admin-detail-grid">
+            <div class="admin-detail-grid wide">
                 <div class="k">Land</div>
                 <div class="v">@Order.DeliveryAddress?.Country</div>
                 <div class="k">PLZ</div>
@@ -65,13 +64,13 @@
             </div>
         </div>
 
-            <div class="combo-card-admin">
+            <div class="combo-card-admin wide">
                 <div class="section">
-                    <h5 class="section-title">Lieferadresse</h5>
+                    <h5 class="section-title">Produkte</h5>
                     <div class="admin-details-section-divider"></div>
                 @if (products == null || products.Count == 0)
                 {
-                    <p>Keine Bestellungen vorhanden.</p>
+                    <p>Keine Produkte vorhanden.</p>
                 }
                 else
                 {
@@ -90,7 +89,7 @@
                         <tbody>
                         @foreach (var p in products)
                         {
-                            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/products/{p.OrderId}"))"
+                            <tr
                                 style="cursor: pointer">
                                 <td>@p.Name</td>
                                 <td>@p.Brand</td>
@@ -136,72 +135,3 @@
 
 }
 
-<style>
-    .section {
-        margin-top: 36px;
-    }
-
-    .section-title {
-        margin-bottom: 18px;
-        font-size: 1.1rem;
-        letter-spacing: 2px;
-        opacity: .95;
-    }
-
-    .admin-detail-grid { gap: 8px 14px; }
-
-    .menu-container {
-        width: min(1100px, calc(100% - 48px));
-        margin: 40px auto 0 auto;
-        padding: 36px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;      /* statt center */
-       justify-content: flex-start;
-        gap: 28px;                 /* mehr Luft */
-        font-family: Bahnschrift;
-    }
-
-    .combo-card-admin {
-        width: 100%;
-        max-width: 100%;
-       padding: 28px 28px;
-        gap: 16px;
-    }
-    
-    .admin-detail-grid {
-        gap: 12px 22px;
-        font-family: Bahnschrift;
-    }
-    .admin-detail-grid .k {
-        font-size: .9rem;
-    }
-    .admin-detail-grid .v {
-        font-size: .95rem;
-    }
-
-    .order-summary {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        margin-bottom: 24px;
-    }
-
-    .order-summary .item {
-        background: rgba(0,0,0,.25);
-        border: 1px solid rgba(255,0,0,.35);
-        border-radius: 10px;
-        padding: 14px 16px;
-        text-align: center;
-    }
-
-    .order-summary .label {
-        font-size: 0.85rem;
-        opacity: 0.7;
-    }
-
-    .order-summary .value {
-        font-size: 1.15rem;
-        font-weight: 700;
-    }
-</style>

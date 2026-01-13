@@ -17,7 +17,7 @@ public class Configuration
     public Car Car { get; set; } = null!;
     public List<Product> Products { get; set; } = new List<Product>();
 
-    public double TotalPrice =>
+    public decimal TotalPrice =>
         (Car?.Price ?? 0) + Products.Sum(p => p.Price);
     
     public int PS =>
