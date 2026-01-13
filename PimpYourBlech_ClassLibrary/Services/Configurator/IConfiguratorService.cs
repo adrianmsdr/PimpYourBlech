@@ -13,10 +13,7 @@ public interface IConfiguratorService
     
     // Fahrzeugteil zur Konfiguration hinzufügen
     Task AddProduct(int configurationId, int productId);
-   
-    // Fahrzeugteil von configuration entfernen
-    void RemoveProduct(Configuration configuration, Product product);
-    
+
     // Gesamtpreis der Konfiguration berechnen
     decimal CalculateTotalPrice(Configuration configuration);
    

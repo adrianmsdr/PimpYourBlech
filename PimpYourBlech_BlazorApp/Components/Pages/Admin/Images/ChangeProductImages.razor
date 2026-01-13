@@ -12,7 +12,7 @@
 @inject ILogger<ChangeProductImages> Logger
 
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
-<div class="menu-container">
+<div class="menu-container wide">
     <h3>Produktbilder bearbeiten</h3>
     <label><strong>Produkt:</strong></label>
     <select class="form-select" @bind="SelectedProductId">
@@ -24,7 +24,7 @@
     </select>
     @if (SelectedProductId == 0)
     {
-        <h4 class="headline-admin">Bitte wähle ein Fahrzeug aus.</h4>
+        <div>Bitte wähle ein Fahrzeug aus.</div>
     }
 
     @if (SelectedProductId != 0)

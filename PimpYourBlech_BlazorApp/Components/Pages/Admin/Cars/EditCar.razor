@@ -3,7 +3,6 @@
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
-@using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @inject IAdminService AdminService
@@ -115,7 +114,6 @@
             Products = Car.Products,
             PS = Car.PS,
             Quantity = Car.Quantity
-            
         };
     }
     
@@ -137,15 +135,14 @@
         Car.DatePermit = EditModel.DatePermit;
         Car.DateProduction = EditModel.DateProduction;
         
-        // Persistieren (muss existieren)
+        // Persistieren
         await AdminService.UpdateCarAsync(Car);
-        
+        // Loggen
         Logger.LogInformation(
             "Admin successfully updated car with Id={CarId}",
             Car.Id
         );
-        
-
+        // User benachrichtigen
         ToastService.ShowSuccess("Änderungen wurden gespeichert.");
     }
 

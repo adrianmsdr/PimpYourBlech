@@ -8,7 +8,6 @@ namespace PimpYourBlech_BlazorApp.Components.Pages.Configurator;
 public partial class ConfiguratorMenu : ComponentBase
 {
      [Parameter] public int Id { get; set; }
-
     public Car Car { get; set; }
 
     private string name = null;
@@ -18,16 +17,12 @@ public partial class ConfiguratorMenu : ComponentBase
     // 360°-Frames
     private List<string> frameUrls = new();
     private int currentFrame = 0;
-
     private List<Product> availableColors = new();
     private List<Product> availableEngines = new();
     private List<Product> availableRims = new();
-    private List<Product> availableLights = new();
     private List<Product> availableExtras = new();
-
     private Configuration? configuration;
     private decimal totalPrice;
-
     private int selectedColorId = 0;
     private int selectedRimId = 0;
     private Product? selectedEngine = new Product();
@@ -202,7 +197,5 @@ public partial class ConfiguratorMenu : ComponentBase
         {
             CurrentImageUrl = ImageService.GetCarImageUrl(Car.Id);
         }
-
-       
     }
 }

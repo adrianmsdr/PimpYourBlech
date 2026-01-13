@@ -62,8 +62,15 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         if (q.ProductId is not null)
             query = query.Where(p => p.ProductId == q.ProductId.Value);
 
-        if (!string.IsNullOrWhiteSpace(q.NameContains))
-            query = query.Where(p => p.Name.Contains(q.NameContains));
+        if (!string.IsNullOrWhiteSpace(q.SearchTerm))
+        {
+            var term = q.SearchTerm.Trim();
+            query = query.Where(p =>
+                (p.Name != null && p.Name.Contains(term)) ||
+                (p.Brand  != null && p.Brand.Contains(term)) ||
+                (p.ArticleNumber  != null && p.ArticleNumber.Contains(term))
+            );
+        }
 
         if (!string.IsNullOrWhiteSpace(q.Brand))
             query = query.Where(p => p.Brand == q.Brand);

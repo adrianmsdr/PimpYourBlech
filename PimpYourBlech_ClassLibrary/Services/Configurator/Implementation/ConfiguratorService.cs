@@ -80,12 +80,6 @@ public class ConfiguratorService : IConfiguratorService
         SaveConfigurations();
     
     }
-    
-    public void RemoveProduct(Configuration configuration, Product product)
-    {
-        configuration.Products.Remove(product);
-        SaveConfigurations();
-    }
 
     //Preisberechnung
     public decimal CalculateTotalPrice(Configuration configuration)

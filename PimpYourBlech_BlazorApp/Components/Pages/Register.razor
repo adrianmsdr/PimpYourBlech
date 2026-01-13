@@ -17,8 +17,6 @@
 @attribute [Routes.AllowAnonymous]
 
 <PageTitle>Registration</PageTitle>
-
-
 <div class="menu-container">
     <h3 class="headline-admin">Registrierung</h3>
     <img src=@SelectedAvatar class="user-image" @onclick="SelectAvatar">
@@ -92,6 +90,7 @@
 
 
 @code {
+
     // Felder für die benötigten Werte eines Customers
     private string firstName = "";
     private string lastName = "";
@@ -114,23 +113,24 @@
         isRegistering = true;
         ErrorMessage = "";
         SuccessMessage = "";
-        
+
         Logger.LogInformation(
             "Registration attempt for username {Username}",
             username
         );
         var loginfo = "Registration failed for username " + username;
-     var succeded=   await Executor.RunAsync(() => AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar)
-       ,successMessage:"Registrierung erfolgreich. Bitte melde dich an." ,logError:loginfo);
-     if (succeded)
-     {
-         Logger.LogInformation(
-             "Registration successful for username {Username}",
-             username
-         );
-     }
-     isRegistering = false;
-       @* try
+        var succeded = await Executor.RunAsync(() => AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar)
+            , successMessage: "Registrierung erfolgreich. Bitte melde dich an.", logError: loginfo);
+        if (succeded)
+        {
+            Logger.LogInformation(
+                "Registration successful for username {Username}",
+                username
+            );
+        }
+
+        isRegistering = false;
+        @* try
         {
             await AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar);
             
@@ -160,7 +160,7 @@
             isRegistering = false;
         }*@
     }
-    
+
     // Kehrt zurück zum Start - Screen
     private void Cancel()
     {
@@ -172,7 +172,7 @@
     private string Avatar1;
     private string Avatar2;
     private string Avatar3;
-    
+
 
     protected override void OnInitialized()
     {
@@ -198,7 +198,6 @@
     }
 
 }
-
 <style>
     
     .user-image {

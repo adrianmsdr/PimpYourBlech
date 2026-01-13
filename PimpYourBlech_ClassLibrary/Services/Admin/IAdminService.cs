@@ -1,4 +1,5 @@
 using System.Drawing;
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 
@@ -30,6 +31,8 @@ public interface IAdminService
     Task<Customer> GetCustomerByIdIncludeAllAsync(int id);
     
     Task<Customer> GetCustomerByIdAsync(int id);
+    
+    Task<List<Customer>> GetFilteredCustomersAsync(CustomerListQuery query);
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
      Product CreateProduct(Car car, string name, string brand, int quantity, decimal price, ProductType productType,
@@ -61,11 +64,13 @@ public interface IAdminService
      Task UpdateProductAsync(Product p);
 
      List<ProductType> GetProductTypes();
+     
+     Task<List<Product>> ProductListQueryAsync(ProductListQuery query);
    // ___________________________________Cars____________________________________
   Task<List<Car>> GetCarsAsync();
    
-   Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand, string model, int ps,
-    int quantity, decimal price);
+   Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand, string model, string ps,
+    string quantity, string price);
    
    Task<Car> GetCarByIdAsync(int id);
    
@@ -75,6 +80,8 @@ public interface IAdminService
    
    public List<Product> GetAvailableRims(int id);
    public List<Product> GetAvailableColors(int id);
+   
+   Task<List<Car>> CarListQueryAsync(CarListQuery q);
    // __________________________________Orders____________________________________
    public Task<List<Order>> GetOrdersAsync();
    

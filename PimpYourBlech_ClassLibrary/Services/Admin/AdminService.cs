@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Exceptions;
@@ -10,17 +11,19 @@ using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 
 namespace PimpYourBlech_ClassLibrary.Services.Admin;
 
-public class AdminService:IAdminService
+public class AdminService : IAdminService
 {
     private readonly ICustomerInventory _customerRepository;
     private readonly IProductInventory _productRepository;
     private readonly ICarInventory _carRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<AdminService> _logger;
-   
-    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car,  IEmailService email, ILogger<AdminService> logger)
+    
+
+    public AdminService(ICustomerInventory costumers, IProductInventory products, ICarInventory car,
+        IEmailService email, ILogger<AdminService> logger)
     {
-        _customerRepository  = costumers;
+        _customerRepository = costumers;
         _productRepository = products;
         _carRepository = car;
         _emailService = email;
@@ -33,15 +36,16 @@ public class AdminService:IAdminService
     }
 
 
-    public async Task RegisterCustomerAsync(string firstName, string lastName, string username, string password, string passwordConfirm, string telefon,
-        string mailAddress, string mailAddressConfirm,string ImagePath)
+    public async Task RegisterCustomerAsync(string firstName, string lastName, string username, string password,
+        string passwordConfirm, string telefon,
+        string mailAddress, string mailAddressConfirm, string ImagePath)
     {
         // Verfügbarkeit des Usernames checken
         await EnsureUsernameAvailableAsync(username);
-        
+
         // Email Validierung
         _emailService.MailAdressChecker(mailAddress, mailAddressConfirm);
-        
+
 
         // Passwörter auf Übereinstimmung checken
         EnsurePasswordAvailable(password, passwordConfirm);
@@ -59,13 +63,13 @@ public class AdminService:IAdminService
         customer.ImagePath = ImagePath;
         await _customerRepository.InsertCustomerAsync(customer);
         await _emailService.SendRegistrationEmailAsync(customer);
-        
+
         _logger.LogInformation(
             "Registering new customer with Username={Username}",
             username
         );
     }
-    
+
     public Customer Login(string username, string passwordHash)
     {
         throw new NotImplementedException();
@@ -106,14 +110,12 @@ public class AdminService:IAdminService
 
     public async Task<Customer> CustomerLoginAsync(string username, string password)
     {
-
-
         // Passwort wird in Hashcode konvertiert für DB - Abgleich
         var hash = Convert.ToBase64String(
             SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
         );
 
-        Customer?  customer = await _customerRepository.GetCustomerByUsernameAsync(username);
+        Customer? customer = await _customerRepository.GetCustomerByUsernameAsync(username);
 
         if (customer == null)
         {
@@ -124,7 +126,7 @@ public class AdminService:IAdminService
         {
             throw new WrongPasswordException("Falsches Passwort. Bitte versuche es erneut.");
         }
-        
+
         _logger.LogInformation(
             "Customer logged in successfully. CustomerId={CustomerId}, Username={Username}",
             customer.Id,
@@ -133,7 +135,6 @@ public class AdminService:IAdminService
 
 
         return customer;
-
     }
 
     public async Task<Customer> GetCustomerByUsernameAsync(string username)
@@ -156,14 +157,13 @@ public class AdminService:IAdminService
             .FirstOrDefault(c => c.FirstName == firstName && c.LastName == lastName);
 
         return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Namen gefunden.");
-
     }
-    
+
     public async Task UpdateCustomerAsync(Customer c)
     {
         await _customerRepository.UpdateCustomerAsync(c);
     }
-    
+
     public async Task DeleteCustomerAsync(Customer c)
     {
         await _customerRepository.DeleteCustomerAsync(c);
@@ -173,13 +173,18 @@ public class AdminService:IAdminService
     {
         return await _customerRepository.GetCustomerByIdIncludeAllAsync(id);
     }
-    
+
     public async Task<Customer> GetCustomerByIdAsync(int id)
     {
         return await _customerRepository.GetCustomerByIdAsync(id);
     }
-    
-    
+
+    public async Task<List<Customer>> GetFilteredCustomersAsync(CustomerListQuery query)
+    {
+        return await _customerRepository.QueryCustomersAsync(query);
+    }
+
+
     // ___________________________________Poducts____________________________________
     public Product CreateProduct(Car car, string name, string brand, int quantity, decimal price,
         ProductType productType, string description)
@@ -261,7 +266,7 @@ public class AdminService:IAdminService
     {
         return _productRepository.ListProducts();
     }
-    
+
     public async Task<Product> GetProductByIdAsync(int id)
     {
         return await _productRepository.GetProductByIdAsync(id);
@@ -278,10 +283,15 @@ public class AdminService:IAdminService
         await _productRepository.UpdateProductAsync(p);
         _logger.LogInformation("Product updated");
     }
-    
+
     public List<ProductType> GetProductTypes()
     {
         return Enum.GetValues(typeof(ProductType)).Cast<ProductType>().ToList();
+    }
+
+    public async Task<List<Product>> ProductListQueryAsync(ProductListQuery query)
+    {
+        return await _productRepository.QueryAsync(query);
     }
 
     // ___________________________________Cars____________________________________
@@ -291,23 +301,38 @@ public class AdminService:IAdminService
     {
         return await _carRepository.ListCarsAsync();
     }
+
     public async Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand,
-        string model, int ps, int quantity,
-        decimal price)
+        string model, string ps, string quantity,string price)
     {
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(model) || string.IsNullOrWhiteSpace(brand))
+            throw new WrongInputException("Name, Hersteller und Modell dürfen nicht leer sein.");
+        
+        if (string.IsNullOrWhiteSpace(dateProduction) || string.IsNullOrWhiteSpace(datePermit))
+            throw new WrongInputException("Zulassungsdatum und Produktionsdatum dürfen nicht leer sein.");
+        
+        if (!int.TryParse(quantity, out var quantityValue) || quantityValue < 0)
+            throw new WrongInputException("Bestand muss eine positive Ganzzahl sein.");
+        
+        if (!decimal.TryParse(price, out var priceValue) || priceValue < 0)
+            throw new WrongInputException("Preis muss eine positive Zahl sein.");
+
+        if (!int.TryParse(ps, out var psValue) || psValue < 0)
+            throw new WrongInputException("PS muss eine positive Ganzzahl sein.");
+
         Car c = new Car();
         c.Name = name;
         c.DateProduction = dateProduction;
         c.DatePermit = datePermit;
         c.Brand = brand;
         c.Model = model;
-        c.PS = ps;
-        c.Quantity = quantity;
-        c.Price = price;
+        c.PS = psValue;
+        c.Quantity = quantityValue;
+        c.Price = priceValue;
         await _carRepository.InsertCarAsync(c);
         return c;
     }
-    
+
     public async Task<Car> GetCarByIdAsync(int id)
     {
         return await _carRepository.GetCarByIdAsync(id);
@@ -321,15 +346,14 @@ public class AdminService:IAdminService
 
     public async Task UpdateCarAsync(Car car)
     {
-        await  _carRepository.UpdateCarAsync(car);
+        await _carRepository.UpdateCarAsync(car);
         _logger.LogInformation(
             "Car updated. CarId={CarId}, Name={Name}",
             car.Id,
             car.Name
         );
-
     }
-    
+
     public List<Product> GetAvailableRims(int carId)
     {
         return GetProducts()
@@ -344,9 +368,14 @@ public class AdminService:IAdminService
             .ToList();
     }
 
+    public async Task<List<Car>> CarListQueryAsync(CarListQuery q)
+    {
+        return await _carRepository.QueryAsync(q);
+    }
+
     // ___________________________________Orders____________________________________
 
-    public  async Task<List<Order>> GetOrdersAsync()
+    public async Task<List<Order>> GetOrdersAsync()
     {
         return await _customerRepository.GetOrdersAsync();
     }

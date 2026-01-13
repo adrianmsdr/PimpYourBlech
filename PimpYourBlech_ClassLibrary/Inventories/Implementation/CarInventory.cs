@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Persistence;
@@ -27,9 +28,9 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
     public async Task<List<Car>> ListCarsForConfigurationsAsync()
     {
         return await database.Cars.Where(c =>
-            database.Products.Any(p => p.CarId == c.Id && p.ProductType == ProductType.Lack) &&
-            database.Products.Any(p => p.CarId == c.Id && p.ProductType == ProductType.Motor) &&
-            database.Products.Any(p => p.CarId == c.Id && p.ProductType == ProductType.Felge))
+                database.Products.Any(p => p.CarId == c.Id && p.ProductType == ProductType.Lack) &&
+                database.Products.Any(p => p.CarId == c.Id && p.ProductType == ProductType.Motor) &&
+                database.Products.Any(p => p.CarId == c.Id && p.ProductType == ProductType.Felge))
             .ToListAsync();
     }
 
@@ -44,22 +45,22 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
 
     public async Task<List<Product>> GetAvailableProductsAsync(int Id, ProductType type)
     {
-        
-            IQueryable<Product> query = database.Products.AsNoTracking().Where(p => p.CarId == Id);
 
-            
-            if (type == ProductType.Lack)
-                query = query.Where(p => p.ProductType== ProductType.Lack);
- 
-            if (type == ProductType.Motor)
-                query = query.Where(p => p.ProductType== ProductType.Motor);
-            
-            if (type == ProductType.Felge)
-                query = query.Where(p => p.ProductType == ProductType.Felge);
-            
+        IQueryable<Product> query = database.Products.AsNoTracking().Where(p => p.CarId == Id);
 
-            return await query.ToListAsync();
-        
+
+        if (type == ProductType.Lack)
+            query = query.Where(p => p.ProductType == ProductType.Lack);
+
+        if (type == ProductType.Motor)
+            query = query.Where(p => p.ProductType == ProductType.Motor);
+
+        if (type == ProductType.Felge)
+            query = query.Where(p => p.ProductType == ProductType.Felge);
+
+
+        return await query.ToListAsync();
+
     }
 
     public async Task DeleteCarAsync(Car car)
@@ -77,5 +78,36 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
     public async Task<Car?> GetCarByIdAsync(int Id)
     {
         return await database.Cars.FindAsync(Id);
+    }
+
+    public async Task<List<Car>> QueryAsync(CarListQuery q)
+    {
+        IQueryable<Car> query = database.Cars.AsNoTracking();
+
+        if (q.CarId is not null)
+            query = query.Where(c => c.Id == q.CarId.Value);
+
+        if (!string.IsNullOrWhiteSpace(q.NameContains))
+            query = query.Where(c => c.Name.Contains(q.NameContains));
+
+        if (!string.IsNullOrWhiteSpace(q.Brand))
+            query = query.Where(c => c.Brand == q.Brand);
+
+        if (q.MinPrice is not null)
+            query = query.Where(p => p.Price >= q.MinPrice.Value);
+
+        if (q.MaxPrice is not null)
+            query = query.Where(p => p.Price <= q.MaxPrice.Value);
+
+        query = q.SortBy switch
+        {
+            CarSort.PriceAsc => query.OrderBy(p => p.Price),
+            CarSort.PriceDesc => query.OrderByDescending(p => p.Price),
+            CarSort.NameDesc => query.OrderByDescending(p => p.Name),
+            CarSort.NameAsc => query.OrderBy(p => p.Name),
+        };
+
+        return await query.ToListAsync();
+
     }
 }

@@ -1,20 +1,88 @@
 @page "/administrator/products"
 <PageTitle>Administrator/products</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_ClassLibrary.DTO
 @using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Services.Shop
+@using PimpYourBlech_ClassLibrary.Services.Shop.Implementation
 @inject IAdminService AdminService
+@inject IConfiguratorService ConfiguratorService
+@inject IShopService ShopService
 @inject NavigationManager Nav
 
 
-<div class="menu-container">
-    @if (filteredProducts == null || filteredProducts.Count == 0)
+<div class="menu-container wide">
+
+    <div class="search-container">
+
+        <div class="search-row">
+            <input class="search-input"
+                   placeholder="Nach Artikelnummer, Name, Hersteller suchen..."
+                   @bind="searchText"/>
+            <button class="buttons" @onclick="LoadProductsAsync">
+                Suchen
+                <MagnifyingGlassIcon/>
+            </button>
+
+        </div>
+
+        <div class="button-row">
+            <div class="d-flex align-items-center gap-3">
+                <label class="fields">Kategorie:</label>
+                <select class="form-select" style="width: 200px"
+                        @bind="selectedCategory" @bind:after="LoadProductsAsync">
+                    <option value="">Alle</option>
+                    @foreach (var c in Enum.GetValues<ProductType>())
+                    {
+                        <option value="@c">@c</option>
+                    }
+                </select>
+
+
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <label class="fields">Sortieren nach:</label>
+                <select class="form-select" style="width: 200px"
+                        @bind="selectedSortOption" @bind:after="LoadProductsAsync">
+                    <option value="@ProductSort.NameAsc">Standard</option>
+                    <option value="@ProductSort.NameAsc">Name (A–Z)</option>
+                    <option value="@ProductSort.NameDesc">Name (Z–A)</option>
+                    <option value="@ProductSort.PriceAsc">Preis (aufsteigend)</option>
+                    <option value="@ProductSort.PriceDesc">Preis (absteigend)</option>
+                </select>
+            </div>
+
+            @if (cars != null)
+            {
+                <div class="d-flex align-items-center gap-3">
+                    <label class="fields">Fahrzeug:</label>
+
+                    <select class="form-select" style="width: 200px"
+                            @bind="selectedCarId" @bind:after="LoadProductsAsync">
+
+                        <option value="0">Alle</option>
+
+                        @foreach (var c in cars)
+                        {
+                            <option value="@c.Id">@c.Name</option>
+                        }
+                    </select>
+                </div>
+            }
+        </div>
+
+
+    </div>
+    @if (products == null || products.Count == 0)
     {
         <p>Keine Fahrzeugteile vorhanden.</p>
     }
     else
     {
-
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
@@ -26,7 +94,7 @@
             </thead>
 
             <tbody>
-            @foreach (var p in filteredProducts)
+            @foreach (var p in products)
             {
                 <tr @onclick="@(() => Nav.NavigateTo($"/administrator/products/{p.ProductId}"))"
                     style="cursor: pointer;">
@@ -39,42 +107,8 @@
             </tbody>
         </table>
     }
-    @if (FoundProduct != null)
-    {
-        <div class="alert alert-info mt-3">
-            <strong>Gefundenes Produkt:</strong><br />
-            Artikelnummer: @FoundProduct.ArticleNumber <br />
-            Name: @FoundProduct.Name <br />
-            Hersteller: @FoundProduct.Brand <br />
-            Bestand: @FoundProduct.Quantity
-        </div>
-    }
-
-    @if (!string.IsNullOrEmpty(ErrorMessage))
-    {
-        <div class="alert alert-danger mt-3">@ErrorMessage</div>
-    }
-
-    <span class="mb-2">Suche nach:</span>
-
-    <select class="form-select mb-2" style="max-width: 250px"
-            @bind="selectedSearchField">
-        <option value="Artikelnummer">Artikelnummer</option>
-        <option value="Name">Name</option>
-        <option value="Hersteller">Hersteller</option>
-    </select>
-
-    <input class="text-inputPYB"
-           placeholder="Suchbegriff..."
-           @bind="searchValue"
-           @oninput="(e => ApplyFilter())"/>
 
     <div class="button-column">
-        <button class="buttons" @onclick="ApplyFilter">
-            <MagnifyingGlassIcon></MagnifyingGlassIcon>
-            Nach Artikel suchen
-        </button>
-
         <button class="buttons" @onclick="AddProduct">
             <AddIcon></AddIcon>
             Produkt hinzufügen
@@ -84,16 +118,31 @@
 </div>
 
 @code {
-    private List<Product> products = new();
-    private List<Product> filteredProducts = new();
+    private List<Product> products;
+    private List<Car> cars;
+    private ProductType? selectedCategory = null; // null = Alle
+    private ProductSort selectedSortOption = ProductSort.NameAsc;
+    private string searchText = string.Empty;
+    private Product selectedProduct = new Product();
+    private int selectedCarId = 0;
 
-    private string selectedSearchField = "Name";
-    private string searchValue = string.Empty;
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        products = AdminService.GetProducts();
-        filteredProducts = products.ToList();
+        await LoadProductsAsync();
+        cars = await ConfiguratorService.ListCarsAsync();
+    }
+
+    private async Task LoadProductsAsync()
+    {
+        var q = new ProductListQuery
+        {
+            Type = selectedCategory,
+            SortBy = selectedSortOption,
+            SearchTerm = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
+            CarId = selectedCarId == 0 ? null : selectedCarId
+        };
+
+        products = await AdminService.ProductListQueryAsync(q);
     }
 
     private void AddProduct()
@@ -101,46 +150,10 @@
         Nav.NavigateTo("/administrator/products/new");
     }
 
-    private void ApplyFilter()
-    {
-        if (products == null || products.Count == 0)
-        {
-            filteredProducts = new List<Product>();
-            return;
-        }
-        
-        if (string.IsNullOrWhiteSpace(searchValue))
-        {
-            filteredProducts = products;
-            return;
-        }
-
-        var term = searchValue.Trim().ToLower();
-
-
-        filteredProducts = selectedSearchField switch
-        {
-            "Artikelnummer" => products
-                .Where(p => p.ArticleNumber != null &&
-                            p.ArticleNumber.ToLower().Contains(term))
-                .ToList(),
-            "Hersteller" => products
-                .Where(p => p.Brand != null &&
-                            p.Brand.ToLower().Contains(term))
-                .ToList(),
-            "Name" => products // Standard: Name
-                .Where(p => p.Name != null &&
-                            p.Name.ToLower().Contains(term))
-                .ToList()
-        };
-    }
-    
-    private Product FoundProduct;
-    private string ErrorMessage = "";
-    
     private void Cancel()
     {
         Nav.NavigateTo("/administrator");
     }
+    
 }
 

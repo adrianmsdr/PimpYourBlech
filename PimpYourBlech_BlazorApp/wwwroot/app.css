@@ -115,10 +115,11 @@ h1:focus {
     font-size: 18px;
     color: white;
 
-    background-image: url("ButtonsImage.png");
+   background-image: url("ButtonsImage.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover; /* <- Stretch sauber */
+    
 
     border: 1px solid rgba(255, 0, 0, 0.7);
     border-radius: 12px;
@@ -338,11 +339,12 @@ h1, h2, h3, h4 {
 /* ---------- Admin-Menüs ---------- */
 
 /* Gesamtcontainer */
-.detail-overview-admin {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
+.detail-overview-admin{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;  /* statt center */
+    gap:14px;
+    width:100%;
 }
 
 /* Bild */
@@ -352,11 +354,14 @@ h1, h2, h3, h4 {
     object-fit: contain;
     border-radius: 12px;
     display: block;
+    margin: 0 auto;
+
 }
 
 
 /* Upload Karten Struktur */
 .upload-row-admin {
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -637,3 +642,53 @@ h1, h2, h3, h4 {
     font-size: .95rem;
 }
 
+/* Shop - Such - Container*/
+
+.search-container, .product-grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 25px 0 30px 0;
+    padding: 18px 22px;
+    background: rgba(40, 0, 0, 0.55);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 0, 0, 0.35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+}
+
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-input {
+    flex: 1;
+    height: 45px;
+    padding: 0 14px;
+    font-family: Bahnschrift;
+    font-size: 16px;
+    color: white;
+    background: rgba(20, 0, 0, 0.8);
+    border: 2px solid #ff1a1a;
+    border-radius: 12px;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-select {
+    height: 42px;
+    padding: 0 10px;
+    font-family: Bahnschrift;
+    font-size: 15px;
+    color: white;
+    background: rgba(20, 0, 0, 0.8);
+    border: 2px solid #ff1a1a;
+    border-radius: 10px;
+    cursor: pointer;
+}

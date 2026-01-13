@@ -19,7 +19,7 @@
         </div>
     </div>
 }
-<div class="menu-container">
+<div class="menu-container wide">
 <h3>Bildverwaltung</h3>
 
     <label><strong>Fahrzeug:</strong></label>
@@ -32,7 +32,7 @@
     </select>
     @if (SelectedCarId == 0)
     {
-        <h4 class="headline-admin">Bitte wähle ein Fahrzeug aus.</h4>
+        <div>Bitte wähle ein Fahrzeug aus.</div>
     }
 
     @if (SelectedCarId != 0)
@@ -124,18 +124,7 @@
                     </div>
                 }
             }
-
-
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="alert alert-danger">@ErrorMessage</div>
-            }
-
-            @if (!string.IsNullOrEmpty(SuccessMessage))
-            {
-                <div class="alert alert-success">@SuccessMessage</div>
-            }
-
+            
         }
     }
 </div>
@@ -152,10 +141,7 @@
 
     private IBrowserFile? uploadedCarImage;
     private IReadOnlyList<IBrowserFile> uploadedFiles = Array.Empty<IBrowserFile>();
-    
-    private string ErrorMessage = "";
-    private string SuccessMessage = "";
-    
+   
     private bool isUploading;
     
     private int SelectedCarId
@@ -216,6 +202,7 @@
             "Admin uploaded car image for CarId={CarId}",
             SelectedCarId
         );
+
         
     }
     

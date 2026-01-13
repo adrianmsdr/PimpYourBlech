@@ -1,3 +1,4 @@
+using PimpYourBlech_ClassLibrary.DTO;
 using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Enums;
 
@@ -18,4 +19,6 @@ public interface ICarInventory
     public Task UpdateCarAsync(Car car);
     
     public Task<Car> GetCarByIdAsync(int Id);
+    
+    Task<List<Car>> QueryAsync(CarListQuery q);
 }
