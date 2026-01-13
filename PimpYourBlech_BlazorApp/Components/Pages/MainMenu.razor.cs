@@ -9,7 +9,7 @@ public partial class MainMenu : ComponentBase
 {
     private void GoToConfigurator() => Nav.NavigateTo("/configurator/chooseCar");
 
-    private void GoToComparator() => Nav.NavigateTo("/compare/choose");
+    private void GoToComparator() => Nav.NavigateTo("/compare");
     
     private void GoToConfigurations() => Nav.NavigateTo("/configurations");
 

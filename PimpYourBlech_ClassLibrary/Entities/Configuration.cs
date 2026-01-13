@@ -1,6 +1,8 @@
+using PimpYourBlech_ClassLibrary.Enums;
+
 namespace PimpYourBlech_ClassLibrary.Entities;
 
-public class Configuration()
+public class Configuration
 {
     public int Id { get; set; }
     
@@ -15,6 +17,14 @@ public class Configuration()
     public Car Car { get; set; } = null!;
     public List<Product> Products { get; set; } = new List<Product>();
 
+    public double TotalPrice =>
+        (Car?.Price ?? 0) + Products.Sum(p => p.Price);
+    
+    public int PS =>
+        Products
+            .FirstOrDefault(p => p.ProductType == ProductType.Motor)
+            ?.EngineDetail?.Ps
+        ?? Car.PS;
     public override string ToString()
     {
         return $"Name: {Name}";

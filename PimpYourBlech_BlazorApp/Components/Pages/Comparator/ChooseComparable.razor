@@ -28,6 +28,8 @@
         <tr>
             <td>
                 <input type="checkbox"
+                       checked="@selectedCars.Any(c => c.Id == car.Id)"
+                       disabled="@(selectedCars.Count >= MaxCompareItems && !selectedCars.Any(c => c.Id == car.Id))"
                        @onchange="() => ToggleCar(car)" />
             </td>
             <td>
@@ -46,6 +48,8 @@
 <CarComparator SelectedCars="@selectedCars" />
 
 @code {
+    private const int MaxCompareItems = 3;
+
     private List<Car> cars = new();
     private List<Car> selectedCars = new();
 
@@ -56,9 +60,20 @@
 
     private void ToggleCar(Car car)
     {
-        if (selectedCars.Contains(car))
-            selectedCars.Remove(car);
-        else
-            selectedCars.Add(car);
+        // bereits ausgewählt → entfernen
+        if (selectedCars.Any(c => c.Id == car.Id))
+        {
+            selectedCars.RemoveAll(c => c.Id == car.Id);
+            return;
+        }
+
+        // ❗ Limit erreicht → nichts hinzufügen
+        if (selectedCars.Count >= MaxCompareItems)
+        {
+            return;
+        }
+
+        selectedCars.Add(car);
     }
+
 }
