@@ -4,11 +4,10 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 
 public interface IEmailService
 {
-    void SendRegistrationEmail(Customer customer);
+    Task SendRegistrationEmailAsync(Customer customer);
     
-    bool IsValid(string email);
 
-    bool ConfirmRegistrationChecker(string mailAddress, String confirm);
+    bool MailAdressChecker(string mailAddress, String confirm);
     
     public Task SendOrderReplyEmail(Customer customer,Order order);
 

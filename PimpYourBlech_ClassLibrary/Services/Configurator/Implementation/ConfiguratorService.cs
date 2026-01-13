@@ -46,10 +46,15 @@ public class ConfiguratorService : IConfiguratorService
 
     }
     
-    public void AddProduct(Configuration configuration, Product product)
+    public async Task AddProduct(int configurationId, int productId)
     {
-        if (product == null || configuration == null)
+        if (productId == 0||configurationId == 0)
             return;
+        var configuration = GetConfigurationById(configurationId);
+        if (configuration == null)
+            return;
+        
+        var product = GetProductById(productId);
         
         var existingProduct = configuration.Products
             .FirstOrDefault(p => p.ProductType == product.ProductType);
@@ -83,10 +88,10 @@ public class ConfiguratorService : IConfiguratorService
     }
 
     //Preisberechnung
-    public double CalculateTotalPrice(Configuration configuration)
+    public decimal CalculateTotalPrice(Configuration configuration)
     {
-        double carPrice = configuration.Car?.Price ?? 0;
-        double productTotal = configuration.Products.Sum(p => p.Price);
+        decimal carPrice = configuration.Car?.Price ?? 0;
+        decimal productTotal = configuration.Products.Sum(p => p.Price);
         
         return carPrice + productTotal;
     }
@@ -142,12 +147,12 @@ public class ConfiguratorService : IConfiguratorService
            .FirstOrDefault(c => c.Id == Id);
     }
 
-    public List<Product> GetAvailableColors(int Id)
+    public async Task<List<Product>> GetAvailableColorsAsync(int Id)
     {
-        return carInventory.GetAvailableColor(Id);
+        return await carInventory.GetAvailableColorsAsync(Id);
     }
 
-    public List<Product> GetAvailableEngines(int carId)
+    public async Task<List<Product>> GetAvailableEnginesAsync(int carId)
     {
         return ListEngines()
             .Where(p => p.CarId == carId && p.ProductType == ProductType.Motor)
@@ -177,5 +182,23 @@ public class ConfiguratorService : IConfiguratorService
     {
         return productInventory.ListProducts().Where(p => p.CarId == carId)
             .Where(p=>p.ProductType!=ProductType.Lack&&p.ProductType!=ProductType.Motor&&p.ProductType!=ProductType.Felge).ToList();
+    }
+
+    public async Task<List<Product>> GetAvailableProductsAsync(int carId, ProductType type)
+    {
+        return await carInventory.GetAvailableProductsAsync(carId, type);
+    }
+
+    public async Task<bool> ConfigurationAvailable(int carId)
+    {
+        return !(await carInventory.GetAvailableProductsAsync(carId, ProductType.Lack)).Any() ||
+               !(await carInventory.GetAvailableProductsAsync(carId, ProductType.Motor)).Any() ||
+               !(await carInventory.GetAvailableProductsAsync(carId, ProductType.Felge)).Any()
+               ;
+    }
+
+    public async Task<List<Car>> GetAvailableCarsAsync()
+    {
+        return await carInventory.ListCarsForConfigurationsAsync();
     }
 }

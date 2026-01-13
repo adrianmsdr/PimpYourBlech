@@ -24,6 +24,8 @@ public interface IDatabase
     DbSet<DeliveryAddress> DeliveryAddresses { get; }
     
     DbSet<OrderPosition> OrderPositions { get; }
+    
+    DbSet<PaymentValue> PaymentValues { get; }
     int SaveChanges();
     
     Task<int> SaveChangesAsync();

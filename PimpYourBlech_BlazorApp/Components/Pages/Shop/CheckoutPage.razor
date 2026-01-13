@@ -35,7 +35,7 @@
             @*<label class="form-label"><strong>Lieferadresse wählen:</strong></label>*@
 
             <select class="form-select" @bind="selectedDeliveryAddressId">
-                <option value="0">Lieferadresse wählen:</option>
+                <option value="0">Neue Lieferadrese</option>
                 @foreach (var a in _addresses)
                 {
                     <option value="@a.Id">@a.Lastname, @a.PostalCode, @a.Town, @a.Street @a.HouseNumber</option>
@@ -260,27 +260,8 @@
         border: 1px solid rgba(255, 0, 0, 0.25);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     }
-    .text-inputBYB {
-        width: 240px;
-        height: 38px;
-        padding: 6px;
-        font-family: Bahnschrift;
-        text-align: center;
-        background-color: rgba(20, 0, 0, 0.65);
-        color: white;
-        border-radius: 10px;
-        border: 2px solid rgba(255, 0, 0, 0.6);
-        outline: none;
-        transition: 0.25s ease;
-    }
-
-    .text-inputBYB:hover {
-        transform: scale(1.1);
-    }
-
-    .text-inputBYB:focus {
-        border-color: #ff3333;
-        box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+    .text-inputPYB:disabled {
+        background-color: rgb(106, 2, 2);
     }
 
     .buttons {
@@ -330,5 +311,6 @@
         color: white;
         font-family: Bahnschrift;
     }
+    
 
 </style>

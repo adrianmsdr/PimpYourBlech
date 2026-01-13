@@ -36,26 +36,15 @@ public class AdminService:IAdminService
     public async Task RegisterCustomerAsync(string firstName, string lastName, string username, string password, string passwordConfirm, string telefon,
         string mailAddress, string mailAddressConfirm,string ImagePath)
     {
-        // Username darf nicht leer sein
-        if (string.IsNullOrWhiteSpace(username))
-            throw new WrongInputException("Username darf nicht leer sein.");
-
-        // Email darf nicht leer sein
-        if (string.IsNullOrWhiteSpace(mailAddress))
-            throw new WrongInputException("Email darf nicht leer sein.");
-
-        // Email Validierung
-        if(!_emailService.IsValid(mailAddress))
-            throw new WrongInputException("Keine gültige Email Adresse. (Beispiel: user@example.com)");
-
-        _emailService.ConfirmRegistrationChecker(mailAddress, mailAddressConfirm);
-
         // Verfügbarkeit des Usernames checken
-        EnsureUsernameAvailableAsync(username);
+        await EnsureUsernameAvailableAsync(username);
+        
+        // Email Validierung
+        _emailService.MailAdressChecker(mailAddress, mailAddressConfirm);
+        
 
         // Passwörter auf Übereinstimmung checken
-        if (password != passwordConfirm)
-            throw new WrongPasswordException("Die Passwörter stimmen nicht überein.");
+        EnsurePasswordAvailable(password, passwordConfirm);
 
         var hash = Convert.ToBase64String(
             SHA256.HashData(Encoding.UTF8.GetBytes(password ?? ""))
@@ -69,7 +58,7 @@ public class AdminService:IAdminService
         customer.MailAddress = mailAddress;
         customer.ImagePath = ImagePath;
         await _customerRepository.InsertCustomerAsync(customer);
-        _emailService.SendRegistrationEmail(customer);
+        await _emailService.SendRegistrationEmailAsync(customer);
         
         _logger.LogInformation(
             "Registering new customer with Username={Username}",
@@ -84,17 +73,37 @@ public class AdminService:IAdminService
 
     public async Task EnsureUsernameAvailableAsync(string username)
     {
-            if (username.Length < 8)
-            {
-                throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
-            }
-            
-            if (await _customerRepository.UsernameExistsAsync(username))
-            {
-                throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
-            }
+        // Username darf nicht leer sein
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            throw new WrongInputException("Username darf nicht leer sein.");
+        }
+
+        if (username.Length < 8)
+        {
+            throw new UsernameNotAvailableException("Username zu kurz. Mindestens 8 Zeichen.");
+        }
+
+        if (await _customerRepository.UsernameExistsAsync(username))
+        {
+            throw new UsernameNotAvailableException("Username ist bereits vergeben, bitte wähle einen anderen!");
+        }
     }
-    
+
+    public void EnsurePasswordAvailable(string password, string passwordConfirm)
+    {
+        // Passwörter auf Übereinstimmung checken
+        if (password != passwordConfirm)
+        {
+            throw new WrongPasswordException("Die Passwörter stimmen nicht überein.");
+        }
+
+        if (password.Length < 8)
+        {
+            throw new WrongPasswordException("Passwort zu kurz. Mindestens 8 Zeichen.");
+        }
+    }
+
     public async Task<Customer> CustomerLoginAsync(string username, string password)
     {
 
@@ -172,7 +181,8 @@ public class AdminService:IAdminService
     
     
     // ___________________________________Poducts____________________________________
-    public Product CreateProduct(Car car, string name, string brand, int quantity, double price, ProductType productType, string description)
+    public Product CreateProduct(Car car, string name, string brand, int quantity, decimal price,
+        ProductType productType, string description)
     {
         _logger.LogInformation(
             "Product instance created. Name={Name}, CarId={CarId}, Type={Type}",
@@ -281,8 +291,9 @@ public class AdminService:IAdminService
     {
         return await _carRepository.ListCarsAsync();
     }
-    public async Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand, string model, int ps, int quantity,
-        double price)
+    public async Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand,
+        string model, int ps, int quantity,
+        decimal price)
     {
         Car c = new Car();
         c.Name = name;

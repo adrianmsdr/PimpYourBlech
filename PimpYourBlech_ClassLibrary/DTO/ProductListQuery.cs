@@ -9,8 +9,8 @@ public class ProductListQuery
     public string? Brand { get; set; }
     public int? CarId { get; set; }
     public ProductType? Type { get; set; }
-    public double? MinPrice { get; set; }
-    public double? MaxPrice { get; set; }
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
 
     public ProductSort SortBy { get; set; } = ProductSort.NameAsc;
 }

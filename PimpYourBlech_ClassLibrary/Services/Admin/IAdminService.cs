@@ -12,8 +12,7 @@ public interface IAdminService
 
     public Task RegisterCustomerAsync(string firstName, string lastName, string username, string password,
     string passwordConfirm, string telefon, string mailAddress, string mailAdressConfirm, string ImagePath);
-    Customer Login(string username, string passwordHash);
-    Task EnsureUsernameAvailableAsync(string username);
+    
 
 
     Task<Customer> CustomerLoginAsync(string username, string password);
@@ -33,7 +32,8 @@ public interface IAdminService
     Task<Customer> GetCustomerByIdAsync(int id);
      // ___________________________________Poducts____________________________________
     List<Product> GetProducts();
-     Product CreateProduct(Car car, string name, string brand, int quantity, double price,ProductType productType, string description);
+     Product CreateProduct(Car car, string name, string brand, int quantity, decimal price, ProductType productType,
+      string description);
 
 
 
@@ -64,7 +64,8 @@ public interface IAdminService
    // ___________________________________Cars____________________________________
   Task<List<Car>> GetCarsAsync();
    
-   Task<Car> RegisterCarAsync(string name,string dateProduction,string datePermit,string brand,string model, int ps,int quantity,double price);
+   Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand, string model, int ps,
+    int quantity, decimal price);
    
    Task<Car> GetCarByIdAsync(int id);
    

@@ -23,7 +23,7 @@
 }
 
 
-<div class="menu-container">
+<div class="menu-container wide">
 <h3>Fahrzeugübersicht:</h3>
 
 
@@ -37,20 +37,31 @@ else
     <div class="detail-overview-admin">
         <img class="detail-image-admin" src="@ImageService.GetCarImageUrl(Car.Id)" />
 
-    <div class="upload-row-admin">
-        <InputFile OnChange="OnCarImageSelected" accept="image/*" />
-        <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedCarImage is null)">
-            Speichern
-        </button>
+        <div class="upload-row-admin">
+            <InputFile OnChange="OnCarImageSelected" accept="image/*" />
+            <button class="buttons" @onclick="SaveCarImage" disabled="@(uploadedCarImage is null)">
+                Speichern
+            </button>
+        </div>
+        <div class="combo-card-admin wide">
+        <div class="section">
+        <h5 class="section-title">Fahrzeugdetails</h5>
+        <div class="admin-details-section-divider"></div>
+        <div class="admin-detail-grid wide">
+            <div class="k">Name</div>
+            <div class="v">@Car.Name</div> 
+            <div class="k">Hersteller</div>
+            <div class="v">@Car.Brand</div> 
+            <div class="k">Modell</div>
+            <div class="v">@Car.Model</div> 
+            <div class="k">Preis</div>
+            <div class="v">@Car.Price</div> 
+            <div class="k">Auf Lager</div>
+            <div class="v">@Car.Quantity</div>
+        </div>
     </div>
-
-    <div class="combo-card-admin">
-        <p><strong>Name:</strong> @Car.Name</p>
-        <p><strong>Hersteller:</strong> @Car.Brand</p>
-        <p><strong>Modell:</strong> @Car.Model</p>
-        <p><strong>Preis:</strong> @Car.Price</p>
-        <p><strong>Auf Lager:</strong> @Car.Quantity</p>
     </div>
+   
         <div class="button-column">
             <button class="buttons" @onclick="OpenDeleteModal">Fahrzeug löschen</button>
             <button class="buttons" @onclick="EditCar">Fahrzeug bearbeiten</button>

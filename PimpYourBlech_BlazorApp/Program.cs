@@ -2,6 +2,7 @@ using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
 using PimpYourBlech_BlazorApp.Components;
 using PimpYourBlech_BlazorApp.Services;
+using PimpYourBlech_BlazorApp.Services.Toasts;
 using PimpYourBlech_ClassLibrary.Factories;
 using PimpYourBlech_ClassLibrary.Inventories;
 using PimpYourBlech_ClassLibrary.Persistence;
@@ -73,6 +74,7 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IFaqService, FaqService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IToastExecutor, ToastExecutor>();
 
 // 7) UserSession
 builder.Services.AddScoped<IUserSession, UserSession>();

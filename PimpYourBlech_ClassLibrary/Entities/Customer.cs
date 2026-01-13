@@ -8,6 +8,8 @@ public class Customer
     
     public List<Order> Orders { get; set; } = new();
     public List<Configuration> Configurations { get; set; } = new ();
+
+    public List<PaymentValue> PaymentValues { get; set; } = new();
     public string? FirstName { get; set; } = string.Empty;
 
     public string? LastName { get; set; } = string.Empty;

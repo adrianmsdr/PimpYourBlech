@@ -294,6 +294,7 @@ h1, h2, h3, h4 {
 .headline-admin {
     font-family: Bahnschrift;
     color: white;
+    letter-spacing: 2px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     text-align: center;
 }
@@ -589,4 +590,50 @@ h1, h2, h3, h4 {
     height:1px;
     background: rgba(255,255,255,0.12);
     margin: 10px 0;
+    
+    
 }
+
+/*-------------__---*/
+.section {
+    margin-top: 36px;
+}
+
+.section-title {
+    margin-bottom: 18px;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    opacity: .95;
+}
+
+
+.menu-container.wide {
+    width: min(1100px, calc(100% - 48px));
+    margin: 40px auto 0 auto;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;      /* statt center */
+    justify-content: flex-start;
+    gap: 28px;                 /* mehr Luft */
+    font-family: Bahnschrift;
+}
+
+.combo-card-admin.wide{
+    width: 100%;
+    max-width: 100%;
+    padding: 28px 28px;
+    gap: 16px;
+}
+
+.admin-detail-grid.wide{
+    gap: 12px 22px;
+    font-family: Bahnschrift;
+}
+.admin-detail-grid.wide .k {
+    font-size: .9rem;
+}
+.admin-detail-grid.wide .v {
+    font-size: .95rem;
+}
+

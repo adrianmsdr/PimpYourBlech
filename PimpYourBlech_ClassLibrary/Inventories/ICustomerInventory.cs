@@ -50,6 +50,11 @@ public interface ICustomerInventory
     
     Task<int> InsertDeliveryAddressAsync(DeliveryAddress address);
     
+    Task<int> InsertPaymentValueAsync(PaymentValue paymentValue);
+
+    public Task<PaymentValue?> GetPaymentValueAsync(int id);
     Task<List<OrderPosition>> GetOrderItemsAsync(int id);
+    
+    Task<List<PaymentValue>> GetPaymentValuesAsync(int customerId);
    
 }

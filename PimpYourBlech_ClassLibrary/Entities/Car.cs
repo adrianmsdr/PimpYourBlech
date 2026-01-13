@@ -4,17 +4,17 @@ public class Car
 {
 
     public int Id { get; set; }
-    public string Name { get; set; } 
+    public string Name { get; set; }
     public string DateProduction { get; set; }
-    
+
     public string DatePermit { get; set; }
     public string Brand { get; set; }
     public string Model { get; set; }
     public int PS { get; set; }
+
+public int Quantity {get; set;}
     
-    public int Quantity {get; set;}
-    
-    public double Price {get; set;}
+    public decimal Price {get; set;}
     
     public List<Product> Products { get; set; }
   

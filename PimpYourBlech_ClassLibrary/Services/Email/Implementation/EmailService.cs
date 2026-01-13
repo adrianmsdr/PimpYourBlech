@@ -9,7 +9,7 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementati
 
 public class EmailService : IEmailService
 {
-    public void SendRegistrationEmail(Customer customer)
+    public async Task SendRegistrationEmailAsync(Customer customer)
     {
         string subject = "Deine Registrierung bei PimpYourBlech";
         string message = "Hallo " + customer.FirstName + ",\n\n" +
@@ -28,14 +28,25 @@ public class EmailService : IEmailService
 
         using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
             to: customer.MailAddress, subject,message);
-        client.Send(mail);
+       await client.SendMailAsync(mail);
     }
-    public bool IsValid(string email)
+    public bool MailAdressChecker(String mailAddress, string confirm)
     {
+        if (string.IsNullOrWhiteSpace(mailAddress))
+        {
+            throw new WrongInputException("Email darf nicht leer sein.");
+        }
+
       
-            var addr = new EmailAddress(email);
-            return true;
-            
+        var addr = new EmailAddress(mailAddress);
+       
+
+        if (!mailAddress.Equals(confirm, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new WrongInputException("E-Mail-Adressen stimmen nicht überein.");
+           
+        }
+        return true;
     }
     
     
@@ -55,7 +66,7 @@ public class EmailService : IEmailService
        StringBuilder sb = new StringBuilder();
         foreach (var p in  order.Items)
         {
-            sb.Append(p.Product.Name + "\n\n" + p.Product.ArticleNumber + "\n\n" + p.Product.Brand + "\n\n" + p.Product.Price + "\n\n");
+            sb.Append(p.Name + "\n\n" + p.ArticleNumber + "\n\n" + p.Brand + "\n\n" + p.UnitPrice*p.Quantity  + " €\n\n");
         }
         string subject = "Deine Bestellung bei PimpYourBlech";
         string message = "Hallo " + customer.FirstName + ",\n\n" +

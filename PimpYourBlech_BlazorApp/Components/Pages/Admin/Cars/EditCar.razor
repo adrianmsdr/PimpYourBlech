@@ -13,7 +13,7 @@
 
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
-<div class="menu-container">
+<div class="menu-container wide">
     <h3>Fahrzeug bearbeiten</h3>
 
     @if (!string.IsNullOrWhiteSpace(ErrorMessage))
@@ -33,12 +33,12 @@
     {
 
             <div style="flex:1; min-width:320px;">
-                <div class="combo-card-admin">
+                <div class="combo-card-admin wide">
                     <EditForm Model="EditModel" OnValidSubmit="SaveEdits">
                         <DataAnnotationsValidator />
                         <ValidationSummary />
 
-                        <div class="form-grid-admin">
+                        <div class="form-grid-admin wide">
                             <label>Name</label>
                             <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.Name" />
 

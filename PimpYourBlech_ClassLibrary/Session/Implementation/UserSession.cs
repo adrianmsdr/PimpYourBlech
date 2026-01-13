@@ -27,7 +27,8 @@ public class UserSession : IUserSession
 
 
     public int CurrentDeliveryAddressId { get; set; }
-    public PaymentValues? PaymentValues { get; set; }
+    public int CurrentPaymentValueId { get; set; }
+    public PaymentValue? PaymentValues { get; set; }
 
     public void LogOut()
     {
