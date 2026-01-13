@@ -18,7 +18,8 @@ public interface IUserSession
     
 
     int CurrentDeliveryAddressId { get; set; }
-    PaymentValues? PaymentValues { get; set; }
+    int CurrentPaymentValueId { get; set; }
+    PaymentValue? PaymentValues { get; set; }
 
     void LogOut();
 

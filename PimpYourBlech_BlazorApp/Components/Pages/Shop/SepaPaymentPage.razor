@@ -1,36 +1,53 @@
 ﻿@inject NavigationManager Nav
 
 @page "/SepaPaymentPage"
+@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.Implementation
 @inject IUserSession UserSession
+@inject IOrderService OrderService
 @inject ILogger<SepaPaymentPage> Logger
 
 
 <div class="sepa-container">
+    <h1 class="font">Kasse</h1>
+<div class="mb-3">
+    <select class="form-select" @bind="selectedPaymentValueId">
+        <option value="0">Neue Zahlungsmethode</option>
+        @foreach (var p in _paymentValues)
+        {
+            <option value="@p.Id">@p.AccountOwner,@p.Iban, @p.Bic</option>
+        }
+    </select>
     
-    <h2 class="font">Kontoinhaber</h2>
+  </div>
+    <h5 class="font">Bitte gebe deine Bankdaten ein.</h5>
     <div class="mb-3">
         <input class="text-inputPYB"
                placeholder="Vorname"
+               disabled="@isDisabled"
                @bind="surname"/>
     </div>
     
     <div class="mb-3">
         <input class="text-inputPYB"
                placeholder="Nachname"
+               disabled="@isDisabled"
                @bind="lastname"/>
     </div>
 
     <div class="mb-3">
         <input class="text-inputPYB"
                placeholder="IBAN"
+               disabled="@isDisabled"
                @bind="iban"/>
     </div>
 
     <div class="mb-3">
         <input class="text-inputPYB"
                placeholder="BIC"
+               disabled="@isDisabled"
                @bind="bic"/>
     </div>
     
@@ -42,37 +59,101 @@
 </div>
 
 @code {
+    private Customer? c;
     private string surname  = string.Empty;
     private string lastname = string.Empty;
     private string iban     = string.Empty;
     private string bic      = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        c = await OrderService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        _paymentValues = await OrderService.GetPaymentValuesAsync(c.Id);
+    }
+
+
+    private List<PaymentValue> _paymentValues = new();
+    private int _selectedPaymentValueId;
     private bool IsCheckoutDisabled =>
         string.IsNullOrWhiteSpace(surname) ||
         string.IsNullOrWhiteSpace(lastname) ||
         string.IsNullOrWhiteSpace(iban) ||
         string.IsNullOrWhiteSpace(bic);
 
-    private void NavigateToConfirm()
+    
+    private int selectedPaymentValueId
     {
+        get => _selectedPaymentValueId;
+        set
+        {
+            _selectedPaymentValueId = value;
+            ApplySelectedPayment();
+        }
+    }
+
+    private PaymentValue? SelectedPayment =>
+        c?.PaymentValues?.FirstOrDefault(x => x.Id == selectedPaymentValueId);
+
+    private bool isDisabled => SelectedPayment != null;
+
+    private async Task NavigateToConfirm()
+    { 
+       
         Logger.LogInformation(
             "User {UserId} entered SEPA payment data and proceeds to confirmation",
             UserSession.CurrentUserId
         );
 
-        UserSession.PaymentValues = new PaymentValues
+        
+        if (SelectedPayment == null || selectedPaymentValueId == 0)
         {
-            AccountOwner = $"{surname} {lastname}",
-            Iban = iban,
-            Bic = bic
-        };
+            PaymentValue pv = new PaymentValue()
+            {
+                CustomerId = c.Id,
+                AccountOwner = surname + " " + lastname,
+                Bic = bic,
+                Iban = iban
+            };
 
-        Logger.LogInformation(
-            "SEPA payment data stored in session for UserId={UserId}",
-            UserSession.CurrentUserId
-        );
+            await OrderService.InsertPaymentValueAsync(pv);
+            UserSession.CurrentPaymentValueId = pv.Id;
+            
+            Logger.LogInformation(
+                "New payment value created for UserId={UserId}, PaymentId={PaymentId}",
+                UserSession.CurrentUserId,
+                pv.Id
+            );
+        }
+        else
+        {
+            UserSession.CurrentPaymentValueId = SelectedPayment.Id;
 
+            Logger.LogInformation(
+                "Existing payment value selected for UserId={UserId}, PaymentId={PaymentId}",
+                UserSession.CurrentUserId,
+                SelectedPayment.Id
+            );
+        }
         Nav.NavigateTo("/ConfirmCheckoutPage");
+    }
+    
+    private void ApplySelectedPayment()
+    {
+        var a = SelectedPayment;
+
+        if (a is null)
+        {
+            surname     = string.Empty;
+            lastname    = string.Empty;
+            iban = string.Empty;
+            bic = string.Empty;
+            return;
+        }
+        
+        surname     = a.AccountOwner;
+        lastname    = a.AccountOwner;
+        iban    = a.Iban;
+       bic = a.Bic;
     }
 }
 
@@ -164,5 +245,9 @@
         transform: none;
         background-color: #4a4a4a;
         box-shadow: none;
+    }
+
+    .text-inputPYB:disabled {
+        background-color: rgb(106, 2, 2);
     }
 </style>

@@ -26,7 +26,7 @@ public partial class ConfiguratorMenu : ComponentBase
     private List<Product> availableExtras = new();
 
     private Configuration? configuration;
-    private double totalPrice;
+    private decimal totalPrice;
 
     private int selectedColorId = 0;
     private int selectedRimId = 0;
@@ -38,7 +38,7 @@ public partial class ConfiguratorMenu : ComponentBase
 
         selectedColorId = colorId;
 
-        ConfiguratorService.AddProduct(configuration, ConfiguratorService.GetProductById(selectedColorId));
+        ConfiguratorService.AddProduct(configuration.Id, selectedColorId);
         LoadFrames();
         UpdatePrice();
     }
@@ -50,15 +50,15 @@ public partial class ConfiguratorMenu : ComponentBase
         if (Car == null) return;
 
         // 2) Farben laden
-        availableColors = ConfiguratorService.GetAvailableColors(Id) ?? new List<Product>();
+        availableColors = await ConfiguratorService.GetAvailableColorsAsync(Id) ?? new List<Product>();
 
         // 3) Produkte laden
-        availableEngines = ConfiguratorService.GetAvailableEngines(Id) ?? new List<Product>();
-        availableRims = ConfiguratorService.GetAvailableRims(Id) ?? new List<Product>();
+        availableEngines = await ConfiguratorService.GetAvailableEnginesAsync(Id) ?? new List<Product>();
+        availableRims = await ConfiguratorService.GetAvailableProductsAsync(Id,ProductType.Felge) ?? new List<Product>();
         availableExtras = ConfiguratorService.GetAvailableExtras(Id) ?? new List<Product>();
 
         // Default Farbe + Felge setzen (damit sofort 360° geht)
-        if (availableColors.Count > 0)
+             if (availableColors.Count > 0)
             selectedColorId = availableColors[0].ProductId;
 
         if (availableRims.Count > 0)
@@ -103,7 +103,7 @@ public partial class ConfiguratorMenu : ComponentBase
         if (configuration == null) return;
 
 
-        ConfiguratorService.AddProduct(configuration, product);
+        ConfiguratorService.AddProduct(configuration.Id, product.ProductId);
 
         if (product.ProductType == ProductType.Felge)
             selectedRimId = product.ProductId;
@@ -143,19 +143,19 @@ public partial class ConfiguratorMenu : ComponentBase
         if (availableColors.Count > 0)
         {
             selectedColorId = availableColors[0].ProductId;
-            ConfiguratorService.AddProduct(configuration, availableColors[0]);
+            ConfiguratorService.AddProduct(configuration.Id, availableColors[0].ProductId);
         }
 
         if (availableRims.Count > 0)
         {
             selectedRimId = availableRims[0].ProductId;
-            ConfiguratorService.AddProduct(configuration, availableRims[0]);
+            ConfiguratorService.AddProduct(configuration.Id, availableRims[0].ProductId);
         }
         
         if (availableEngines.Count > 0)
         {
             selectedEngine = availableEngines[0];
-            ConfiguratorService.AddProduct(configuration, availableEngines[0]);
+            ConfiguratorService.AddProduct(configuration.Id, availableEngines[0].ProductId);
         }
 
         LoadFrames();

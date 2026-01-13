@@ -237,7 +237,7 @@
             return;
         }
 
-        if (!double.TryParse(_price, out var priceValue) || priceValue < 0)
+        if (!decimal.TryParse(_price, out var priceValue) || priceValue < 0)
         {
             _errorMessage = "Preis muss eine positive Zahl sein.";
             return;

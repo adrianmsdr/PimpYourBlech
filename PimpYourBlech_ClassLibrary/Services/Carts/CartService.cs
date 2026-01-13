@@ -41,7 +41,7 @@ public class CartService : ICartService
 
         foreach (var product in cart.Products)
         {
-            total = total+(double)product.Price*product.Quantity;
+            total = total + (double)product.Price;
         }
 
         return total;

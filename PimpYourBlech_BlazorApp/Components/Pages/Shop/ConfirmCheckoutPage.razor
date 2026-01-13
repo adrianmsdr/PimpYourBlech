@@ -68,7 +68,7 @@
             </p>
         </div>
 
-        if (UserSession.PaymentValues is null)
+        if (pv is null)
         {
             <p>Keine Bezahldaten vorhanden.</p>
         }
@@ -79,24 +79,24 @@
 
                 <p>
                     <strong>Kontoinhaber:</strong>
-                    @UserSession.PaymentValues.AccountOwner
+                    @pv.AccountOwner
                 </p>
 
                 <p>
                     <strong>IBAN:</strong>
-                    **** **** **** @UserSession.PaymentValues.Iban[^4..]
+                    **** **** **** @pv.Iban[^4..]
                 </p>
 
                 <p>
                     <strong>BIC:</strong>
-                    @UserSession.PaymentValues.Bic
+                    @pv.Bic
                 </p>
             </div>
         }
 
         <button class="checkout-button"
                 onclick="@ConfirmPayment">
-            Kauf bestÃ¤tigen
+            Kauf bestätigen
         </button>
     }
 
@@ -104,6 +104,7 @@
     Order _order = new Order();
     Customer? c;
     DeliveryAddress? da;
+    PaymentValue? pv;
 
     private async Task ConfirmPayment()
     {
@@ -114,12 +115,11 @@
 
         try
         {
-            da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
 
             _order = await OrderService.CreateOrderFromCart(
                 UserSession.CurrentCart,
                 c,
-                da
+                da, pv
             );
 
             Logger.LogInformation(
@@ -157,6 +157,7 @@
 
         c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
+        pv = await OrderService.GetPaymentValueAsync(UserSession.CurrentPaymentValueId);
     }
 }
 

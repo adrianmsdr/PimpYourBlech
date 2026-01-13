@@ -12,5 +12,9 @@ public class Order
     public DateTime OrderDate { get; set; }
     public decimal TotalPrice { get; set; }
     public int DeliveryAddressId { get; set; }
-    public DeliveryAddress DeliveryAddress { get; set; }
+    public DeliveryAddress DeliveryAddress { get; set; } = null!;
+    
+    public int PaymentValueId { get; set; }
+
+    public PaymentValue PaymentValue { get; set; } = null!;
 }

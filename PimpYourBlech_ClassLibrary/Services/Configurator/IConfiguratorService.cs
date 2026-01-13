@@ -12,13 +12,13 @@ public interface IConfiguratorService
     public List<Configuration> GetAllConfigurationsForCustomer(int customerId);
     
     // Fahrzeugteil zur Konfiguration hinzufügen
-    void AddProduct(Configuration configuration, Product product);
+    Task AddProduct(int configurationId, int productId);
    
     // Fahrzeugteil von configuration entfernen
     void RemoveProduct(Configuration configuration, Product product);
     
     // Gesamtpreis der Konfiguration berechnen
-    double CalculateTotalPrice(Configuration configuration);
+    decimal CalculateTotalPrice(Configuration configuration);
    
     // Konfiguration speichern
     void SaveConfiguration(Configuration configuration);
@@ -40,9 +40,9 @@ public interface IConfiguratorService
     
     Configuration GetConfigurationById(int Id);
     
-    public List<Product> GetAvailableColors(int Id);
+    public Task<List<Product>> GetAvailableColorsAsync(int Id);
     
-    public List<Product> GetAvailableEngines(int Id);
+    public Task<List<Product>> GetAvailableEnginesAsync(int Id);
     public List<Product> GetAvailableRims(int Id);
     
     public Product GetProductById(int Id);
@@ -50,5 +50,10 @@ public interface IConfiguratorService
     public string GetGearDisplayName(Gear gear);
 
     public List<Product> GetAvailableExtras(int carId);
+    
+    public Task<List<Product>> GetAvailableProductsAsync(int carId,ProductType type);
+    Task<bool> ConfigurationAvailable(int carId);
+    
+    Task<List<Car>> GetAvailableCarsAsync();
 
 }

@@ -37,6 +37,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
     
     public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
     
+    public DbSet<PaymentValue> PaymentValues { get; set; }
+    
     
     public async Task<int> GetNextArticleNumberAsync()
     {
@@ -120,6 +122,12 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             .WithOne(d => d.Customer)
             .HasForeignKey(d => d.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Customer>()
+            .HasMany(c => c.PaymentValues)
+            .WithOne(d => d.Customer)
+            .HasForeignKey(d => d.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<OrderPosition>()
             .HasOne(i => i.Order)
@@ -127,17 +135,20 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             .HasForeignKey(i => i.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<OrderPosition>()
-            .HasOne(i => i.Product)
-            .WithMany()
-            .HasForeignKey(i => i.ProductId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         modelBuilder.Entity<Order>()
             .HasOne(o => o.DeliveryAddress)
             .WithMany()
             .HasForeignKey(o => o.DeliveryAddressId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.PaymentValue)
+            .WithMany()
+            .HasForeignKey(o => o.PaymentValueId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        
+        
     }
 
     int IDatabase.SaveChanges() => base.SaveChanges();

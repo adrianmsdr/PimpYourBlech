@@ -16,7 +16,7 @@ public class OrderService : IOrderService
         _logger = logger;
     }
     
-    public async Task<Order> CreateOrderFromCart(Cart cart, Customer customer, DeliveryAddress address)
+    public async Task<Order> CreateOrderFromCart(Cart cart, Customer customer, DeliveryAddress address, PaymentValue pv)
     {
         _logger.LogInformation(
             "Creating order from cart for CustomerId={CustomerId}",
@@ -39,16 +39,21 @@ public class OrderService : IOrderService
             CustomerId = customer.Id,
             OrderDate = DateTime.UtcNow,
             Items = new List<OrderPosition>(),
-            TotalPrice = cart.Products.Sum(p => p.Price)
+            TotalPrice = cart.Products.Sum(p => p.Price),
+            DeliveryAddressId = address.Id,
+            PaymentValueId = pv.Id,
         };
 
         foreach (var p in cart.Products)
         {
             order.Items.Add(new OrderPosition
             {
-                ProductId = p.ProductId,
+                Name = p.Product.Name,
+                ArticleNumber = p.Product.ArticleNumber,
+                Brand = p.Product.Brand,
+                Type = p.Product.ProductType,
                 Quantity = p.Quantity,
-                UnitPrice = (decimal)p.Price
+                UnitPrice = (decimal)p.Price,
             });
         }
         
@@ -57,7 +62,7 @@ public class OrderService : IOrderService
             order.Items.Count,
             order.TotalPrice
         );
-        
+        /*
 
         var existingAddress = customer.DeliveryAddresses;
 
@@ -80,7 +85,8 @@ public class OrderService : IOrderService
                 "Using new delivery address for CustomerId={CustomerId}",
                 customer.Id
             );
-        }
+             }
+            */        
 
         _customerInventory.AddOrder(order);
         
@@ -111,5 +117,20 @@ public class OrderService : IOrderService
             address.CustomerId
         );
         return await _customerInventory.InsertDeliveryAddressAsync(address);
+    }
+
+    public async Task<int> InsertPaymentValueAsync(PaymentValue paymentValue)
+    {
+        return await _customerInventory.InsertPaymentValueAsync(paymentValue);
+    }
+
+    public async Task<PaymentValue?> GetPaymentValueAsync(int id)
+    {
+        return await _customerInventory.GetPaymentValueAsync(id);
+    }
+
+    public async Task<List<PaymentValue>> GetPaymentValuesAsync(int id)
+    {
+        return await _customerInventory.GetPaymentValuesAsync(id);
     }
 }

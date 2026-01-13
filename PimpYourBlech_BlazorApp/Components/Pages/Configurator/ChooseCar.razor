@@ -9,7 +9,7 @@
 
 <div class="menu-container">
 <h3 class="headline-admin">Fahrzeug wählen:</h3>
-@if (cars == null)
+@if (cars.Count == 0)
 {
     <div>Keine Fahrzeuge gefunden.</div>
 }
@@ -17,34 +17,36 @@ else
 {
     @foreach (var c in cars)
     {
-        var preview = ImageService.GetCarImageUrl(c.Id);
+        
+            var preview = ImageService.GetCarImageUrl(c.Id);
 
-        <div class="car-card">
+            <div class="car-card">
 
-            <div class="combo-card-admin-grid" @onclick="@(() => Nav.NavigateTo($"/configurator/{c.Id}"))">
-                <div class="combo-left">
-                    @if (!string.IsNullOrWhiteSpace(preview))
-                    {
-                        <img src="@preview" class="combo-preview"/>
-                    }
-                    else
-                    {
-                        <div class="combo-empty">Keine Vorschau</div>
-                    }
-                </div>
+                <div class="combo-card-admin-grid" @onclick="@(() => Nav.NavigateTo($"/configurator/{c.Id}"))">
+                    <div class="combo-left">
+                        @if (!string.IsNullOrWhiteSpace(preview))
+                        {
+                            <img src="@preview" class="combo-preview"/>
+                        }
+                        else
+                        {
+                            <div class="combo-empty">Keine Vorschau</div>
+                        }
+                    </div>
 
-                <div class="combo-right">
-                    <div class="combo-header">
-                        <div class="combo-title">
-                            <div class="combo-name">@(c.Name)</div>
-                            <div class="combo-meta">Hersteller: @c.Brand</div>
-                            <div class="combo-meta">Modell: @c.Model</div>
-                            <div class="combo-meta">Preis: @c.Price €</div>
+                    <div class="combo-right">
+                        <div class="combo-header">
+                            <div class="combo-title">
+                                <div class="combo-name">@(c.Name)</div>
+                                <div class="combo-meta">Hersteller: @c.Brand</div>
+                                <div class="combo-meta">Modell: @c.Model</div>
+                                <div class="combo-meta">Preis: @c.Price €</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        
     }
 }
 </div>
@@ -53,7 +55,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        cars = await ConfiguratorService.ListCarsAsync();
+        cars = await ConfiguratorService.GetAvailableCarsAsync();
     }
 }
 <style>

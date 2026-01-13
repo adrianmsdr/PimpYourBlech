@@ -181,9 +181,27 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
         return address.Id;
     }
 
+    public async Task<int> InsertPaymentValueAsync(PaymentValue paymentValue)
+    {
+        database.PaymentValues.Add(paymentValue);
+        await database.SaveChangesAsync();
+        return paymentValue.Id;
+    }
+
+
     public async Task<List<OrderPosition>> GetOrderItemsAsync(int id)
     {
         return await database.OrderPositions.Where(o => o.OrderId == id).ToListAsync();
+    }
+
+    public async Task<PaymentValue?> GetPaymentValueAsync(int id)
+    {
+        return await database.PaymentValues.FirstOrDefaultAsync(p => p.Id == id);
+    }
+
+    public async Task<List<PaymentValue>> GetPaymentValuesAsync(int id)
+    {
+        return await database.PaymentValues.Where(p => p.CustomerId == id).ToListAsync();
     }
 }
 

@@ -3,6 +3,7 @@
 @using System.Diagnostics.Metrics
 @using System.Security.Cryptography
 @using System.Text
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.State
@@ -10,6 +11,7 @@
 @inject IUserSession UserSession
 @inject ILogger<Login> Logger
 @inject NavigationManager Nav
+@inject IToastExecutor ToastExecutor
 @attribute [Routes.AllowAnonymous]
 
 <PageTitle>LogIn</PageTitle>
@@ -25,11 +27,11 @@
 
 @*EditForm um Enter drücken zum Anmelden zu ermöglichen*@
 <EditForm Model="@this">
-    
+
     <div class="menu-container">
         <h2 class="headline-admin">Anmelden</h2>
         <img src="benutzer.png" class="user-image">
-        
+
         @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
         @if (!string.IsNullOrEmpty(ErrorMessage))
         {
@@ -39,7 +41,7 @@
         {
             <p style="color: orange;">DEBUG: @DebugInfo</p>
         }
-        
+
         @*Eingabefelder für Username und Passwort*@
         <div class="mb-3">
             <input class="text-inputPYB"
@@ -53,7 +55,7 @@
                    placeholder="Passwort"
                    @bind="password"/>
         </div>
-        <p class="no-account-yet">Noch kein Account? 
+        <p class="no-account-yet">Noch kein Account?
             <span class="registrate-now" @onclick="NavigateToRegister">Jetzt registrieren</span></p>
 
         @*Buttons um sich anzumelden oder um zum Start - Screen zurückzukehren*@
@@ -65,6 +67,7 @@
 </EditForm>
 
 @code {
+
     // Felder für die benötigten Werte und Fehlermeldungen etc.
     private string DebugInfo = "";
     private string username = "";
@@ -75,16 +78,33 @@
     private async Task LoginCustomer()
     {
         if (isLoggingIn) return;
-        
+
         Logger.LogInformation(
             "Login attempt for username {Username}",
             username
         );
-        
-        
+
+
         isLoggingIn = true;
         StateHasChanged();
+        var loginfo = "Login failed for username " + username;
+        var c = await ToastExecutor.RunReturnAsync(() => AdminService.CustomerLoginAsync(username, password), logError: loginfo);
+        isLoggingIn = false;
+        if (c == null)
+        {
+            return;
+        }
+        UserSession.LogIn(c);
+        LoginState.CurrentUserId = c.Id;
+        Logger.LogInformation(
+            "Login successful for user {UserId}",
+            c.Id
+        );
+        Nav.NavigateTo("/mainMenu");
+    }
+    
 
+    @*
         // AdminService führt den LoginCheck mit den Userdaten aus
         try
         {
@@ -118,7 +138,9 @@
         }
     }
 
-    // Führt zum Start - Screen
+    *@
+   // Führt zum Start - Screen
+
     private void Cancel()
     {
         Nav.NavigateTo("/");
@@ -128,10 +150,11 @@
     {
         Nav.NavigateTo("/register");
     }
+
 }
 
 <style>
-    
+
     .user-image {
         width: 120px;
         height: 120px;
@@ -139,18 +162,19 @@
         border: 2px solid rgba(255, 0, 0, 0.5);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
     }
-    
-    
+
+
     .no-account-yet {
         color: white;
         font-family: Bahnschrift;
     }
-    
+
     .registrate-now {
         color: darkslateblue;
         font-family: Bahnschrift;
         font-weight: bold;
     }
+
     .registrate-now:hover {
         text-decoration: underline;
         color: #ba3a25;

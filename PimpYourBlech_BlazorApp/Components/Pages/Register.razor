@@ -1,8 +1,10 @@
 @page "/register";
 @using System.Security.Cryptography
 @using System.Text
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Exceptions
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
@@ -10,6 +12,7 @@
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IImageService ImageService
+@inject IToastExecutor Executor
 @inject ILogger<Register> Logger
 @attribute [Routes.AllowAnonymous]
 
@@ -116,8 +119,18 @@
             "Registration attempt for username {Username}",
             username
         );
-
-        try
+        var loginfo = "Registration failed for username " + username;
+     var succeded=   await Executor.RunAsync(() => AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar)
+       ,successMessage:"Registrierung erfolgreich. Bitte melde dich an." ,logError:loginfo);
+     if (succeded)
+     {
+         Logger.LogInformation(
+             "Registration successful for username {Username}",
+             username
+         );
+     }
+     isRegistering = false;
+       @* try
         {
             await AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar);
             
@@ -136,7 +149,7 @@
         {
             Logger.LogWarning(
                 ex,
-                "Registration failed for username {Username}",
+              "  Registration failed for username {Username}",
                 username
             );
             
@@ -145,7 +158,7 @@
         finally
         {
             isRegistering = false;
-        }
+        }*@
     }
     
     // Kehrt zurück zum Start - Screen

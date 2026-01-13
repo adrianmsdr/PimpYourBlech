@@ -7,65 +7,78 @@
 
 <div class="menu-container ">
 
-    <h3>Bestellübersicht</h3>
+    <h3 class="headline-admin">Bestellübersicht</h3>
     @if (Order is null)
     {
         <p>Lade Daten…</p>
     }
     else
     {
-            <div class="combo-card-admin combo-card-wide"><h5 class="headline-admin">Bestellung</h5>
+        <div class="combo-card-admin">
+            <div class="section">
+                <h5 class="section-title">Bestellung</h5>
+                <div class="admin-details-section-divider"></div>
+
                 <div class="admin-detail-grid">
+                   
                     <div class="k">ID</div>
                     <div class="v">@Order.OrderId</div>
                     <div class="k">Bestelldatum</div>
                     <div class="v">@Order.OrderDate</div>
                     <div class="k">Gesamtpreis</div>
-                    <div class="v">@Order.TotalPrice</div>
-                </div>
-                <div class="admin-details-section-divider"></div>
-                <h5 class="headline-admin">Kundendaten</h5>
-                <div class="admin-detail-grid">
-                    <div class="k">Vorname</div>
-                    <div class="v">@Order.Customer?.FirstName</div>
-                    <div class="k">Nachname</div>
-                    <div class="v">@Order.Customer?.LastName</div>
-                    <div class="k">E-Mail</div>
-                    <div class="v">@Order.Customer?.MailAddress</div>
-                    <div class="k">Username</div>
-                    <div class="v">@Order.Customer?.Username</div>
-                    <div class="k">Telefon</div>
-                    <div class="v">@Order.Customer?.Telefon</div>
-                </div>
-                <div class="admin-details-section-divider"></div>
-                <h5 class="headline-admin">Lieferadresse</h5>
-                <div class="admin-detail-grid">
-                    <div class="k">Land</div>
-                    <div class="v">@Order.DeliveryAddress?.Country</div>
-                    <div class="k">PLZ</div>
-                    <div class="v">@Order.DeliveryAddress?.PostalCode</div>
-                    <div class="k">Stadt</div>
-                    <div class="v">@Order.DeliveryAddress?.Town</div>
-                    <div class="k">Straße</div>
-                    <div class="v">@Order.DeliveryAddress?.Street</div>
-                    <div class="k">Hausnummer</div>
-                    <div class="v">@Order.DeliveryAddress?.HouseNumber</div>
+                    <div class="v">@Order.TotalPrice€</div>
                 </div>
             </div>
+            <div class="section">
+            <h5 class="section-title">Kundendaten</h5>
+            <div class="admin-details-section-divider"></div>
 
-            <div class="combo-card-admin combo-card-wide">
-                <h5 class="headline-admin">Produkte</h5>
+            <div class="admin-detail-grid">
+                <div class="k">Vorname</div>
+                <div class="v">@Order.Customer?.FirstName</div>
+                <div class="k">Nachname</div>
+                <div class="v">@Order.Customer?.LastName</div>
+                <div class="k">E-Mail</div>
+                <div class="v">@Order.Customer?.MailAddress</div>
+                <div class="k">Username</div>
+                <div class="v">@Order.Customer?.Username</div>
+                <div class="k">Telefon</div>
+                <div class="v">@Order.Customer?.Telefon</div>
+            </div>
+            </div>
+            <div class="section">
+            <h5 class="section-title">Lieferadresse</h5>
+            <div class="admin-details-section-divider"></div>
+
+            <div class="admin-detail-grid">
+                <div class="k">Land</div>
+                <div class="v">@Order.DeliveryAddress?.Country</div>
+                <div class="k">PLZ</div>
+                <div class="v">@Order.DeliveryAddress?.PostalCode</div>
+                <div class="k">Stadt</div>
+                <div class="v">@Order.DeliveryAddress?.Town</div>
+                <div class="k">Straße</div>
+                <div class="v">@Order.DeliveryAddress?.Street</div>
+                <div class="k">Hausnummer</div>
+                <div class="v">@Order.DeliveryAddress?.HouseNumber</div>
+            </div>
+            </div>
+        </div>
+
+            <div class="combo-card-admin">
+                <div class="section">
+                    <h5 class="section-title">Lieferadresse</h5>
+                    <div class="admin-details-section-divider"></div>
                 @if (products == null || products.Count == 0)
                 {
                     <p>Keine Bestellungen vorhanden.</p>
                 }
                 else
                 {
-
+                 
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Hersteller</th>
                             <th>Artikelnummer</th>
@@ -79,10 +92,9 @@
                         {
                             <tr @onclick="@(() => Nav.NavigateTo($"/administrator/products/{p.OrderId}"))"
                                 style="cursor: pointer">
-                                <td>@p.ProductId</td>
-                                <td>@p.Product.Name</td>
-                                <td>@p.Product.Brand</td>
-                                <td>@p.Product.ArticleNumber</td>
+                                <td>@p.Name</td>
+                                <td>@p.Brand</td>
+                                <td>@p.ArticleNumber</td>
                                 <td>@p.Quantity</td>
                                 <td>@p.UnitPrice</td>
                             </tr>
@@ -92,6 +104,7 @@
                 }
             
             
+                </div>
                 </div>
             
             
@@ -124,9 +137,71 @@
 }
 
 <style>
-
-    .combo-card-wide {
-        width: min(450px);
+    .section {
+        margin-top: 36px;
     }
 
+    .section-title {
+        margin-bottom: 18px;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        opacity: .95;
+    }
+
+    .admin-detail-grid { gap: 8px 14px; }
+
+    .menu-container {
+        width: min(1100px, calc(100% - 48px));
+        margin: 40px auto 0 auto;
+        padding: 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;      /* statt center */
+       justify-content: flex-start;
+        gap: 28px;                 /* mehr Luft */
+        font-family: Bahnschrift;
+    }
+
+    .combo-card-admin {
+        width: 100%;
+        max-width: 100%;
+       padding: 28px 28px;
+        gap: 16px;
+    }
+    
+    .admin-detail-grid {
+        gap: 12px 22px;
+        font-family: Bahnschrift;
+    }
+    .admin-detail-grid .k {
+        font-size: .9rem;
+    }
+    .admin-detail-grid .v {
+        font-size: .95rem;
+    }
+
+    .order-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .order-summary .item {
+        background: rgba(0,0,0,.25);
+        border: 1px solid rgba(255,0,0,.35);
+        border-radius: 10px;
+        padding: 14px 16px;
+        text-align: center;
+    }
+
+    .order-summary .label {
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    .order-summary .value {
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
 </style>
