@@ -30,7 +30,10 @@
 
     <div class="menu-container">
         <h2 class="headline-admin">Anmelden</h2>
-        <img src="benutzer.png" class="user-image">
+        <div class="user-image">
+            <img src="user.png" class="user-photo" />
+        </div>
+
 
         @*Benachrichtigungen bei Fehlern oder als Bestätigung (Wird aktiviert falls die message gesetzt wird*@
         @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -154,15 +157,6 @@
 }
 
 <style>
-
-    .user-image {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 2px solid rgba(255, 0, 0, 0.5);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-    }
-
 
     .no-account-yet {
         color: white;

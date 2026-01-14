@@ -25,15 +25,16 @@
     {
         <h2 class="headline-admin">Willkommen, @c.Username!</h2>
 
-        @if (c.ImagePath != null)
-        {
-            <img src=@c.ImagePath class="user-image" @onclick="GoToUserSettings">
-        }
-        else
-        {
-            <img src="benutzer.png" class="user-image" @onclick="GoToUserSettings">
-
-        }
+        <div class="user-image" @onclick="GoToUserSettings">
+            @if (c.ImagePath != null)
+            {
+                <img src="@c.ImagePath" class="user-photo" />
+            }
+            else
+            {
+                <img src="user.png" class="user-photo" />
+            }
+        </div>
     }
     <div class="button-column">
         <div class="button-row-menu">

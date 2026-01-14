@@ -17,7 +17,7 @@
 
 <div class="home-section">
     <div class="main-row">
-        <div class="our-partners-box">
+        <div class="our-partners-box partner-card">
             <img src="unsere-partner.png" class="our-partners">
         </div>
 
@@ -36,35 +36,18 @@
                 <img class="video" src="/PYB-Video.webp" alt="" />
             </div>
         </div>
-        @*
-        <div class="funfact-card">
-            <div class="funfact-title">Heute vor @yearsAgo Jahren:</div>
+        
+        <div class="partner-card">
+            <h3 class="partner-title">Unsere Kooperationspartner</h3>
 
-            @if (isLoading)
-            {
-                <div class="funfact-text">Lade…</div>
-            }
-            else
-            {
-                <div class="funfact-text">@factText</div>
-
-                @if (!string.IsNullOrWhiteSpace(factUrl))
-                {
-                    <a class="funfact-link" href="@factUrl" target="_blank">
-                        Mehr dazu
-                    </a>
-                }
-            }
-            <button class="buttons funfact-btn" @onclick="LoadOnThisDay">
-                Neuer Fakt
-            </button>
+            <div class="partner-logo-wrapper">
+                <img src="@currentImage" class="partner-logo" />
+            </div>
+            <h4 class="nextimagebutton" @onclick="NextImage">Neues Bild</h4>
         </div>
-        *@
-        <div class="our-partners-box">
-            <img src="unsere-partner.png" class="our-partners">
+
         </div>
     </div>
-</div>
 
 
 @code
@@ -161,6 +144,22 @@
         }
     }
     
+    private string[] images =
+    {
+        "elitegaertner_werbung.png",
+        "kardei_werbung.jpeg",
+        "ralfschuhmacherad.png",
+        "schwanzenfest_werbung.jpeg"
+    };
+
+    private int currentIndex = 0;
+    private string currentImage => images[currentIndex];
+
+    private void NextImage()
+    {
+        currentIndex = (currentIndex + 1) % images.Length;
+    }
+    
     public void StartProgramm()
     {
         Nav.NavigateTo("/startMenu");
@@ -168,7 +167,6 @@
     
 }
 <style>
-
     .main-row {
         display: flex;
         justify-content: center;
@@ -214,7 +212,7 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
     }
 
-    
+
     .buttons {
         width: 100%;
         height: 45px;
@@ -236,7 +234,7 @@
     }
 
 
-     
+
     .car-button {
         position: relative;
         display: flex;
@@ -245,6 +243,21 @@
         overflow: hidden;
         gap: 10px;
         transition: background-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .nextimagebutton {
+        margin-top: 3px;
+        font-family: Bahnschrift;
+        cursor: pointer;
+        border: 1px solid rgba(255, 0, 0, 0.7);
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+        transition: transform 0.4s ease;
+    }
+
+    .nextimagebutton:hover {
+        transform: scale(1.05);
+        color: #b30000;
     }
 
     .car-icon {
@@ -302,34 +315,61 @@
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 0, 0, 0.7);
         border-radius: 12px;
-
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
     }
 
-    .funfact-card{
+    .partner-card {
         margin-top: 0;
         width: 280px;
-        padding: 14px;
-        background: rgba(0,0,0,0.25);
+        height: 550px;
+        padding: 12px;
+        border-radius: 18px;
+        background: rgba(5, 5, 5, 0.85);
         backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 0, 0, 0.7);
-        border-radius: 12px;
-
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 0, 0, 0.4);
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.35);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
     }
-    .funfact-title{ font-family: Bahnschrift; color: white; font-size: 1.05rem; margin-bottom: 10px; }
-    .funfact-text{ color: rgba(255,255,255,0.9); line-height: 1.35; margin-bottom: 10px; }
-    .funfact-link{ color: #ff7a7a; text-decoration: none; display: inline-block; margin-bottom: 10px; }
-    .funfact-btn{ height: 40px; }
 
-    
+    .partner-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ff2a2a;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 6px 0 10px 0;
+        text-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+        flex-shrink: 0;
+    }
+
+    .partner-logo-wrapper {
+        flex: 1;
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid rgba(255,0,0,0.3);
+        position: relative;
+    }
+
+    .partner-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
     .home-section{
         margin-top: 16px;
-     
+
     }
 
     .menu-container{
         margin-top: 0 !important;
+        border-radius: 18px;
+        background: rgba(5, 5, 5, 0.85);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 0, 0, 0.4);
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.35);
     }
-    
 </style>
