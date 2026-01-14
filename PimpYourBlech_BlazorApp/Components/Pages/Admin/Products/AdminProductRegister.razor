@@ -63,6 +63,13 @@
         <input class="text-inputPYB"
                placeholder="Name"
                @bind="_name"/>
+        
+        if (_selectedProductType == ProductType.Lack)
+        {
+            <input class="text-inputPYB"
+                   placeholder="Farbenname"
+                   @bind="_displayName"/>
+        }
 
 
         <input class="text-inputPYB"
@@ -82,7 +89,7 @@
           placeholder="Beschreibung (nur Shop)..."
           maxlength="1000"
           @bind="_description"></textarea>
-        <div class="text-muted mt-1">@_description.Length / 1000</div>
+        <h6 class="headline-admin">@_description.Length / 1000</h6>
 
         @if (_selectedProductType == ProductType.Motor)
         {
@@ -147,12 +154,6 @@
 
             </div>
 
-        }
-        else if (_selectedProductType == ProductType.Lack)
-        {
-            <input class="text-inputPYB"
-                   placeholder="Farbenname"
-                   @bind="_displayName"/>
         }
 
         <div class="mb-3">

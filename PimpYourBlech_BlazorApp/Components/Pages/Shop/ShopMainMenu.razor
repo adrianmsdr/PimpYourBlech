@@ -40,7 +40,7 @@
         @if (!UserSession.CurrentCart.Products.Any())
         {
             <div class="null-content">
-                <p class="no-products">Keine Produkte vorhanden</p>
+                <h4 class="headline-admin">Keine Produkte vorhanden</h4>
             </div>
         }
         else
@@ -159,7 +159,7 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
 }
 else if (!products.Any())
 {
-    <p>Keine Produkte vorhanden.</p>
+    <h4 class="headline-admin">Keine Produkte vorhanden.</h4>
 }
 else
 {
