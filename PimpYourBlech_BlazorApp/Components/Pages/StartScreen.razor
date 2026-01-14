@@ -43,7 +43,7 @@
             <div class="partner-logo-wrapper">
                 <img src="@currentImage" class="partner-logo" />
             </div>
-            <h4 class="nextimagebutton" @onclick="NextImage">Neues Bild</h4>
+            <button class="nextimagebutton" @onclick="NextImage">Neues Bild</button>
         </div>
 
         </div>
@@ -246,18 +246,24 @@
     }
 
     .nextimagebutton {
-        margin-top: 3px;
+        color: white;
+        margin-top: 5px;
         font-family: Bahnschrift;
         cursor: pointer;
         border: 1px solid rgba(255, 0, 0, 0.7);
         border-radius: 12px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         transition: transform 0.4s ease;
+        background-color:#5a0000 ;
     }
 
     .nextimagebutton:hover {
         transform: scale(1.05);
         color: #b30000;
+    }
+    
+    .nextimagebutton:active {
+        transform: scale(1.03);
     }
 
     .car-icon {
