@@ -20,6 +20,7 @@
 <div class="menu-container">
     <h3 class="headline-admin">Registrierung</h3>
     <div class="user-image"
+         style="cursor: pointer"
          @onclick="SelectAvatar">
         <img src="@SelectedAvatar" class="user-photo" />
     </div>
@@ -89,8 +90,6 @@
     <button class="buttons" @onclick="RegisterCustomer">Registrieren</button>
     <button class="buttons" @onclick="Cancel">Abbrechen</button>
 </div>
-
-
 
 @code {
 
@@ -232,6 +231,5 @@
         border-color: #ff3333;
         box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-
-
+    
 </style>
