@@ -1,6 +1,7 @@
-using PimpYourBlech_ClassLibrary.Inventories;
-using PimpYourBlech_ClassLibrary.Inventories.Implementation;
-using PimpYourBlech_ClassLibrary.Persistence;
+using PimpYourBlech_Data.Inventories;
+using PimpYourBlech_Data.Inventories.Implementation;
+using PimpYourBlech_Data.Persistence;
+
 
 namespace PimpYourBlech_ClassLibrary.Factories;
 
@@ -9,6 +10,8 @@ public sealed class InventoryFactory(IDatabase database)
     private readonly CustomerInventory _customerInventory = new(database);
     private readonly ProductInventory _productInventory = new(database);
     private readonly CarInventory _carInventory = new(database);
+    private readonly ConfigurationInventory _configurationInventory = new(database);
+    private readonly OrderInventory _orderInventory = new(database);
     
 
     public ICustomerInventory GetCustomerRepository()
@@ -19,5 +22,11 @@ public sealed class InventoryFactory(IDatabase database)
     
     public ICarInventory GetCarInventory()
     => _carInventory;
+ 
+    public IConfigurationInventory GetConfigurationInventory()
+    => _configurationInventory;
+ 
+    public IOrderInventory GetOrderInventory()
+    => _orderInventory;
 
 }

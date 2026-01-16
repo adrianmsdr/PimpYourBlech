@@ -2,10 +2,13 @@
 <PageTitle>administrator/orders</PageTitle>
 
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Orders
+@using PimpYourBlech_Contracts.DTOs
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
 @inject NavigationManager Nav
+@inject IOrderService OrderService
 
 
 <div class="menu-container wide">
@@ -30,12 +33,12 @@ else
         <tbody>
         @foreach (var o in orders)
         {
-            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/orders/{o.OrderId}"))"
+            <tr @onclick="@(() => Nav.NavigateTo($"/administrator/orders/{o.Id}"))"
                 style="cursor: pointer">
-                <td>@o.OrderId</td>
-                <td>@o.OrderDate</td>
-                <td>@o.Customer.FirstName</td>
-                <td>@o.Customer.LastName</td>
+                <td>@o.Id</td>
+                <td>@o.Created</td>
+                <td>@o.CustomerFirstName</td>
+                <td>@o.CustomerLastName</td>
            
                 <td>@o.TotalPrice€</td>
             </tr>
@@ -43,18 +46,7 @@ else
         </tbody>
     </table>
 }
-@*
-@if (FoundCustomer != null)
-{
-    <div class="alert alert-info mt-3">
-        <strong>Gefunden:</strong><br />
-        Vorname: @FoundCustomer.FirstName <br />
-        Nachname: @FoundCustomer.LastName <br />
-        Username: @FoundCustomer.Username <br />
-        Email: @FoundCustomer.MailAddress
-    </div>
-}
-*@
+
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div class="alert alert-danger mt-3">@ErrorMessage</div>
@@ -74,15 +66,15 @@ else
 </div>
 
 @code {
-    private List<Order> orders = new ();
-
+    private List<OrderCustomerDto> orders = new ();
+    
     protected override async Task OnInitializedAsync()
     {
-        orders = await AdminService.GetOrdersAsync();
+        orders = await OrderService.GetOrdersBasicsAsync();
     }
 
     private string searchValue = string.Empty;
-    private Customer FoundOrder;
+    private CustomerDto FoundOrder;
     private string ErrorMessage = "";
 
   /*  private void SearchUsername()

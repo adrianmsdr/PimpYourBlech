@@ -1,8 +1,10 @@
 @page "/administrator/orders/{id:int}"
 <PageTitle>Bestellung @Id</PageTitle>
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Orders
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
+@inject IOrderService OrderService
 @inject NavigationManager Nav
 
 <div class="menu-container wide">
@@ -34,15 +36,15 @@
 
             <div class="admin-detail-grid wide">
                 <div class="k">Vorname</div>
-                <div class="v">@Order.Customer?.FirstName</div>
+                <div class="v">@_customerDto.FirstName</div>
                 <div class="k">Nachname</div>
-                <div class="v">@Order.Customer?.LastName</div>
+                <div class="v">@_customerDto.LastName</div>
                 <div class="k">E-Mail</div>
-                <div class="v">@Order.Customer?.MailAddress</div>
+                <div class="v">@_customerDto.MailAddress</div>
                 <div class="k">Username</div>
-                <div class="v">@Order.Customer?.Username</div>
+                <div class="v">@_customerDto.Username</div>
                 <div class="k">Telefon</div>
-                <div class="v">@Order.Customer?.Telefon</div>
+                <div class="v">@_customerDto.Telefon</div>
             </div>
             </div>
             <div class="section">
@@ -51,15 +53,15 @@
 
             <div class="admin-detail-grid wide">
                 <div class="k">Land</div>
-                <div class="v">@Order.DeliveryAddress?.Country</div>
+                <div class="v">@_addressDto.Country</div>
                 <div class="k">PLZ</div>
-                <div class="v">@Order.DeliveryAddress?.PostalCode</div>
+                <div class="v">@_addressDto.PostalCode</div>
                 <div class="k">Stadt</div>
-                <div class="v">@Order.DeliveryAddress?.Town</div>
+                <div class="v">@_addressDto.Town</div>
                 <div class="k">Straße</div>
-                <div class="v">@Order.DeliveryAddress?.Street</div>
+                <div class="v">@_addressDto.Street</div>
                 <div class="k">Hausnummer</div>
-                <div class="v">@Order.DeliveryAddress?.HouseNumber</div>
+                <div class="v">@_addressDto.HouseNumber</div>
             </div>
             </div>
         </div>
@@ -119,13 +121,17 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-    public Order? Order { get; set; }
-    private List<OrderPosition> products;
+    public OrderDto? Order { get; set; }
+    private DeliveryAddressDto? _addressDto = new DeliveryAddressDto();
+    private CustomerDto _customerDto = new CustomerDto();
+    private List<OrderPositionDto> products;
 
     protected override async Task OnInitializedAsync()
     {
         Order = await AdminService.GetOrderByIdAsync(Id);
         products = await AdminService.GetOrderItemsAsync(Order.OrderId);
+        _customerDto = await AdminService.GetCustomerByIdAsync(Order.CustomerId);
+        _addressDto = await OrderService.GetDeliveryAddressForOrderAsync(Order.OrderId);
     }
 
     private void Cancel()

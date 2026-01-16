@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_ClassLibrary"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_BlazorApp", "PimpYourBlech_BlazorApp\PimpYourBlech_BlazorApp.csproj", "{878E79D1-3263-470F-8527-F27BB6CEBE61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_Data", "PimpYourBlech_Data\PimpYourBlech_Data.csproj", "{E534B596-A147-4FD2-9DBD-DD4C4B1ADD4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_Contracts", "PimpYourBlech_Contracts\PimpYourBlech_Contracts.csproj", "{355942A0-9B64-4E9F-903A-555D71B6BA00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{878E79D1-3263-470F-8527-F27BB6CEBE61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{878E79D1-3263-470F-8527-F27BB6CEBE61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{878E79D1-3263-470F-8527-F27BB6CEBE61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E534B596-A147-4FD2-9DBD-DD4C4B1ADD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E534B596-A147-4FD2-9DBD-DD4C4B1ADD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E534B596-A147-4FD2-9DBD-DD4C4B1ADD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E534B596-A147-4FD2-9DBD-DD4C4B1ADD4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

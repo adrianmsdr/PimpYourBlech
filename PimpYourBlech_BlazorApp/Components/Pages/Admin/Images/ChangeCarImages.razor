@@ -1,10 +1,9 @@
 @page "/administrator/images/360"
-@using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Enums
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
 @inject Services.IImageService ImageService
 @inject NavigationManager Nav
@@ -90,7 +89,7 @@
                                     <span class="combo-plus">+</span>
                                     <img class="combo-thumb" src="@ImageService.GetProductImageUrl(r.ProductId)"/>
                                     <div class="combo-title">
-                                        <div class="combo-name">@(c.ColorDetail?.DisplayName ?? c.Name) + @r.Name</div>
+                                        <div class="combo-name">@(c.Name) + @r.Name</div>
                                         <div class="combo-meta">Frames: @frames.Count • C:@c.ProductId /
                                             R:@r.ProductId</div>
                                     </div>
@@ -131,10 +130,10 @@
 
 
 @code {
-    private Car car = new();
-    private List<Car> cars = new();
-    private List<Product> Colors = new();
-    private List<Product> Rims = new();
+    private CarDto car = new();
+    private List<CarDto> cars = new();
+    private List<ProductDto> Colors = new();
+    private List<ProductDto> Rims = new();
     private int selectedCarId;
 
     private int CarId;
@@ -151,7 +150,7 @@
         {
             if (selectedCarId == value) return;
             selectedCarId = value;
-            OnCarChanged();
+             OnCarChangedAsync();
             
             Logger.LogInformation(
                 "Admin selected car for image management: CarId={CarId}",
@@ -172,7 +171,7 @@
         uploadedFiles = e.GetMultipleFiles(40); //mehrere Bilder Speichern
     }
 
-    private void OnCarChanged()
+    private async Task OnCarChangedAsync()
     {
         uploadedCarImage = null;
         uploadedFiles = Array.Empty<IBrowserFile>();
@@ -182,8 +181,8 @@
 
         if (selectedCarId == 0) return;
 
-        Colors = AdminService.GetAvailableColors(selectedCarId);
-        Rims = AdminService.GetAvailableRims(selectedCarId);
+        Colors = await AdminService.GetAvailableColors(selectedCarId);
+        Rims = await AdminService.GetAvailableRims(selectedCarId);
     }
 
     private void OnCarImageSelected(InputFileChangeEventArgs e)

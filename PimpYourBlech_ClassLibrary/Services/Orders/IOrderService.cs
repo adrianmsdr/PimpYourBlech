@@ -1,23 +1,34 @@
-﻿using PimpYourBlech_ClassLibrary.Entities;
-using PimpYourBlech_ClassLibrary.Session;
-using PimpYourBlech_ClassLibrary.ValueObjects;
+﻿using PimpYourBlech_ClassLibrary.ValueObjects;
+using PimpYourBlech_Contracts.DTOs;
+using PimpYourBlech_Contracts.EntityDTOs;
 
 namespace PimpYourBlech_ClassLibrary.Services.Orders;
 
 public interface IOrderService
 {
 
-    Task<Order> CreateOrderFromCart(Cart cart, Customer customer, DeliveryAddress address, PaymentValue pv);
+    Task<OrderDto> CreateOrderFromCart(Cart cart, CustomerDto customer, DeliveryAddressDto address, PaymentValueDto pv);
     
-    Task<Customer> GetCustomerByIdAsync(int id);
+    Task<CustomerDto?> GetCustomerByIdAsync(int id);
 
-    Task<DeliveryAddress> GetDeliveryAddressAsync(int id);
+    Task<DeliveryAddressDto?> GetDeliveryAddressAsync(int id);
     
-    Task<int> InsertDeliveryAddressAsync(DeliveryAddress address);
+    Task<int> InsertDeliveryAddressAsync(DeliveryAddressDto address);
     
-    Task<int> InsertPaymentValueAsync(PaymentValue paymentValue);
+    Task<int> InsertPaymentValueAsync(PaymentValueDto paymentValue);
     
-    Task<PaymentValue?> GetPaymentValueAsync(int id);
+    Task<PaymentValueDto?> GetPaymentValueAsync(int id);
 
-    public Task<List<PaymentValue>> GetPaymentValuesAsync(int id);
+    public Task<List<PaymentValueDto>> GetPaymentValuesAsync(int id);
+    
+    public Task<List<OrderCustomerDto>> GetOrdersBasicsAsync();
+    
+    public Task<List<OrderPositionDto>> GetOrdersPositionsAsync(int orderId);
+    
+   // public Task<List<OrderTotalDto>> GetOrdersTotalAsync();
+
+   public Task<List<OrderDto>> GetUserOrdersAsync(int customerId);
+   
+   public Task<DeliveryAddressDto?> GetDeliveryAddressForOrderAsync(int orderId);
+   
 }

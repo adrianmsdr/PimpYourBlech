@@ -1,12 +1,12 @@
-﻿using PimpYourBlech_ClassLibrary.Entities;
-using PimpYourBlech_ClassLibrary.Services.Carts;
+﻿using PimpYourBlech_ClassLibrary.Services.Carts;
 using PimpYourBlech_ClassLibrary.ValueObjects;
+using PimpYourBlech_Contracts.EntityDTOs;
 
 
 public class CartService : ICartService
 {
    
-    public Cart AddProduct(Cart cart,Product product)
+    public Cart AddProduct(Cart cart, ProductDto product)
     {
         CartPosition? cp = cart.Products.Find(x => x.ProductId == product.ProductId);
         if (cp == null)

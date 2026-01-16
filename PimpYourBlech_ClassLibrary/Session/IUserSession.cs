@@ -1,10 +1,9 @@
-using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Session.Implementation;
 using PimpYourBlech_ClassLibrary.ValueObjects;
+using PimpYourBlech_Contracts.EntityDTOs;
 
 namespace PimpYourBlech_ClassLibrary.Session;
 
-using PimpYourBlech_ClassLibrary.Entities;
 
 public interface IUserSession
 {
@@ -14,16 +13,16 @@ public interface IUserSession
 
     bool IsAdmin { get; }
 
-    Configuration? CurrentConfiguration { get; set; }
+    ConfigurationDto? CurrentConfigurationDto { get; set; }
     
 
     int CurrentDeliveryAddressId { get; set; }
     int CurrentPaymentValueId { get; set; }
-    PaymentValue? PaymentValues { get; set; }
+    PaymentValueDto? PaymentValues { get; set; }
 
     void LogOut();
 
-    void LogIn(Customer customer);
+    void LogIn(CustomerDto customer);
     void LogIn(int customerId);
 
     public Cart CurrentCart { get; set; } 

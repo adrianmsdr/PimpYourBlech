@@ -3,9 +3,10 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_Contracts.EntityDTOs
+@using PimpYourBlech_Data.Models
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 @inject IAdminService AdminService
@@ -109,8 +110,8 @@
     private string ErrorMessage = "";
     private string SuccessMessage = "";
 
-    private Customer? Customer = new Customer();
-    private Customer EditModel = new();
+    private CustomerDto? Customer = new CustomerDto();
+    private CustomerDto EditModel = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,7 +121,7 @@
         Avatar3 = Images[2];
         try
         {
-            Customer = await AdminService.GetCustomerByIdIncludeAllAsync(UserSession.CurrentUserId);
+            Customer = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         }
         catch (Exception e)
         {
@@ -133,7 +134,7 @@
             
             try
             {
-                EditModel = new Customer()
+                EditModel = new CustomerDto()
                 {
                     Id = Customer.Id,
                     FirstName = Customer.FirstName,
@@ -143,7 +144,6 @@
                     Telefon = Customer.Telefon,
                     PasswordHash = Customer.PasswordHash,
                     ImagePath = Customer.ImagePath,
-                    DeliveryAddresses = Customer.DeliveryAddresses
                 };
             }
             catch (Exception e)

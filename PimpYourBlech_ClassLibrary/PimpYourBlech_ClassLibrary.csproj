@@ -22,7 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Enums\CustomerSort\" />
+      <ProjectReference Include="..\PimpYourBlech_Contracts\PimpYourBlech_Contracts.csproj" />
+      <ProjectReference Include="..\PimpYourBlech_Data\PimpYourBlech_Data.csproj" />
     </ItemGroup>
 
 </Project>

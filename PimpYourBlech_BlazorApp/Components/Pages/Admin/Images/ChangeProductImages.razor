@@ -3,8 +3,8 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 <PageTitle>Produktbilder bearbeiten</PageTitle>
 @inject IImageService ImageService
 @inject IAdminService AdminService
@@ -41,7 +41,7 @@
     }
 </div>
 @code {
-    private List<Product> products = new();
+    private List<ProductDto> products = new();
     private int SelectedProductId;
 
     private int CarId;

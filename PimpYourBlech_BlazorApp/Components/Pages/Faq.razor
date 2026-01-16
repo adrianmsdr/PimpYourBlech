@@ -1,7 +1,8 @@
+@*
 @page "/FAQ"
 
+@using PimpYourBlech_ClassLibrary.DTOs
 @using PimpYourBlech_ClassLibrary.Services.FAQ
-@using PimpYourBlech_ClassLibrary.Entities
 
 @inject IFaqService FaqService
 
@@ -120,7 +121,7 @@
     }
     //------------------Comunity FAQ----------------------
     
-    private List<CommunityQuestion> CommunityQuestions = new();
+    private List<CommunityQuestionDto> CommunityQuestions = new();
     private string NewQuestionContent;
     private Dictionary<int, string> NewAnswerContent = new();
 
@@ -230,4 +231,4 @@
 }
 
 
-</style>
+</style>*@

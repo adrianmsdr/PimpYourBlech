@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using PimpYourBlech_ClassLibrary.Entities;
-using PimpYourBlech_ClassLibrary.Inventories;
-using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
+
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Data.Inventories;
 
 namespace PimpYourBlech_ClassLibrary.Services.FAQ;
 
@@ -14,13 +13,20 @@ public class FaqService : IFaqService
         customerInventory = customers;
     }
     
-    public async Task<List<CommunityQuestion>> GetCommunityQuestionsAsync()
+    public async Task<List<CommunityQuestionDto>>? GetCommunityQuestionsAsync()
     {
-        return await customerInventory.GetCommunityQuestionsAsync();
+        var communityQuestions = await customerInventory.GetCommunityQuestionsAsync();;
+       return communityQuestions.ConvertAll(q => new CommunityQuestionDto()
+        {
+           Id = q.Id,
+           Content = q.Content,
+           CreatedAt = q.CreatedAt,
+        });
     }
 
     public async Task AddCommunityQuestionAsync(string content)
     {
+        
         await customerInventory.AddCommunityQuestionAsync(content);
     }
 

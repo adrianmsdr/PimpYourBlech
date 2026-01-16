@@ -1,11 +1,13 @@
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Data.Inventories.Implementation;
+
 namespace PimpYourBlech_ClassLibrary.Services.Comparator.Implementation;
 
-using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Services.Comparator.Models;
 
 public class ComparatorService : IComparatorService
 {
-    public ComparisonResult CompareCars(List<Car> cars)
+    public ComparisonResult CompareCars(List<CarDto> cars)
     {
         return new ComparisonResult
         {
@@ -25,8 +27,10 @@ public class ComparatorService : IComparatorService
     }
     
     public ComparisonResult CompareConfigurations(
-        List<Configuration> configurations)
+        List<ConfigurationDto> configurations)
     {
+        
+        /*
         return new ComparisonResult
         {
             Configurations = configurations,
@@ -45,6 +49,10 @@ public class ComparatorService : IComparatorService
                     c => c.Car.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar"
                 )
             }
+        };*/
+        return new ComparisonResult
+        {
+            Configurations = configurations,
         };
     }
     private ComparisonRow Row<T>(

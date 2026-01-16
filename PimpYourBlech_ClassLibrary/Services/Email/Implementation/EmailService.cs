@@ -1,15 +1,17 @@
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Exceptions;
+using PimpYourBlech_ClassLibrary.Services.Orders;
 using PimpYourBlech_ClassLibrary.ValueObjects;
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Data.Models;
 
 namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation;
 
 public class EmailService : IEmailService
 {
-    public async Task SendRegistrationEmailAsync(Customer customer)
+    public async Task SendRegistrationEmailAsync(CustomerDto customer)
     {
         string subject = "Deine Registrierung bei PimpYourBlech";
         string message = "Hallo " + customer.FirstName + ",\n\n" +
@@ -61,10 +63,10 @@ public class EmailService : IEmailService
         return true;
     }
 
-    public async Task SendOrderReplyEmail(Customer customer,Order order)
+    public async Task SendOrderReplyEmail(CustomerDto customer, List<OrderPositionDto> orderPositions)
     {
        StringBuilder sb = new StringBuilder();
-        foreach (var p in  order.Items)
+        foreach (var p in  orderPositions)
         {
             sb.Append(p.Name + "\n\n" + p.ArticleNumber + "\n\n" + p.Brand + "\n\n" + p.UnitPrice*p.Quantity  + " €\n\n");
         }
@@ -88,7 +90,7 @@ public class EmailService : IEmailService
         }
     }
 
-    public async Task SendConfigurationRequestEmail(Customer customer, Configuration config)
+    public async Task SendConfigurationRequestEmail(CustomerDto customer, ConfigurationDto config)
     {
         string subject = "Deine Konfigurationsübersicht (ID: " + config.Id + ")";
         string message = "Hallo " + customer.FirstName + ",\n\n" +

@@ -6,9 +6,11 @@
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
+@using PimpYourBlech_Contracts.EntityDTOs
+@using PimpYourBlech_Data.Models
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
@@ -18,6 +20,7 @@
 @inject IOrderService OrderService
 @inject IAdminService AdminService
 @inject ILogger<CheckoutPage> Logger
+@inject ICustomerService CustomerService
 
 
 <div class="checkout-container">
@@ -32,7 +35,6 @@
         <h5 class="font">Wohin sollen wir deine Bestellung liefern?</h5>
 
         <div class="mb-3">
-            @*<label class="form-label"><strong>Lieferadresse wählen:</strong></label>*@
 
             <select class="form-select" @bind="selectedDeliveryAddressId">
                 <option value="0">Neue Lieferadrese</option>
@@ -113,7 +115,7 @@
 
 
 @code {
-    private Customer? c;
+    private CustomerDto? c;
     private string salutation  = string.Empty;
     private string surname     = string.Empty;
     private string lastname    = string.Empty;
@@ -123,7 +125,7 @@
     private string postalcode  = string.Empty;
     private string country     = string.Empty;
 
-    private List<DeliveryAddress> _addresses = new();
+    private List<DeliveryAddressDto> _addresses = new();
     private int _selectedDeliveryAddressId;
 
     private int selectedDeliveryAddressId
@@ -136,8 +138,8 @@
         }
     }
 
-    private DeliveryAddress? SelectedAddress =>
-        c?.DeliveryAddresses?.FirstOrDefault(x => x.Id == selectedDeliveryAddressId);
+    private DeliveryAddressDto? SelectedAddress =>
+        _addresses.FirstOrDefault(x => x.Id == selectedDeliveryAddressId);
 
     private bool isDisabled => SelectedAddress != null;
 
@@ -148,9 +150,9 @@
             UserSession.CurrentUserId
         );
 
-        c = await AdminService.GetCustomerByIdIncludeAllAsync(UserSession.CurrentUserId);
+       c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
 
-        _addresses = c.DeliveryAddresses ?? new List<DeliveryAddress>();
+      _addresses = await CustomerService.GetUserAddressesAsync(c.Id);
 
         if (_addresses.Count == 1)
         {
@@ -167,7 +169,7 @@
 
         if (SelectedAddress == null || selectedDeliveryAddressId == 0)
         {
-            DeliveryAddress da = new DeliveryAddress
+            DeliveryAddressDto da = new DeliveryAddressDto
             {
                 CustomerId = c.Id,
                 Salutation = salutation,

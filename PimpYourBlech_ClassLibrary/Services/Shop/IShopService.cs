@@ -1,5 +1,5 @@
-using PimpYourBlech_ClassLibrary.DTO;
-using PimpYourBlech_ClassLibrary.Entities;
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Contracts.Query;
 
 namespace PimpYourBlech_ClassLibrary.Services.Shop;
 
@@ -11,5 +11,5 @@ public interface IShopService
     
 
 
-    public Task<List<Product>> GetProductsAsync(ProductListQuery q);
+    public Task<List<ProductDto>> GetProductsAsync(ProductListQuery q);
 }

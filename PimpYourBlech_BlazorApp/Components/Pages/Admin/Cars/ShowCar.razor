@@ -1,8 +1,8 @@
 @page "/administrator/cars/{id:int}"
 <PageTitle>Administrator/cars/@Id.ToString()</PageTitle>
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 
 @inject IAdminService AdminService
 @inject  NavigationManager Nav
@@ -73,7 +73,7 @@ else
 @code {
     [Parameter] public int Id { get; set; }
 
-    public Car? Car { get; set; }
+    public CarDto? Car { get; set; }
 
     private IBrowserFile? uploadedCarImage;
 

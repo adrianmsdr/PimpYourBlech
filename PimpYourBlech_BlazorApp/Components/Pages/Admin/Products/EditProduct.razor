@@ -4,8 +4,8 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
@@ -75,8 +75,8 @@
 @code {
     [Parameter] public int Id { get; set; }
 
-    private Product? Product;
-    private Product EditModel = new();
+    private ProductDto? Product;
+    private ProductDto EditModel = new();
 
     private IBrowserFile? uploadedProductImage;
 
@@ -103,7 +103,7 @@
         }
 
         // Kopie fürs Formular (damit Cancel sauber ist)
-        EditModel = new Product
+        EditModel = new ProductDto
         {
             ProductId = Product.ProductId,
             CarId = Product.CarId,

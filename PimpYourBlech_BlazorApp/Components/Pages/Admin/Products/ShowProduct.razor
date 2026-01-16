@@ -1,10 +1,9 @@
 @page "/administrator/products/{id:int}"
 <PageTitle>Administrator/products/@Id.ToString()</PageTitle>
-
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
+@using PimpYourBlech_Contracts.Enums
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IImageService ImageService
@@ -81,7 +80,7 @@
 @code {
     [Parameter] public int Id { get; set; }
 
-    public Product? Product { get; set; }
+    public ProductDto? Product { get; set; }
 
     private IBrowserFile? uploadedProductImage;
 
@@ -95,11 +94,11 @@
 
     private async Task DeleteProduct()
     {
-        Car c = await AdminService.GetCarByIdAsync(Product.CarId);
+        CarDto c = await AdminService.GetCarByIdAsync(Product.CarId);
         await ImageService.DeleteProductImagesAsync(Product.ProductId);
         if (Product.ProductType == ProductType.Lack)
         {
-            foreach (var r in AdminService.GetAvailableRims(c.Id))
+            foreach (var r in await AdminService.GetAvailableRims(c.Id))
             {
                 await ImageService.Delete360ImagesAsync(c.Id, Product.ProductId, r.ProductId);
             }
@@ -107,7 +106,7 @@
 
         if (Product.ProductType == ProductType.Felge)
         {
-            foreach (var color in AdminService.GetAvailableColors(c.Id))
+            foreach (var color in await AdminService.GetAvailableColors(c.Id))
             {
                 await ImageService.Delete360ImagesAsync(c.Id, color.ProductId, Product.ProductId);
             }

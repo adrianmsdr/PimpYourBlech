@@ -4,9 +4,6 @@ using PimpYourBlech_BlazorApp.Components;
 using PimpYourBlech_BlazorApp.Services;
 using PimpYourBlech_BlazorApp.Services.Toasts;
 using PimpYourBlech_ClassLibrary.Factories;
-using PimpYourBlech_ClassLibrary.Inventories;
-using PimpYourBlech_ClassLibrary.Persistence;
-using PimpYourBlech_ClassLibrary.Persistence.EFDatabase;
 using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Services.Carts;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
@@ -20,7 +17,14 @@ using PimpYourBlech_ClassLibrary.Session;
 using PimpYourBlech_ClassLibrary.Session.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Comparator;
 using PimpYourBlech_ClassLibrary.Services.Comparator.Implementation;
+using PimpYourBlech_ClassLibrary.Services.Customers;
+using PimpYourBlech_ClassLibrary.Services.Customers.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Orders;
+using PimpYourBlech_ClassLibrary.Services.Products;
+using PimpYourBlech_ClassLibrary.Services.Products.Implememtation;
+using PimpYourBlech_Data.Inventories;
+using PimpYourBlech_Data.Persistence;
+using PimpYourBlech_Data.Persistence.EFDatabase;
 using Serilog;
 
 
@@ -65,8 +69,22 @@ builder.Services.AddScoped<ICarInventory>(sp =>
     return fac.GetCarInventory();
 });
 
+builder.Services.AddScoped<IConfigurationInventory>(sp =>
+{
+    var fac = sp.GetRequiredService<InventoryFactory>();
+    return fac.GetConfigurationInventory();
+});
+
+builder.Services.AddScoped<IOrderInventory>(sp =>
+{
+    var fac = sp.GetRequiredService<InventoryFactory>();
+    return fac.GetOrderInventory();
+});
+
 // 6) Services
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
 builder.Services.AddScoped<IComparatorService, ComparatorService>();
 builder.Services.AddScoped<IShopService, ShopService>();

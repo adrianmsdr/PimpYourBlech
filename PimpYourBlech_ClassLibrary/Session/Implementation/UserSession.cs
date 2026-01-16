@@ -1,6 +1,6 @@
-using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Session;
 using PimpYourBlech_ClassLibrary.ValueObjects;
+using PimpYourBlech_Contracts.EntityDTOs;
 
 namespace PimpYourBlech_ClassLibrary.Session.Implementation;
 
@@ -12,7 +12,7 @@ public class UserSession : IUserSession
 
     public bool IsAdmin { get; }
 
-    public Configuration? CurrentConfiguration { get; set; }
+    public ConfigurationDto? CurrentConfigurationDto { get; set; }
 
     public void LogIn(int customerId)
     {
@@ -28,14 +28,14 @@ public class UserSession : IUserSession
 
     public int CurrentDeliveryAddressId { get; set; }
     public int CurrentPaymentValueId { get; set; }
-    public PaymentValue? PaymentValues { get; set; }
+    public PaymentValueDto? PaymentValues { get; set; }
 
     public void LogOut()
     {
         CurrentUserId = 0;
     }
 
-    public void LogIn(Customer customer)
+    public void LogIn(CustomerDto customer)
     {
         CurrentUserId = customer.Id;
     }
