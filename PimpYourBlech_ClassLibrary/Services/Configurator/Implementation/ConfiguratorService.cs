@@ -46,17 +46,52 @@ public class ConfiguratorService : IConfiguratorService
             Id = config.Id
         };
     }
+    
+    // Methode für die ausgabe des Fahrzeugvergleichs
     public async Task<List<ConfigurationDto>> GetAllConfigurationsForCustomerAsync(int customerId)
     {
-        var configs =  await _customerInventory.GetConfigurationsForCustomer(customerId);
-        return configs.ConvertAll(p => new ConfigurationDto
+        var configs =
+            await _configurationInventory
+                .GetConfigurationsIncludeCarProductsAsync(customerId);
+
+        var result = new List<ConfigurationDto>();
+
+        foreach (var c in configs)
         {
-            Name = p.Name,
-            CarId = p.CarId,
-            CustomerId = p.CustomerId,
-            Id = p.Id
-        });
+            var dto = new ConfigurationDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                CustomerId = c.CustomerId,
+                CarId = c.CarId,
+
+                Car = new CarDto
+                {
+                    Id = c.Car.Id,
+                    Name = c.Car.Name,
+                    Brand = c.Car.Brand,
+                    Model = c.Car.Model,
+                    PS = c.Car.PS,
+                    Price = c.Car.Price,
+                    DateProduction = c.Car.DateProduction,
+                    DatePermit = c.Car.DatePermit,
+                    Quantity = c.Car.Quantity
+                },
+
+                ProductCount = c.Products.Count,
+                TotalPs = CalculateTotalPs(c)
+            };
+
+            dto.TotalPrice =
+                c.Car.Price +
+                c.Products.Sum(p => p.Price);
+
+            result.Add(dto);
+        }
+
+        return result;
     }
+
     public async Task<CarDto> GetCarByIdAsync(int carId)
     {
         var car = await _carInventory.GetCarByIdAsync(carId);
@@ -137,47 +172,7 @@ public class ConfiguratorService : IConfiguratorService
         await _configurationInventory.UpdateConfigurationAsync(configuration.Id);  
     
     }
-   
-  /* public async Task AddProduct(int configurationId, int productId)
-   {
-       if (configurationId <= 0 || productId <= 0)
-           return;
-
-       var product = await _productInventory.GetProductByIdAsync(productId);
-       if (product is null)
-           return;
-
-       var existing = await _configurationInventory.GetProductByType(configurationId, product.ProductType);
-
-       bool exclusive = product.ProductType is
-           ProductType.Lack or
-           ProductType.Felge or
-           ProductType.Motor;
-
-       if (exclusive)
-       {
-           if (existing?.ProductId == productId)
-               return;
-
-           if (existing is not null)
-               await _configurationInventory.RemoveProduct(configurationId, existing.ProductId);
-
-           await _configurationInventory
-               .AddProduct(configurationId, productId);
-       }
-       else
-       {
-           if (existing?.ProductId == productId)
-           {
-               await _configurationInventory
-                   .RemoveProduct(configurationId, productId);
-               return;
-           }
-
-           await _configurationInventory
-               .AddProduct(configurationId, productId);
-       }
-   }*/
+    
 
     //Preisberechnung
     public async  Task<decimal> CalculateTotalPriceAsync(ConfigurationDto configuration)
@@ -189,6 +184,20 @@ public class ConfiguratorService : IConfiguratorService
         decimal productTotal = products.Sum(p => p.Price);
         
         return carPrice + productTotal;
+    }
+    
+    // PS Berechnung
+    private int CalculateTotalPs(Configuration config)
+    {
+        var basePs = config.Car.PS;
+        
+        var motor = config.Products
+            .FirstOrDefault(p => p.ProductType == ProductType.Motor);
+        
+        if (motor?.EngineDetail == null)
+            return basePs;
+        
+        return motor.EngineDetail.Ps;
     }
 
     public async Task SaveConfigurationAsync(ConfigurationDto configuration, CustomerDto customer)

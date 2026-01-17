@@ -1,15 +1,12 @@
-@*<h3>ChooseComparable</h3>
-
 @page "/compare/choose"
 
-@using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.DTOs
+@using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_Contracts.EntityDTOs;
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @inject IConfiguratorService ConfiguratorService
 @inject IImageService ImageService
 
 <h3>Fahrzeuge vergleichen</h3>
-<p>Wähle mindestens zwei Fahrzeuge aus</p>
 
 <table class="table table-striped">
     <thead>
@@ -67,7 +64,7 @@
             return;
         }
 
-        // ❗ Limit erreicht → nichts hinzufügen
+        // Limit erreicht → nichts hinzufügen
         if (selectedCars.Count >= MaxCompareItems)
         {
             return;
@@ -76,4 +73,4 @@
         selectedCars.Add(car);
     }
 
-}*@
+}

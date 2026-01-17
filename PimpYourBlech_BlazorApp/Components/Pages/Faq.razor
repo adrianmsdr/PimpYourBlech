@@ -1,7 +1,7 @@
-@*
+
 @page "/FAQ"
 
-@using PimpYourBlech_ClassLibrary.DTOs
+@using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_ClassLibrary.Services.FAQ
 
 @inject IFaqService FaqService
@@ -78,10 +78,6 @@
             }
 
             <!-- Antwortformular -->
-            @if (!NewAnswerContent.ContainsKey(question.Id))
-            {
-                NewAnswerContent[question.Id] = "";
-            }
             <input type="text" class="form-control mb-1"
                    placeholder="Antwort hinzufügen..."
                    @bind="NewAnswerContent[question.Id]" />
@@ -122,39 +118,65 @@
     //------------------Comunity FAQ----------------------
     
     private List<CommunityQuestionDto> CommunityQuestions = new();
-    private string NewQuestionContent;
+    private string NewQuestionContent = string.Empty;
     private Dictionary<int, string> NewAnswerContent = new();
-
+    
     protected override async Task OnInitializedAsync()
     {
+        await LoadQuestions();
+    }
+
+    private async Task LoadQuestions()
+    {
         CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
+
         foreach (var q in CommunityQuestions)
         {
             if (!NewAnswerContent.ContainsKey(q.Id))
-                NewAnswerContent[q.Id] = "";
+            {
+                NewAnswerContent[q.Id] = string.Empty;
+            }
         }
-
     }
+
 
     private async Task PostQuestion()
     {
-        if (!string.IsNullOrWhiteSpace(NewQuestionContent))
+        if (string.IsNullOrWhiteSpace(NewQuestionContent))
+            return;
+
+        var dto = new CommunityQuestionCreateDto
         {
-            await FaqService.AddCommunityQuestionAsync(NewQuestionContent);
-            NewQuestionContent = "";
-            CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
-        }
+            Content = NewQuestionContent
+        };
+
+        await FaqService.AddCommunityQuestionAsync(dto);
+
+        NewQuestionContent = string.Empty;
+        await LoadQuestions();
     }
+
 
     private async Task PostAnswer(int questionId)
     {
-        if (NewAnswerContent.ContainsKey(questionId) && !string.IsNullOrWhiteSpace(NewAnswerContent[questionId]))
+        if (!NewAnswerContent.TryGetValue(questionId, out var content))
+            return;
+
+        if (string.IsNullOrWhiteSpace(content))
+            return;
+
+        var dto = new CommunityAnswerCreateDto
         {
-            await FaqService.AddCommunityAnswerAsync(questionId, NewAnswerContent[questionId]);
-            NewAnswerContent[questionId] = "";
-            CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
-        }
+            QuestionId = questionId,
+            Content = content
+        };
+
+        await FaqService.AddCommunityAnswerAsync(dto);
+
+        NewAnswerContent[questionId] = string.Empty;
+        await LoadQuestions();
     }
+
     //----------Ausklappfunktion der Fragen--------------
     private HashSet<int> OpenAnswerQuestions = new();
 
@@ -231,4 +253,4 @@
 }
 
 
-</style>*@
+</style>

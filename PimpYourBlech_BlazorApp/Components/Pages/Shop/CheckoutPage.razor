@@ -7,6 +7,7 @@
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
@@ -17,6 +18,7 @@
 @inject IShopService ShopService
 @inject ICartService CartService
 @inject IToastService ToastService
+@inject IToastExecutor ToastExecutor
 @inject IUserSession UserSession
 @inject IOrderService OrderService
 @inject IAdminService AdminService
@@ -182,7 +184,7 @@
                 Country = country
             };
 
-       var    daId = await OrderService.InsertDeliveryAddressAsync(da);
+  var daId =  await ToastExecutor.RunReturnAsync(()=>OrderService.InsertDeliveryAddressAsync(da));
             UserSession.CurrentDeliveryAddressId = daId;
             
             Logger.LogInformation(
@@ -190,6 +192,11 @@
                 UserSession.CurrentUserId,
                 daId
             );
+            if (daId is not 0)
+            {
+                Nav.NavigateTo("/SepaPaymentPage");
+
+            }
         }
         else
         {
@@ -200,9 +207,9 @@
                 UserSession.CurrentUserId,
                 SelectedAddress.Id
             );
-        }
+            Nav.NavigateTo("/SepaPaymentPage");
 
-        Nav.NavigateTo("/SepaPaymentPage");
+        }
     }
 
     private void ApplySelectedAddress()

@@ -189,7 +189,9 @@ registeredProducts = await ConfiguratorService.GetRegisteredProductsAsync(config
     private async Task SaveConfiguration()
     {
         await ConfiguratorService.SaveConfigurationAsync(configuration,CurrentCustomer);
+        ToastService.ShowSuccess("Konfiguration erfolgreich gespeichert.");
     }
+    
 
     private void LoadFrames()
     {

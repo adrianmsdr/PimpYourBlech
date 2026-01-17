@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_Data", "PimpY
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_Contracts", "PimpYourBlech_Contracts\PimpYourBlech_Contracts.csproj", "{355942A0-9B64-4E9F-903A-555D71B6BA00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimpYourBlech_Tests", "PimpYourBlech_Tests\PimpYourBlech_Tests.csproj", "{22EC5A28-6D24-44A0-8BE0-01D1A984DAC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{355942A0-9B64-4E9F-903A-555D71B6BA00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22EC5A28-6D24-44A0-8BE0-01D1A984DAC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22EC5A28-6D24-44A0-8BE0-01D1A984DAC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22EC5A28-6D24-44A0-8BE0-01D1A984DAC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22EC5A28-6D24-44A0-8BE0-01D1A984DAC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
