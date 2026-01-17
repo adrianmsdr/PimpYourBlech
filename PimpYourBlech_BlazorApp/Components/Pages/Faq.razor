@@ -142,19 +142,20 @@
 
     private async Task PostQuestion()
     {
-        if (!string.IsNullOrWhiteSpace(NewQuestionContent))
+        if (string.IsNullOrWhiteSpace(NewQuestionContent))
+            return;
+
+        var dto = new CommunityQuestionCreateDto
         {
-            var dto = new CommunityQuestionCreateDto
-            {
-                Content = NewQuestionContent
-            };
+            Content = NewQuestionContent
+        };
 
-            await FaqService.AddCommunityQuestionAsync(dto);
+        await FaqService.AddCommunityQuestionAsync(dto);
 
-            NewQuestionContent = "";
-            CommunityQuestions = await FaqService.GetCommunityQuestionsAsync();
-        }
+        NewQuestionContent = string.Empty;
+        await LoadQuestions();
     }
+
 
     private async Task PostAnswer(int questionId)
     {

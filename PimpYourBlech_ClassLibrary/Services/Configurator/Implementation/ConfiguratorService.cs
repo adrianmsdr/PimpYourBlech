@@ -172,47 +172,7 @@ public class ConfiguratorService : IConfiguratorService
         await _configurationInventory.UpdateConfigurationAsync(configuration.Id);  
     
     }
-   
-  /* public async Task AddProduct(int configurationId, int productId)
-   {
-       if (configurationId <= 0 || productId <= 0)
-           return;
-
-       var product = await _productInventory.GetProductByIdAsync(productId);
-       if (product is null)
-           return;
-
-       var existing = await _configurationInventory.GetProductByType(configurationId, product.ProductType);
-
-       bool exclusive = product.ProductType is
-           ProductType.Lack or
-           ProductType.Felge or
-           ProductType.Motor;
-
-       if (exclusive)
-       {
-           if (existing?.ProductId == productId)
-               return;
-
-           if (existing is not null)
-               await _configurationInventory.RemoveProduct(configurationId, existing.ProductId);
-
-           await _configurationInventory
-               .AddProduct(configurationId, productId);
-       }
-       else
-       {
-           if (existing?.ProductId == productId)
-           {
-               await _configurationInventory
-                   .RemoveProduct(configurationId, productId);
-               return;
-           }
-
-           await _configurationInventory
-               .AddProduct(configurationId, productId);
-       }
-   }*/
+    
 
     //Preisberechnung
     public async  Task<decimal> CalculateTotalPriceAsync(ConfigurationDto configuration)
