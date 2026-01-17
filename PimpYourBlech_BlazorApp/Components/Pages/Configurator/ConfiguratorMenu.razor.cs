@@ -1,56 +1,60 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
-using PimpYourBlech_ClassLibrary.Entities;
-using PimpYourBlech_ClassLibrary.Enums;
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Contracts.Enums;
 
 namespace PimpYourBlech_BlazorApp.Components.Pages.Configurator;
 
 public partial class ConfiguratorMenu : ComponentBase
 {
      [Parameter] public int Id { get; set; }
-    public Car Car { get; set; }
+    public CarDto Car { get; set; }
 
     private string name = null;
     private string configurationName;
     private string? CurrentImageUrl;
-
+private CustomerDto? CurrentCustomer;
     // 360°-Frames
     private List<string> frameUrls = new();
     private int currentFrame = 0;
-    private List<Product> availableColors = new();
-    private List<Product> availableEngines = new();
-    private List<Product> availableRims = new();
-    private List<Product> availableExtras = new();
-    private Configuration? configuration;
+    private List<ProductDto> registeredProducts = new();
+
+    private List<ProductDto> availableColors = new();
+    private List<ProductDto> availableEngines = new();
+    private List<ProductDto> availableRims = new();
+    private List<ProductDto> availableExtras = new();
+    private ConfigurationDto? configuration;
     private decimal totalPrice;
     private int selectedColorId = 0;
     private int selectedRimId = 0;
-    private Product? selectedEngine = new Product();
+    private ProductDto? selectedEngine = new ProductDto();
 
-    private void SelectColor(int colorId)
+    private async Task SelectColor(int colorId)
     {
         if (configuration == null) return;
 
         selectedColorId = colorId;
 
-        ConfiguratorService.AddProduct(configuration.Id, selectedColorId);
+       await ConfiguratorService.AddProduct(configuration.Id, selectedColorId);
         LoadFrames();
-        UpdatePrice();
+        await UpdatePrice();
     }
 
     protected override async Task OnInitializedAsync()
     {
+        CurrentCustomer = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        
         // 1) Auto laden (einmal)
         Car = await ConfiguratorService.GetCarByIdAsync(Id);
         if (Car == null) return;
 
         // 2) Farben laden
-        availableColors = await ConfiguratorService.GetAvailableColorsAsync(Id) ?? new List<Product>();
+        availableColors = await ConfiguratorService.GetAvailableColorsAsync(Id) ?? new List<ProductDto>();
 
         // 3) Produkte laden
-        availableEngines = await ConfiguratorService.GetAvailableEnginesAsync(Id) ?? new List<Product>();
-        availableRims = await ConfiguratorService.GetAvailableProductsAsync(Id,ProductType.Felge) ?? new List<Product>();
-        availableExtras = ConfiguratorService.GetAvailableExtras(Id) ?? new List<Product>();
+        availableEngines = await ConfiguratorService.GetAvailableEnginesAsync(Id) ?? new List<ProductDto>();
+        availableRims = await ConfiguratorService.GetAvailableProductsAsync(Id,ProductType.Felge) ?? new List<ProductDto>();
+        availableExtras = await ConfiguratorService.GetAvailableExtras(Id) ?? new List<ProductDto>();
 
         // Default Farbe + Felge setzen (damit sofort 360° geht)
              if (availableColors.Count > 0)
@@ -72,7 +76,7 @@ public partial class ConfiguratorMenu : ComponentBase
 
         if (qs.TryGetValue("configId", out var s) && int.TryParse(s, out var configId))
         {
-            configuration = ConfiguratorService.GetConfigurationById(configId);
+            configuration = await ConfiguratorService.GetConfigurationByIdAsync(configId);
             name = configuration?.Name;
         }
 
@@ -93,68 +97,74 @@ public partial class ConfiguratorMenu : ComponentBase
         currentFrame = (currentFrame + 1) % frameUrls.Count;
     }
 
-    private void HandleProduct(Product product)
+    private async Task HandleProduct(ProductDto product)
     {
-        if (configuration == null) return;
+        if (configuration == null)
+        {
+            return;
+        }
 
 
-        ConfiguratorService.AddProduct(configuration.Id, product.ProductId);
+       await ConfiguratorService.AddProduct(configuration.Id, product.ProductId);
+       
 
-        if (product.ProductType == ProductType.Felge)
-            selectedRimId = product.ProductId;
+       if (product.ProductType == ProductType.Felge)
+       {
+           selectedRimId = product.ProductId;
+       }
 
-        if (product.ProductType == ProductType.Lack)
-            selectedColorId = product.ProductId;
+       if (product.ProductType == ProductType.Lack)
+       {
+           selectedColorId = product.ProductId;
+       }
 
-        if (product.ProductType == ProductType.Motor)
+
+       if (product.ProductType == ProductType.Motor)
         {
             selectedEngine = product;
         }
 
-
+registeredProducts = await ConfiguratorService.GetRegisteredProductsAsync(configuration.Id);
         LoadFrames();
-        UpdatePrice();
+        await UpdatePrice();
     }
+    
 
-    private void RemoveProduct(Product product)
+    private async Task UpdatePrice()
     {
         if (configuration == null) return;
-        configuration.Products.Remove(product);
-        UpdatePrice();
-    }
-
-    private void UpdatePrice()
-    {
-        if (configuration == null) return;
-        totalPrice = ConfiguratorService.CalculateTotalPrice(configuration);
+        totalPrice = await ConfiguratorService.CalculateTotalPriceAsync(configuration);
     }
 
     private async Task StartConfiguration()
     {
         name = configurationName;
-        configuration = ConfiguratorService.StartNewConfiguration(await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId), Car, name);
+        configuration = await ConfiguratorService.StartNewConfiguration(await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId), Car, name);
 
         // Defaultfarbe + Defaultfelge als Produkt setzen
         if (availableColors.Count > 0)
         {
             selectedColorId = availableColors[0].ProductId;
-            ConfiguratorService.AddProduct(configuration.Id, availableColors[0].ProductId);
+            await ConfiguratorService.AddProduct(configuration.Id, availableColors[0].ProductId);
         }
 
         if (availableRims.Count > 0)
         {
             selectedRimId = availableRims[0].ProductId;
-            ConfiguratorService.AddProduct(configuration.Id, availableRims[0].ProductId);
+            await ConfiguratorService.AddProduct(configuration.Id, availableRims[0].ProductId);
         }
         
         if (availableEngines.Count > 0)
         {
             selectedEngine = availableEngines[0];
-            ConfiguratorService.AddProduct(configuration.Id, availableEngines[0].ProductId);
+           await  ConfiguratorService.AddProduct(configuration.Id, availableEngines[0].ProductId);
         }
 
         LoadFrames();
-        UpdatePrice();
+        registeredProducts = await ConfiguratorService.GetRegisteredProductsAsync(configuration.Id);
+
+       await UpdatePrice();
+        
 
     }
 
@@ -163,9 +173,9 @@ public partial class ConfiguratorMenu : ComponentBase
         Nav.NavigateTo("/mainMenu");
     }
 
-    private void DeleteConfiguration()
+    private async Task DeleteConfiguration()
     {
-        ConfiguratorService.DeleteConfiguration(configuration);
+        await ConfiguratorService.DeleteConfiguration(configuration);
         Nav.NavigateTo("/mainMenu");
     }
 
@@ -176,9 +186,9 @@ public partial class ConfiguratorMenu : ComponentBase
 
     }
 
-    private void SaveConfiguration()
+    private async Task SaveConfiguration()
     {
-        ConfiguratorService.SaveConfiguration(configuration);
+        await ConfiguratorService.SaveConfigurationAsync(configuration,CurrentCustomer);
     }
 
     private void LoadFrames()

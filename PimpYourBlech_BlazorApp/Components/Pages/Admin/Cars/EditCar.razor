@@ -3,8 +3,8 @@
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
@@ -75,8 +75,8 @@
 @code {
     [Parameter] public int Id { get; set; }
 
-    private Car? Car;
-    private Car EditModel = new();
+    private CarDto? Car;
+    private CarDto EditModel = new();
     
     
     private string ErrorMessage = "";
@@ -102,7 +102,7 @@
         }
 
         // Kopie fürs Formular (damit Cancel sauber ist)
-        EditModel = new Car
+        EditModel = new CarDto
         {
             Id = Car.Id,
             Name = Car.Name,
@@ -111,7 +111,6 @@
             DateProduction = Car.DateProduction,
             Model = Car.Model,
             Price = Car.Price,
-            Products = Car.Products,
             PS = Car.PS,
             Quantity = Car.Quantity
         };

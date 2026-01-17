@@ -2,12 +2,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using PimpYourBlech_ClassLibrary.DTO;
-using PimpYourBlech_ClassLibrary.Entities;
-using PimpYourBlech_ClassLibrary.Enums;
 using PimpYourBlech_ClassLibrary.Exceptions;
-using PimpYourBlech_ClassLibrary.Inventories;
+using PimpYourBlech_Data.Inventories;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Contracts.Enums;
+using PimpYourBlech_Contracts.Query;
+using PimpYourBlech_Data.Models;
 
 namespace PimpYourBlech_ClassLibrary.Services.Admin;
 
@@ -30,9 +31,21 @@ public class AdminService : IAdminService
         _logger = logger;
     }
 
-    public async Task<List<Customer>> GetListCustomersAsync()
+    public async Task<List<CustomerDto>> GetListCustomersAsync()
     {
-        return await _customerRepository.ListCustomersAsync();
+        var customers = await _customerRepository.ListCustomersAsync();
+        return customers.ConvertAll(c => new CustomerDto
+        {
+            Id = c.Id,
+            FirstName = c.FirstName,
+            LastName = c.LastName,
+            AdminRights = c.AdminRights,
+            ImagePath = c.ImagePath,
+            MailAddress = c.MailAddress,
+            PasswordHash = c.PasswordHash,
+            Telefon = c.Telefon,
+            Username = c.Username,
+        });
     }
 
 
@@ -62,18 +75,14 @@ public class AdminService : IAdminService
         customer.MailAddress = mailAddress;
         customer.ImagePath = ImagePath;
         await _customerRepository.InsertCustomerAsync(customer);
-        await _emailService.SendRegistrationEmailAsync(customer);
+       // await _emailService.SendRegistrationEmailAsync(customer);
 
         _logger.LogInformation(
             "Registering new customer with Username={Username}",
             username
         );
     }
-
-    public Customer Login(string username, string passwordHash)
-    {
-        throw new NotImplementedException();
-    }
+    
 
     public async Task EnsureUsernameAvailableAsync(string username)
     {
@@ -108,7 +117,7 @@ public class AdminService : IAdminService
         }
     }
 
-    public async Task<Customer> CustomerLoginAsync(string username, string password)
+    public async Task<CustomerDto> CustomerLoginAsync(string username, string password)
     {
         // Passwort wird in Hashcode konvertiert für DB - Abgleich
         var hash = Convert.ToBase64String(
@@ -133,60 +142,94 @@ public class AdminService : IAdminService
             customer.Username
         );
 
+        return customer != null ? new CustomerDto
+        {
+            Id = customer.Id,
+            FirstName = customer.FirstName,
+            LastName = customer.LastName,
+            AdminRights = customer.AdminRights,
+            ImagePath = customer.ImagePath,
+            MailAddress = customer.MailAddress,
+            PasswordHash = customer.PasswordHash,
+            Telefon = customer.Telefon,
+            Username = customer.Username,
+        } : null;
+       
+    }
+    
 
-        return customer;
+    public async Task UpdateCustomerAsync(CustomerDto c)
+    {
+        Customer? customer = new Customer
+        {
+            Id = c.Id,
+            FirstName = c.FirstName,
+            LastName = c.LastName,
+            AdminRights = c.AdminRights,
+            ImagePath = c.ImagePath,
+            MailAddress = c.MailAddress,
+            PasswordHash = c.PasswordHash,
+            Telefon = c.Telefon,
+            Username = c.Username,
+        };
+        await _customerRepository.UpdateCustomerAsync(customer);
     }
 
-    public async Task<Customer> GetCustomerByUsernameAsync(string username)
+    public async Task DeleteCustomerAsync(CustomerDto c)
     {
-        var temp = await _customerRepository.GetCustomerByUsernameAsync(username);
+        
+        
+        Customer? customer = await _customerRepository.GetCustomerByIdAsync(c.Id);
+        if (customer != null)
+        {
+            await _customerRepository.DeleteCustomerAsync(customer);
+        }
+    }
+/*
+    public async Task<CustomerDto> GetCustomerByIdIncludeAllAsync(int id)
+    {
+       // return await _customerRepository.GetCustomerByIdIncludeAllAsync(id);
+    }
+*/
+    public async Task<CustomerDto> GetCustomerByIdAsync(int id)
+    {
+        var customer = await _customerRepository.GetCustomerByIdAsync(id);
+        return new CustomerDto
+        {
+            Id = customer.Id,
+            FirstName = customer.FirstName,
+            LastName = customer.LastName,
+            AdminRights = customer.AdminRights,
+            ImagePath = customer.ImagePath,
+            MailAddress = customer.MailAddress,
+            PasswordHash = customer.PasswordHash,
+            Telefon = customer.Telefon,
+            Username = customer.Username,
+        };
 
-        return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Username gefunden.");
     }
 
-    public Customer GetCustomerByTelefon(string telefon)
+    public async Task<List<CustomerDto>> GetFilteredCustomersAsync(CustomerListQuery query)
     {
-        var temp = _customerRepository.ListCustomers().FirstOrDefault(c => c.Telefon == telefon);
+        var customers = await _customerRepository.QueryCustomersAsync(query);
 
-        return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Username gefunden.");
-    }
-
-    public Customer GetCustomerByNames(string firstName, string lastName)
-    {
-        var temp = _customerRepository.ListCustomers()
-            .FirstOrDefault(c => c.FirstName == firstName && c.LastName == lastName);
-
-        return temp ?? throw new NoCustomerFoundException("Kein Benutzer mit diesen Namen gefunden.");
-    }
-
-    public async Task UpdateCustomerAsync(Customer c)
-    {
-        await _customerRepository.UpdateCustomerAsync(c);
-    }
-
-    public async Task DeleteCustomerAsync(Customer c)
-    {
-        await _customerRepository.DeleteCustomerAsync(c);
-    }
-
-    public async Task<Customer> GetCustomerByIdIncludeAllAsync(int id)
-    {
-        return await _customerRepository.GetCustomerByIdIncludeAllAsync(id);
-    }
-
-    public async Task<Customer> GetCustomerByIdAsync(int id)
-    {
-        return await _customerRepository.GetCustomerByIdAsync(id);
-    }
-
-    public async Task<List<Customer>> GetFilteredCustomersAsync(CustomerListQuery query)
-    {
-        return await _customerRepository.QueryCustomersAsync(query);
+        return customers.ConvertAll(c => new CustomerDto
+        {
+            Id = c.Id,
+            FirstName = c.FirstName,
+            LastName = c.LastName,
+            AdminRights = c.AdminRights,
+            ImagePath = c.ImagePath,
+            MailAddress = c.MailAddress,
+            PasswordHash = c.PasswordHash,
+            Telefon = c.Telefon,
+            Username = c.Username,
+        });
     }
 
 
     // ___________________________________Poducts____________________________________
-    public Product CreateProduct(Car car, string name, string brand, int quantity, decimal price,
+    public async Task<int> CreateProduct(CarDto car, string name, string brand, int quantity, decimal price,
         ProductType productType, string description)
     {
         _logger.LogInformation(
@@ -196,9 +239,8 @@ public class AdminService : IAdminService
             productType
         );
 
-        return new Product
+        Product p = new Product
         {
-            Car = car,
             CarId = car.Id,
             Name = name,
             Brand = brand,
@@ -207,10 +249,14 @@ public class AdminService : IAdminService
             ProductType = productType,
             Description = description
         };
+        await InsertProduct(p);
+        return p.ProductId;
     }
 
-    public void RegisterEngine(Product p, int ps, int kw, string displacement, Gear gear, Fuel fuel)
+    public async Task RegisterEngine(int productId, int ps, int kw, string displacement, Gear gear, Fuel fuel)
     {
+        var p = await _productRepository.GetProductByIdAsync(productId);
+        
         p.EngineDetail = new EngineDetail
         {
             ProductId = p.ProductId,
@@ -221,66 +267,112 @@ public class AdminService : IAdminService
             Fuel = fuel
         };
         _logger.LogInformation("Engine registered for product {ProductId}.", p.ProductId);
+        await _productRepository.UpdateProductAsync(p);
     }
 
-    public void RegisterRim(Product p, decimal diameter, decimal width)
+    public async Task RegisterRim(int productId, decimal diameter, decimal width)
     {
+        var p = await _productRepository.GetProductByIdAsync(productId);
+
         p.RimDetail = new RimDetail
         {
             ProductId = p.ProductId,
             DiameterInInch = diameter,
             WidthInInch = width
         };
+        _productRepository.UpdateProductAsync(p);
         _logger.LogInformation("Rim registered for product {ProductId}.", p.ProductId);
     }
 
-    public void RegisterLights(Product p, int lumen, bool isLED)
+    public async Task RegisterLights(int productId, int lumen, bool isLED)
     {
+        var p = await _productRepository.GetProductByIdAsync(productId);
+
         p.LightsDetail = new LightsDetail
         {
             ProductId = p.ProductId,
             Lumen = lumen,
             IsLed = isLED
         };
+        _productRepository.UpdateProductAsync(p);
         _logger.LogInformation("Light registered for product {ProductId}", p.ProductId);
     }
 
-    public void RegisterColor(Product p, string colorName)
+    public async Task RegisterColor(int productId, string colorName)
     {
+        var p = await _productRepository.GetProductByIdAsync(productId);
+
         p.ColorDetail = new ColorDetail
         {
             ProductId = p.ProductId,
             DisplayName = colorName,
         };
+        _productRepository.UpdateProductAsync(p);
         _logger.LogInformation("Color registered for product {ProductId}.", p.ProductId);
     }
 
-    public async Task<Product> InsertProduct(Product p)
+    public async Task InsertProduct(Product p)
     {
         await _productRepository.InsertProductAsync(p); // muss SaveChangesAsync machen
         _logger.LogInformation($"Inserted product {p.ProductId}");
-        return p;
+        
     }
 
-    public List<Product> GetProducts()
+    public List<ProductDto> GetProducts()
     {
-        return _productRepository.ListProducts();
+        var products = _productRepository.ListProducts();
+        return products.ConvertAll(p => new ProductDto
+        {
+            ProductId = p.ProductId,
+            Name = p.Name,
+            Brand = p.Brand,
+            Price = p.Price,
+            Description = p.Description,
+            ArticleNumber = p.ArticleNumber,
+            ImageUrl = p.ImageUrl,
+            CarId = p.CarId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        });
     }
 
-    public async Task<Product> GetProductByIdAsync(int id)
+    public async Task<ProductDto> GetProductByIdAsync(int id)
     {
-        return await _productRepository.GetProductByIdAsync(id);
+        var product = await _productRepository.GetProductByIdAsync(id);
+        return new ProductDto
+        {
+            ProductId = product.ProductId,
+            Name = product.Name,
+            Brand = product.Brand,
+            Price = product.Price,
+            Description = product.Description,
+            ArticleNumber = product.ArticleNumber,
+            ImageUrl = product.ImageUrl,
+            CarId = product.CarId,
+            ProductType = product.ProductType,
+            Quantity = product.Quantity,
+        };
     }
 
-    public async Task DeleteProductAsync(Product p)
+    public async Task DeleteProductAsync(ProductDto p)
     {
-        await _productRepository.DeleteProductAsync(p);
+        var product = await _productRepository.GetProductByIdAsync(p.ProductId);
+        await _productRepository.DeleteProductAsync(product);
         _logger.LogWarning("Product deleted");
     }
 
-    public async Task UpdateProductAsync(Product p)
+    public async Task UpdateProductAsync(ProductDto p)
     {
-        await _productRepository.UpdateProductAsync(p);
+        var product = await _productRepository.GetProductByIdAsync(p.ProductId);
+        product.Name = p.Name;
+        product.Brand = p.Brand;
+        product.Price = p.Price;
+        product.Description = p.Description;
+        product.ArticleNumber = p.ArticleNumber;
+        product.ImageUrl = p.ImageUrl;
+        product.ProductType = p.ProductType;
+        product.Quantity = p.Quantity;
+        await _productRepository.UpdateProductAsync(product);
         _logger.LogInformation("Product updated");
     }
 
@@ -289,20 +381,47 @@ public class AdminService : IAdminService
         return Enum.GetValues(typeof(ProductType)).Cast<ProductType>().ToList();
     }
 
-    public async Task<List<Product>> ProductListQueryAsync(ProductListQuery query)
+    public async Task<List<ProductDto>> ProductListQueryAsync(ProductListQuery query)
     {
-        return await _productRepository.QueryAsync(query);
+       var products = await _productRepository.QueryAsync(query);
+       return products.ConvertAll(p => new ProductDto
+           {
+               ProductId = p.ProductId,
+               Name = p.Name,
+               Brand = p.Brand,
+               Price = p.Price,
+               Description = p.Description,
+               ArticleNumber = p.ArticleNumber,
+               ImageUrl = p.ImageUrl,
+               CarId = p.CarId,
+               ProductType = p.ProductType,
+               Quantity = p.Quantity,
+           }
+       );
     }
 
     // ___________________________________Cars____________________________________
 
 
-    public async Task<List<Car>> GetCarsAsync()
+    public async Task<List<CarDto>> GetCarsAsync()
     {
-        return await _carRepository.ListCarsAsync();
+        
+      var cars = await _carRepository.ListCarsAsync();
+      return cars.ConvertAll(c => new CarDto
+      {
+          Brand = c.Brand,
+          DatePermit = c.DatePermit,
+          DateProduction = c.DateProduction,
+          Price = c.Price,
+          PS = c.PS,
+          Model = c.Model,
+          Id = c.Id,
+          Name = c.Name,
+          Quantity = c.Quantity,
+      });
     }
 
-    public async Task<Car> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand,
+    public async Task<CarDto> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand,
         string model, string ps, string quantity,string price)
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(model) || string.IsNullOrWhiteSpace(brand))
@@ -330,23 +449,62 @@ public class AdminService : IAdminService
         c.Quantity = quantityValue;
         c.Price = priceValue;
         await _carRepository.InsertCarAsync(c);
-        return c;
+        var carDto = new CarDto
+        {
+            Brand = c.Brand,
+            DatePermit = c.DatePermit,
+            DateProduction = c.DateProduction,
+            Price = c.Price,
+            PS = c.PS,
+            Model = c.Model,
+            Name = c.Name,
+            Quantity = c.Quantity,
+            Id = c.Id,
+        };
+        return carDto;
     }
 
-    public async Task<Car> GetCarByIdAsync(int id)
+    public async Task<CarDto> GetCarByIdAsync(int id)
     {
-        return await _carRepository.GetCarByIdAsync(id);
+        var car = await _carRepository.GetCarByIdAsync(id);
+        return car != null ? new CarDto
+        {
+            Id = car.Id,
+            Brand = car.Brand,
+            DatePermit = car.DatePermit,
+            DateProduction = car.DateProduction,
+            Price = car.Price,
+            PS = car.PS,
+            Model = car.Model,
+            Name = car.Name,
+            Quantity = car.Quantity,
+        } : null;
     }
 
-    public async Task DeleteCarAsync(Car car)
+    public async Task DeleteCarAsync(CarDto car)
     {
-        await _carRepository.DeleteCarAsync(car);
+        var productsCount = (await _productRepository.GetProductsForCarsAsync(car.Id)).Count;
+        if (productsCount > 0){
+            throw new ForbiddenActionException("Fahrzeug besitzt "  + productsCount + " registrierte Produkte und darf nicht gelöscht werden.");
+        }
+        var carToDelete = await _carRepository.GetCarByIdAsync(car.Id);
+        await _carRepository.DeleteCarAsync(carToDelete);
         _logger.LogInformation("Car deleted");
     }
 
-    public async Task UpdateCarAsync(Car car)
+    public async Task UpdateCarAsync(CarDto car)
     {
-        await _carRepository.UpdateCarAsync(car);
+        var carToUpdate = await _carRepository.GetCarByIdAsync(car.Id);
+        carToUpdate.Brand = car.Brand;
+        carToUpdate.DatePermit = car.DatePermit;
+        carToUpdate.DateProduction = car.DateProduction;
+        carToUpdate.Price = car.Price;
+        carToUpdate.Model = car.Model;
+        carToUpdate.Quantity = car.Quantity;
+        carToUpdate.PS = car.PS;
+        carToUpdate.Name = car.Name;
+        
+        await _carRepository.UpdateCarAsync(carToUpdate);
         _logger.LogInformation(
             "Car updated. CarId={CarId}, Name={Name}",
             car.Id,
@@ -354,39 +512,116 @@ public class AdminService : IAdminService
         );
     }
 
-    public List<Product> GetAvailableRims(int carId)
+    public async Task<List<ProductDto>> GetAvailableRims(int carId)
     {
-        return GetProducts()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Felge)
-            .ToList();
+        var query = new ProductListQuery
+        {
+            CarId = carId,
+            Type = ProductType.Felge,
+        };
+        var rims = await _productRepository.QueryAsync(query);
+        return rims.ConvertAll(p => new ProductDto
+        {
+            ProductId = p.ProductId,
+            Name = p.Name,
+            Brand = p.Brand,
+            Price = p.Price,
+            Description = p.Description,
+            ArticleNumber = p.ArticleNumber,
+            ImageUrl = p.ImageUrl,
+            CarId = p.CarId,
+            Quantity = p.Quantity,
+            ProductType = p.ProductType,
+        });
+    }
+    
+
+    public async Task<List<ProductDto>> GetAvailableColors(int carId)
+    {
+        var query = new ProductListQuery
+        {
+            CarId = carId,
+            Type = ProductType.Lack,
+        };
+        var colors = await _productRepository.QueryAsync(query);
+        return colors.ConvertAll(p => new ProductDto
+        {
+            ProductId = p.ProductId,
+            Name = p.Name,
+            Brand = p.Brand,
+            Price = p.Price,
+            Description = p.Description,
+            ArticleNumber = p.ArticleNumber,
+            ImageUrl = p.ImageUrl,
+            CarId = p.CarId,
+            Quantity = p.Quantity,
+            ProductType = p.ProductType,
+        });
     }
 
-    public List<Product> GetAvailableColors(int carId)
+    public async Task<List<CarDto>> CarListQueryAsync(CarListQuery q)
     {
-        return GetProducts()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Lack)
-            .ToList();
-    }
-
-    public async Task<List<Car>> CarListQueryAsync(CarListQuery q)
-    {
-        return await _carRepository.QueryAsync(q);
+        
+      var cars = await _carRepository.QueryAsync(q);
+      return cars.ConvertAll(p => new CarDto
+      {
+          Id = p.Id,
+          Brand = p.Brand,
+          DatePermit = p.DatePermit,
+          DateProduction = p.DateProduction,
+          Price = p.Price,
+          PS = p.PS,
+          Model = p.Model,
+          Name = p.Name,
+          Quantity = p.Quantity,
+      });
     }
 
     // ___________________________________Orders____________________________________
 
-    public async Task<List<Order>> GetOrdersAsync()
+    public async Task<List<OrderDto>> GetOrdersAsync()
     {
-        return await _customerRepository.GetOrdersAsync();
+        var orders = await _customerRepository.GetOrdersAsync();
+        return orders.ConvertAll(p => new OrderDto
+            {
+                CustomerId = p.CustomerId,
+                OrderId = p.OrderId,
+                OrderDate = p.OrderDate,
+                TotalPrice = p.TotalPrice,
+                DeliveryAddressId = p.DeliveryAddressId,
+                PaymentValueId = p.PaymentValueId,
+            }
+        );
     }
 
-    public async Task<Order> GetOrderByIdAsync(int id)
+    public async Task<OrderDto> GetOrderByIdAsync(int id)
     {
-        return await _customerRepository.GetOrderByIdAsync(id);
+        var order = await _customerRepository.GetOrderByIdAsync(id);
+        return order != null ? new OrderDto
+        {
+            CustomerId = order.CustomerId,
+            OrderId = order.OrderId,
+            OrderDate = order.OrderDate,
+            TotalPrice = order.TotalPrice,
+            DeliveryAddressId = order.DeliveryAddressId,
+            PaymentValueId = order.PaymentValueId,
+        } : null;
     }
 
-    public async Task<List<OrderPosition>> GetOrderItemsAsync(int id)
+    public async Task<List<OrderPositionDto>> GetOrderItemsAsync(int id)
     {
-        return await _customerRepository.GetOrderItemsAsync(id);
+        var orderitems = await _customerRepository.GetOrderItemsAsync(id);
+        return orderitems.ConvertAll(p => new OrderPositionDto
+            {
+                OrderId = p.OrderId,
+                OrderPositionId = p.OrderPositionId,
+                ArticleNumber = p.ArticleNumber,
+                Name = p.Name,
+                Brand = p.Brand,
+                Type = p.Type,
+                UnitPrice = p.UnitPrice,
+                Quantity = p.Quantity,
+            }
+        );
     }
 }

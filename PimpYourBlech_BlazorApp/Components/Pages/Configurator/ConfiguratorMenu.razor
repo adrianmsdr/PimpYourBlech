@@ -3,6 +3,7 @@
 
 @using System.Globalization
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
@@ -99,35 +100,35 @@ else
                     </div>
                     <div class="stat">
                         <div class="stat__label">Produkte</div>
-                        <div class="stat__value">@configuration?.Products?.Count</div>
+                        <div class="stat__value">@registeredProducts.Count</div>
                     </div>
                 </div>
 
     <div class="details-stats">
         <div class="stat">
             <div class="stat__label">PS</div>
-            <div class="stat__value">@selectedEngine.EngineDetail.Ps</div>
+            <div class="stat__value">@selectedEngine.Ps</div>
         </div>
         <div class="stat">
             <div class="stat__label">Kraftstoff</div>
-            <div class="stat__value">@selectedEngine.EngineDetail.Fuel</div>
+            <div class="stat__value">@selectedEngine.Fuel</div>
         </div>
         <div class="stat">
             <div class="stat__label">Getriebeart</div>
-            <div class="stat__value">@ConfiguratorService.GetGearDisplayName(selectedEngine.EngineDetail.Gear)</div>
+            <div class="stat__value">@ConfiguratorService.GetGearDisplayName(selectedEngine.Gear)</div>
         </div>
     </div>
                     <div class="details-section__title">Ausgewählt</div>
                 <div class="details-panel__body">
 
-                    @if (configuration?.Products == null || configuration.Products.Count == 0)
+                    @if (registeredProducts == null || registeredProducts.Count == 0)
                     {
                         <div class="details-empty">Noch nichts gewählt.</div>
                     }
                     else
                     {
                         <div class="selected-grid">
-                            @foreach (var p in configuration.Products)
+                            @foreach (var p in registeredProducts)
                             {
                                 <div class="selected-item">
                                     <div class="selected-item__text">
@@ -164,12 +165,12 @@ else
         <div class="row">
             @foreach (var c in availableColors)
             {
-                var isSelected = configuration?.Products?.Any(p => p.ProductId == c.ProductId) == true;
+                var isSelected = registeredProducts?.Any(p => p.ProductId == c.ProductId) == true;
                 <div class="col-4">
                     <div class="combo-card-admin configurator-card glow-red @(isSelected ? "selected" : "")"
                          role="button"
                          tabindex="0"
-                         @onclick="() => SelectColor(c.ProductId)">
+                         @onclick="() => HandleProduct(c)">
 
                         <div class="card-media-color">
                             <img class="product-img"
@@ -178,7 +179,7 @@ else
                         </div>
                         <div class="selected-item">
                             <div class="selected-itemtext">
-                                <div class="selected-itemname">@c.ColorDetail.DisplayName</div>
+                                @*<div class="selected-itemname">@c.ColorDetail.DisplayName</div>*@
                                 <div class="selected-item__price">@c.Price</div>
                             </div>
 
@@ -208,7 +209,7 @@ else
         <div class="row">
             @foreach (var product in availableEngines)
             {
-                var isSelected = configuration?.Products?.Any(p => p.ProductId == product.ProductId) == true;
+                var isSelected = registeredProducts?.Any(p => p.ProductId == product.ProductId) == true;
                 <div class="col-4">
                     <div class="combo-card-admin configurator-card @(isSelected ? "selected" : "")"
                          role="button"
@@ -248,7 +249,7 @@ else
         <div class="row">
             @foreach (var product in availableRims)
             {
-                var isSelected = configuration?.Products?.Any(p => p.ProductId == product.ProductId) == true;
+                var isSelected = registeredProducts?.Any(p => p.ProductId == product.ProductId) == true;
                 <div class="col-4">
                     <div class="combo-card-admin configurator-card @(isSelected ? "selected" : "")"
                          role="button"
@@ -288,7 +289,7 @@ else
         <div class="row">
             @foreach (var product in availableExtras)
             {
-                var isSelected = configuration?.Products?.Any(p => p.ProductId == product.ProductId) == true;
+                var isSelected = registeredProducts?.Any(p => p.ProductId == product.ProductId) == true;
                 <div class="col-4">
                     <div class="combo-card-admin configurator-card @(isSelected ? "selected" : "")"
                          role="button"

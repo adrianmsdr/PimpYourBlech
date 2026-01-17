@@ -2,9 +2,10 @@
 <PageTitle>Administrator/products/new</PageTitle>
 @using System.Runtime.CompilerServices
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Enums
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
+@using PimpYourBlech_Contracts.Enums
 
 @inject NavigationManager Nav
 @inject IAdminService AdminService
@@ -196,7 +197,7 @@
 
     private IBrowserFile? _uploadedProductImage;
 
-    private List<Car> _cars = new();
+    private List<CarDto> _cars = new();
     private List<ProductType> _categories = new();
     private int _selectedCarId = 0;
 
@@ -246,7 +247,8 @@
             return;
         }
 
-        Product p = AdminService.CreateProduct(
+        
+        int productId = await AdminService.CreateProduct(
             await AdminService.GetCarByIdAsync(_selectedCarId),
             _name,
             _brand,
@@ -297,7 +299,7 @@
                     case "Elektro": fuel = Fuel.Elektro; break;
                 }
 
-                AdminService.RegisterEngine(p, psValue, kwValue, _displacement, gear, fuel);
+                AdminService.RegisterEngine(productId, psValue, kwValue, _displacement, gear, fuel);
                 break;
 
             case ProductType.Felge:
@@ -319,7 +321,7 @@
                     return;
                 }
 
-                AdminService.RegisterRim(p, diameterValue, widthValue);
+                AdminService.RegisterRim(productId, diameterValue, widthValue);
                 break;
 
             case ProductType.Lichter:
@@ -336,17 +338,16 @@
                 }
 
                 bool isLed = _isLed == "True";
-                AdminService.RegisterLights(p, lumenValue, isLed);
+                AdminService.RegisterLights(productId, lumenValue, isLed);
                 break;
 
             case ProductType.Lack:
-                AdminService.RegisterColor(p, _displayName);
+                AdminService.RegisterColor(productId, _displayName);
                 break;
         }
 
-        p = await AdminService.InsertProduct(p);
 
-        if (p.ProductId == 0)
+        if (productId == 0)
         {
             _errorMessage = "Produkt konnte nicht gespeichert werden (keine gültige ID).";
             return;
@@ -354,17 +355,17 @@
         
         Logger.LogInformation(
             "Admin successfully registered product with ProductId={ProductId}, Type={ProductType}",
-            p.ProductId,
+            productId,
             _selectedProductType
         );
 
         if (_uploadedProductImage != null)
         {
-            await ImageService.SaveProductImagesAsync(p.ProductId, _uploadedProductImage);
+            await ImageService.SaveProductImagesAsync(productId, _uploadedProductImage);
             
             Logger.LogInformation(
                 "Admin uploaded product image for ProductId={ProductId}",
-                p.ProductId
+                productId
             );
         }
 

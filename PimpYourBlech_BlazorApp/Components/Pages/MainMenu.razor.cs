@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
-using PimpYourBlech_ClassLibrary.Entities;
 using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Session.State;
+using PimpYourBlech_Contracts.EntityDTOs;
 
 namespace PimpYourBlech_BlazorApp.Components.Pages;
 
@@ -30,7 +30,7 @@ public partial class MainMenu : ComponentBase
 
     private void GoToAdmin() => Nav.NavigateTo("/administrator");
     
-    private Customer? c;
+    private CustomerDto? c;
     private bool _loading;
 
     protected override async Task OnInitializedAsync(){

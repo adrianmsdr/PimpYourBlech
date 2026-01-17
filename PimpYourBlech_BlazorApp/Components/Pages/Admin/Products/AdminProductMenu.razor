@@ -1,13 +1,14 @@
 @page "/administrator/products"
 <PageTitle>Administrator/products</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_ClassLibrary.DTO
-@using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Services.Shop.Implementation
+@using PimpYourBlech_Contracts.EntityDTOs
+@using PimpYourBlech_Contracts.Enums
+@using PimpYourBlech_Contracts.Query
+@using PimpYourBlech_Data.Models
 @inject IAdminService AdminService
 @inject IConfiguratorService ConfiguratorService
 @inject IShopService ShopService
@@ -118,12 +119,12 @@
 </div>
 
 @code {
-    private List<Product> products;
-    private List<Car> cars;
+    private List<ProductDto> products;
+    private List<CarDto> cars;
     private ProductType? selectedCategory = null; // null = Alle
     private ProductSort selectedSortOption = ProductSort.NameAsc;
     private string searchText = string.Empty;
-    private Product selectedProduct = new Product();
+    private ProductDto selectedProduct = new ProductDto();
     private int selectedCarId = 0;
 
     protected override async Task OnInitializedAsync()

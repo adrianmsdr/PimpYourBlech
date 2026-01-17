@@ -1,10 +1,10 @@
 ﻿@inject NavigationManager Nav
 
 @page "/SepaPaymentPage"
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.Implementation
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IUserSession UserSession
 @inject IOrderService OrderService
 @inject ILogger<SepaPaymentPage> Logger
@@ -59,7 +59,7 @@
 </div>
 
 @code {
-    private Customer? c;
+    private CustomerDto? c;
     private string surname  = string.Empty;
     private string lastname = string.Empty;
     private string iban     = string.Empty;
@@ -72,7 +72,7 @@
     }
 
 
-    private List<PaymentValue> _paymentValues = new();
+    private List<PaymentValueDto> _paymentValues = new();
     private int _selectedPaymentValueId;
     private bool IsCheckoutDisabled =>
         string.IsNullOrWhiteSpace(surname) ||
@@ -91,8 +91,8 @@
         }
     }
 
-    private PaymentValue? SelectedPayment =>
-        c?.PaymentValues?.FirstOrDefault(x => x.Id == selectedPaymentValueId);
+    private PaymentValueDto? SelectedPayment =>
+        _paymentValues.FirstOrDefault(x => x.Id == selectedPaymentValueId);
 
     private bool isDisabled => SelectedPayment != null;
 
@@ -107,7 +107,7 @@
         
         if (SelectedPayment == null || selectedPaymentValueId == 0)
         {
-            PaymentValue pv = new PaymentValue()
+            PaymentValueDto pv = new PaymentValueDto()
             {
                 CustomerId = c.Id,
                 AccountOwner = surname + " " + lastname,
@@ -115,13 +115,13 @@
                 Iban = iban
             };
 
-            await OrderService.InsertPaymentValueAsync(pv);
-            UserSession.CurrentPaymentValueId = pv.Id;
+           var pvId = await OrderService.InsertPaymentValueAsync(pv);
+            UserSession.CurrentPaymentValueId = pvId;
             
             Logger.LogInformation(
                 "New payment value created for UserId={UserId}, PaymentId={PaymentId}",
                 UserSession.CurrentUserId,
-                pv.Id
+                pvId
             );
         }
         else

@@ -1,13 +1,14 @@
 ﻿@page "/shop/details/{id:int}"
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IAdminService AdminService
@@ -85,7 +86,7 @@
 @code {
     [Parameter] public int Id { get; set; }
 
-    public Product? Product { get; set; }
+    public ProductDto? Product { get; set; }
     private string imagePath = "/no-image.png";
 
     private bool _isLoading = true;
@@ -117,7 +118,7 @@
         }
     }
 
-    private void AddProduct(Product product)
+    private void AddProduct(ProductDto product)
     {
         CartService.AddProduct(UserSession.CurrentCart,product);
         ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");

@@ -1,10 +1,11 @@
 @page "/administrator/cars"
 <PageTitle>Administrator/cars</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_ClassLibrary.DTO
-@using PimpYourBlech_ClassLibrary.Entities
-@using PimpYourBlech_ClassLibrary.Enums
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
+@using PimpYourBlech_Contracts.Enums
+@using PimpYourBlech_Contracts.Query
+@using PimpYourBlech_Data.Models
 @inject NavigationManager Nav
 @inject IAdminService AdminService
 
@@ -76,8 +77,8 @@
     </div>
 </div>
 @code {
-    private List<Car> cars = new();
-    private Car FoundCar;
+    private List<CarDto> cars = new();
+    private CarDto FoundCar;
     private string searchText = string.Empty;
     private string selectedSearchField = "Name";
     private CarSort selectedSortOption = CarSort.NameAsc;

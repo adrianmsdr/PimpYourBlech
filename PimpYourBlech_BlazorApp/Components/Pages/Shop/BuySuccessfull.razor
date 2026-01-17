@@ -1,11 +1,12 @@
 ﻿@page "/BuySuccessfull"
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IShopService ShopService
@@ -50,7 +51,7 @@
 
 @code {
     
-    Customer c;
+    CustomerDto c;
 
     protected override async Task OnInitializedAsync()
     {

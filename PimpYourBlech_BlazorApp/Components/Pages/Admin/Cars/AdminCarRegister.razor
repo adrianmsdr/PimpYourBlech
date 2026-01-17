@@ -2,9 +2,10 @@
 <PageTitle>Administrator/cars/new</PageTitle>
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_BlazorApp.Services.Toasts
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject NavigationManager Nav
 @inject IToastExecutor Executor
 @inject IAdminService AdminService
@@ -87,7 +88,7 @@
             brand
         );
 
-        Car? car = await Executor.RunReturnAsync(()=> (AdminService.RegisterCarAsync(
+        CarDto? car = await Executor.RunReturnAsync(()=> (AdminService.RegisterCarAsync(
             name, dateProduction, datePermit, brand, model, ps,
             quantity, price
         )),successMessage:"Fahrzeug erfolgreich hinzugefügt.",logError:"Registrieren eines neuen Fahrzeugs fehlgeschlagen.");

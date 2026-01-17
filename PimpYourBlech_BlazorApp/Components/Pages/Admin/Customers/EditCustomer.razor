@@ -5,8 +5,8 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
@@ -79,8 +79,8 @@
 @code {
     [Parameter] public int Id { get; set; }
 
-    private Customer? Customer;
-    private Customer EditModel = new();
+    private CustomerDto? Customer;
+    private CustomerDto EditModel = new();
 
     private string ErrorMessage = "";
     private string SuccessMessage = "";
@@ -92,7 +92,7 @@
             Id
         );
         
-        Customer = await AdminService.GetCustomerByIdIncludeAllAsync(Id);
+        Customer = await AdminService.GetCustomerByIdAsync(Id);
         if (Customer is null)
         {
             Logger.LogWarning(
@@ -105,13 +105,12 @@
         }
 
         // Kopie fürs Formular (damit Cancel sauber ist)
-        EditModel = new Customer()
+        EditModel = new CustomerDto()
         {
            Id = Customer.Id,
            FirstName = Customer.FirstName,
            LastName = Customer.LastName,
            AdminRights = Customer.AdminRights, 
-           Configurations  = Customer.Configurations,
            MailAddress = Customer.MailAddress,
            Telefon = Customer.Telefon,
            PasswordHash = Customer.PasswordHash,

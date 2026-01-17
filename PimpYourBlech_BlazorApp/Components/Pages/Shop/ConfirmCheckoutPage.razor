@@ -15,10 +15,11 @@
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
-@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
 @using PimpYourBlech_ClassLibrary.Services.Orders
+@using PimpYourBlech_Contracts.EntityDTOs
 
 <h1 class="headline">Übersicht</h1>
 <div class="container">
@@ -101,10 +102,10 @@
     }
 
 @code {
-    Order _order = new Order();
-    Customer? c;
-    DeliveryAddress? da;
-    PaymentValue? pv;
+    OrderDto _order = new OrderDto();
+    CustomerDto? c;
+    DeliveryAddressDto? da;
+    PaymentValueDto? pv;
 
     private async Task ConfirmPayment()
     {
@@ -126,8 +127,9 @@
                 "Order {OrderId} successfully created for UserId={UserId}",
                 UserSession.CurrentUserId
             );
+            var orderPositions = await OrderService.GetOrdersPositionsAsync(_order.OrderId);
 
-            await EmailService.SendOrderReplyEmail(c, _order);
+            await EmailService.SendOrderReplyEmail(c, orderPositions);
 
             Logger.LogInformation(
                 "Order confirmation email sent for OrderId={OrderId}",

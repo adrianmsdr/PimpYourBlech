@@ -1,9 +1,9 @@
-<h3>ChooseComparable</h3>
+@*<h3>ChooseComparable</h3>
 
 @page "/compare/choose"
 
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_ClassLibrary.DTOs
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @inject IConfiguratorService ConfiguratorService
 @inject IImageService ImageService
@@ -50,15 +50,15 @@
 @code {
     private const int MaxCompareItems = 3;
 
-    private List<Car> cars = new();
-    private List<Car> selectedCars = new();
+    private List<CarDto> cars = new();
+    private List<CarDto> selectedCars = new();
 
     protected override async Task OnInitializedAsync()
     {
         cars = await ConfiguratorService.ListCarsAsync();
     }
 
-    private void ToggleCar(Car car)
+    private void ToggleCar(CarDto car)
     {
         // bereits ausgewählt → entfernen
         if (selectedCars.Any(c => c.Id == car.Id))
@@ -76,4 +76,4 @@
         selectedCars.Add(car);
     }
 
-}
+}*@

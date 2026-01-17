@@ -1,8 +1,17 @@
 @page "/administrator/customers/{id:int}"
 <PageTitle>Administrator/customers/@Id.ToString()</PageTitle>
-@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Services.Customers
+@using PimpYourBlech_ClassLibrary.Services.Orders
+@using PimpYourBlech_Contracts.DTOs
+@using PimpYourBlech_Contracts.EntityDTOs
+@inject IToastExecutor ToastExecutor
 @inject IAdminService AdminService
+@inject ICustomerService CustomerService
+@inject IConfiguratorService ConfiguratorService
+@inject IOrderService OrderService
 @inject NavigationManager Nav
 
 @if (showDeleteModal)
@@ -66,7 +75,7 @@
                 <div class="section">
                     <h5 class="section-title">Registrierte Lieferadressen</h5>
                     <div class="admin-details-section-divider"></div>
-                    @if (p.DeliveryAddresses != null)
+                    @if (DeliveryAddressDtos != null)
                     {
                         <table class="table table-striped table-bordered">
                             <thead>
@@ -83,7 +92,7 @@
                             </thead>
 
                             <tbody>
-                            @foreach (var d in p.DeliveryAddresses)
+                            @foreach (var d in DeliveryAddressDtos)
                             {
                                 <tr >
                                     <td>@d.Salutation</td>
@@ -120,7 +129,7 @@
                     <h5 class="section-title">Bestellungen</h5>
                     <div class="admin-details-section-divider"></div>
 
-                    @if (p.Orders == null || p.Orders.Count == 0)
+                    @if (OrderDtos == null || OrderDtos.Count == 0)
                     {
                         <p>Keine Bestellungen vorhanden.</p>
                     }
@@ -137,7 +146,7 @@
                             </thead>
 
                             <tbody>
-                            @foreach (var o in p.Orders)
+                            @foreach (var o in OrderDtos)
                             {
                                 <tr @onclick="@(() => Nav.NavigateTo($"/administrator/orders/{o.OrderId}"))"
                                     style="cursor: pointer">
@@ -163,7 +172,7 @@
 
 
 
-                    @if (p.Configurations == null || p.Configurations.Count == 0)
+                    @if (ConfigurationDtos == null || ConfigurationDtos.Count == 0)
                     {
                         <p>Keine Konfigurationen vorhanden.</p>
                     }
@@ -180,13 +189,13 @@
                             </thead>
 
                             <tbody>
-                            @foreach (var c in p.Configurations)
+                            @foreach (var c in ConfigurationDtos)
                             {
-                                <tr @onclick="@(() => Nav.NavigateTo($"/configurator/{c.CarId}/?configId={c.Id}"))"
+                                <tr @onclick="@(() => Nav.NavigateTo($"/configurator/{c.CarId}/?configId={c.ConfigurationId}"))"
                                     style="cursor: pointer">
                                     <td>@c.Name</td>
-                                    <td>@c.Car.Name</td>
-                                    <td>@c.Products.Count</td>
+                                    <td>@c.CarName</td>
+                                    <td>@c.ProductCount</td>
                                 </tr>
                             }
                             </tbody>
@@ -211,12 +220,17 @@
 
 @code {
     [Parameter] public int Id { get; set; }
-
-    public Customer? p { get; set; }
+    public List<ConfigurationCarItemsDto> ConfigurationDtos = new List<ConfigurationCarItemsDto>();
+    public List<DeliveryAddressDto> DeliveryAddressDtos = new List<DeliveryAddressDto>();
+    public List<OrderDto> OrderDtos = new List<OrderDto>();
+    public CustomerDto? p { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        p = await AdminService.GetCustomerByIdIncludeAllAsync(Id);
+        p = await AdminService.GetCustomerByIdAsync(Id);
+        ConfigurationDtos = await ConfiguratorService.GetConfigurationsBasicsCustomerAsync(p.Id);
+        DeliveryAddressDtos = await CustomerService.GetUserAddressesAsync(p.Id);
+        OrderDtos = await OrderService.GetUserOrdersAsync(p.Id);
     }
 
     private void LockCustomer()
@@ -243,7 +257,12 @@
 
     async Task ConfirmDelete()
     {
-        await AdminService.DeleteCustomerAsync(p);
+        bool success = await ToastExecutor.RunAsync(() => CustomerService.CanBeDeletedAsync(p.Id));
+        if (success)
+        {
+            await AdminService.DeleteCustomerAsync(p);
+        }
+
         showDeleteModal = false;
         Nav.NavigateTo("/administrator/customers");
 

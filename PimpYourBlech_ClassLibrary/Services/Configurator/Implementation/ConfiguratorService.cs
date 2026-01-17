@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using PimpYourBlech_ClassLibrary.Entities;
-using PimpYourBlech_ClassLibrary.Enums;
-using PimpYourBlech_ClassLibrary.Inventories;
+using PimpYourBlech_Contracts.DTOs;
+using PimpYourBlech_Contracts.EntityDTOs;
+using PimpYourBlech_Contracts.Enums;
+using PimpYourBlech_Data.Inventories;
+using PimpYourBlech_Data.Models;
 
 namespace PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 
@@ -10,54 +12,104 @@ public class ConfiguratorService : IConfiguratorService
 {
 
     private readonly ICustomerInventory _customerInventory;
-    private readonly IProductInventory productInventory;
-    private readonly ICarInventory carInventory;
+    private readonly IProductInventory _productInventory;
+    private readonly ICarInventory _carInventory;
+    private readonly IConfigurationInventory _configurationInventory;
 
     public ConfiguratorService(
         ICustomerInventory customers,
         IProductInventory products,
-        ICarInventory cars
+        ICarInventory cars,
+        IConfigurationInventory configurations
     )
     {
         _customerInventory = customers;
-        productInventory = products;
-        carInventory = cars;
+        _productInventory = products;
+        _carInventory = cars;
+        _configurationInventory = configurations;
     }
-    public Configuration StartNewConfiguration(Customer customer, Car car,string name)
+    public async Task<ConfigurationDto> StartNewConfiguration(CustomerDto customer, CarDto car, string name)
     {
         var config = new Configuration
         {
             Name = name,
-            Car = car,
+            CarId = car.Id,
             CustomerId = customer.Id,
         };
-        _customerInventory.AddConfiguration(config);
-        customer.Configurations.Add(config);
-        return config;
+        await _configurationInventory.AddConfigurationAsync(config);
+
+        return new ConfigurationDto
+        {
+            Name = name,
+            CarId = car.Id,
+            CustomerId = customer.Id,
+            Id = config.Id
+        };
     }
-    public List<Configuration> GetAllConfigurationsForCustomer(int customerId)
+    public async Task<List<ConfigurationDto>> GetAllConfigurationsForCustomerAsync(int customerId)
     {
-        return _customerInventory.GetConfigurationsForCustomer(customerId);
+        var configs =  await _customerInventory.GetConfigurationsForCustomer(customerId);
+        return configs.ConvertAll(p => new ConfigurationDto
+        {
+            Name = p.Name,
+            CarId = p.CarId,
+            CustomerId = p.CustomerId,
+            Id = p.Id
+        });
     }
-    public async Task<Car> GetCarByIdAsync(int carId)
+    public async Task<CarDto> GetCarByIdAsync(int carId)
     {
-        return await carInventory.GetCarByIdAsync(carId);
+        var car = await _carInventory.GetCarByIdAsync(carId);
+        return car != null ? new CarDto
+        {
+            Id = car.Id,
+            Brand = car.Brand,
+            DatePermit = car.DatePermit,
+            DateProduction = car.DateProduction,
+            Price = car.Price,
+            PS = car.PS,
+            Model = car.Model,
+            Name = car.Name,
+            Quantity = car.Quantity,
+        } : null;
         
 
     }
     
     public async Task AddProduct(int configurationId, int productId)
     {
-        if (productId == 0||configurationId == 0)
+        if (productId == 0 || configurationId == 0)
+        {
             return;
-        var configuration = GetConfigurationById(configurationId);
+        }
+
+        var configuration = await GetConfigurationByIdAsync(configurationId);
         if (configuration == null)
+        {
+
             return;
-        
-        var product = GetProductById(productId);
-        
-        var existingProduct = configuration.Products
-            .FirstOrDefault(p => p.ProductType == product.ProductType);
+        }
+
+        var product = await _productInventory.GetProductByIdAsync(productId);
+        if (product == null)
+        {
+
+            var productDto = new ProductDto
+            {
+                ArticleNumber = product.ArticleNumber,
+                Name = product.Name,
+                CarId = product.CarId,
+                Brand = product.Brand,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price,
+                ProductId = product.ProductId,
+                ProductType = product.ProductType,
+                Quantity = product.Quantity,
+            };
+        }
+        var products = await GetRegisteredProductsAsync(configurationId);
+        var existingProduct = products.FirstOrDefault(p => p.ProductType == product.ProductType);
 
         if (product.ProductType == ProductType.Lack
             || product.ProductType == ProductType.Felge
@@ -66,103 +118,257 @@ public class ConfiguratorService : IConfiguratorService
             if (existingProduct?.ProductId == product.ProductId)
                 return;
             if (existingProduct != null)
-                configuration.Products.Remove(existingProduct);
+            {
+                await RemoveProduct(configurationId, existingProduct.ProductId);
+
+            }
+           
         }
         else
         {
             if (existingProduct?.ProductId == product.ProductId)
             {
-                configuration.Products.Remove(existingProduct);
+                await RemoveProduct(configurationId, product.ProductId);
                 return;
             }
         }
-        configuration.Products.Add(product);
-        SaveConfigurations();
+        await _configurationInventory.AddProduct(configurationId, product.ProductId);
+        
+        await _configurationInventory.UpdateConfigurationAsync(configuration.Id);  
     
     }
+   
+  /* public async Task AddProduct(int configurationId, int productId)
+   {
+       if (configurationId <= 0 || productId <= 0)
+           return;
+
+       var product = await _productInventory.GetProductByIdAsync(productId);
+       if (product is null)
+           return;
+
+       var existing = await _configurationInventory.GetProductByType(configurationId, product.ProductType);
+
+       bool exclusive = product.ProductType is
+           ProductType.Lack or
+           ProductType.Felge or
+           ProductType.Motor;
+
+       if (exclusive)
+       {
+           if (existing?.ProductId == productId)
+               return;
+
+           if (existing is not null)
+               await _configurationInventory.RemoveProduct(configurationId, existing.ProductId);
+
+           await _configurationInventory
+               .AddProduct(configurationId, productId);
+       }
+       else
+       {
+           if (existing?.ProductId == productId)
+           {
+               await _configurationInventory
+                   .RemoveProduct(configurationId, productId);
+               return;
+           }
+
+           await _configurationInventory
+               .AddProduct(configurationId, productId);
+       }
+   }*/
 
     //Preisberechnung
-    public decimal CalculateTotalPrice(Configuration configuration)
+    public async  Task<decimal> CalculateTotalPriceAsync(ConfigurationDto configuration)
     {
-        decimal carPrice = configuration.Car?.Price ?? 0;
-        decimal productTotal = configuration.Products.Sum(p => p.Price);
+        var config = await _configurationInventory.GetConfigurationByIdAsync(configuration.Id);
+        var car = await _carInventory.GetCarByIdAsync(configuration.CarId);
+        decimal carPrice = car.Price;
+        var products = await _configurationInventory.GetAllProductsAsync(configuration.Id);
+        decimal productTotal = products.Sum(p => p.Price);
         
         return carPrice + productTotal;
     }
 
-    //Config Speicher
-    public void SaveConfiguration(Configuration configuration)
+    public async Task SaveConfigurationAsync(ConfigurationDto configuration, CustomerDto customer)
     {
-        SaveConfigurations();
-    }
+        if (configuration.Id == 0)
+        {
+            Console.WriteLine("No configuration found. new initialiozed");
 
-    public void SaveConfiguration(Configuration configuration, Customer customer)
-    {
-        if (!customer.Configurations.Contains(configuration))
-            customer.Configurations.Add(configuration);
+            var config = new Configuration
+            {
+                Id = configuration.Id,
+                Name = configuration.Name,
+                CarId = configuration.CarId,
+                CustomerId = customer.Id,
+            };
+            await _configurationInventory.AddConfigurationAsync(config);
+        }
+        else
+        {
+            var existing = await _configurationInventory.GetConfigurationByIdAsync(configuration.Id);
+            if (existing is not null)
+            {
+                existing.Name = configuration.Name;
+               await _configurationInventory.UpdateConfigurationAsync(configuration.Id);
+            }
+        }
         
-        SaveConfigurations();
     }
-    public void DeleteConfiguration(Configuration configuration)
+    public async Task DeleteConfiguration(ConfigurationDto configuration)
     {
-            _customerInventory.DeleteConfiguration(configuration);
+           await _configurationInventory.DeleteConfigurationAsync(configuration.Id);
     }
 
-    public List<Configuration> GetAllConfigurations(Customer customer)
+    public async Task RemoveProduct(int configurationId, int productId)
     {
-        return customer.Configurations;
+        await _configurationInventory.RemoveProductAsync(configurationId, productId);
+    }
+    public async Task<List<ConfigurationDto>> GetAllConfigurations(CustomerDto customer)
+    {
+       var configs =  await _configurationInventory.GetConfigurationsForCustomerAsync(customer.Id);
+       return configs.ConvertAll(p => new ConfigurationDto
+       {
+           Name = p.Name,
+           CarId = p.CarId,
+           CustomerId = p.CustomerId,
+           Id = p.Id
+       });
     }
 
    
 
-    public void SaveConfigurations()
+    
+
+    public async Task<List<ProductDto>> ListEnginesAsync()
     {
-        _customerInventory.UpdateCustomers();
+        var engines = await _productInventory.ListEnginesAsync();
+        return engines.ConvertAll(p => new ProductDto
+        {
+            ArticleNumber = p.ArticleNumber,
+            Name = p.Name,
+            CarId = p.CarId,
+            Brand = p.Brand,
+            Description = p.Description,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            ProductId = p.ProductId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        });
     }
 
-    public List<Product> ListEngines()
+    public async Task<List<ProductDto>> ListRimsAsync()
     {
-        return productInventory.ListEngines();
+        var rims = await _productInventory.ListEnginesAsync();
+        return rims.ConvertAll(p => new ProductDto
+        {
+            ArticleNumber = p.ArticleNumber,
+            Name = p.Name,
+            CarId = p.CarId,
+            Brand = p.Brand,
+            Description = p.Description,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            ProductId = p.ProductId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        });
     }
 
-    public List<Product> ListRims()
+    public async Task<List<CarDto>> ListCarsAsync()
     {
-       return productInventory.ListRims();
+        var cars = await _carInventory.ListCarsAsync();
+        return cars.ConvertAll(p => new CarDto
+            {
+                Name = p.Name,
+                Quantity = p.Quantity,
+                Brand = p.Brand,
+                Model = p.Model,
+                DatePermit = p.DatePermit,
+                DateProduction = p.DateProduction,
+                Price = p.Price,
+                PS = p.PS,
+                Id = p.Id,
+            }
+        );
     }
 
-    public async Task<List<Car>> ListCarsAsync()
+    public async Task<ConfigurationDto> GetConfigurationByIdAsync(int configurationId)
     {
-        return await carInventory.ListCarsAsync();
+        var config = await _configurationInventory.GetConfigurationByIdAsync(configurationId);
+        return config != null ? new ConfigurationDto
+        {
+            Name = config.Name,
+            CarId = config.CarId,
+            CustomerId = config.CustomerId,
+            Id = config.Id,
+        } : null;
     }
 
-    public Configuration GetConfigurationById(int Id)
+    public async Task<List<ProductDto>> GetAvailableColorsAsync(int Id)
     {
-       return _customerInventory.ListConfigurations()
-           .FirstOrDefault(c => c.Id == Id);
+        var colors = await _carInventory.GetAvailableColorsAsync(Id);
+        return colors.ConvertAll(p => new ProductDto
+        {
+            ArticleNumber = p.ArticleNumber,
+            Name = p.Name,
+            CarId = p.CarId,
+            Brand = p.Brand,
+            Description = p.Description,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            ProductId = p.ProductId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        });
     }
 
-    public async Task<List<Product>> GetAvailableColorsAsync(int Id)
+    public async Task<List<ProductDto>> GetAvailableEnginesAsync(int carId)
     {
-        return await carInventory.GetAvailableColorsAsync(Id);
+        var engines = await _carInventory.GetAvailableEnginesAsync(carId);
+        return engines.ConvertAll(p => new ProductDto
+            {
+                ArticleNumber = p.ArticleNumber,
+                Name = p.Name,
+                CarId = p.CarId,
+                Brand = p.Brand,
+                Description = p.Description,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                ProductId = p.ProductId,
+                ProductType = p.ProductType,
+                Quantity = p.Quantity,
+                Ps = p.EngineDetail.Ps,
+                Kw = p.EngineDetail.Kw,
+                Gear = p.EngineDetail.Gear,
+                Fuel = p.EngineDetail.Fuel,
+                Displacement = p.EngineDetail.Displacement,
+            }
+        );
     }
 
-    public async Task<List<Product>> GetAvailableEnginesAsync(int carId)
+    public async Task<List<ProductDto>> GetAvailableRims(int carId)
     {
-        return ListEngines()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Motor)
-            .ToList();
+        var engines = await _carInventory.GetAvailableEnginesAsync(carId);
+        return engines.ConvertAll(p => new ProductDto
+            {
+                ArticleNumber = p.ArticleNumber,
+                Name = p.Name,
+                CarId = p.CarId,
+                Brand = p.Brand,
+                Description = p.Description,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                ProductId = p.ProductId,
+                ProductType = p.ProductType,
+                Quantity = p.Quantity,
+            }
+        );
     }
-
-    public List<Product> GetAvailableRims(int carId)
-    {
-        return ListRims()
-            .Where(p => p.CarId == carId && p.ProductType == ProductType.Felge)
-            .ToList();
-    }
-    public Product GetProductById(int Id)
-    {
-        return productInventory.ListProducts().FirstOrDefault(p => p.ProductId == Id);
-    }
+    
     
     public string GetGearDisplayName(Gear gear)
     {
@@ -172,27 +378,103 @@ public class ConfiguratorService : IConfiguratorService
             .Name ?? gear.ToString();
     }
 
-    public List<Product> GetAvailableExtras(int carId)
+    public async Task<List<ProductDto>> GetAvailableExtras(int carId)
     {
-        return productInventory.ListProducts().Where(p => p.CarId == carId)
-            .Where(p=>p.ProductType!=ProductType.Lack&&p.ProductType!=ProductType.Motor&&p.ProductType!=ProductType.Felge).ToList();
+    var extras = await _carInventory.GetAvailableExtrasAsync(carId);
+    return extras.ConvertAll(p => new ProductDto
+        {
+            ArticleNumber = p.ArticleNumber,
+            Name = p.Name,
+            CarId = p.CarId,
+            Brand = p.Brand,
+            Description = p.Description,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            ProductId = p.ProductId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        }
+    );
     }
 
-    public async Task<List<Product>> GetAvailableProductsAsync(int carId, ProductType type)
+    public async Task<List<ProductDto>> GetAvailableProductsAsync(int carId, ProductType type)
     {
-        return await carInventory.GetAvailableProductsAsync(carId, type);
+       var products =  await _carInventory.GetAvailableProductsAsync(carId, type);
+       return products.ConvertAll(p => new ProductDto
+           {
+               ArticleNumber = p.ArticleNumber,
+               Name = p.Name,
+               CarId = p.CarId,
+               Brand = p.Brand,
+               Description = p.Description,
+               ImageUrl = p.ImageUrl,
+               Price = p.Price,
+               ProductId = p.ProductId,
+               ProductType = p.ProductType,
+               Quantity = p.Quantity,
+           }
+       );
     }
 
     public async Task<bool> ConfigurationAvailable(int carId)
     {
-        return !(await carInventory.GetAvailableProductsAsync(carId, ProductType.Lack)).Any() ||
-               !(await carInventory.GetAvailableProductsAsync(carId, ProductType.Motor)).Any() ||
-               !(await carInventory.GetAvailableProductsAsync(carId, ProductType.Felge)).Any()
+        return !(await _carInventory.GetAvailableProductsAsync(carId, ProductType.Lack)).Any() ||
+               !(await _carInventory.GetAvailableProductsAsync(carId, ProductType.Motor)).Any() ||
+               !(await _carInventory.GetAvailableProductsAsync(carId, ProductType.Felge)).Any()
                ;
     }
 
-    public async Task<List<Car>> GetAvailableCarsAsync()
+    public async Task<List<CarDto>> GetAvailableCarsAsync()
     {
-        return await carInventory.ListCarsForConfigurationsAsync();
+        var cars = await _carInventory.ListCarsForConfigurationsAsync();
+        return cars.ConvertAll(c => new CarDto
+        {
+            Name = c.Name,
+            Quantity = c.Quantity,
+            Brand = c.Brand,
+            Model = c.Model,
+            DatePermit = c.DatePermit,
+            DateProduction = c.DateProduction,
+            Price = c.Price,
+            PS = c.PS,
+            Id = c.Id,
+        });
+    }
+
+    public Task<List<ConfigurationCarItemsDto>> GetConfigurationBasicsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<List<ConfigurationCarItemsDto>> GetConfigurationsBasicsCustomerAsync(int customerId)
+    {
+        var configurations = await _configurationInventory.GetConfigurationsIncludeCarProductsAsync(customerId);
+        return configurations.ConvertAll(c => new ConfigurationCarItemsDto
+        {
+            Name = c.Name,
+            CarId = c.CarId,
+            CarName = c.Car.Name,
+            ConfigurationId = c.Id,
+            ProductCount = c.Products.Count,
+
+        });
+    }
+
+    public async Task<List<ProductDto>> GetRegisteredProductsAsync(int configId)
+    {
+        var config = await _configurationInventory.GetAllProductsAsync(configId);
+        return config.ConvertAll(p => new ProductDto
+        {
+            ArticleNumber = p.ArticleNumber,
+            Name = p.Name,
+            CarId = p.CarId,
+            Brand = p.Brand,
+            Description = p.Description,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            ProductId = p.ProductId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        });
     }
 }

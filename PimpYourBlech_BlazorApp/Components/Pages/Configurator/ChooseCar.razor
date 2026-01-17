@@ -1,8 +1,9 @@
 ﻿@page "/configurator/ChooseCar"
 <PageTitle>Choose your Car</PageTitle>
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IConfiguratorService ConfiguratorService
 @inject NavigationManager Nav
 @inject IImageService ImageService
@@ -49,7 +50,7 @@ else
 }
 </div>
 @code {
-    private List<Car> cars = new();
+    private List<CarDto> cars = new();
     
     protected override async Task OnInitializedAsync()
     {

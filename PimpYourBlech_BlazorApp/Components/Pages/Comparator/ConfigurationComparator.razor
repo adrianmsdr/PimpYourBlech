@@ -1,6 +1,6 @@
-@using PimpYourBlech_ClassLibrary.Entities
 @using PimpYourBlech_ClassLibrary.Services.Comparator
 @using PimpYourBlech_ClassLibrary.Services.Comparator.Models
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IComparatorService ComparatorService
 
 @if (SelectedConfigurations == null || SelectedConfigurations.Count < 2)
@@ -38,5 +38,5 @@ else
 }
 @code {
     [Parameter]
-    public List<Configuration> SelectedConfigurations { get; set; } = new();
+    public List<ConfigurationDto> SelectedConfigurations { get; set; } = new();
 }
