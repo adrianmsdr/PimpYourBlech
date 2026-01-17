@@ -343,42 +343,28 @@ public class OrderService : IOrderService
 
         // Normalisieren
         var plz = postalCode.Trim();
-
-        // Optional: "CH-8000", "AT-1010", "DE-10115" tolerieren
-        plz = plz.Replace(" ", "");
-        if (plz.Contains('-'))
-        {
-            var parts = plz.Split('-', StringSplitOptions.RemoveEmptyEntries);
-            plz = parts.Length == 2 ? parts[1] : plz;
-        }
+        
 
         if (!plz.All(char.IsDigit))
             return false;
-
-        var c = country.Trim().ToUpperInvariant();
-
-        // Du musst definieren, was in address.Country steht:
-        // "DE" / "AT" / "CH" ODER "Deutschland" / "Österreich" / "Schweiz"
-        // Ich fange beides ab:
-        return c switch
+        
+        return country switch
         {
-            "DE" or "DEUTSCHLAND" => plz.Length == 5,
-            "AT" or "ÖSTERREICH" or "OESTERREICH" => plz.Length == 4,
-            "CH" or "SCHWEIZ" => plz.Length == 4,
-            "LI" or "LIECHTENSTEIN" => plz.Length == 4,
+            "DE"  => plz.Length == 5,
+            "AT"  => plz.Length == 4,
+            "CH"  => plz.Length == 4,
             _ => false
         };
     }
 
     private static bool IsValidHouseNumber(string houseNumber)
-    {
-        // Minimale, praxistaugliche Logik ohne Regex:
+    { 
         // Erst Ziffern, optional 1 Buchstabe am Ende.
         int i = 0;
         while (i < houseNumber.Length && char.IsDigit(houseNumber[i])) i++;
 
         if (i == 0) return false;                 // muss mit Zahl anfangen
-        if (i == houseNumber.Length) return true; // nur Zahl OK
+        if (i == houseNumber.Length) return true; // nur Zahl 
 
         // genau 1 Buchstabe am Ende, sonst Müll
         return i == houseNumber.Length - 1 && char.IsLetter(houseNumber[i]);
@@ -446,7 +432,6 @@ public class OrderService : IOrderService
         // Bankcode (4 Buchstaben)
         if (!bic[..4].All(char.IsLetter))
             return false;
-
         // Ländercode (2 Buchstaben)
         if (!bic.Substring(4, 2).All(char.IsLetter))
             return false;
@@ -454,11 +439,7 @@ public class OrderService : IOrderService
         // Ortscode (2 Alphanum)
         if (!bic.Substring(6, 2).All(char.IsLetterOrDigit))
             return false;
-
-        // Filialcode optional (3 Alphanum)
-        if (bic.Length == 11 && !bic.Substring(8, 3).All(char.IsLetterOrDigit))
-            return false;
-
+        
         return true;
     }
 }
