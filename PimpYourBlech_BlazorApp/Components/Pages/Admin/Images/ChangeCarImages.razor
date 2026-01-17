@@ -3,11 +3,11 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services.Images
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_Contracts.EntityDTOs
-@inject IAdminService AdminService
 @inject IImageService ImageService
 @inject NavigationManager Nav
+@inject ICarService CarService
 @inject IToastService ToastService
 @inject ILogger<ChangeCarImages> Logger
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
@@ -162,7 +162,7 @@
     protected override async Task OnInitializedAsync()
     {
         Logger.LogInformation("Admin opened 360 image management page");
-        cars = await AdminService.GetCarsAsync();
+        cars = await CarService.GetCarsAsync();
     }
 
     private void HandleFilesSelected(InputFileChangeEventArgs e)
@@ -180,8 +180,8 @@
 
         if (selectedCarId == 0) return;
 
-        Colors = await AdminService.GetAvailableColors(selectedCarId);
-        Rims = await AdminService.GetAvailableRims(selectedCarId);
+        Colors = await CarService.GetAvailableColors(selectedCarId);
+        Rims = await CarService.GetAvailableRims(selectedCarId);
     }
 
     private void OnCarImageSelected(InputFileChangeEventArgs e)
@@ -256,7 +256,7 @@
     {
         if (selectedCarId == 0) return;
 
-        ImageService.Delete360ImagesAsync(selectedCarId, colorId, rimId);
+        ImageService.Delete360Images(selectedCarId, colorId, rimId);
            ToastService.ShowError("Frames wurden gelöscht"); 
            
            Logger.LogInformation(

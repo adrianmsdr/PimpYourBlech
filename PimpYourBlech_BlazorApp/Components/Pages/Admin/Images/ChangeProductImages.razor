@@ -4,11 +4,11 @@
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Products
 @using PimpYourBlech_Contracts.EntityDTOs
 <PageTitle>Produktbilder bearbeiten</PageTitle>
 @inject IImageService ImageService
-@inject IAdminService AdminService
+@inject IProductService ProductService
 @inject IToastService ToastService
 @inject ILogger<ChangeProductImages> Logger
 
@@ -55,7 +55,7 @@
     protected override void OnInitialized()
     {
         Logger.LogInformation("Admin opened product image management page");
-        products = AdminService.GetProducts();
+        products = ProductService.GetProducts();
     }
 
     private void OnProductImageSelected(InputFileChangeEventArgs e)
@@ -72,7 +72,7 @@
             SelectedProductId
         );
 
-        await ImageService.SaveProductImagesAsync(SelectedProductId, uploadedProductImage);
+        await ImageService.SaveProductImageAsync(SelectedProductId, uploadedProductImage);
 
         ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
         

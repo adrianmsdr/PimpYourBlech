@@ -442,4 +442,50 @@ public class OrderService : IOrderService
         
         return true;
     }
+    
+    public async Task<List<OrderDto>> GetOrdersAsync()
+    {
+        var orders = await _customerInventory.GetOrdersAsync();
+        return orders.ConvertAll(p => new OrderDto
+            {
+                CustomerId = p.CustomerId,
+                OrderId = p.OrderId,
+                OrderDate = p.OrderDate,
+                TotalPrice = p.TotalPrice,
+                DeliveryAddressId = p.DeliveryAddressId,
+                PaymentValueId = p.PaymentValueId,
+            }
+        );
+    }
+
+    public async Task<OrderDto> GetOrderByIdAsync(int id)
+    {
+        var order = await _customerInventory.GetOrderByIdAsync(id);
+        return order != null ? new OrderDto
+        {
+            CustomerId = order.CustomerId,
+            OrderId = order.OrderId,
+            OrderDate = order.OrderDate,
+            TotalPrice = order.TotalPrice,
+            DeliveryAddressId = order.DeliveryAddressId,
+            PaymentValueId = order.PaymentValueId,
+        } : null;
+    }
+
+    public async Task<List<OrderPositionDto>> GetOrderItemsAsync(int id)
+    {
+        var orderitems = await _customerInventory.GetOrderItemsAsync(id);
+        return orderitems.ConvertAll(p => new OrderPositionDto
+            {
+                OrderId = p.OrderId,
+                OrderPositionId = p.OrderPositionId,
+                ArticleNumber = p.ArticleNumber,
+                Name = p.Name,
+                Brand = p.Brand,
+                Type = p.Type,
+                UnitPrice = p.UnitPrice,
+                Quantity = p.Quantity,
+            }
+        );
+    }
 }

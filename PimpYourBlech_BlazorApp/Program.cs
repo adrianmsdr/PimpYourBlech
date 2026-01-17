@@ -6,7 +6,8 @@ using PimpYourBlech_BlazorApp.Services.Images;
 using PimpYourBlech_BlazorApp.Services.Toasts;
 using PimpYourBlech_BlazorApp.Services.Toasts.Implementation;
 using PimpYourBlech_ClassLibrary.Factories;
-using PimpYourBlech_ClassLibrary.Services.Admin;
+using PimpYourBlech_ClassLibrary.Services.Cars;
+using PimpYourBlech_ClassLibrary.Services.Cars.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Carts;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
@@ -84,9 +85,9 @@ builder.Services.AddScoped<IOrderInventory>(sp =>
 });
 
 // 6) Services
-builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IConfiguratorService, ConfiguratorService>();
 builder.Services.AddScoped<IComparatorService, ComparatorService>();
 builder.Services.AddScoped<IShopService, ShopService>();

@@ -4,10 +4,11 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Products
 @using PimpYourBlech_Contracts.EntityDTOs
-@inject IAdminService AdminService
 @inject NavigationManager Nav
+@inject IProductService ProductService
+
 @inject IToastService ToastService
 @inject ILogger<EditProduct> Logger
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
@@ -90,7 +91,7 @@
             Id
         );
 
-        Product = await AdminService.GetProductByIdAsync(Id);
+        Product = await ProductService.GetProductByIdAsync(Id);
         if (Product is null)
         {
             Logger.LogWarning(
@@ -136,7 +137,7 @@
         Product.Description = EditModel.Description;
 
         // Persistieren
-        await AdminService.UpdateProductAsync(Product);
+        await ProductService.UpdateProductAsync(Product);
         
         Logger.LogInformation(
             "Admin successfully updated product with ProductId={ProductId}",

@@ -31,4 +31,10 @@ public interface IOrderService
    
    public Task<DeliveryAddressDto?> GetDeliveryAddressForOrderAsync(int orderId);
    
+   public Task<List<OrderDto>> GetOrdersAsync();
+   
+   public Task<OrderDto> GetOrderByIdAsync(int id);
+
+   public Task<List<OrderPositionDto>> GetOrderItemsAsync(int id);
+   
 }

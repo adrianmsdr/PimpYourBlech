@@ -1,8 +1,8 @@
 ﻿@page "/BuySuccessfull"
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Carts
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
@@ -13,8 +13,9 @@
 @inject ICartService CartService
 @inject IUserSession UserSession
 @inject IOrderService OrderService
-@inject IAdminService AdminService
 @inject ILogger<BuySuccessfull> Logger
+@inject ICustomerService CustomerService
+
 
 <PageTitle>Kauf erfolgreich</PageTitle>
 
@@ -60,7 +61,7 @@
             UserSession.CurrentUserId
         );
 
-        c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
     }
 
     private void GoBackToHomepage()

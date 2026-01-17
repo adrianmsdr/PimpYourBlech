@@ -99,7 +99,7 @@ public class ImageService: IImageService
             return $"/ProductImages/{productId}/{Path.GetFileName(file)}";
         }
 
-        public async Task<string> SaveProductImagesAsync(int productId, IBrowserFile file)
+        public async Task<string> SaveProductImageAsync(int productId, IBrowserFile file)
         {
             // Zielordner für das Produkt
             var folder = Path.Combine(_env.WebRootPath, "ProductImages", productId.ToString());
@@ -125,7 +125,7 @@ public class ImageService: IImageService
             return "/" + relativePath;
         }
 
-        public bool DeleteCarImagesAsync(int carId)
+        public bool DeleteCarImages(int carId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
@@ -145,7 +145,7 @@ public class ImageService: IImageService
               
             }
         }
-        public bool DeleteProductImagesAsync(int ProductId)
+        public bool DeleteProductImage(int ProductId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "ProductImages", ProductId.ToString());
@@ -167,7 +167,7 @@ public class ImageService: IImageService
 
        
         
-        public bool Delete360ImagesAsync(int carId, int colorId, int rimId)
+        public bool Delete360Images(int carId, int colorId, int rimId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "Combos", colorId.ToString(), rimId.ToString());

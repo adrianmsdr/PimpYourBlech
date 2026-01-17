@@ -8,7 +8,8 @@
 @inject IUserSession UserSession
 @inject IOrderService OrderService
 @inject IEmailService EmailService
-@inject IAdminService AdminService
+@inject ICustomerService CustomerService
+
 @inject ILogger<ConfirmCheckoutPage> Logger
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_ClassLibrary.Services.Carts
@@ -16,8 +17,8 @@
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services.Images
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_Contracts.EntityDTOs
 
@@ -157,7 +158,7 @@
             UserSession.CurrentUserId
         );
 
-        c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         da = await OrderService.GetDeliveryAddressAsync(UserSession.CurrentDeliveryAddressId);
         pv = await OrderService.GetPaymentValueAsync(UserSession.CurrentPaymentValueId);
     }

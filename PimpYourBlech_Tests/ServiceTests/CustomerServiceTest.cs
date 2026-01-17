@@ -1,82 +1,46 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Microsoft.Extensions.Logging;
-using PimpYourBlech_ClassLibrary.Services.Admin;
-using PimpYourBlech_ClassLibrary.Exceptions;
-using PimpYourBlech_Contracts.EntityDTOs;
-using PimpYourBlech_Data.Inventories;
-using PimpYourBlech_Data.Models;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Moq;
+using PimpYourBlech_ClassLibrary.Exceptions;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
+using PimpYourBlech_ClassLibrary.Services.Customers.Implementation;
+using PimpYourBlech_ClassLibrary.Services.Products.Implememtation;
+using PimpYourBlech_Data.Inventories;
+using PimpYourBlech_Data.Models;
 
-/* Hier wird mit Moq ein Objekt zur Laufzeit erzeugt, das:
-
-    -das Interface implementiert
-
-    -exakt das zurückgibt, was du vorgibst
-
-    -Aufrufe protokolliert
-
- ((  dotnet add package Moq )) */
-
-namespace PimpYourBlech_Tests.Services.Admin;
+namespace PimpYourBlech_Tests.ServiceTests;
 
 [TestClass]
-public class AdminServiceTests
+public class CustomerServiceTest
 {
     // Mocks für alle Abhängigkeiten des AdminService
     private Mock<ICustomerInventory> _customerInventoryMock;
-    private Mock<IProductInventory> _productInventoryMock;
-    private Mock<ICarInventory> _carInventoryMock;
     private Mock<IEmailService> _emailServiceMock;
-    private Mock<ILogger<AdminService>> _loggerMock;
+    private Mock<ILogger<CustomerService>> _loggerCustomerMock;
+    private Mock<IOrderInventory> _orderInventoryMock;
 
-    private AdminService _service;
+    private CustomerService _service;
 
     [TestInitialize]
     public void Setup()
     {
         // Initialisierung der Mocks
         _customerInventoryMock = new Mock<ICustomerInventory>();
-        _productInventoryMock = new Mock<IProductInventory>();
-        _carInventoryMock = new Mock<ICarInventory>();
         _emailServiceMock = new Mock<IEmailService>();
-        _loggerMock = new Mock<ILogger<AdminService>>();
+        _loggerCustomerMock = new Mock<ILogger<CustomerService>>();
+        _orderInventoryMock = new Mock<IOrderInventory>();
+        
 
         // Service wird mit gemockten Abhängigkeiten erstellt
-        _service = new AdminService(
+        _service = new CustomerService(
             _customerInventoryMock.Object,
-            _productInventoryMock.Object,
-            _carInventoryMock.Object,
+            _orderInventoryMock.Object,
             _emailServiceMock.Object,
-            _loggerMock.Object
+            _loggerCustomerMock.Object
         );
     }
-
-    // ------------------------------------------------------
-    // DeleteCarAsync
-    // ------------------------------------------------------
-
-    [TestMethod]
-    public async Task DeleteCarAsync_ThrowsException_WhenProductsExist()
-    {
-        // Arrange: Fahrzeug-Daten
-        var carDto = new CarDto { Id = 1 };
-
-        // Das Fahrzeug besitzt noch mindestens ein Produkt
-        _productInventoryMock
-            .Setup(p => p.GetProductsForCarsAsync(1))
-            .ReturnsAsync(new List<Product> { new() });
-
-        // Act & Assert: Löschen ist fachlich verboten
-        await Assert.ThrowsExceptionAsync<ForbiddenActionException>(
-            () => _service.DeleteCarAsync(carDto)
-        );
-    }
-
+    
     // ------------------------------------------------------
     // EnsurePasswordAvailable
     // ------------------------------------------------------
@@ -98,7 +62,7 @@ public class AdminServiceTests
             _service.EnsurePasswordAvailable("short", "short")
         );
     }
-
+    
     // ------------------------------------------------------
     // CustomerLoginAsync
     // ------------------------------------------------------
@@ -132,7 +96,7 @@ public class AdminServiceTests
         Assert.AreEqual(customer.Id, result.Id);
         Assert.AreEqual(customer.Username, result.Username);
     }
-
+    
     [TestMethod]
     public async Task CustomerLoginAsync_ThrowsException_WhenPasswordIsWrong()
     {

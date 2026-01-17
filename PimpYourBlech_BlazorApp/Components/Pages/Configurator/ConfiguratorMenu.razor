@@ -1,19 +1,18 @@
 @page "/configurator/{id:int}"
 <PageTitle>Configurator</PageTitle>
-
 @using System.Globalization
 @using Blazored.Toast.Services
-@using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Session
 @inject IImageService ImageService
 @inject IConfiguratorService ConfiguratorService
 @inject IUserSession UserSession
 @inject NavigationManager Nav
-@inject IAdminService AdminService
 @inject IToastService ToastService
+@inject ICustomerService CustomerService
+
 
 @if (configuration == null)
 {

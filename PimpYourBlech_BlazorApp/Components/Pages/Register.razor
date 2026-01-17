@@ -7,10 +7,10 @@
 @using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Exceptions
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation
-@inject IAdminService AdminService
+@using PimpYourBlech_ClassLibrary.Services.Customers
+@inject ICustomerService CustomerService
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IToastExecutor Executor
@@ -122,7 +122,7 @@
             username
         );
         var loginfo = "Registration failed for username " + username;
-        var succeded = await Executor.RunAsync(() => AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar)
+        var succeded = await Executor.RunAsync(() => CustomerService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar)
             , successMessage: "Registrierung erfolgreich. Bitte melde dich an.", logError: loginfo);
         if (succeded)
         {

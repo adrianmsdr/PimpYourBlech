@@ -1,18 +1,18 @@
 @page "/administrator/products"
 <PageTitle>Administrator/products</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Configurator
+@using PimpYourBlech_ClassLibrary.Services.Products
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Services.Shop.Implementation
 @using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_Contracts.Enums
 @using PimpYourBlech_Contracts.Query
 @using PimpYourBlech_Data.Models
-@inject IAdminService AdminService
 @inject IConfiguratorService ConfiguratorService
 @inject IShopService ShopService
 @inject NavigationManager Nav
+@inject IProductService ProductService
 
 
 <div class="menu-container wide">
@@ -143,7 +143,7 @@
             CarId = selectedCarId == 0 ? null : selectedCarId
         };
 
-        products = await AdminService.ProductListQueryAsync(q);
+        products = await ProductService.ProductListQueryAsync(q);
     }
 
     private void AddProduct()

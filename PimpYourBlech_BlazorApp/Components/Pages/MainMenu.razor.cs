@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using PimpYourBlech_ClassLibrary.Services.Admin;
 using PimpYourBlech_ClassLibrary.Session.State;
 using PimpYourBlech_Contracts.EntityDTOs;
 
@@ -39,7 +38,7 @@ public partial class MainMenu : ComponentBase
         try
         {
 
-            c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+            c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         }
         finally
         {

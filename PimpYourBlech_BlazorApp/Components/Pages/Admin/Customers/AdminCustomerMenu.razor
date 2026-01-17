@@ -1,11 +1,11 @@
 @page "/administrator/customers"
 <PageTitle>Administrator/customers</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_Contracts.Enums
 @using PimpYourBlech_Contracts.Query
-@inject IAdminService AdminService
+@inject ICustomerService CustomerService
 @inject NavigationManager Nav
 
 
@@ -86,7 +86,7 @@
     
     protected override async Task OnInitializedAsync()
     {
-        customers = await AdminService.GetListCustomersAsync();
+        customers = await CustomerService.GetListCustomersAsync();
     }
 
 
@@ -98,7 +98,7 @@
             SortBy = selectedSortOption,
             SearchTerm = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
         };
-        customers = await AdminService.GetFilteredCustomersAsync(q);
+        customers = await CustomerService.GetFilteredCustomersAsync(q);
     }
 
     private void Cancel()

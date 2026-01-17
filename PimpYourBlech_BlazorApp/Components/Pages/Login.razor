@@ -4,14 +4,14 @@
 @using System.Security.Cryptography
 @using System.Text
 @using PimpYourBlech_BlazorApp.Services.Toasts
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.State
-@inject IAdminService AdminService
 @inject IUserSession UserSession
 @inject ILogger<Login> Logger
 @inject NavigationManager Nav
 @inject IToastExecutor ToastExecutor
+@inject ICustomerService CustomerService
 @attribute [Routes.AllowAnonymous]
 
 <PageTitle>LogIn</PageTitle>
@@ -91,7 +91,7 @@
         isLoggingIn = true;
         StateHasChanged();
         var loginfo = "Login failed for username " + username;
-        var c = await ToastExecutor.RunReturnAsync(() => AdminService.CustomerLoginAsync(username, password), logError: loginfo);
+        var c = await ToastExecutor.RunReturnAsync(() => CustomerService.CustomerLoginAsync(username, password), logError: loginfo);
         isLoggingIn = false;
         if (c == null)
         {
