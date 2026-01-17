@@ -80,6 +80,32 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cars");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Brand = "Volkswagen",
+                            DatePermit = "2026",
+                            DateProduction = "2025",
+                            Model = "GTI 2025",
+                            Name = "Golf",
+                            PS = 325,
+                            Price = 45000m,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Brand = "Volkswagen",
+                            DatePermit = "2021",
+                            DateProduction = "2020",
+                            Model = "Polo 2020",
+                            Name = "Polo",
+                            PS = 225,
+                            Price = 25000m,
+                            Quantity = 15
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.ColorDetail", b =>
@@ -103,6 +129,44 @@ namespace PimpYourBlech_Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Colors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Tornadorot",
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DisplayName = "Metallic Weiß Perleffekt",
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DisplayName = "Deep Black Pearl",
+                            ProductId = 17
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DisplayName = "Crystal Ice Blue Metallic",
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DisplayName = "Kings Red Velvet",
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DisplayName = "Urban Grey Metallic",
+                            ProductId = 18
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.CommunityAnswer", b =>
@@ -218,6 +282,20 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AdminRights = true,
+                            FirstName = "Max",
+                            ImagePath = "/CustomerImages/Car1.png",
+                            LastName = "Mustermann",
+                            MailAddress = "mustermail.adresse@mustermail.de",
+                            PasswordHash = "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=",
+                            Telefon = "0123456789",
+                            Username = "MusterMax"
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.DeliveryAddress", b =>
@@ -268,6 +346,21 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("DeliveryAddresses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Country = "Deutschland",
+                            CustomerId = 1,
+                            HouseNumber = "12A",
+                            Lastname = "Mustermann",
+                            PostalCode = "83022",
+                            Salutation = "Herr",
+                            Street = "Musterstraße",
+                            Surname = "Max",
+                            Town = "Rosenheim"
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.EngineDetail", b =>
@@ -303,6 +396,68 @@ namespace PimpYourBlech_Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Engines");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Displacement = "2.0",
+                            Fuel = 0,
+                            Gear = 2,
+                            Kw = 239,
+                            ProductId = 3,
+                            Ps = 325
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Displacement = "2.0",
+                            Fuel = 0,
+                            Gear = 2,
+                            Kw = 265,
+                            ProductId = 4,
+                            Ps = 360
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Displacement = "1.8",
+                            Fuel = 3,
+                            Gear = 2,
+                            Kw = 210,
+                            ProductId = 15,
+                            Ps = 280
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Displacement = "1.0",
+                            Fuel = 0,
+                            Gear = 1,
+                            Kw = 81,
+                            ProductId = 11,
+                            Ps = 110
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Displacement = "1.5",
+                            Fuel = 0,
+                            Gear = 2,
+                            Kw = 110,
+                            ProductId = 12,
+                            Ps = 150
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Displacement = "1.2",
+                            Fuel = 3,
+                            Gear = 2,
+                            Kw = 96,
+                            ProductId = 19,
+                            Ps = 130
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.LightsDetail", b =>
@@ -328,6 +483,50 @@ namespace PimpYourBlech_Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Lights");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsLed = true,
+                            Lumen = 3200,
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsLed = true,
+                            Lumen = 3000,
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsLed = true,
+                            Lumen = 3800,
+                            ProductId = 16
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsLed = true,
+                            Lumen = 2600,
+                            ProductId = 13
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsLed = true,
+                            Lumen = 3100,
+                            ProductId = 14
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsLed = true,
+                            Lumen = 3400,
+                            ProductId = 20
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.Order", b =>
@@ -481,6 +680,296 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("CarId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = 1,
+                            ArticleNumber = "100000",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Sportliche Alufelge mit roten Akzenten.",
+                            Name = "Queenstown Felge",
+                            Price = 1000m,
+                            ProductType = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductId = 2,
+                            ArticleNumber = "100001",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Aerodynamische Premium-Felge für sportliche Fahrweise.",
+                            Name = "Warmenau Performance Felge",
+                            Price = 1200m,
+                            ProductType = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductId = 21,
+                            ArticleNumber = "100011",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Leichte Schmiedefelge mit hoher Stabilität.",
+                            Name = "Pretoria Sport Felge",
+                            Price = 1350m,
+                            ProductType = 1,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductId = 3,
+                            ArticleNumber = "100002",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "325 PS Turbo-Benzinmotor.",
+                            Name = "GTI 2.0 TFSI Performance Motor",
+                            Price = 2500m,
+                            ProductType = 0,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductId = 4,
+                            ArticleNumber = "100003",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Hochleistungsmotor mit Rennsportabstimmung.",
+                            Name = "GTI Clubsport RS Motor",
+                            Price = 3400m,
+                            ProductType = 0,
+                            Quantity = 3
+                        },
+                        new
+                        {
+                            ProductId = 15,
+                            ArticleNumber = "100008",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Effizienter Hybridmotor mit ruhigem Lauf.",
+                            Name = "GTI EcoBoost Hybrid Motor",
+                            Price = 3900m,
+                            ProductType = 0,
+                            Quantity = 4
+                        },
+                        new
+                        {
+                            ProductId = 5,
+                            ArticleNumber = "100004",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Adaptive Matrix-LED-Scheinwerfer.",
+                            Name = "IQ.Light LED Matrix Pro",
+                            Price = 1450m,
+                            ProductType = 2,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductId = 6,
+                            ArticleNumber = "100007",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Sportlicher LED-Scheinwerfer mit dunklem Gehäuse.",
+                            Name = "Dynamic Vision LED Blackline",
+                            Price = 1580m,
+                            ProductType = 2,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductId = 16,
+                            ArticleNumber = "100009",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Extrem helle LED-Scheinwerfer für maximale Sicht.",
+                            Name = "NightDrive LED UltraBeam",
+                            Price = 1750m,
+                            ProductType = 2,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductId = 7,
+                            ArticleNumber = "100005",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Kräftige Sportlackierung.",
+                            Name = "Tornadorot",
+                            Price = 1800m,
+                            ProductType = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductId = 8,
+                            ArticleNumber = "100006",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Eleganter Perlglanz.",
+                            Name = "Metallic Weiß Perleffekt",
+                            Price = 1900m,
+                            ProductType = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductId = 17,
+                            ArticleNumber = "100010",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Tiefschwarze Premium-Lackierung.",
+                            Name = "Deep Black Pearl",
+                            Price = 2100m,
+                            ProductType = 4,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            ProductId = 22,
+                            ArticleNumber = "200010",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Klassische Alufelge für Alltag und Komfort.",
+                            Name = "Astana Felge",
+                            Price = 850m,
+                            ProductType = 1,
+                            Quantity = 12
+                        },
+                        new
+                        {
+                            ProductId = 23,
+                            ArticleNumber = "200011",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Sportliche Mehrspeichenfelge.",
+                            Name = "Bergamo Sport Felge",
+                            Price = 980m,
+                            ProductType = 1,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductId = 24,
+                            ArticleNumber = "200012",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Schwarze Performance-Felge.",
+                            Name = "Verona Black Performance Felge",
+                            Price = 1100m,
+                            ProductType = 1,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductId = 11,
+                            ArticleNumber = "200003",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Effizienter Stadtturbomotor.",
+                            Name = "Polo 1.0 TSI BlueMotion Motor",
+                            Price = 1800m,
+                            ProductType = 0,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductId = 12,
+                            ArticleNumber = "200004",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Sportlicher Turbomotor.",
+                            Name = "Polo 1.5 TSI GT-Line Motor",
+                            Price = 2400m,
+                            ProductType = 0,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductId = 19,
+                            ArticleNumber = "200008",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Hybridantrieb mit niedrigem Verbrauch.",
+                            Name = "Polo 1.2 Hybrid Drive",
+                            Price = 2600m,
+                            ProductType = 0,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductId = 13,
+                            ArticleNumber = "200005",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Gleichmäßige LED-Ausleuchtung.",
+                            Name = "Polo LED Comfort Beam",
+                            Price = 980m,
+                            ProductType = 2,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            ProductId = 14,
+                            ArticleNumber = "200006",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Erweiterte Reichweite bei Nacht.",
+                            Name = "Polo LED NightVision Plus",
+                            Price = 1150m,
+                            ProductType = 2,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            ProductId = 20,
+                            ArticleNumber = "200009",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Blendfreies Fernlicht mit Pixel-Technologie.",
+                            Name = "Polo Adaptive Pixel Light",
+                            Price = 1350m,
+                            ProductType = 2,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            ProductId = 9,
+                            ArticleNumber = "200001",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Kühle Metallic-Lackierung.",
+                            Name = "Crystal Ice Blue Metallic",
+                            Price = 1600m,
+                            ProductType = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductId = 10,
+                            ArticleNumber = "200002",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Edler Rotton mit Tiefenglanz.",
+                            Name = "Kings Red Velvet",
+                            Price = 1700m,
+                            ProductType = 4,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            ProductId = 18,
+                            ArticleNumber = "200007",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Moderne urbane Graulackierung.",
+                            Name = "Urban Grey Metallic",
+                            Price = 1650m,
+                            ProductType = 4,
+                            Quantity = 18
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.RimDetail", b =>
@@ -506,6 +995,50 @@ namespace PimpYourBlech_Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Rims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DiameterInInch = 19m,
+                            ProductId = 1,
+                            WidthInInch = 8m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DiameterInInch = 20m,
+                            ProductId = 2,
+                            WidthInInch = 8.5m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DiameterInInch = 18m,
+                            ProductId = 21,
+                            WidthInInch = 7.5m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DiameterInInch = 16m,
+                            ProductId = 22,
+                            WidthInInch = 6.5m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DiameterInInch = 17m,
+                            ProductId = 23,
+                            WidthInInch = 7.0m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DiameterInInch = 18m,
+                            ProductId = 24,
+                            WidthInInch = 7.5m
+                        });
                 });
 
             modelBuilder.Entity("ConfigurationProduct", b =>
