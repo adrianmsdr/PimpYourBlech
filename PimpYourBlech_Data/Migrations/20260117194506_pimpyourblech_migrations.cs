@@ -4,10 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PimpYourBlech_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class pimpyourblech_migrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -362,6 +364,108 @@ namespace PimpYourBlech_Data.Migrations
                         principalTable: "Orders",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cars",
+                columns: new[] { "Id", "Brand", "DatePermit", "DateProduction", "Model", "Name", "PS", "Price", "Quantity" },
+                values: new object[,]
+                {
+                    { 1, "Volkswagen", "2026", "2025", "GTI 2025", "Golf", 325, 45000m, 20 },
+                    { 2, "Volkswagen", "2021", "2020", "Polo 2020", "Polo", 225, 25000m, 15 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Customers",
+                columns: new[] { "Id", "AdminRights", "FirstName", "ImagePath", "LastName", "MailAddress", "PasswordHash", "Telefon", "Username" },
+                values: new object[] { 1, true, "Max", "/CustomerImages/Car1.png", "Mustermann", "mustermail.adresse@mustermail.de", "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=", "0123456789", "MusterMax" });
+
+            migrationBuilder.InsertData(
+                table: "DeliveryAddresses",
+                columns: new[] { "Id", "Country", "CustomerId", "HouseNumber", "Lastname", "PostalCode", "Salutation", "Street", "Surname", "Town" },
+                values: new object[] { 1, "Deutschland", 1, "12A", "Mustermann", "83022", "Herr", "Musterstraße", "Max", "Rosenheim" });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "ProductId", "ArticleNumber", "Brand", "CarId", "Description", "ImageUrl", "Name", "Price", "ProductType", "Quantity" },
+                values: new object[,]
+                {
+                    { 1, "100000", "Volkswagen", 1, "Sportliche Alufelge mit roten Akzenten.", null, "Queenstown Felge", 1000m, 1, 10 },
+                    { 2, "100001", "Volkswagen", 1, "Aerodynamische Premium-Felge für sportliche Fahrweise.", null, "Warmenau Performance Felge", 1200m, 1, 10 },
+                    { 3, "100002", "Volkswagen", 1, "325 PS Turbo-Benzinmotor.", null, "GTI 2.0 TFSI Performance Motor", 2500m, 0, 5 },
+                    { 4, "100003", "Volkswagen", 1, "Hochleistungsmotor mit Rennsportabstimmung.", null, "GTI Clubsport RS Motor", 3400m, 0, 3 },
+                    { 5, "100004", "Volkswagen", 1, "Adaptive Matrix-LED-Scheinwerfer.", null, "IQ.Light LED Matrix Pro", 1450m, 2, 10 },
+                    { 6, "100007", "Volkswagen", 1, "Sportlicher LED-Scheinwerfer mit dunklem Gehäuse.", null, "Dynamic Vision LED Blackline", 1580m, 2, 8 },
+                    { 7, "100005", "Volkswagen", 1, "Kräftige Sportlackierung.", null, "Tornadorot", 1800m, 4, 20 },
+                    { 8, "100006", "Volkswagen", 1, "Eleganter Perlglanz.", null, "Metallic Weiß Perleffekt", 1900m, 4, 20 },
+                    { 9, "200001", "Volkswagen", 2, "Kühle Metallic-Lackierung.", null, "Crystal Ice Blue Metallic", 1600m, 4, 20 },
+                    { 10, "200002", "Volkswagen", 2, "Edler Rotton mit Tiefenglanz.", null, "Kings Red Velvet", 1700m, 4, 20 },
+                    { 11, "200003", "Volkswagen", 2, "Effizienter Stadtturbomotor.", null, "Polo 1.0 TSI BlueMotion Motor", 1800m, 0, 8 },
+                    { 12, "200004", "Volkswagen", 2, "Sportlicher Turbomotor.", null, "Polo 1.5 TSI GT-Line Motor", 2400m, 0, 6 },
+                    { 13, "200005", "Volkswagen", 2, "Gleichmäßige LED-Ausleuchtung.", null, "Polo LED Comfort Beam", 980m, 2, 10 },
+                    { 14, "200006", "Volkswagen", 2, "Erweiterte Reichweite bei Nacht.", null, "Polo LED NightVision Plus", 1150m, 2, 8 },
+                    { 15, "100008", "Volkswagen", 1, "Effizienter Hybridmotor mit ruhigem Lauf.", null, "GTI EcoBoost Hybrid Motor", 3900m, 0, 4 },
+                    { 16, "100009", "Volkswagen", 1, "Extrem helle LED-Scheinwerfer für maximale Sicht.", null, "NightDrive LED UltraBeam", 1750m, 2, 6 },
+                    { 17, "100010", "Volkswagen", 1, "Tiefschwarze Premium-Lackierung.", null, "Deep Black Pearl", 2100m, 4, 15 },
+                    { 18, "200007", "Volkswagen", 2, "Moderne urbane Graulackierung.", null, "Urban Grey Metallic", 1650m, 4, 18 },
+                    { 19, "200008", "Volkswagen", 2, "Hybridantrieb mit niedrigem Verbrauch.", null, "Polo 1.2 Hybrid Drive", 2600m, 0, 5 },
+                    { 20, "200009", "Volkswagen", 2, "Blendfreies Fernlicht mit Pixel-Technologie.", null, "Polo Adaptive Pixel Light", 1350m, 2, 6 },
+                    { 21, "100011", "Volkswagen", 1, "Leichte Schmiedefelge mit hoher Stabilität.", null, "Pretoria Sport Felge", 1350m, 1, 8 },
+                    { 22, "200010", "Volkswagen", 2, "Klassische Alufelge für Alltag und Komfort.", null, "Astana Felge", 850m, 1, 12 },
+                    { 23, "200011", "Volkswagen", 2, "Sportliche Mehrspeichenfelge.", null, "Bergamo Sport Felge", 980m, 1, 10 },
+                    { 24, "200012", "Volkswagen", 2, "Schwarze Performance-Felge.", null, "Verona Black Performance Felge", 1100m, 1, 6 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Colors",
+                columns: new[] { "Id", "DisplayName", "ProductId" },
+                values: new object[,]
+                {
+                    { 1, "Tornadorot", 7 },
+                    { 2, "Metallic Weiß Perleffekt", 8 },
+                    { 3, "Deep Black Pearl", 17 },
+                    { 4, "Crystal Ice Blue Metallic", 9 },
+                    { 5, "Kings Red Velvet", 10 },
+                    { 6, "Urban Grey Metallic", 18 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Engines",
+                columns: new[] { "Id", "Displacement", "Fuel", "Gear", "Kw", "ProductId", "Ps" },
+                values: new object[,]
+                {
+                    { 1, "2.0", 0, 2, 239, 3, 325 },
+                    { 2, "2.0", 0, 2, 265, 4, 360 },
+                    { 3, "1.8", 3, 2, 210, 15, 280 },
+                    { 4, "1.0", 0, 1, 81, 11, 110 },
+                    { 5, "1.5", 0, 2, 110, 12, 150 },
+                    { 6, "1.2", 3, 2, 96, 19, 130 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Lights",
+                columns: new[] { "Id", "IsLed", "Lumen", "ProductId" },
+                values: new object[,]
+                {
+                    { 1, true, 3200, 5 },
+                    { 2, true, 3000, 6 },
+                    { 3, true, 3800, 16 },
+                    { 4, true, 2600, 13 },
+                    { 5, true, 3100, 14 },
+                    { 6, true, 3400, 20 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rims",
+                columns: new[] { "Id", "DiameterInInch", "ProductId", "WidthInInch" },
+                values: new object[,]
+                {
+                    { 1, 19m, 1, 8m },
+                    { 2, 20m, 2, 8.5m },
+                    { 3, 18m, 21, 7.5m },
+                    { 4, 16m, 22, 6.5m },
+                    { 5, 17m, 23, 7.0m },
+                    { 6, 18m, 24, 7.5m }
                 });
 
             migrationBuilder.CreateIndex(

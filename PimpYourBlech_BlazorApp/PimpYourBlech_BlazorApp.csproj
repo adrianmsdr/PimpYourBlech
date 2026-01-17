@@ -29,5 +29,22 @@
       <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\PresentationImage\Car_ShowPicture.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_00.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_01.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_02.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_03.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_04.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_05.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_06.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_07.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_08.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_09.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_10.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\Combos\3\2\frame_11.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\CarImages\2\PresentationImage\Car_1768666075000.webp" />
+    </ItemGroup>
+
 
 </Project>
