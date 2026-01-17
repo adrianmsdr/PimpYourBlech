@@ -86,6 +86,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
         modelBuilder.Entity<Product>().HasOne(p => p.ColorDetail).WithOne(d => d.Product)
             .HasForeignKey<ColorDetail>(d => d.ProductId);
 
+        
+            
         // Configuration -> Customer (1:n)
         modelBuilder.Entity<Configuration>()
             .HasOne(cfg => cfg.Customer)
