@@ -4,14 +4,15 @@
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_BlazorApp.Services.Toasts
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject NavigationManager Nav
 @inject IToastExecutor Executor
-@inject IAdminService AdminService
 @inject IImageService ImageService
 @inject IToastService ToastService
 @inject ILogger<AdminCarRegister> Logger
+@inject ICarService CarService
+
 
 
 <div class="menu-container wide">
@@ -88,7 +89,7 @@
             brand
         );
 
-        CarDto? car = await Executor.RunReturnAsync(()=> (AdminService.RegisterCarAsync(
+        CarDto? car = await Executor.RunReturnAsync(()=> (CarService.RegisterCarAsync(
             name, dateProduction, datePermit, brand, model, ps,
             quantity, price
         )),successMessage:"Fahrzeug erfolgreich hinzugefügt.",logError:"Registrieren eines neuen Fahrzeugs fehlgeschlagen.");

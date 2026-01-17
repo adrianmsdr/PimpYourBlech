@@ -1,11 +1,12 @@
 @page "/administrator/orders/{id:int}"
 <PageTitle>Bestellung @Id</PageTitle>
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_Contracts.EntityDTOs
-@inject IAdminService AdminService
 @inject IOrderService OrderService
 @inject NavigationManager Nav
+@inject ICustomerService CustomerService
+
 
 <div class="menu-container wide">
 
@@ -128,9 +129,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Order = await AdminService.GetOrderByIdAsync(Id);
-        products = await AdminService.GetOrderItemsAsync(Order.OrderId);
-        _customerDto = await AdminService.GetCustomerByIdAsync(Order.CustomerId);
+        Order = await OrderService.GetOrderByIdAsync(Id);
+        products = await OrderService.GetOrderItemsAsync(Order.OrderId);
+        _customerDto = await CustomerService.GetCustomerByIdAsync(Order.CustomerId);
         _addressDto = await OrderService.GetDeliveryAddressForOrderAsync(Order.OrderId);
     }
 

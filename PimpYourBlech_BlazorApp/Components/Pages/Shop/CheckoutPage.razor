@@ -1,29 +1,18 @@
 ﻿@page "/CheckoutPage"
-
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Services.Carts
-@using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
-@using Blazored.Toast.Services
-@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_BlazorApp.Services.Toasts
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_Contracts.EntityDTOs
-@using PimpYourBlech_Data.Models
 @inject NavigationManager Nav
-@inject IImageService ImageService
-@inject IShopService ShopService
-@inject ICartService CartService
-@inject IToastService ToastService
 @inject IToastExecutor ToastExecutor
 @inject IUserSession UserSession
 @inject IOrderService OrderService
-@inject IAdminService AdminService
 @inject ILogger<CheckoutPage> Logger
 @inject ICustomerService CustomerService
+
+
 
 
 <div class="checkout-container">
@@ -153,7 +142,7 @@
             UserSession.CurrentUserId
         );
 
-       c = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+       c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
 
       _addresses = await CustomerService.GetUserAddressesAsync(c.Id);
 

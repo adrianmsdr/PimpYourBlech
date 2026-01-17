@@ -1,17 +1,11 @@
 ﻿@inherits LayoutComponentBase
-@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_BlazorApp.Services.Toasts
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
-@using Blazored.Toast.Services
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.State
 @inject IUserSession UserSession
 @inject NavigationManager Nav
-@inject IAdminService AdminService
-@inject IToastService ToastService
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
 <nav class="navbar">

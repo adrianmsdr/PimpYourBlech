@@ -1,13 +1,14 @@
 @page "/administrator/cars"
 <PageTitle>Administrator/cars</PageTitle>
 @using PimpYourBlech_BlazorApp.Components.Icons
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_Contracts.Enums
 @using PimpYourBlech_Contracts.Query
 @using PimpYourBlech_Data.Models
+@inject ICarService CarService
+
 @inject NavigationManager Nav
-@inject IAdminService AdminService
 
 <div class="menu-container wide">
 
@@ -85,7 +86,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        cars = await AdminService.GetCarsAsync();
+        cars = await CarService.GetCarsAsync();
     }
 
     private void AddCar()
@@ -105,7 +106,7 @@
             SortBy = selectedSortOption,
             NameContains = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
         };
-        cars = await AdminService.CarListQueryAsync(q);
+        cars = await CarService.CarListQueryAsync(q);
     }
 
 }

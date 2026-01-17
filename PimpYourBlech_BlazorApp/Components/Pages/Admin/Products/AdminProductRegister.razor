@@ -3,14 +3,16 @@
 @using System.Runtime.CompilerServices
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Cars
+@using PimpYourBlech_ClassLibrary.Services.Products
 @using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_Contracts.Enums
+@inject IProductService ProductService
+@inject ICarService CarService
 
 @inject NavigationManager Nav
-@inject IAdminService AdminService
 @inject IImageService ImageService
-@inject ILogger<AdminService> Logger
+@inject ILogger<AdminProductRegister> Logger
 
 
 
@@ -208,8 +210,8 @@
     {
         Logger.LogInformation("Admin opened product registration page");
 
-        _cars = await AdminService.GetCarsAsync();
-        _categories = AdminService.GetProductTypes();
+        _cars = await CarService.GetCarsAsync();
+        _categories = ProductService.GetProductTypes();
     }
 
     private void HandleProductImageSelected(InputFileChangeEventArgs e)
@@ -248,8 +250,8 @@
         }
 
         
-        int productId = await AdminService.CreateProduct(
-            await AdminService.GetCarByIdAsync(_selectedCarId),
+        int productId = await ProductService.CreateProduct(
+            await CarService.GetCarByIdAsync(_selectedCarId),
             _name,
             _brand,
             quantityValue,
@@ -299,7 +301,7 @@
                     case "Elektro": fuel = Fuel.Elektro; break;
                 }
 
-                AdminService.RegisterEngine(productId, psValue, kwValue, _displacement, gear, fuel);
+                await ProductService.RegisterEngine(productId, psValue, kwValue, _displacement, gear, fuel);
                 break;
 
             case ProductType.Felge:
@@ -321,7 +323,7 @@
                     return;
                 }
 
-                AdminService.RegisterRim(productId, diameterValue, widthValue);
+                await ProductService.RegisterRim(productId, diameterValue, widthValue);
                 break;
 
             case ProductType.Lichter:
@@ -338,11 +340,11 @@
                 }
 
                 bool isLed = _isLed == "True";
-                AdminService.RegisterLights(productId, lumenValue, isLed);
+             await  ProductService.RegisterLights(productId, lumenValue, isLed);
                 break;
 
             case ProductType.Lack:
-                AdminService.RegisterColor(productId, _displayName);
+               await ProductService.RegisterColor(productId, _displayName);
                 break;
         }
 
@@ -361,7 +363,7 @@
 
         if (_uploadedProductImage != null)
         {
-            await ImageService.SaveProductImagesAsync(productId, _uploadedProductImage);
+            await ImageService.SaveProductImageAsync(productId, _uploadedProductImage);
             
             Logger.LogInformation(
                 "Admin uploaded product image for ProductId={ProductId}",

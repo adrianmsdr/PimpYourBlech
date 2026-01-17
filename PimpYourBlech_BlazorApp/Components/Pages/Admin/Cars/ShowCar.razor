@@ -4,12 +4,12 @@
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_BlazorApp.Services.Toasts
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject IToastService ToastService
 @inject IToastExecutor ToastExecutor
+@inject ICarService CarService
 
-@inject IAdminService AdminService
 @inject  NavigationManager Nav
 @inject IImageService ImageService
 @if (showDeleteModal)
@@ -87,7 +87,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        Car = await AdminService.GetCarByIdAsync(Id);
+        Car = await CarService.GetCarByIdAsync(Id);
     }
 
     private void OnCarImageSelected(InputFileChangeEventArgs e)
@@ -122,9 +122,9 @@ else
     async Task ConfirmDelete()
     {
         var id = Car.Id;
-        if (await ToastExecutor.RunAsync(() => AdminService.DeleteCarAsync(Car)))
+        if (await ToastExecutor.RunAsync(() => CarService.DeleteCarAsync(Car)))
         {
-            bool success = ImageService.DeleteCarImagesAsync(id);
+            bool success = ImageService.DeleteCarImages(id);
             if (!success)
             {
                 ToastService.ShowError("Fehler beim Löschen der Fahrzeugbilder");

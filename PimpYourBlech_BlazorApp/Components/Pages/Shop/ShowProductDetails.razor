@@ -1,17 +1,17 @@
 ﻿@page "/shop/details/{id:int}"
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Carts
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Components.Icons
 @using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_ClassLibrary.Services.Products
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject NavigationManager Nav
 @inject IImageService ImageService
-@inject IAdminService AdminService
+@inject IProductService ProductService
 @inject IUserSession UserSession
 @inject ICartService CartService
 @inject IToastService ToastService
@@ -103,7 +103,7 @@
 
         try
         {
-            Product = await AdminService.GetProductByIdAsync(Id);
+            Product = await ProductService.GetProductByIdAsync(Id);
 
             if (Product is not null)
             {

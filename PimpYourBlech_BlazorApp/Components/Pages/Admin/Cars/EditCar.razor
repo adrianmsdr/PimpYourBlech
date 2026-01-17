@@ -3,12 +3,13 @@
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_Contracts.EntityDTOs
-@inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
 @inject ILogger<EditCar> Logger
+@inject ICarService CarService
+
 
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
@@ -89,7 +90,7 @@
             Id
         );
         
-        Car = await AdminService.GetCarByIdAsync(Id);
+        Car = await CarService.GetCarByIdAsync(Id);
         if (Car is null)
         {
             Logger.LogWarning(
@@ -135,7 +136,7 @@
         Car.DateProduction = EditModel.DateProduction;
         
         // Persistieren
-        await AdminService.UpdateCarAsync(Car);
+        await CarService.UpdateCarAsync(Car);
         // Loggen
         Logger.LogInformation(
             "Admin successfully updated car with Id={CarId}",

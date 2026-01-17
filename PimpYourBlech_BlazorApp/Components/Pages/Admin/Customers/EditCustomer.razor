@@ -5,11 +5,12 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.Services.Admin
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_Contracts.EntityDTOs
-@inject IAdminService AdminService
 @inject NavigationManager Nav
 @inject IToastService ToastService
+@inject ICustomerService CustomerService
+
 @inject ILogger<EditCustomer> Logger
 
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
@@ -92,7 +93,7 @@
             Id
         );
         
-        Customer = await AdminService.GetCustomerByIdAsync(Id);
+        Customer = await CustomerService.GetCustomerByIdAsync(Id);
         if (Customer is null)
         {
             Logger.LogWarning(
@@ -129,7 +130,7 @@
         );
 
         // Persistieren (muss existieren)
-        await AdminService.UpdateCustomerAsync(EditModel);
+        await CustomerService.UpdateCustomerAsync(EditModel);
 
         // 🔹 LOG: Update erfolgreich
         Logger.LogInformation(

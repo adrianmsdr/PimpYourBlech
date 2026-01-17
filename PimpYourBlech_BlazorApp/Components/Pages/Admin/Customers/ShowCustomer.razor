@@ -1,18 +1,17 @@
 @page "/administrator/customers/{id:int}"
 <PageTitle>Administrator/customers/@Id.ToString()</PageTitle>
 @using PimpYourBlech_BlazorApp.Services.Toasts
-@using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_Contracts.DTOs
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject IToastExecutor ToastExecutor
-@inject IAdminService AdminService
 @inject ICustomerService CustomerService
 @inject IConfiguratorService ConfiguratorService
 @inject IOrderService OrderService
 @inject NavigationManager Nav
+
 
 @if (showDeleteModal)
 {
@@ -227,7 +226,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        p = await AdminService.GetCustomerByIdAsync(Id);
+        p = await CustomerService.GetCustomerByIdAsync(Id);
         ConfigurationDtos = await ConfiguratorService.GetConfigurationsBasicsCustomerAsync(p.Id);
         DeliveryAddressDtos = await CustomerService.GetUserAddressesAsync(p.Id);
         OrderDtos = await OrderService.GetUserOrdersAsync(p.Id);
@@ -260,7 +259,7 @@
         bool success = await ToastExecutor.RunAsync(() => CustomerService.CanBeDeletedAsync(p.Id));
         if (success)
         {
-            await AdminService.DeleteCustomerAsync(p);
+            await CustomerService.DeleteCustomerAsync(p);
         }
 
         showDeleteModal = false;

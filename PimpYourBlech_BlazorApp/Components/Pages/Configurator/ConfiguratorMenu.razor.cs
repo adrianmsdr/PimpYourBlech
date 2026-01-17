@@ -42,7 +42,7 @@ private CustomerDto? CurrentCustomer;
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentCustomer = await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        CurrentCustomer = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         
         // 1) Auto laden (einmal)
         Car = await ConfiguratorService.GetCarByIdAsync(Id);
@@ -139,7 +139,7 @@ registeredProducts = await ConfiguratorService.GetRegisteredProductsAsync(config
     private async Task StartConfiguration()
     {
         name = configurationName;
-        configuration = await ConfiguratorService.StartNewConfiguration(await AdminService.GetCustomerByIdAsync(UserSession.CurrentUserId), Car, name);
+        configuration = await ConfiguratorService.StartNewConfiguration(await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId), Car, name);
 
         // Defaultfarbe + Defaultfelge als Produkt setzen
         if (availableColors.Count > 0)
