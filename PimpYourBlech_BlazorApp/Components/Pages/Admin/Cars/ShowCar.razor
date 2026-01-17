@@ -1,8 +1,13 @@
 @page "/administrator/cars/{id:int}"
 <PageTitle>Administrator/cars/@Id.ToString()</PageTitle>
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_Contracts.EntityDTOs
+@inject IToastService ToastService
+@inject IToastExecutor ToastExecutor
 
 @inject IAdminService AdminService
 @inject  NavigationManager Nav
@@ -116,8 +121,16 @@ else
 
     async Task ConfirmDelete()
     {
-        await ImageService.DeleteCarImagesAsync(Car.Id);
-        await AdminService.DeleteCarAsync(Car);
+        var id = Car.Id;
+        if (await ToastExecutor.RunAsync(() => AdminService.DeleteCarAsync(Car)))
+        {
+            bool success = ImageService.DeleteCarImagesAsync(id);
+            if (!success)
+            {
+                ToastService.ShowError("Fehler beim Löschen der Fahrzeugbilder");
+            }
+        }
+
         showDeleteModal = false;
         Nav.NavigateTo("/administrator/cars");
         

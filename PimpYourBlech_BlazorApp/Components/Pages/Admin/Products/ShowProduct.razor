@@ -1,6 +1,7 @@
 @page "/administrator/products/{id:int}"
 <PageTitle>Administrator/products/@Id.ToString()</PageTitle>
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_Contracts.Enums
@@ -95,12 +96,12 @@
     private async Task DeleteProduct()
     {
         CarDto c = await AdminService.GetCarByIdAsync(Product.CarId);
-        await ImageService.DeleteProductImagesAsync(Product.ProductId);
+         ImageService.DeleteProductImagesAsync(Product.ProductId);
         if (Product.ProductType == ProductType.Lack)
         {
             foreach (var r in await AdminService.GetAvailableRims(c.Id))
             {
-                await ImageService.Delete360ImagesAsync(c.Id, Product.ProductId, r.ProductId);
+                ImageService.Delete360ImagesAsync(c.Id, Product.ProductId, r.ProductId);
             }
         }
 
@@ -108,7 +109,7 @@
         {
             foreach (var color in await AdminService.GetAvailableColors(c.Id))
             {
-                await ImageService.Delete360ImagesAsync(c.Id, color.ProductId, Product.ProductId);
+               ImageService.Delete360ImagesAsync(c.Id, color.ProductId, Product.ProductId);
             }
         }
 

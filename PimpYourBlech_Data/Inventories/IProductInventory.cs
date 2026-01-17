@@ -12,14 +12,15 @@ public interface IProductInventory
     public Task DeleteProductAsync(Product p);
 
     public Task UpdateProductAsync(Product p);
-    
+
     Task<List<Product>> ListEnginesAsync();
-    
+
     Task<List<Product>> ListRimsAsync();
-    
+
     Task<Product?> GetProductByIdAsync(int id);
-    
+
     Task<List<Product>> QueryAsync(ProductListQuery q);
-    
- 
+
+   Task<List<Product>> GetProductsForCarsAsync(int carId);
+   
 }

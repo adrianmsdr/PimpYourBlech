@@ -26,20 +26,6 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
     {
         return await database.Customers.ToListAsync();
     }
-    
-    
-    public async Task<Customer> GetCustomerByIdIncludeAllAsync(int id)
-    {
-
-        return await database.Customers
-            .Include(c => c.DeliveryAddresses)
-            .Include(c => c.Orders)
-            .Include(c => c.Configurations)
-            .ThenInclude(cfg => cfg.Car)
-            .Include(c => c.Configurations)
-            .ThenInclude(cfg => cfg.Products)
-            .FirstOrDefaultAsync(c => c.Id == id);
-    }    
 
 
     public async Task<Customer?> GetCustomerByIdAsync(int id)
@@ -243,6 +229,8 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
     {
         return await database.DeliveryAddresses.Where(d => d.CustomerId == customerId).ToListAsync();
     }
+    
+    
 }
 
     

@@ -115,13 +115,13 @@
                 Iban = iban
             };
 
-            await OrderService.InsertPaymentValueAsync(pv);
-            UserSession.CurrentPaymentValueId = pv.Id;
+           var pvId = await OrderService.InsertPaymentValueAsync(pv);
+            UserSession.CurrentPaymentValueId = pvId;
             
             Logger.LogInformation(
                 "New payment value created for UserId={UserId}, PaymentId={PaymentId}",
                 UserSession.CurrentUserId,
-                pv.Id
+                pvId
             );
         }
         else

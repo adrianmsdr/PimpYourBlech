@@ -1,7 +1,7 @@
 using Blazored.Toast.Services;
 using PimpYourBlech_ClassLibrary.Exceptions;
 
-namespace PimpYourBlech_BlazorApp.Services.Toasts;
+namespace PimpYourBlech_BlazorApp.Services.Toasts.Implementation;
 
 public class ToastExecutor : IToastExecutor
 {
@@ -45,6 +45,21 @@ public class ToastExecutor : IToastExecutor
             }
 
             return false;
+        }
+        catch (Exception ex) when (
+            ex is ForbiddenActionException)
+        {
+            _toast.ShowError(errorMessage ?? ex.Message);
+            if (!string.IsNullOrWhiteSpace(logError))
+            {
+                _logger.LogError(
+                    ex,
+                    logError
+                );
+            }
+
+            return false;
+            
         }
         catch (Exception ex)
         {

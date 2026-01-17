@@ -6,6 +6,7 @@
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
 @using Blazored.Toast.Services
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Services.Orders
@@ -154,9 +155,8 @@
 
       _addresses = await CustomerService.GetUserAddressesAsync(c.Id);
 
-        if (_addresses.Count == 1)
-        {
-            selectedDeliveryAddressId = _addresses[0].Id;
+        if (_addresses.Count >= 1){
+            selectedDeliveryAddressId = _addresses[_addresses.Count-1].Id;
         }
     }
 
@@ -182,13 +182,13 @@
                 Country = country
             };
 
-            await OrderService.InsertDeliveryAddressAsync(da);
-            UserSession.CurrentDeliveryAddressId = da.Id;
+       var    daId = await OrderService.InsertDeliveryAddressAsync(da);
+            UserSession.CurrentDeliveryAddressId = daId;
             
             Logger.LogInformation(
                 "New delivery address created for UserId={UserId}, AddressId={AddressId}",
                 UserSession.CurrentUserId,
-                da.Id
+                daId
             );
         }
         else

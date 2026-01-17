@@ -1,4 +1,4 @@
-﻿namespace PimpYourBlech_BlazorApp.Services;
+﻿namespace PimpYourBlech_BlazorApp.Services.Images;
 using Microsoft.AspNetCore.Components.Forms;
 
 public interface IImageService
@@ -14,15 +14,15 @@ public interface IImageService
     
     Task Save360ImagesAsync(int carId, int colorId,int rimId, IReadOnlyList<IBrowserFile> files);
 
-    Task Delete360ImagesAsync(int carId, int colorId, int rimId);
+    bool Delete360ImagesAsync(int carId, int colorId, int rimId);
 
     List<string> Get360ImageUrls(int carId, int colorId, int rimId);
     
-    Task DeleteCarImagesAsync(int carId);
+    bool DeleteCarImagesAsync(int carId);
     
-    Task DeleteProductImagesAsync(int productId);
+    bool DeleteProductImagesAsync(int productId);
 
     public List<string> GetCustomerImageUrl();
 
-    public void DeleteAllImages();
+    bool DeleteAllImages();
 }

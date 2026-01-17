@@ -98,5 +98,11 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
 
         return await query.ToListAsync();
     }
-    
+
+    public async Task<List<Product>> GetProductsForCarsAsync(int carId)
+    {
+       return await database.Products
+           .Where(p => p.CarId == carId)
+           .ToListAsync();
+    }
 }

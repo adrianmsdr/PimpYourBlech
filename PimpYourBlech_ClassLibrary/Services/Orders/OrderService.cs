@@ -137,6 +137,7 @@ public class OrderService : IOrderService
     {
         var deliveryAddress = new DeliveryAddress()
         {
+            CustomerId = address.CustomerId,
             Id = address.Id,
             Salutation = address.Salutation,
             Surname = address.Surname,

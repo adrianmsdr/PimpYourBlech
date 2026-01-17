@@ -2,10 +2,11 @@
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject IAdminService AdminService
-@inject Services.IImageService ImageService
+@inject IImageService ImageService
 @inject NavigationManager Nav
 @inject IToastService ToastService
 @inject ILogger<ChangeCarImages> Logger
@@ -22,24 +23,24 @@
 <h3>Bildverwaltung</h3>
 
     <label><strong>Fahrzeug:</strong></label>
-    <select class="form-select" @bind="SelectedCarId">
+    <select class="form-select" value="@selectedCarId" @onchange="OnCarSelected">
         <option value="0">-- Bitte wählen --</option>
         @foreach (var c in cars)
         {
             <option value="@c.Id">@c.Name (@c.Id)</option>
         }
     </select>
-    @if (SelectedCarId == 0)
+    @if (selectedCarId == 0)
     {
         <div>Bitte wähle ein Fahrzeug aus.</div>
     }
 
-    @if (SelectedCarId != 0)
+    @if (selectedCarId != 0)
     {
         <hr/>
 
         <h4>Präsentationsbild:</h4>
-        <img src="@ImageService.GetCarImageUrl(SelectedCarId)" style="max-width:320px;border-radius:12px;"/>
+        <img src="@ImageService.GetCarImageUrl(selectedCarId)" style="max-width:320px;border-radius:12px;"/>
 
         <div style="margin-top:10px">
             <InputFile OnChange="OnCarImageSelected" accept="image/*"/>
@@ -55,7 +56,7 @@
             <div>Keine Varianten für dieses Fahrzeug gefunden.</div>
             <div style="padding:8px;border:1px dashed #666;margin-bottom:10px;">
                 Debug:
-                CarId=@SelectedCarId |
+                CarId=@selectedCarId |
                 Colors=@Colors.Count |
                 Rims=@Rims.Count
             </div>
@@ -66,7 +67,7 @@
             {
                 @foreach (var r in Rims)
                 {
-                    var frames = ImageService.Get360ImageUrls(SelectedCarId, c.ProductId, r.ProductId);
+                    var frames = ImageService.Get360ImageUrls(selectedCarId, c.ProductId, r.ProductId);
                     var preview = frames.FirstOrDefault();
 
                     <div style="padding:12px;border:1px solid #444;border-radius:12px;margin-bottom:12px;">
@@ -142,23 +143,21 @@
     private IReadOnlyList<IBrowserFile> uploadedFiles = Array.Empty<IBrowserFile>();
    
     private bool isUploading;
-    
-    private int SelectedCarId
+    private async Task OnCarSelected(ChangeEventArgs e)
     {
-        get => selectedCarId;
-        set
-        {
-            if (selectedCarId == value) return;
-            selectedCarId = value;
-             OnCarChangedAsync();
-            
-            Logger.LogInformation(
-                "Admin selected car for image management: CarId={CarId}",
-                selectedCarId
-            );
-            
-        }
+        if (!int.TryParse(e.Value?.ToString(), out var id))
+            return;
+
+        if (selectedCarId == id) return;
+
+        selectedCarId = id;
+
+        Logger.LogInformation("Admin selected car for image management: CarId={CarId}", selectedCarId);
+
+        await OnCarChangedAsync();
+        StateHasChanged();
     }
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -192,29 +191,28 @@
 
     private async Task SaveCarImage()
     {
-        if (SelectedCarId == 0 || uploadedCarImage is null) return;
+        if (selectedCarId == 0 || uploadedCarImage is null) return;
 
-        await ImageService.SaveCarImageAsync(SelectedCarId, uploadedCarImage);
+        await ImageService.SaveCarImageAsync(selectedCarId, uploadedCarImage);
         ToastService.ShowSuccess("Präsentationsbild wurde gespeichert.");
         
         Logger.LogInformation(
             "Admin uploaded car image for CarId={CarId}",
-            SelectedCarId
+            selectedCarId
         );
-
         
     }
     
     private async Task SaveColorFrames(int colorId, int rimId)
     {
             if (isUploading) return;
-            if (SelectedCarId == 0) return;
+            if (selectedCarId == 0) return;
             isUploading = true;
             StateHasChanged(); 
             
             Logger.LogInformation(
                 "Admin started uploading 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
-                SelectedCarId,
+                selectedCarId,
                 colorId,
                 rimId
             );
@@ -228,7 +226,7 @@
                 
                 Logger.LogInformation(
                     "Admin successfully uploaded 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
-                    SelectedCarId,
+                    selectedCarId,
                     colorId,
                     rimId
                 );
@@ -242,7 +240,7 @@
                 Logger.LogError(
                     ex,
                     "Error uploading 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
-                    SelectedCarId,
+                    selectedCarId,
                     colorId,
                     rimId
                 );
@@ -256,14 +254,14 @@
     
     private async Task DeleteColorFrames(int colorId, int rimId)
     {
-        if (SelectedCarId == 0) return;
+        if (selectedCarId == 0) return;
 
-        await ImageService.Delete360ImagesAsync(SelectedCarId, colorId, rimId);
+        ImageService.Delete360ImagesAsync(selectedCarId, colorId, rimId);
            ToastService.ShowError("Frames wurden gelöscht"); 
            
            Logger.LogInformation(
                "Admin deleted 360 frames (CarId={CarId}, ColorId={ColorId}, RimId={RimId})",
-               SelectedCarId,
+               selectedCarId,
                colorId,
                rimId
            );

@@ -106,6 +106,7 @@ private CustomerDto? CurrentCustomer;
 
 
        await ConfiguratorService.AddProduct(configuration.Id, product.ProductId);
+       
 
        if (product.ProductType == ProductType.Felge)
        {

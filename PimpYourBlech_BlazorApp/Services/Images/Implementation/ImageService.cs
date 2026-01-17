@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-namespace PimpYourBlech_BlazorApp.Services;
+namespace PimpYourBlech_BlazorApp.Services.Images;
 
 // Implementierung des Image Service
 // Dieser Service ist nur in der Blazor-App, nicht in der Class Library
@@ -27,27 +27,18 @@ public class ImageService: IImageService
         // Dieser Ordner enthält die Bilder für ein bestimmtes Auto
         public string GetCarImageUrl(int carId)
         {
-            // System-Pfad zum Ordner des Autos bauen
-            // Beispiel:
-            // _env.WebRootPath ="/.../wwwroot"
-            // Path.Combine(…, "CarImages", car.Id (z.B. 1)) = "/.../wwwroot/CarImages/1"
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "PresentationImage");
+          var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "PresentationImage");
+          if (!Directory.Exists(folder))
+              return "/no-img.png";
 
-            // Wenn der Ordner nicht existiert, geben wir einfach eine leere Liste zurück
-            if (!Directory.Exists(folder))
-                return "/no-img.png";
-            
-            //erste Bilddatei holen
-            var file = Directory
-                .GetFiles(folder)
-                .OrderBy(f => f)
-                .FirstOrDefault();
-            
-            if(file == null)
-                return "/no-img.png";
-            
-            //Zu Web-URL Umwandeln
-            return $"/CarImages/{carId}/PresentationImage/{Path.GetFileName(file)}";
+          var file = Directory.EnumerateFiles(folder, "Car_*.*")
+              .OrderByDescending(File.GetLastWriteTimeUtc)
+              .FirstOrDefault();
+
+          if (file is null)
+              return "/no-img.png";
+
+          return $"/CarImages/{carId}/PresentationImage/{Path.GetFileName(file)}";
         }
 
         
@@ -59,30 +50,31 @@ public class ImageService: IImageService
         // wenn ein Benutzer im Browser ein Bild hochlädt
         public async Task<string> SaveCarImageAsync(int carId, IBrowserFile file)
         {
-            // vollständigen System-Pfad zum Autoordner bauen
-            var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "PresentationImage");
+          
+          var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "PresentationImage");
+          Directory.CreateDirectory(folder);
 
-            // Ordner anlegen, falls er noch nicht existiert
-            Directory.CreateDirectory(folder);
-            
-            //Dateiendung des Uploads Übernehmen (.webp)
-            var extension = Path.GetExtension(file.Name);
-            
-            // Fester Dateiname 
-            var fileName = "Car" + extension;
+          var extension = Path.GetExtension(file.Name);
+          if (string.IsNullOrWhiteSpace(extension))
+              extension = ".webp"; // fallback
 
-            // Voller System-Pfad
-            var fullPath = Path.Combine(folder, fileName);
+          // 1) Alte "Car_*" Dateien löschen (egal welche Extension)
+          foreach (var old in Directory.EnumerateFiles(folder, "Car*.*"))
+          {
+              try { File.Delete(old); } catch { /* optional loggen */ }
+          }
 
-            // Datei speichern
-            await using var fs = new FileStream(fullPath, FileMode.Create);
-            await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(fs);
+          // 2) Neuer eindeutiger Name (Version)
+          var version = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+          var fileName = $"Car_{version}{extension}";
+          var fullPath = Path.Combine(folder, fileName);
 
-            // Web-URL zurückgeben
-            var relativePath = Path.Combine("CarImages", carId.ToString(),"PresentationImage", fileName)
-                .Replace("\\", "/");
+          // 3) Speichern
+          await using var fs = new FileStream(fullPath, FileMode.Create);
+          await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(fs);
 
-            return "/" + relativePath;
+          // 4) URL zurückgeben (neu -> kein Cache)
+          return $"/CarImages/{carId}/PresentationImage/{fileName}";
         }
 
        
@@ -133,67 +125,64 @@ public class ImageService: IImageService
             return "/" + relativePath;
         }
 
-        public async Task DeleteCarImagesAsync(int carId)
+        public bool DeleteCarImagesAsync(int carId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString());
 
             if (!Directory.Exists(folder))
-                return; // nichts zu tun
+                return true; // nichts zu tun
 
             try
             {
                 // true = rekursiv, falls Unterordner vorhanden
                 Directory.Delete(folder, recursive: true);
+                return true;
             }
             catch (Exception ex)
             {
-                // je nach Anspruch:
-                // - hier nur loggen und weitermachen
-                // - oder Fehler nach oben durchreichen
+                return false;
+              
             }
         }
-        public async Task DeleteProductImagesAsync(int ProductId)
+        public bool DeleteProductImagesAsync(int ProductId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "ProductImages", ProductId.ToString());
 
             if (!Directory.Exists(folder))
-                return; // nichts zu tun
+                return true; // nichts zu tun
 
             try
             {
                 // true = rekursiv, falls Unterordner vorhanden
                 Directory.Delete(folder, recursive: true);
+                return true;
             }
             catch (Exception ex)
             {
-                // je nach Anspruch:
-                // - hier nur loggen und weitermachen
-                // - oder Fehler nach oben durchreichen
+                return false;
             }
         }
 
        
         
-        public async Task Delete360ImagesAsync(int carId, int colorId, int rimId)
+        public bool Delete360ImagesAsync(int carId, int colorId, int rimId)
         {
             // Ordner, in dem die Bilder dieses Autos liegen
             var folder = Path.Combine(_env.WebRootPath, "CarImages", carId.ToString(), "Combos", colorId.ToString(), rimId.ToString());
 
             if (!Directory.Exists(folder))
-                return; // nichts zu tun
+                return true; // nichts zu tun
 
             try
             {
-                // true = rekursiv, falls Unterordner vorhanden
                 Directory.Delete(folder, recursive: true);
+                return true;
             }
             catch (Exception ex)
             {
-                // je nach Anspruch:
-                // - hier nur loggen und weitermachen
-                // - oder Fehler nach oben durchreichen
+                return false;
             }
         }
 
@@ -292,11 +281,19 @@ public class ImageService: IImageService
         }
         
 
-        public void DeleteAllImages()
+        public bool DeleteAllImages()
         {
-            DeleteFolderIfExists(Path.Combine(_env.WebRootPath, "CarImages"));
-            DeleteFolderIfExists(Path.Combine(_env.WebRootPath, "ProductImages"));
-            
+            try
+            {
+                DeleteFolderIfExists(Path.Combine(_env.WebRootPath, "CarImages"));
+                DeleteFolderIfExists(Path.Combine(_env.WebRootPath, "ProductImages"));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
         }
 
         private static void DeleteFolderIfExists(string folder)

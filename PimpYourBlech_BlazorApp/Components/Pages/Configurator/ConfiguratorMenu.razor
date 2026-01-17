@@ -3,6 +3,7 @@
 
 @using System.Globalization
 @using PimpYourBlech_BlazorApp.Services
+@using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
@@ -169,7 +170,7 @@ else
                     <div class="combo-card-admin configurator-card glow-red @(isSelected ? "selected" : "")"
                          role="button"
                          tabindex="0"
-                         @onclick="() => SelectColor(c.ProductId)">
+                         @onclick="() => HandleProduct(c)">
 
                         <div class="card-media-color">
                             <img class="product-img"

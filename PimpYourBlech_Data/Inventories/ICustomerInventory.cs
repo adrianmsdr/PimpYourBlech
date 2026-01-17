@@ -12,7 +12,6 @@ public interface ICustomerInventory
     
     public Task<List<Customer>> ListCustomersAsync();
     
-    Task<Customer> GetCustomerByIdIncludeAllAsync(int id);
 
     Task<Customer?> GetCustomerByIdAsync(int id);
 
@@ -62,5 +61,7 @@ public interface ICustomerInventory
     Task<List<Customer>> QueryCustomersAsync(CustomerListQuery q);
     
     Task<List<DeliveryAddress>> GetUserAddressesAsync(int customerId);
+    
+    
    
 }

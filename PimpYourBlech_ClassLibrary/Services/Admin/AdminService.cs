@@ -177,6 +177,8 @@ public class AdminService : IAdminService
 
     public async Task DeleteCustomerAsync(CustomerDto c)
     {
+        
+        
         Customer? customer = await _customerRepository.GetCustomerByIdAsync(c.Id);
         if (customer != null)
         {
@@ -481,6 +483,10 @@ public class AdminService : IAdminService
 
     public async Task DeleteCarAsync(CarDto car)
     {
+        var productsCount = (await _productRepository.GetProductsForCarsAsync(car.Id)).Count;
+        if (productsCount > 0){
+            throw new ForbiddenActionException("Fahrzeug besitzt "  + productsCount + " registrierte Produkte und darf nicht gelöscht werden.");
+        }
         var carToDelete = await _carRepository.GetCarByIdAsync(car.Id);
         await _carRepository.DeleteCarAsync(carToDelete);
         _logger.LogInformation("Car deleted");
