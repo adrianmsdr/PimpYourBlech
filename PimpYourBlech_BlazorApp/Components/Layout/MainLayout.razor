@@ -78,11 +78,11 @@
     
 </div>
 <footer class="footer">
-    <span>© 2025 PimpYourBlech</span>
+    <span>© 2026 PimpYourBlech</span>
     <span class="footer-separator">|</span>
-    <NavLink href="/impressum" class="footer-link">Impressum</NavLink>
+    <NavLink @onclick="GoToImpressum" class="footer-link">Impressum</NavLink>
     <span class="footer-separator">|</span>
-    <NavLink href="/datenschutz" class="footer-link">Datenschutz</NavLink>
+    <NavLink @onclick="GoToDatenschutz" class="footer-link">Datenschutz</NavLink>
 </footer>
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
@@ -110,9 +110,15 @@
         Nav.NavigateTo("/");
 
     }
-    
-    
-    
+
+    private void GoToImpressum()
+    {
+        Nav.NavigateTo("/Impressum");
+    }
+    private void GoToDatenschutz()
+    {
+        Nav.NavigateTo("/Datenschutz");
+    }
 }
 
 <style>
@@ -209,6 +215,7 @@
         color: rgba(255, 255, 255, 0.85);
         text-decoration: none;
         transition: 0.2s ease;
+        cursor: pointer;
     }
 
     .footer-link:hover {

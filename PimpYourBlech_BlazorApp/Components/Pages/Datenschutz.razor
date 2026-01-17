@@ -1,0 +1,165 @@
+﻿@page "/Datenschutz"
+@attribute [Routes.AllowAnonymous]
+
+<PageTitle>Datenschutzerklärung</PageTitle>
+
+<div class="menu-container impressum-container">
+
+    <h2 class="headline-admin">Datenschutzerklärung</h2>
+
+    <div class="content">
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">1. Allgemeine Hinweise</h5>
+            <p class="impressum-font">
+                Der Schutz Ihrer persönlichen Daten ist uns wichtig. Diese
+                Datenschutzerklärung informiert Sie darüber, welche Daten im
+                Rahmen der Nutzung dieser Plattform erhoben, verarbeitet und
+                gespeichert werden, und zu welchem Zweck dies geschieht.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">2. Verantwortlicher</h5>
+            <p class="impressum-font">
+                Verantwortlich für die Datenverarbeitung im Sinne der DSGVO ist:
+                PimpYourBlech Automotive Configuration Solutions GmbH & Co. KG
+                (Vertreten durch die Geschäftsführung)
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">3. Erhebung und Nutzung von Daten</h5>
+            <p class="impressum-font">
+                Bei der Nutzung dieser Plattform werden grundsätzlich keine
+                personenbezogenen Daten erhoben, sofern Sie uns diese nicht
+                freiwillig zur Verfügung stellen (z. B. über Kontaktformulare,
+                E-Mail-Kommunikation oder Feedback).
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">4. Server- und Logdaten</h5>
+            <p class="impressum-font">
+                Beim Zugriff auf diese Website werden aus technischen Gründen
+                zwingend Daten in sogenannten Server-Logfiles gespeichert.
+                Dies umfasst unter anderem:
+            </p>
+            <ul class="impressum-font impressum-list">
+                <li>IP-Adresse (anonymisiert, sofern möglich)</li>
+                <li>Datum und Uhrzeit des Zugriffs</li>
+                <li>Name und URL der abgerufenen Datei</li>
+                <li>Browsertyp und Betriebssystem</li>
+                <li>Referrer URL (vorher besuchte Seite)</li>
+            </ul>
+            <p class="impressum-font">
+                Diese Daten werden ausschließlich zur Gewährleistung des
+                Betriebs, zur Sicherheit und zur Fehleranalyse genutzt.
+                Eine Zusammenführung dieser Daten mit anderen Datenquellen
+                findet nicht statt.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">5. Cookies</h5>
+            <p class="impressum-font">
+                Diese Website verwendet keine Cookies zur Identifikation
+                von Personen. Temporäre Session-Cookies können zur
+                funktionalen Nutzung der Seite eingesetzt werden.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">6. Weitergabe von Daten</h5>
+            <p class="impressum-font">
+                Eine Weitergabe personenbezogener Daten an Dritte erfolgt nur,
+                wenn dies gesetzlich vorgeschrieben ist oder Sie ausdrücklich
+                eingewilligt haben.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">7. Sicherheit</h5>
+            <p class="impressum-font">
+                Wir setzen technische und organisatorische Maßnahmen ein,
+                um die Daten gegen Verlust, Manipulation und unbefugten Zugriff
+                zu schützen. Trotzdem ist eine 100%ige Sicherheit im Internet
+                nicht gewährleistbar.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">8. Ihre Rechte</h5>
+            <p class="impressum-font">
+                Sie haben das Recht auf:
+            </p>
+            <ul class="impressum-font impressum-list">
+                <li>Auskunft über die gespeicherten Daten</li>
+                <li>Berichtigung unrichtiger Daten</li>
+                <li>Löschung oder Einschränkung der Verarbeitung</li>
+                <li>Widerspruch gegen die Verarbeitung</li>
+                <li>Datenübertragbarkeit</li>
+            </ul>
+            <p class="impressum-font">
+                Zur Ausübung dieser Rechte kontaktieren Sie uns bitte unter:
+                pimpyourblech@gmail.com
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">9. Änderungen dieser Datenschutzerklärung</h5>
+            <p class="impressum-font">
+                Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf
+                anzupassen, insbesondere bei Erweiterung der Funktionalität
+                oder rechtlichen Änderungen. Der aktuelle Stand ist stets
+                auf dieser Seite ersichtlich.
+            </p>
+        </section>
+
+    </div>
+
+</div>
+
+<style>
+    .impressum-container {
+        max-width: 900px;
+        margin: 0 auto;
+        margin-top: 16px;
+        text-align: left;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .impressum-section {
+        position: relative;
+    }
+
+    .impressum-font {
+        color: white;
+        font-family: Bahnschrift, Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0.3rem 0 0 0;
+        font-size: 1.05rem;
+    }
+
+    .headline-impressum {
+        color: darkred;
+        margin-bottom: 0.2rem;
+        letter-spacing: 0.4px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+    }
+
+    .impressum-list {
+        padding-left: 1.2rem;
+    }
+
+    .impressum-list li {
+        margin-bottom: 0.3rem;
+    }
+</style>

@@ -41,7 +41,7 @@
         @if (!UserSession.CurrentCart.Products.Any())
         {
             <div class="null-content">
-                <h4 class="headline-admin">Keine Produkte vorhanden</h4>
+                <h4 class="no-products">Keine Produkte vorhanden</h4>
             </div>
         }
         else
@@ -168,7 +168,7 @@ else
         @foreach (var product in products)
         {
             <a class="product-card">
-                <img loading ="lazy" src="@ImageService.GetProductImageUrl(product.ProductId)"
+                <img loading="lazy" src="@ImageService.GetProductImageUrl(product.ProductId)"
                      @onclick="() => ShowProduct(product)"
                      class="product-image"/>
                 <div class="product-info">
@@ -178,10 +178,13 @@ else
                     </h4>
                     <p>@product.Brand</p>
                     <p class="product-price">@product.Price.ToString("C")</p>
-                    <button type="button" class="selectProduct"
-                            @onclick="() => AddToCart(product)">
-                        <AddToCartIcon/> Zum Warenkorb
-                    </button>
+                    
+                    <div class="product-footer">
+                        <button type="button" class="selectProduct"
+                                @onclick="() => AddToCart(product)">
+                            <AddToCartIcon/> Zum Warenkorb
+                        </button>
+                    </div>
                 </div>
             </a>
         }
@@ -301,7 +304,7 @@ else
         color: white;
         font-family: Bahnschrift;
         text-align: center;
-        margin-top: 5px;
+        margin-top: 15px;
     }
 
     .product-grid {
@@ -322,6 +325,9 @@ else
             rgba(40,40,40,0.75),
             rgba(10,10,10,0.65)
         );
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     .product-image {
@@ -338,10 +344,13 @@ else
 
     .product-info {
         margin-top: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
     }
-    
-    .product-name {
-        //
+
+    .product-footer {
+        margin-top: auto;
     }
     
     .product-name:hover {
@@ -427,8 +436,8 @@ else
         border: 2px solid #ff1a1a;
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
         transition: transform 0.25s ease,
-                    background-color 0.25s ease,
-                    box-shadow 0.25s ease;
+        background-color 0.25s ease,
+        box-shadow 0.25s ease;
         cursor: pointer;
     }
 
