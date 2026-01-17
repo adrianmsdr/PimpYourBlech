@@ -1,11 +1,12 @@
-@*@page "/configurations/compare"
+@page "/configurations/compare"
 
 @using PimpYourBlech_BlazorApp.Services
-@using PimpYourBlech_ClassLibrary.DTOs
-@using PimpYourBlech_ClassLibrary.Entities
+@using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_Contracts.EntityDTOs;
 @using PimpYourBlech_ClassLibrary.Services.Comparator
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_Contracts.DTOs
 @inject IUserSession UserSession
 @inject IConfiguratorService ConfiguratorService
 @inject IImageService ImageService
@@ -13,7 +14,6 @@
 <PageTitle>Konfigurationen vergleichen</PageTitle>
 
 <h3>Konfigurationen vergleichen</h3>
-<p>Bitte mindestens zwei Konfigurationen auswählen.</p>
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -52,7 +52,7 @@ else
                 <td>@c.Name</td>
                 <td>@c.Car.Brand</td>
                 <td>@c.Car.Model</td>
-                <td>@c.Products.Count</td>
+                <td>@c.ProductCount</td>
                 <td>@c.TotalPrice €</td>
             </tr>
         }
@@ -107,4 +107,3 @@ else
         selectedConfigurations.Add(config);
     }
 }
-*@

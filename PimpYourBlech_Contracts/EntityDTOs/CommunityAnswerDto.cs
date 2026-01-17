@@ -11,5 +11,5 @@ public class CommunityAnswerDto
     // Foreign Key
     public int QuestionId { get; set; }
 
-    // Navigation
+    
 }
