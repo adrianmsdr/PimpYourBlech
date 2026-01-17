@@ -1,0 +1,223 @@
+﻿@page "/Impressum"
+@attribute [Routes.AllowAnonymous]
+
+<PageTitle>Impressum</PageTitle>
+
+<div class="menu-container impressum-container">
+
+    <h2 class="headline-admin">Impressum</h2>
+
+    <div class="content">
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Unternehmen</h5>
+            <p class="impressum-font">
+                PimpYourBlech Automotive Configuration Solutions GmbH & Co. KG
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Markenclaim</h5>
+            <p class="impressum-font">
+                „Where Performance Meets Perfection.“
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Unternehmensgegenstand</h5>
+            <p class="impressum-font">
+                Entwicklung, Design und strategische Implementierung
+                hochindividualisierter, digitaler Fahrzeugkonfigurations-
+                lösungen der Premium- und Hypercar-Klasse.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Vertreten durch die Geschäftsführung</h5>
+            <ul class="impressum-font impressum-list">
+                <li class="employer">Christian Greczylo – Head of Digital Architecture</li>
+                <li class="employer">Adrian Mäscheder – Head of Frontend & Systems</li>
+                <li class="employer">Michael Frick – Head of Configuration Technology</li>
+            </ul>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Hauptsitz</h5>
+            <p class="impressum-font">
+                Technische Hochschule Rosenheim<br />
+                Hochschulstraße 1<br />
+                83024 Rosenheim<br />
+                Deutschland
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Kontakt</h5>
+            <p class="impressum-font">
+                Telefon: +49 (0) 999 888 777 0<br />
+                E-Mail: pimpyourblech@gmail.com<br />
+                Web: www.pimpyourblech.com
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Registereintrag</h5>
+            <p class="impressum-font">
+                Eingetragen im Handelsregister<br />
+                Registergericht: Amtsgericht Traunstein<br />
+                Registernummer: HRB 999999
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Umsatzsteuer-ID gemäß §27a UStG</h5>
+            <p class="impressum-font">
+                DE999999999
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">
+                Inhaltlich Verantwortlicher gemäß § 18 Abs. 2 MStV
+            </h5>
+            <p class="impressum-font">
+                Rainer Winkler<br />
+                (Chief Legal & Compliance Officer)
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Haftungsausschluss</h5>
+            <p class="impressum-font">
+                Die Inhalte dieser Plattform wurden mit maximaler
+                Sorgfalt, strategischer Weitsicht und unter Einsatz
+                modernster Technologien erstellt. Dennoch übernimmt
+                PimpYourBlech Automotive Configuration Solutions GmbH
+                keine Haftung für absolute Perfektion in jedem
+                denkbaren Nutzungsszenario.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Urheberrecht & Intellectual Property</h5>
+            <p class="impressum-font">
+                Sämtliche Inhalte, Quellcodes, Designs, Konzepte,
+                Animationen und Ideen unterliegen dem internationalen
+                Urheber-, Marken- und Patentrecht. Jegliche Nutzung
+                ohne ausdrückliche schriftliche Genehmigung wird
+                rechtlich verfolgt. Weltweit.
+            </p>
+        </section>
+
+        <section class="impressum-section">
+            <h5 class="headline-impressum">Hinweis</h5>
+            <p class="impressum-font">
+                Dieses Produkt richtet sich ausschließlich an
+                Visionäre, Entscheider und Menschen mit Anspruch.
+            </p>
+        </section>
+
+    </div>
+
+    <section class="impressum-section stand-highlight">
+        <h5 class="headline-impressum">Stand</h5>
+        <p class="impressum-font">Januar 2026</p>
+    </section>
+
+</div>
+
+<style>
+    .impressum-container {
+        max-width: 900px;
+        margin: 0 auto;
+        margin-top: 16px;
+        text-align: left;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .impressum-section {
+        position: relative;
+    }
+
+    .impressum-font {
+        color: white;
+        font-family: Bahnschrift, Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0.3rem 0 0 0;
+        font-size: 1.05rem;
+    }
+
+    .headline-impressum {
+        color: darkred;
+        margin-bottom: 0.2rem;
+        letter-spacing: 0.4px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+    }
+
+    .impressum-list {
+        padding-left: 1.2rem;
+    }
+
+    .impressum-list li {
+        margin-bottom: 0.3rem;
+    }
+
+    .employer {
+        font-weight: 600;
+        color: #c3c0c0;
+    }
+
+    /* Stand Highlight + WOW Effect */
+    .stand-highlight {
+        width: 100%;
+        margin-top: 2.8rem;
+        padding: 1rem 1.4rem;
+
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+
+        border-radius: 6px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stand-highlight::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 2px;
+
+        background: linear-gradient(
+            90deg,
+            transparent,
+            darkred,
+            transparent
+        );
+
+        opacity: 0.6;
+        transform: translateX(-100%);
+        transition: transform 0.8s ease;
+    }
+
+    .stand-highlight:hover::before {
+        transform: translateX(100%);
+    }
+
+    .stand-highlight:hover {
+        transform: translateY(-2px);
+        transition: transform 0.3s ease;
+    }
+</style>
