@@ -1,12 +1,14 @@
 ﻿@inject NavigationManager Nav
 
 @page "/SepaPaymentPage"
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.Implementation
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject IUserSession UserSession
 @inject IOrderService OrderService
+@inject IToastExecutor ToastExecutor
 @inject ILogger<SepaPaymentPage> Logger
 
 
@@ -115,14 +117,19 @@
                 Iban = iban
             };
 
-           var pvId = await OrderService.InsertPaymentValueAsync(pv);
-            UserSession.CurrentPaymentValueId = pvId;
-            
-            Logger.LogInformation(
-                "New payment value created for UserId={UserId}, PaymentId={PaymentId}",
-                UserSession.CurrentUserId,
-                pvId
-            );
+           var pvId = await ToastExecutor.RunReturnAsync(()=>OrderService.InsertPaymentValueAsync(pv));
+           if (pvId != 0)
+           {
+               UserSession.CurrentPaymentValueId = pvId;
+
+               Logger.LogInformation(
+                   "New payment value created for UserId={UserId}, PaymentId={PaymentId}",
+                   UserSession.CurrentUserId,
+                   pvId
+               );
+               Nav.NavigateTo("/ConfirmCheckoutPage");
+
+           }
         }
         else
         {
@@ -133,8 +140,9 @@
                 UserSession.CurrentUserId,
                 SelectedPayment.Id
             );
+            Nav.NavigateTo("/ConfirmCheckoutPage");
+
         }
-        Nav.NavigateTo("/ConfirmCheckoutPage");
     }
     
     private void ApplySelectedPayment()

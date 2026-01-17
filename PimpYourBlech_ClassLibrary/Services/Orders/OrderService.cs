@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Numerics;
+using System.Text;
+using Microsoft.Extensions.Logging;
+using PimpYourBlech_ClassLibrary.Exceptions;
 using PimpYourBlech_ClassLibrary.Session;
 using PimpYourBlech_ClassLibrary.ValueObjects;
 using PimpYourBlech_Contracts.DTOs;
@@ -135,6 +138,8 @@ public class OrderService : IOrderService
 
     public async Task<int> InsertDeliveryAddressAsync(DeliveryAddressDto address)
     {
+        ValidateDeliveryAddress(address);
+        
         var deliveryAddress = new DeliveryAddress()
         {
             CustomerId = address.CustomerId,
@@ -158,6 +163,7 @@ public class OrderService : IOrderService
 
     public async Task<int> InsertPaymentValueAsync(PaymentValueDto paymentValue)
     {
+        ValidatePaymentValue(paymentValue);
         var payment = new PaymentValue()
         {
             Id = paymentValue.Id,
@@ -259,5 +265,200 @@ public class OrderService : IOrderService
                 Country = da.Country,
             }
             : null;
+    }
+
+    void ValidatePaymentValue(PaymentValueDto paymentValue)
+    {
+        if (paymentValue == null)
+            throw new WrongInputException("Zahlungsdaten fehlen");
+
+        paymentValue.AccountOwner = paymentValue.AccountOwner?.Trim();
+        paymentValue.Bic = paymentValue.Bic?.Trim().ToUpperInvariant();
+        paymentValue.Iban = paymentValue.Iban?.Replace(" ", "").Trim().ToUpperInvariant();
+
+        if (string.IsNullOrWhiteSpace(paymentValue.AccountOwner))
+            throw new WrongInputException("Kontoinhaber fehlt");
+
+        if (string.IsNullOrWhiteSpace(paymentValue.Bic))
+            throw new WrongInputException("BIC fehlt");
+
+        if (string.IsNullOrWhiteSpace(paymentValue.Iban))
+            throw new WrongInputException("IBAN fehlt");
+
+        if (!IsValidBic(paymentValue.Bic))
+            throw new WrongInputException("BIC ist ungültig");
+
+        if (!IsValidIban(paymentValue.Iban))
+            throw new WrongInputException("IBAN ist ungültig");
+    }
+    
+    
+    void ValidateDeliveryAddress(DeliveryAddressDto address)
+    {
+        if (address is null) throw new WrongInputException("Adresse fehlt");
+
+        // Trimmen um keine Probleme mit Leerzeichen zu bekommen
+        address.Street      = address.Street?.Trim();
+        address.HouseNumber = address.HouseNumber?.Trim();
+        address.Town        = address.Town?.Trim();
+        address.PostalCode  = address.PostalCode?.Trim();
+        address.Country     = address.Country?.Trim();
+        address.Salutation  = address.Salutation?.Trim();
+        address.Surname     = address.Surname?.Trim();
+        address.Lastname    = address.Lastname?.Trim();
+
+        if (string.IsNullOrWhiteSpace(address.Street))
+            throw new WrongInputException("Straße darf nicht leer sein");
+
+        if (string.IsNullOrWhiteSpace(address.HouseNumber))
+            throw new WrongInputException("Hausnummer darf nicht leer sein");
+
+        // Hausnummer: (Zahl + optional Buchstabe (12, 12a, 7B))
+        if (!IsValidHouseNumber(address.HouseNumber))
+            throw new WrongInputException("Hausnummer ist ungültig (z.B. 12 oder 12a)");
+
+        if (string.IsNullOrWhiteSpace(address.Town))
+            throw new WrongInputException("Stadt darf nicht leer sein");
+
+        if (string.IsNullOrWhiteSpace(address.PostalCode))
+            throw new WrongInputException("PLZ darf nicht leer sein");
+
+        if (!IsPostalCodeValidForCountry(address.PostalCode, address.Country))
+            throw new WrongInputException("PLZ ist für das ausgewählte Land ungültig");
+
+        if (string.IsNullOrWhiteSpace(address.Country))
+            throw new WrongInputException("Land darf nicht leer sein");
+
+        if (string.IsNullOrWhiteSpace(address.Lastname)
+            || string.IsNullOrWhiteSpace(address.Salutation)
+            || string.IsNullOrWhiteSpace(address.Surname))
+            throw new WrongInputException("Name und Anrede dürfen nicht leer sein");
+        
+    }
+    
+    private static bool IsPostalCodeValidForCountry(string postalCode, string country)
+    {
+        if (string.IsNullOrWhiteSpace(postalCode) || string.IsNullOrWhiteSpace(country))
+            return false;
+
+        // Normalisieren
+        var plz = postalCode.Trim();
+
+        // Optional: "CH-8000", "AT-1010", "DE-10115" tolerieren
+        plz = plz.Replace(" ", "");
+        if (plz.Contains('-'))
+        {
+            var parts = plz.Split('-', StringSplitOptions.RemoveEmptyEntries);
+            plz = parts.Length == 2 ? parts[1] : plz;
+        }
+
+        if (!plz.All(char.IsDigit))
+            return false;
+
+        var c = country.Trim().ToUpperInvariant();
+
+        // Du musst definieren, was in address.Country steht:
+        // "DE" / "AT" / "CH" ODER "Deutschland" / "Österreich" / "Schweiz"
+        // Ich fange beides ab:
+        return c switch
+        {
+            "DE" or "DEUTSCHLAND" => plz.Length == 5,
+            "AT" or "ÖSTERREICH" or "OESTERREICH" => plz.Length == 4,
+            "CH" or "SCHWEIZ" => plz.Length == 4,
+            "LI" or "LIECHTENSTEIN" => plz.Length == 4,
+            _ => false
+        };
+    }
+
+    private static bool IsValidHouseNumber(string houseNumber)
+    {
+        // Minimale, praxistaugliche Logik ohne Regex:
+        // Erst Ziffern, optional 1 Buchstabe am Ende.
+        int i = 0;
+        while (i < houseNumber.Length && char.IsDigit(houseNumber[i])) i++;
+
+        if (i == 0) return false;                 // muss mit Zahl anfangen
+        if (i == houseNumber.Length) return true; // nur Zahl OK
+
+        // genau 1 Buchstabe am Ende, sonst Müll
+        return i == houseNumber.Length - 1 && char.IsLetter(houseNumber[i]);
+    }
+    
+    private static bool IsValidIban(string iban)
+    {
+        if (iban.Length < 15 || iban.Length > 34)
+            return false;
+
+        if (!iban.All(char.IsLetterOrDigit))
+            return false;
+
+        var countryCode = iban[..2];
+
+        // Längenprüfung pro Land (DE/AT/CH + Reserve)
+        var expectedLength = countryCode switch
+        {
+            "DE" => 22,
+            "AT" => 20,
+            "CH" => 21,
+            _ => -1
+        };
+
+        if (expectedLength != -1 && iban.Length != expectedLength)
+            return false;
+
+        // Umbauen:
+        // iban[..4] = Alles ab Index 4 bis Ende
+        // iban[..a] = Index0 bis 3
+        var rearranged = iban[4..] + iban[..4];
+
+        var sb = new StringBuilder();
+
+        foreach (char c in rearranged)
+        {
+            if (char.IsDigit(c))
+            {
+                sb.Append(c);
+            }
+            else if (char.IsLetter(c))
+            {
+                int value = char.ToUpperInvariant(c) - 'A' + 10;
+                sb.Append(value);
+            }
+            else
+            {
+                throw new WrongInputException("IBAN enthält ungültige Zeichen");
+            }
+        }
+
+        return Mod97(sb.ToString()) == 1;
+    }
+
+    private static int Mod97(string input)
+    {
+        return (int)(BigInteger.Parse(input) % 97);
+    }
+    
+    private static bool IsValidBic(string bic)
+    {
+        if (bic.Length != 8 && bic.Length != 11)
+            return false;
+
+        // Bankcode (4 Buchstaben)
+        if (!bic[..4].All(char.IsLetter))
+            return false;
+
+        // Ländercode (2 Buchstaben)
+        if (!bic.Substring(4, 2).All(char.IsLetter))
+            return false;
+
+        // Ortscode (2 Alphanum)
+        if (!bic.Substring(6, 2).All(char.IsLetterOrDigit))
+            return false;
+
+        // Filialcode optional (3 Alphanum)
+        if (bic.Length == 11 && !bic.Substring(8, 3).All(char.IsLetterOrDigit))
+            return false;
+
+        return true;
     }
 }
