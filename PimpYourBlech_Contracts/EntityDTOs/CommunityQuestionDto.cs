@@ -9,4 +9,6 @@ public class CommunityQuestionDto
 
     public DateTime CreatedAt { get; set; }
 
+    public List<CommunityAnswerDto> Answers { get; set; } = new();
+
     }

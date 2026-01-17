@@ -13,25 +13,32 @@ public class FaqService : IFaqService
         customerInventory = customers;
     }
     
-    public async Task<List<CommunityQuestionDto>>? GetCommunityQuestionsAsync()
+    public async Task<List<CommunityQuestionDto>> GetCommunityQuestionsAsync()
     {
-        var communityQuestions = await customerInventory.GetCommunityQuestionsAsync();;
-       return communityQuestions.ConvertAll(q => new CommunityQuestionDto()
+        var questions = await customerInventory.GetCommunityQuestionsAsync();
+
+        return questions.Select(q => new CommunityQuestionDto
         {
-           Id = q.Id,
-           Content = q.Content,
-           CreatedAt = q.CreatedAt,
-        });
+            Id = q.Id,
+            Content = q.Content,
+            CreatedAt = q.CreatedAt,
+            Answers = q.Answers.Select(a => new CommunityAnswerDto
+            {
+                Id = a.Id,
+                Content = a.Content,
+                CreatedAt = a.CreatedAt,
+                QuestionId = a.QuestionId
+            }).ToList()
+        }).ToList();
     }
 
-    public async Task AddCommunityQuestionAsync(string content)
+    public async Task AddCommunityQuestionAsync(CommunityQuestionCreateDto dto)
     {
-        
-        await customerInventory.AddCommunityQuestionAsync(content);
+        await customerInventory.AddCommunityQuestionAsync(dto.Content);
     }
 
-    public async Task AddCommunityAnswerAsync(int questionId, string content)
+    public async Task AddCommunityAnswerAsync(CommunityAnswerCreateDto dto)
     {
-        await customerInventory.AddCommunityAnswerAsync(questionId, content);
+        await customerInventory.AddCommunityAnswerAsync(dto.QuestionId, dto.Content);
     }
 }

@@ -21,17 +21,16 @@ public class ComparatorService : IComparatorService
                 Row("Erstzulassung", cars, c => c.DatePermit),
                 Row("Leistung", cars, c => $"{c.PS} PS"),
                 Row("Preis", cars, c => $"{c.Price:N0} €"),
-                Row("Verfügbarkeit", cars, c => c.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar")
+                Row("Verfügbarkeit", cars,
+                    c => c.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar")
             }
         };
     }
-    
-    public ComparisonResult CompareConfigurations(
+
+    public ConfigurationComparisonResult CompareConfigurations(
         List<ConfigurationDto> configurations)
     {
-        
-        /*
-        return new ComparisonResult
+        return new ConfigurationComparisonResult
         {
             Configurations = configurations,
             Rows = new List<ComparisonRow>
@@ -41,20 +40,14 @@ public class ComparatorService : IComparatorService
                 Row("Modell", configurations, c => c.Car.Model),
                 Row("Baujahr", configurations, c => c.Car.DateProduction),
                 Row("Erstzulassung", configurations, c => c.Car.DatePermit),
-                Row("Leistung", configurations, c => $"{c.PS} PS"),
+                Row("Leistung", configurations, c => $"{c.TotalPs} PS"),
                 Row("Preis", configurations, c => $"{c.TotalPrice:N0} €"),
-                Row(
-                    "Verfügbarkeit",
-                    configurations,
-                    c => c.Car.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar"
-                )
+                Row("Verfügbarkeit", configurations,
+                    c => c.Car.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar")
             }
-        };*/
-        return new ComparisonResult
-        {
-            Configurations = configurations,
         };
     }
+
     private ComparisonRow Row<T>(
         string label,
         List<T> items,
@@ -63,8 +56,7 @@ public class ComparatorService : IComparatorService
         return new ComparisonRow
         {
             Label = label,
-            Values = items.Select(selector).ToList()
+            Values = items.Select(i => selector(i) ?? "-").ToList()
         };
     }
-
 }

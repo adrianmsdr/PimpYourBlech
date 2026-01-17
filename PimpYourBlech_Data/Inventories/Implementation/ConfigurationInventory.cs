@@ -89,6 +89,7 @@ public class ConfigurationInventory(IDatabase database):IConfigurationInventory
         return await database.Configurations
             .Where(c => c.CustomerId == customerId)
             .Include(c => c.Products)
+            .ThenInclude(p => p.EngineDetail)
             .Include(c => c.Car)
             .ToListAsync();
     }

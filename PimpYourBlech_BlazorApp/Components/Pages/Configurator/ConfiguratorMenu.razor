@@ -2,6 +2,7 @@
 <PageTitle>Configurator</PageTitle>
 
 @using System.Globalization
+@using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
 @using PimpYourBlech_ClassLibrary.Services.Admin
@@ -12,7 +13,7 @@
 @inject IUserSession UserSession
 @inject NavigationManager Nav
 @inject IAdminService AdminService
-
+@inject IToastService ToastService
 
 @if (configuration == null)
 {

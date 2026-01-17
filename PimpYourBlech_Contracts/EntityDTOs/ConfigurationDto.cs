@@ -12,6 +12,15 @@ public class ConfigurationDto
     // FK zu Car
     public int CarId { get; set; }
     
+    
+    public decimal TotalPrice { get; set; }
+    
+    public int ProductCount   { get; set; }
+
+    public int TotalPs { get; set; }
+    
+    public CarDto Car { get; set; } = new();
+    
     public override string ToString()
     {
         return $"Name: {Name}";
