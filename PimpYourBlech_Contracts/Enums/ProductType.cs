@@ -20,4 +20,5 @@ public enum ProductType
     Bremsscheiben,
     Bremsbacken,
     Handbremsseil,
+    Spoiler
 }

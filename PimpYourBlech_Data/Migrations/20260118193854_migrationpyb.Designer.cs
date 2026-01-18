@@ -12,8 +12,8 @@ using PimpYourBlech_Data.Persistence.EFDatabase;
 namespace PimpYourBlech_Data.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    [Migration("20260117194506_pimpyourblech_migrations")]
-    partial class pimpyourblech_migrations
+    [Migration("20260118193854_migrationpyb")]
+    partial class migrationpyb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -245,6 +245,22 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Configurations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CarId = 1,
+                            CustomerId = 1,
+                            Name = "Max' Golf Konfiguration"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CarId = 2,
+                            CustomerId = 2,
+                            Name = "Mustermann Polo Setup"
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.Customer", b =>
@@ -291,6 +307,18 @@ namespace PimpYourBlech_Data.Migrations
                         {
                             Id = 1,
                             AdminRights = true,
+                            FirstName = "Max",
+                            ImagePath = "/CustomerImages/Car1.png",
+                            LastName = "Mustermann",
+                            MailAddress = "mustermail-admin.adresse@mustermail.de",
+                            PasswordHash = "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=",
+                            Telefon = "0123456789",
+                            Username = "MusterAdmin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AdminRights = false,
                             FirstName = "Max",
                             ImagePath = "/CustomerImages/Car1.png",
                             LastName = "Mustermann",
@@ -354,8 +382,21 @@ namespace PimpYourBlech_Data.Migrations
                         new
                         {
                             Id = 1,
-                            Country = "Deutschland",
+                            Country = "DE",
                             CustomerId = 1,
+                            HouseNumber = "12A",
+                            Lastname = "Mustermann",
+                            PostalCode = "83022",
+                            Salutation = "Herr",
+                            Street = "Musterstraße",
+                            Surname = "Admin",
+                            Town = "Rosenheim"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Country = "DE",
+                            CustomerId = 2,
                             HouseNumber = "12A",
                             Lastname = "Mustermann",
                             PostalCode = "83022",
@@ -564,6 +605,17 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("PaymentValueId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = 1,
+                            CustomerId = 1,
+                            DeliveryAddressId = 1,
+                            OrderDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            PaymentValueId = 1,
+                            TotalPrice = 2000m
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.OrderPosition", b =>
@@ -603,6 +655,19 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderPositions");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderPositionId = 1,
+                            ArticleNumber = "100000",
+                            Brand = "Volkswagen",
+                            Name = "Queenstown Felge",
+                            OrderId = 1,
+                            Quantity = 2,
+                            Type = 1,
+                            UnitPrice = 1000m
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.PaymentValue", b =>
@@ -633,6 +698,16 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("PaymentValues");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccountOwner = "Max Mustermann",
+                            Bic = "INGDDEFFXXX",
+                            CustomerId = 1,
+                            Iban = "DE44500105175407324931"
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.Product", b =>
@@ -972,6 +1047,30 @@ namespace PimpYourBlech_Data.Migrations
                             Price = 1650m,
                             ProductType = 4,
                             Quantity = 18
+                        },
+                        new
+                        {
+                            ProductId = 30,
+                            ArticleNumber = "300001",
+                            Brand = "Volkswagen",
+                            CarId = 1,
+                            Description = "Sportlicher Carbon-Heckspoiler für verbesserte Aerodynamik.",
+                            Name = "GTI Carbon Heckspoiler",
+                            Price = 950m,
+                            ProductType = 17,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            ProductId = 31,
+                            ArticleNumber = "300002",
+                            Brand = "Volkswagen",
+                            CarId = 2,
+                            Description = "Kompakter Sportspoiler für den Polo.",
+                            Name = "Polo Sport Heckspoiler",
+                            Price = 720m,
+                            ProductType = 17,
+                            Quantity = 7
                         });
                 });
 

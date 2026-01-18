@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PimpYourBlech_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class pimpyourblech_migrations : Migration
+    public partial class migrationpyb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -378,12 +378,34 @@ namespace PimpYourBlech_Data.Migrations
             migrationBuilder.InsertData(
                 table: "Customers",
                 columns: new[] { "Id", "AdminRights", "FirstName", "ImagePath", "LastName", "MailAddress", "PasswordHash", "Telefon", "Username" },
-                values: new object[] { 1, true, "Max", "/CustomerImages/Car1.png", "Mustermann", "mustermail.adresse@mustermail.de", "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=", "0123456789", "MusterMax" });
+                values: new object[,]
+                {
+                    { 1, true, "Max", "/CustomerImages/Car1.png", "Mustermann", "mustermail-admin.adresse@mustermail.de", "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=", "0123456789", "MusterAdmin" },
+                    { 2, false, "Max", "/CustomerImages/Car1.png", "Mustermann", "mustermail.adresse@mustermail.de", "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=", "0123456789", "MusterMax" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Configurations",
+                columns: new[] { "Id", "CarId", "CustomerId", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, "Max' Golf Konfiguration" },
+                    { 2, 2, 2, "Mustermann Polo Setup" }
+                });
 
             migrationBuilder.InsertData(
                 table: "DeliveryAddresses",
                 columns: new[] { "Id", "Country", "CustomerId", "HouseNumber", "Lastname", "PostalCode", "Salutation", "Street", "Surname", "Town" },
-                values: new object[] { 1, "Deutschland", 1, "12A", "Mustermann", "83022", "Herr", "Musterstraße", "Max", "Rosenheim" });
+                values: new object[,]
+                {
+                    { 1, "DE", 1, "12A", "Mustermann", "83022", "Herr", "Musterstraße", "Admin", "Rosenheim" },
+                    { 2, "DE", 2, "12A", "Mustermann", "83022", "Herr", "Musterstraße", "Max", "Rosenheim" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PaymentValues",
+                columns: new[] { "Id", "AccountOwner", "Bic", "CustomerId", "Iban" },
+                values: new object[] { 1, "Max Mustermann", "INGDDEFFXXX", 1, "DE44500105175407324931" });
 
             migrationBuilder.InsertData(
                 table: "Products",
@@ -413,7 +435,9 @@ namespace PimpYourBlech_Data.Migrations
                     { 21, "100011", "Volkswagen", 1, "Leichte Schmiedefelge mit hoher Stabilität.", null, "Pretoria Sport Felge", 1350m, 1, 8 },
                     { 22, "200010", "Volkswagen", 2, "Klassische Alufelge für Alltag und Komfort.", null, "Astana Felge", 850m, 1, 12 },
                     { 23, "200011", "Volkswagen", 2, "Sportliche Mehrspeichenfelge.", null, "Bergamo Sport Felge", 980m, 1, 10 },
-                    { 24, "200012", "Volkswagen", 2, "Schwarze Performance-Felge.", null, "Verona Black Performance Felge", 1100m, 1, 6 }
+                    { 24, "200012", "Volkswagen", 2, "Schwarze Performance-Felge.", null, "Verona Black Performance Felge", 1100m, 1, 6 },
+                    { 30, "300001", "Volkswagen", 1, "Sportlicher Carbon-Heckspoiler für verbesserte Aerodynamik.", null, "GTI Carbon Heckspoiler", 950m, 17, 5 },
+                    { 31, "300002", "Volkswagen", 2, "Kompakter Sportspoiler für den Polo.", null, "Polo Sport Heckspoiler", 720m, 17, 7 }
                 });
 
             migrationBuilder.InsertData(
@@ -456,6 +480,11 @@ namespace PimpYourBlech_Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "OrderId", "CustomerId", "DeliveryAddressId", "OrderDate", "PaymentValueId", "TotalPrice" },
+                values: new object[] { 1, 1, 1, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, 2000m });
+
+            migrationBuilder.InsertData(
                 table: "Rims",
                 columns: new[] { "Id", "DiameterInInch", "ProductId", "WidthInInch" },
                 values: new object[,]
@@ -467,6 +496,11 @@ namespace PimpYourBlech_Data.Migrations
                     { 5, 17m, 23, 7.0m },
                     { 6, 18m, 24, 7.5m }
                 });
+
+            migrationBuilder.InsertData(
+                table: "OrderPositions",
+                columns: new[] { "OrderPositionId", "ArticleNumber", "Brand", "Name", "OrderId", "Quantity", "Type", "UnitPrice" },
+                values: new object[] { 1, "100000", "Volkswagen", "Queenstown Felge", 1, 2, 1, 1000m });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Colors_ProductId",
