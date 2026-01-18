@@ -89,8 +89,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
         modelBuilder.Entity<Product>().HasOne(p => p.ColorDetail).WithOne(d => d.Product)
             .HasForeignKey<ColorDetail>(d => d.ProductId);
 
-        
-            
+
+
         // Configuration -> Customer (1:n)
         modelBuilder.Entity<Configuration>()
             .HasOne(cfg => cfg.Customer)
@@ -151,6 +151,8 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             .HasForeignKey(o => o.PaymentValueId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        //AB HIER SEEDING 
+
 /*=====================================================
   CUSTOMER
 =====================================================*/
@@ -160,11 +162,26 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
                 Id = 1,
                 FirstName = "Max",
                 LastName = "Mustermann",
+                Username = "MusterAdmin",
+                PasswordHash = "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=",
+                Telefon = "0123456789",
+                MailAddress = "mustermail-admin.adresse@mustermail.de",
+                AdminRights = true,
+                ImagePath = "/CustomerImages/Car1.png"
+            }
+        );
+
+        modelBuilder.Entity<Customer>().HasData(
+            new Customer
+            {
+                Id = 2,
+                FirstName = "Max",
+                LastName = "Mustermann",
                 Username = "MusterMax",
                 PasswordHash = "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=",
                 Telefon = "0123456789",
                 MailAddress = "mustermail.adresse@mustermail.de",
-                AdminRights = true,
+                AdminRights = false,
                 ImagePath = "/CustomerImages/Car1.png"
             }
         );
@@ -441,13 +458,127 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
                 Id = 1,
                 CustomerId = 1,
                 Salutation = "Herr",
+                Surname = "Admin",
+                Lastname = "Mustermann",
+                Street = "Musterstraße",
+                HouseNumber = "12A",
+                Town = "Rosenheim",
+                PostalCode = "83022",
+                Country = "DE"
+            }
+        );
+
+        modelBuilder.Entity<DeliveryAddress>().HasData(
+            new DeliveryAddress
+            {
+                Id = 2,
+                CustomerId = 2,
+                Salutation = "Herr",
                 Surname = "Max",
                 Lastname = "Mustermann",
                 Street = "Musterstraße",
                 HouseNumber = "12A",
                 Town = "Rosenheim",
                 PostalCode = "83022",
-                Country = "Deutschland"
+                Country = "DE"
+            }
+        );
+
+/*=====================================================
+  PAYMENT VALUE
+=====================================================*/
+        modelBuilder.Entity<PaymentValue>().HasData(
+            new PaymentValue
+            {
+                Id = 1,
+                CustomerId = 1,
+                AccountOwner = "Max Mustermann",
+                Iban = "DE44500105175407324931",
+                Bic = "INGDDEFFXXX"
+            }
+        );
+
+/*=====================================================
+  ORDER
+=====================================================*/
+        modelBuilder.Entity<Order>().HasData(
+            new Order
+            {
+                OrderId = 1,
+                CustomerId = 1,
+                DeliveryAddressId = 1,
+                PaymentValueId = 1,
+                OrderDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                TotalPrice = 2000m
+            }
+        );
+
+/*=====================================================
+  ORDER POSITION
+=====================================================*/
+        modelBuilder.Entity<OrderPosition>().HasData(
+            new OrderPosition
+            {
+                OrderPositionId = 1,
+                OrderId = 1,
+                ArticleNumber = "100000",
+                Name = "Queenstown Felge",
+                Brand = "Volkswagen",
+                Type = ProductType.Felge,
+                Quantity = 2,
+                UnitPrice = 1000m
+            }
+        );
+
+        /*=====================================================
+      CONFIGURATIONS
+    =====================================================*/
+        modelBuilder.Entity<Configuration>().HasData(
+
+            new Configuration
+            {
+                Id = 1,
+                Name = "Max' Golf Konfiguration",
+                CustomerId = 1,
+                CarId = 1
+            },
+
+            new Configuration
+            {
+                Id = 2,
+                Name = "Mustermann Polo Setup",
+                CustomerId = 2,
+                CarId = 2
+            }
+        );
+
+        // ================= EXTRAS =================
+        modelBuilder.Entity<Product>().HasData(
+
+            new Product
+            {
+                ProductId = 30,
+                CarId = 1,
+                Name = "GTI Carbon Heckspoiler",
+                ArticleNumber = "300001",
+                Brand = "Volkswagen",
+                Description = "Sportlicher Carbon-Heckspoiler für verbesserte Aerodynamik.",
+                Quantity = 5,
+                Price = 950,
+                ProductType = ProductType.Spoiler
+            },
+
+            new Product
+            {
+                ProductId = 31,
+                CarId = 2,
+                Name = "Polo Sport Heckspoiler",
+                ArticleNumber = "300002",
+                Brand = "Volkswagen",
+                Description = "Kompakter Sportspoiler für den Polo.",
+                Quantity = 7,
+                Price = 720,
+                ProductType = ProductType.Spoiler
             }
         );
     }

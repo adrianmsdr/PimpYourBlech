@@ -198,8 +198,8 @@ Temporary Items
 
 # Fahrzeugbilder lokal generiert
 
-PimpYourBlech_BlazorApp/wwwroot/CarImages/
-PimpYourBlech_BlazorApp/wwwroot/ProductImages/
+# PimpYourBlech_BlazorApp/wwwroot/CarImages/
+# PimpYourBlech_BlazorApp/wwwroot/ProductImages/
 
 # Serilog / Runtime Logs
 Logs/
