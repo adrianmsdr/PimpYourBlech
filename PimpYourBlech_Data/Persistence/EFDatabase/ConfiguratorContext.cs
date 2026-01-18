@@ -531,10 +531,11 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
         );
 
         /*=====================================================
-      CONFIGURATIONS
-    =====================================================*/
+    CONFIGURATIONS
+  =====================================================*/
         modelBuilder.Entity<Configuration>().HasData(
 
+            // ===== User 1 =====
             new Configuration
             {
                 Id = 1,
@@ -546,11 +547,29 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
             new Configuration
             {
                 Id = 2,
+                Name = "Max' Polo Konfiguration",
+                CustomerId = 1,
+                CarId = 2
+            },
+
+            // ===== User 2 =====
+            new Configuration
+            {
+                Id = 3,
                 Name = "Mustermann Polo Setup",
                 CustomerId = 2,
                 CarId = 2
+            },
+
+            new Configuration
+            {
+                Id = 4,
+                Name = "Mustermann Golf Setup",
+                CustomerId = 2,
+                CarId = 1
             }
         );
+
 
         // ================= EXTRAS =================
         modelBuilder.Entity<Product>().HasData(

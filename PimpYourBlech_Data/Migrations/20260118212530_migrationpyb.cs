@@ -390,7 +390,9 @@ namespace PimpYourBlech_Data.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 1, "Max' Golf Konfiguration" },
-                    { 2, 2, 2, "Mustermann Polo Setup" }
+                    { 2, 2, 1, "Max' Polo Konfiguration" },
+                    { 3, 2, 2, "Mustermann Polo Setup" },
+                    { 4, 1, 2, "Mustermann Golf Setup" }
                 });
 
             migrationBuilder.InsertData(
