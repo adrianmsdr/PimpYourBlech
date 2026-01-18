@@ -33,6 +33,7 @@ public class ToastExecutor : IToastExecutor
         catch (Exception ex) when (
             ex is NoCustomerFoundException ||
             ex is UsernameNotAvailableException ||
+            ex is ProductNotAvailableException ||
             ex is WrongInputException ||
             ex is WrongPasswordException) // eigene Exceptions werden gefangen
         {
@@ -91,6 +92,7 @@ public class ToastExecutor : IToastExecutor
             ex is NoCustomerFoundException ||
             ex is UsernameNotAvailableException ||
             ex is WrongInputException ||
+            ex is ProductNotAvailableException ||
             ex is WrongPasswordException) // eigene Exceptions werden gefangen
         {
             _toast.ShowError(errorMessage ?? ex.Message); // Toast - Benachrichtigung für den User in der GUI

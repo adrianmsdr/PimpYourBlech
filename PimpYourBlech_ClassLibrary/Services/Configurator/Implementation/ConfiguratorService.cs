@@ -11,6 +11,7 @@ namespace PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 public class ConfiguratorService : IConfiguratorService
 {
 
+    // Zugriff auf Inventare über Interfaces
     private readonly ICustomerInventory _customerInventory;
     private readonly IProductInventory _productInventory;
     private readonly ICarInventory _carInventory;
@@ -28,6 +29,8 @@ public class ConfiguratorService : IConfiguratorService
         _carInventory = cars;
         _configurationInventory = configurations;
     }
+   
+    // Erstellt eine neue Konfiguration für Kunde + Fahrzeug und speichert sie
     public async Task<ConfigurationDto> StartNewConfiguration(CustomerDto customer, CarDto car, string name)
     {
         var config = new Configuration
@@ -47,7 +50,7 @@ public class ConfiguratorService : IConfiguratorService
         };
     }
     
-    // Methode für die ausgabe des Fahrzeugvergleichs
+    // Liefert alle Konfigurationen eines Kunden inkl. Auto, Produktanzahl, Gesamtpreis und Gesamt-PS
     public async Task<List<ConfigurationDto>> GetAllConfigurationsForCustomerAsync(int customerId)
     {
         var configs =
@@ -92,26 +95,9 @@ public class ConfiguratorService : IConfiguratorService
         return result;
     }
 
-    public async Task<CarDto> GetCarByIdAsync(int carId)
-    {
-        var car = await _carInventory.GetCarByIdAsync(carId);
-        return car != null ? new CarDto
-        {
-            Id = car.Id,
-            Brand = car.Brand,
-            DatePermit = car.DatePermit,
-            DateProduction = car.DateProduction,
-            Price = car.Price,
-            PS = car.PS,
-            Model = car.Model,
-            Name = car.Name,
-            Quantity = car.Quantity,
-        } : null;
-        
-
-    }
-    
-    public async Task AddProduct(int configurationId, int productId)
+   
+    // Fügt ein Produkt einer Konfiguration hinzu oder entfernt/ersetzt es je nach Produkttyp
+    public async Task HandleProductAsync(int configurationId, int productId)
     {
         if (productId == 0 || configurationId == 0)
         {
@@ -146,6 +132,7 @@ public class ConfiguratorService : IConfiguratorService
         var products = await GetRegisteredProductsAsync(configurationId);
         var existingProduct = products.FirstOrDefault(p => p.ProductType == product.ProductType);
 
+        // Lack/Felge/Motor -> vorhandenes Produkt gleichen Typs ersetzen
         if (product.ProductType == ProductType.Lack
             || product.ProductType == ProductType.Felge
             || product.ProductType == ProductType.Motor)
@@ -159,6 +146,7 @@ public class ConfiguratorService : IConfiguratorService
             }
            
         }
+        // sonstige Produkte -> gleiches Produkt togglen (hinzufügen/entfernen)
         else
         {
             if (existingProduct?.ProductId == product.ProductId)
@@ -174,7 +162,7 @@ public class ConfiguratorService : IConfiguratorService
     }
     
 
-    //Preisberechnung
+    // Berechnet den Gesamtpreis einer Konfiguration (Auto + Summe aller Produktpreise)
     public async  Task<decimal> CalculateTotalPriceAsync(ConfigurationDto configuration)
     {
         var config = await _configurationInventory.GetConfigurationByIdAsync(configuration.Id);
@@ -186,7 +174,7 @@ public class ConfiguratorService : IConfiguratorService
         return carPrice + productTotal;
     }
     
-    // PS Berechnung
+    // Berechnet die Gesamt-PS der Konfiguration (Basis-PS oder Motor-PS wenn Motor gewählt)
     private int CalculateTotalPs(Configuration config)
     {
         var basePs = config.Car.PS;
@@ -200,6 +188,7 @@ public class ConfiguratorService : IConfiguratorService
         return motor.EngineDetail.Ps;
     }
 
+    // Speichert eine Konfiguration: neu anlegen (Id==0) oder bestehende aktualisieren
     public async Task SaveConfigurationAsync(ConfigurationDto configuration, CustomerDto customer)
     {
         if (configuration.Id == 0)
@@ -226,15 +215,20 @@ public class ConfiguratorService : IConfiguratorService
         }
         
     }
+    
+    // Löscht eine Konfiguration anhand ihrer Id
     public async Task DeleteConfiguration(ConfigurationDto configuration)
     {
            await _configurationInventory.DeleteConfigurationAsync(configuration.Id);
     }
 
+    // Entfernt ein Produkt aus einer Konfiguration
     public async Task RemoveProduct(int configurationId, int productId)
     {
         await _configurationInventory.RemoveProductAsync(configurationId, productId);
     }
+   
+    // Getter für alle Konfigurationen eines Kunden 
     public async Task<List<ConfigurationDto>> GetAllConfigurations(CustomerDto customer)
     {
        var configs =  await _configurationInventory.GetConfigurationsForCustomerAsync(customer.Id);
@@ -246,66 +240,9 @@ public class ConfiguratorService : IConfiguratorService
            Id = p.Id
        });
     }
-
-   
-
     
-
-    public async Task<List<ProductDto>> ListEnginesAsync()
-    {
-        var engines = await _productInventory.ListEnginesAsync();
-        return engines.ConvertAll(p => new ProductDto
-        {
-            ArticleNumber = p.ArticleNumber,
-            Name = p.Name,
-            CarId = p.CarId,
-            Brand = p.Brand,
-            Description = p.Description,
-            ImageUrl = p.ImageUrl,
-            Price = p.Price,
-            ProductId = p.ProductId,
-            ProductType = p.ProductType,
-            Quantity = p.Quantity,
-        });
-    }
-
-    public async Task<List<ProductDto>> ListRimsAsync()
-    {
-        var rims = await _productInventory.ListEnginesAsync();
-        return rims.ConvertAll(p => new ProductDto
-        {
-            ArticleNumber = p.ArticleNumber,
-            Name = p.Name,
-            CarId = p.CarId,
-            Brand = p.Brand,
-            Description = p.Description,
-            ImageUrl = p.ImageUrl,
-            Price = p.Price,
-            ProductId = p.ProductId,
-            ProductType = p.ProductType,
-            Quantity = p.Quantity,
-        });
-    }
-
-    public async Task<List<CarDto>> ListCarsAsync()
-    {
-        var cars = await _carInventory.ListCarsAsync();
-        return cars.ConvertAll(p => new CarDto
-            {
-                Name = p.Name,
-                Quantity = p.Quantity,
-                Brand = p.Brand,
-                Model = p.Model,
-                DatePermit = p.DatePermit,
-                DateProduction = p.DateProduction,
-                Price = p.Price,
-                PS = p.PS,
-                Id = p.Id,
-            }
-        );
-    }
-
-    public async Task<ConfigurationDto> GetConfigurationByIdAsync(int configurationId)
+    // Getter für eine Konfiguration über seine Id
+    public async Task<ConfigurationDto?> GetConfigurationByIdAsync(int configurationId)
     {
         var config = await _configurationInventory.GetConfigurationByIdAsync(configurationId);
         return config != null ? new ConfigurationDto
@@ -317,6 +254,7 @@ public class ConfiguratorService : IConfiguratorService
         } : null;
     }
 
+    
     public async Task<List<ProductDto>> GetAvailableColorsAsync(int Id)
     {
         var colors = await _carInventory.GetAvailableColorsAsync(Id);
@@ -335,6 +273,7 @@ public class ConfiguratorService : IConfiguratorService
         });
     }
 
+    // Getter für verfügbare Motoren für ein Auto (Extra - Informationen in der Vorschau)
     public async Task<List<ProductDto>> GetAvailableEnginesAsync(int carId)
     {
         var engines = await _carInventory.GetAvailableEnginesAsync(carId);
@@ -358,27 +297,9 @@ public class ConfiguratorService : IConfiguratorService
             }
         );
     }
-
-    public async Task<List<ProductDto>> GetAvailableRims(int carId)
-    {
-        var engines = await _carInventory.GetAvailableEnginesAsync(carId);
-        return engines.ConvertAll(p => new ProductDto
-            {
-                ArticleNumber = p.ArticleNumber,
-                Name = p.Name,
-                CarId = p.CarId,
-                Brand = p.Brand,
-                Description = p.Description,
-                ImageUrl = p.ImageUrl,
-                Price = p.Price,
-                ProductId = p.ProductId,
-                ProductType = p.ProductType,
-                Quantity = p.Quantity,
-            }
-        );
-    }
     
     
+    // Getter für den Anzeigenamen des Getriebes
     public string GetGearDisplayName(Gear gear)
     {
         var field = gear.GetType().GetField(gear.ToString());
@@ -387,6 +308,7 @@ public class ConfiguratorService : IConfiguratorService
             .Name ?? gear.ToString();
     }
 
+    // Getter für alle verfügbaren Extras eines Fahrzeugs
     public async Task<List<ProductDto>> GetAvailableExtras(int carId)
     {
     var extras = await _carInventory.GetAvailableExtrasAsync(carId);
@@ -406,6 +328,7 @@ public class ConfiguratorService : IConfiguratorService
     );
     }
 
+    // Query um verfügbare Produkte eines Fahrzeugs nach Produkttyp zu suchen
     public async Task<List<ProductDto>> GetAvailableProductsAsync(int carId, ProductType type)
     {
        var products =  await _carInventory.GetAvailableProductsAsync(carId, type);
@@ -425,14 +348,8 @@ public class ConfiguratorService : IConfiguratorService
        );
     }
 
-    public async Task<bool> ConfigurationAvailable(int carId)
-    {
-        return !(await _carInventory.GetAvailableProductsAsync(carId, ProductType.Lack)).Any() ||
-               !(await _carInventory.GetAvailableProductsAsync(carId, ProductType.Motor)).Any() ||
-               !(await _carInventory.GetAvailableProductsAsync(carId, ProductType.Felge)).Any()
-               ;
-    }
-
+    
+    // Getter für alle aktuell verfügbaren Fahrzeuge
     public async Task<List<CarDto>> GetAvailableCarsAsync()
     {
         var cars = await _carInventory.ListCarsForConfigurationsAsync();
@@ -449,12 +366,8 @@ public class ConfiguratorService : IConfiguratorService
             Id = c.Id,
         });
     }
-
-    public Task<List<ConfigurationCarItemsDto>> GetConfigurationBasicsAsync()
-    {
-        throw new NotImplementedException();
-    }
-
+    
+    // Liefert die Basis-Konfigurationsdaten eines Kunden
     public async Task<List<ConfigurationCarItemsDto>> GetConfigurationsBasicsCustomerAsync(int customerId)
     {
         var configurations = await _configurationInventory.GetConfigurationsIncludeCarProductsAsync(customerId);
@@ -469,6 +382,7 @@ public class ConfiguratorService : IConfiguratorService
         });
     }
 
+    // Liefert alle registrierten Produkte einer Konfiguration
     public async Task<List<ProductDto>> GetRegisteredProductsAsync(int configId)
     {
         var config = await _configurationInventory.GetAllProductsAsync(configId);

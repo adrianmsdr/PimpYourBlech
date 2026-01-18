@@ -6,6 +6,7 @@
 @using PimpYourBlech_ClassLibrary.Services.Orders
 @using PimpYourBlech_ClassLibrary.Services.Shop
 @using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_ClassLibrary.ValueObjects
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject NavigationManager Nav
 @inject IImageService ImageService
@@ -70,7 +71,7 @@
             "User {UserId} navigated back to MainMenu after successful purchase",
             UserSession.CurrentUserId
         );
-
+        UserSession.CurrentCart = new Cart();
         Nav.NavigateTo("/MainMenu");
     }
 }

@@ -1,0 +1,74 @@
+@page "/user/orders"
+@using PimpYourBlech_ClassLibrary.Services.Customers
+@using PimpYourBlech_ClassLibrary.Services.Customers.Implementation
+@using PimpYourBlech_ClassLibrary.Services.Orders
+@using PimpYourBlech_ClassLibrary.Session
+@using PimpYourBlech_Contracts.DTOs
+@using PimpYourBlech_Contracts.EntityDTOs
+@inject ICustomerService CustomerService
+@inject IOrderService OrderService
+@inject IUserSession UserSession
+@inject  NavigationManager Nav
+<PageTitle>/user/orders</PageTitle>
+<div class="menu-container wide">
+    <h3 class="headline-admin">Deine Bestellungen:</h3>
+    
+   
+    
+    @if (orders == null || orders.Count == 0)
+    {
+        <p>Keine Bestellungen vorhanden.</p>
+    }
+    else
+    {
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Zeitstempel</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Gesamtpreis</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var o in orders)
+            {
+                <tr 
+                    style="cursor: pointer">
+                    <td>@o.Id</td>
+                    <td>@o.Created</td>
+                    <td>@o.CustomerFirstName</td>
+                    <td>@o.CustomerLastName</td>
+           
+                    <td>@o.TotalPrice€</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    <div class="button-column">
+        <button class="buttons" @onclick="Cancel">Zurück</button>
+    </div>
+
+</div>
+
+
+@code {
+    CustomerDto c = new();
+    private List<OrderCustomerDto> orders = new ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        orders = await OrderService.GetUserOrdersDetailsAsync(c.Id);
+    }
+
+    public void Cancel()
+    {
+        Nav.NavigateTo("/user");
+    }
+
+}

@@ -34,6 +34,14 @@ public class OrderInventory(IDatabase database):IOrderInventory
             .ToListAsync();
     }
 
+    public async Task<List<Order>> GetOrdersForCustomerIncludeCustomerAsync(int customerId)
+    {
+        return await database.Orders
+            .Include(o => o.Customer)
+            .Where(o => o.Customer.Id == customerId)
+            .ToListAsync();
+    }
+
     public async Task<List<Order>> GetOrdersForCustomerAsync(int customerId)
     {
         return await database.Orders

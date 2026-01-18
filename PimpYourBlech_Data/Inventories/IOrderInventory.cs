@@ -8,6 +8,7 @@ public interface IOrderInventory
     public Task<List<OrderPosition>> GetProductsForOrderAsync(int orderId);
     
     public Task<List<Order>> GetOrdersIncludeCustomerAsync();
+    public Task<List<Order>> GetOrdersForCustomerIncludeCustomerAsync(int customerId);
     
     public Task<List<Order>> GetOrdersForCustomerAsync(int customerId);
     

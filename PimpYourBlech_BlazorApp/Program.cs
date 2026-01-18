@@ -9,6 +9,7 @@ using PimpYourBlech_ClassLibrary.Factories;
 using PimpYourBlech_ClassLibrary.Services.Cars;
 using PimpYourBlech_ClassLibrary.Services.Cars.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Carts;
+using PimpYourBlech_ClassLibrary.Services.Carts.Implementation;
 using PimpYourBlech_ClassLibrary.Services.Configurator;
 using PimpYourBlech_ClassLibrary.Services.Configurator.Implementation;
 using PimpYourBlech_ClassLibrary.Services.CustomerCommunication;

@@ -35,7 +35,7 @@ private CustomerDto? CurrentCustomer;
 
         selectedColorId = colorId;
 
-       await ConfiguratorService.AddProduct(configuration.Id, selectedColorId);
+       await ConfiguratorService.HandleProductAsync(configuration.Id, selectedColorId);
         LoadFrames();
         await UpdatePrice();
     }
@@ -45,11 +45,11 @@ private CustomerDto? CurrentCustomer;
         CurrentCustomer = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         
         // 1) Auto laden (einmal)
-        Car = await ConfiguratorService.GetCarByIdAsync(Id);
+        Car = await CarService.GetCarByIdAsync(Id);
         if (Car == null) return;
 
         // 2) Farben laden
-        availableColors = await ConfiguratorService.GetAvailableColorsAsync(Id) ?? new List<ProductDto>();
+        availableColors = await CarService.GetAvailableColorsAsync(Id) ?? new List<ProductDto>();
 
         // 3) Produkte laden
         availableEngines = await ConfiguratorService.GetAvailableEnginesAsync(Id) ?? new List<ProductDto>();
@@ -105,7 +105,7 @@ private CustomerDto? CurrentCustomer;
         }
 
 
-       await ConfiguratorService.AddProduct(configuration.Id, product.ProductId);
+       await ConfiguratorService.HandleProductAsync(configuration.Id, product.ProductId);
        
 
        if (product.ProductType == ProductType.Felge)
@@ -145,19 +145,19 @@ registeredProducts = await ConfiguratorService.GetRegisteredProductsAsync(config
         if (availableColors.Count > 0)
         {
             selectedColorId = availableColors[0].ProductId;
-            await ConfiguratorService.AddProduct(configuration.Id, availableColors[0].ProductId);
+            await ConfiguratorService.HandleProductAsync(configuration.Id, availableColors[0].ProductId);
         }
 
         if (availableRims.Count > 0)
         {
             selectedRimId = availableRims[0].ProductId;
-            await ConfiguratorService.AddProduct(configuration.Id, availableRims[0].ProductId);
+            await ConfiguratorService.HandleProductAsync(configuration.Id, availableRims[0].ProductId);
         }
         
         if (availableEngines.Count > 0)
         {
             selectedEngine = availableEngines[0];
-           await  ConfiguratorService.AddProduct(configuration.Id, availableEngines[0].ProductId);
+           await  ConfiguratorService.HandleProductAsync(configuration.Id, availableEngines[0].ProductId);
         }
 
         LoadFrames();
