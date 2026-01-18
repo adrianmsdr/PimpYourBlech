@@ -12,7 +12,7 @@ using PimpYourBlech_Data.Persistence.EFDatabase;
 namespace PimpYourBlech_Data.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    [Migration("20260118193854_migrationpyb")]
+    [Migration("20260118212530_migrationpyb")]
     partial class migrationpyb
     {
         /// <inheritdoc />
@@ -258,8 +258,22 @@ namespace PimpYourBlech_Data.Migrations
                         {
                             Id = 2,
                             CarId = 2,
+                            CustomerId = 1,
+                            Name = "Max' Polo Konfiguration"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CarId = 2,
                             CustomerId = 2,
                             Name = "Mustermann Polo Setup"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CarId = 1,
+                            CustomerId = 2,
+                            Name = "Mustermann Golf Setup"
                         });
                 });
 
