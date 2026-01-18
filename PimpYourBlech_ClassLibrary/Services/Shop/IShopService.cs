@@ -6,10 +6,6 @@ namespace PimpYourBlech_ClassLibrary.Services.Shop;
 public interface IShopService
 {
     
-
-    //(Optional für später) Bestellen
-    
-
-
+    // Getter für alle Produkte die im Shop verfügbar sein sollen
     public Task<List<ProductDto>> GetProductsAsync(ProductListQuery q);
 }

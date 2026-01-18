@@ -5,9 +5,12 @@ namespace PimpYourBlech_ClassLibrary.Services.Carts;
 
 public interface ICartService
 {
-    Cart AddProduct(Cart cart, ProductDto product);
+    // Fügt ein Produkt dem Warenkorb hinzu
+    Task AddProduct(Cart cart, ProductDto product);
+
+    // Entfernt ein Produkt aus dem Warenkorb
     void RemoveProduct(Cart cart, CartPosition cp);
 
-
-  public double GetTotalPrice(Cart cart);
+    // Berechnet den Gesamtpreis des Warenkorbs
+    public decimal GetTotalPrice(Cart cart);
 }

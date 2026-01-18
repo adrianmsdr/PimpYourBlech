@@ -68,33 +68,14 @@
                     <InputText class="text-inputPYB form-input-grid" type="password" @bind-Value="EditModel.PasswordHash" />
                     
                 </div>
-                @*
-                <div class="admin-details-section-divider"></div>
-                <h4 class="headline-admin">Lieferadresse</h4>
-
-                <div class="form-grid-admin">
-                    <label>Land</label>
-                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.Country" />
-
-                    <label>Postleitzahl</label>
-                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.PostalCode" />
-
-                    <label>E-Mail</label>
-                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.Town" />
-
-                    <label>Telefon</label>
-                    <InputText class="text-inputPYB form-input-grid" @bind-Value="EditModel.DeliveryAddress.Street" />
-
-                    <label>Passwort</label>
-                    <InputText class="text-inputPYB form-input-grid" type="password" @bind-Value="EditModel.DeliveryAddress.HouseNumber" />
-                    
-                </div>*@
+                
                 
             </EditForm>
         </div>
     </div>
     <div class="button-column">
         <button class="buttons" @onclick="SaveUser">Speichern</button>
+        <button class="buttons" @onclick="GoToOrders">Bestellungen</button>
         <button class="buttons" @onclick="Cancel">Zurück</button>
     </div>
 </div>
@@ -158,6 +139,13 @@
     {
         Nav.NavigateTo("/mainMenu");
     }
+    
+     public void GoToOrders()
+    {
+        Nav.NavigateTo("/user/orders");
+    }
+    
+    
     public async Task SaveUser()
     {
         if (Customer is null) return;

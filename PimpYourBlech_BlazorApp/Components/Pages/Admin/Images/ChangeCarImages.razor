@@ -180,7 +180,7 @@
 
         if (selectedCarId == 0) return;
 
-        Colors = await CarService.GetAvailableColors(selectedCarId);
+        Colors = await CarService.GetAvailableColorsAsync(selectedCarId);
         Rims = await CarService.GetAvailableRims(selectedCarId);
     }
 

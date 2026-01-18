@@ -71,6 +71,9 @@
     {
         c = await OrderService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         _paymentValues = await OrderService.GetPaymentValuesAsync(c.Id);
+        if (_paymentValues.Count >= 1){
+            selectedPaymentValueId = _paymentValues[_paymentValues.Count-1].Id;
+        }
     }
 
 

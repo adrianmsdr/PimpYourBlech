@@ -71,14 +71,30 @@
 
                 </div>
             </div>
+            
+            <div class="combo-card-admin wide">
+                <div class="section">
+                    <h5 class="section-title">Produktbeschreibung</h5>
+                    <div class="admin-details-section-divider"></div>
 
+                   
+                      
+                        <div class="v">@Product.Description</div>
+                        
+               
+            
 
-            <div class="button-column">
-                <button class="buttons" @onclick="OpenDeleteModal">Fahrzeugteil löschen</button>
-                <button class="buttons" @onclick="EditProduct">Fahrzeugteil bearbeiten</button>
-                <button class="buttons" @onclick="Cancel">Zurück</button>
+                </div>
             </div>
-        </div>
+
+
+
+                <div class="button-column">
+                    <button class="buttons" @onclick="OpenDeleteModal">Fahrzeugteil löschen</button>
+                    <button class="buttons" @onclick="EditProduct">Fahrzeugteil bearbeiten</button>
+                    <button class="buttons" @onclick="Cancel">Zurück</button>
+                </div>
+            </div>
     }
 </div>
 
@@ -111,7 +127,7 @@
 
         if (Product.ProductType == ProductType.Felge)
         {
-            foreach (var color in await CarService.GetAvailableColors(c.Id))
+            foreach (var color in await CarService.GetAvailableColorsAsync(c.Id))
             {
                ImageService.Delete360Images(c.Id, color.ProductId, Product.ProductId);
             }

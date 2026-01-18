@@ -7,6 +7,8 @@
 @using Blazored.Toast.Configuration
 @using Blazored.Toast.Services
 @using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_BlazorApp.Services.Toasts
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.State
@@ -20,7 +22,9 @@
 @inject IConfiguratorService ConfiguratorService
 @inject ICartService CartService
 @inject IToastService ToastService
+@inject IToastExecutor ToastExecutor
 @inject IUserSession UserSession
+@inject ICarService CarService
 
 
 <PageTitle>Shop</PageTitle>
@@ -112,7 +116,10 @@ ausgewählten infos + bild in so nem Kästchen wär noch schön
             <option value="">Alle</option>
             @foreach (var c in Enum.GetValues<ProductType>())
             {
-                <option value="@c">@c</option>
+                if (c != ProductType.Lack)
+                {
+                    <option value="@c">@c</option>
+                }
             }
         </select>
        
@@ -210,13 +217,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         await LoadProductsAsync();
-       cars =  await ConfiguratorService.ListCarsAsync();
+       cars =  await CarService.GetCarsAsync();
     }
 
     private async Task LoadProductsAsync()
     {
         var q = new ProductListQuery
         {
+            ExcludeColors = true,
             Type = selectedCategory,
             SortBy = selectedSortOption,
             SearchTerm = string.IsNullOrWhiteSpace(searchText) ? null : searchText.Trim(),
@@ -232,10 +240,9 @@ else
         IsOpen = !IsOpen;
     }
     
-    private void AddToCart(ProductDto product)
+    private async Task AddToCart(ProductDto product)
     {
-        UserSession.CurrentCart = CartService.AddProduct(UserSession.CurrentCart,product);
-        ToastService.ShowSuccess($"{product.Name} wurde zum Warenkorb hinzugefügt");
+        await ToastExecutor.RunAsync(()=>CartService.AddProduct(UserSession.CurrentCart,product),successMessage:$"{product.Name} wurde zum Warenkorb hinzugefügt");
         StateHasChanged();
     }
 

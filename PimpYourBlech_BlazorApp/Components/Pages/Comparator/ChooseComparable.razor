@@ -1,9 +1,11 @@
 @page "/compare/choose"
 
 @using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_Contracts.EntityDTOs;
 @using PimpYourBlech_ClassLibrary.Services.Configurator
 @inject IConfiguratorService ConfiguratorService
+@inject ICarService CarService
 @inject IImageService ImageService
 
 <h3>Fahrzeuge vergleichen</h3>
@@ -52,7 +54,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        cars = await ConfiguratorService.ListCarsAsync();
+        cars = await CarService.GetCarsAsync();
     }
 
     private void ToggleCar(CarDto car)

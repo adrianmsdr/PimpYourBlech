@@ -11,8 +11,10 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementati
 
 public class EmailService : IEmailService
 {
+    // Versendet die Registrierungsbestätigung an einen Kunden
     public async Task SendRegistrationEmailAsync(CustomerDto customer)
     {
+        // Betreff + Inhalt der Registrierungs-Mail bauen
         string subject = "Deine Registrierung bei PimpYourBlech";
         string message = "Hallo " + customer.FirstName + ",\n\n" +
             "dein Account bei PimpYourBlech wurde erfolgreich erstellt.\n" +
@@ -21,6 +23,7 @@ public class EmailService : IEmailService
             "Ignorier die Mail einfach oder gib uns kurz Bescheid.\n\n" +
             "Bis gleich in der Werkstatt!";
 
+        // SMTP-Client konfigurieren (Gmail, SSL, Credentials)
         using var client = new SmtpClient("smtp.gmail.com", 587)
             {
                 EnableSsl = true,
@@ -28,10 +31,13 @@ public class EmailService : IEmailService
             }
             ;
 
+        // Mail erstellen und senden
         using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
             to: customer.MailAddress, subject,message);
        await client.SendMailAsync(mail);
     }
+    
+    // Prüft E-Mail auf Inhalt + Format + Übereinstimmung mit Bestätigung
     public bool MailAdressChecker(String mailAddress, string confirm)
     {
         if (string.IsNullOrWhiteSpace(mailAddress))
@@ -51,67 +57,47 @@ public class EmailService : IEmailService
         return true;
     }
     
-    
 
-    public bool ConfirmRegistrationChecker(String mailAddress, string confirm)
-    {
-        if (!mailAddress.Equals(confirm, StringComparison.OrdinalIgnoreCase))
-        {
-           throw new WrongInputException("E-Mail-Adressen stimmen nicht überein.");
-           
-        }
-        return true;
-    }
-
+    // Versendet eine Bestellbestätigung inkl. aller Bestellpositionen
     public async Task SendOrderReplyEmail(CustomerDto customer, List<OrderPositionDto> orderPositions)
     {
+        // Bestellpositionen in einen Textblock bauen
        StringBuilder sb = new StringBuilder();
         foreach (var p in  orderPositions)
         {
+            // Pro Position: Name, Artikelnummer, Marke, Preis*Anzahl
             sb.Append(p.Name + "\n\n" + p.ArticleNumber + "\n\n" + p.Brand + "\n\n" + p.UnitPrice*p.Quantity  + " €\n\n");
         }
+        
+        // Betreff + Inhalt der Bestellbestätigung bauen
         string subject = "Deine Bestellung bei PimpYourBlech";
         string message = "Hallo " + customer.FirstName + ",\n\n" +
                          "deine Bestellung bei PimpYourBlech war erfolgreich.\n" +
                          "Du kannst deine Bestellungen auch jederzeit in deinem Profil verwalten.\n\n" +
                          "Bestellübersicht: \n\n" + sb;
 
+        // SMTP-Client konfigurieren
         using var client = new SmtpClient("smtp.gmail.com", 587)
             {
                 EnableSsl = true,
                 Credentials = new NetworkCredential("pimpyourblech@gmail.com", "yswx nobp xhgk sjzv")
             }
             ;
-        if (customer.MailAddress != null)
+        if (customer.MailAddress == null)
         {
-            using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
+            return;
+        }
+    
+        // Mail erstellen und senden
+        using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
                 to: customer.MailAddress, subject, message);
             await client.SendMailAsync(mail);
-        }
+        
     }
 
+    // Versendet eine Konfigurationsübersicht zu einer gespeicherten Konfiguration
     public async Task SendConfigurationRequestEmail(CustomerDto customer, ConfigurationDto config)
     {
-        string subject = "Deine Konfigurationsübersicht (ID: " + config.Id + ")";
-        string message = "Hallo " + customer.FirstName + ",\n\n" +
-                         "deine Bestellung bei PimpYourBlech war erfolgreich.\n" +
-                         "Du kannst deine Bestellungen auch jederzeit in deinem Profil verwalten.\n\n" +
-                         "Bestellübersicht: Hierfür müsste eine Order jetzt mehrere Produkte speichern können, \\n\\n\" +" +
-                         "nicht nur eins wie jetzt"
-                         
-            ;
-
-        using var client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                EnableSsl = true,
-                Credentials = new NetworkCredential("pimpyourblech@gmail.com", "yswx nobp xhgk sjzv")
-            }
-            ;
-        if (customer.MailAddress != null)
-        {
-            using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
-                to: customer.MailAddress, subject, message);
-            await client.SendMailAsync(mail);
-        }
+        
     }
 }

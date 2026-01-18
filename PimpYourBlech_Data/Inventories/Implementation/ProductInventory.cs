@@ -59,6 +59,11 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
     public async Task<List<Product>> QueryAsync(ProductListQuery q)
     {
         IQueryable<Product> query = database.Products.AsNoTracking();
+        
+        if (q.ExcludeColors)
+        {
+            query = query.Where(p => p.ProductType != ProductType.Lack);
+        }
 
         if (q.ProductId is not null)
             query = query.Where(p => p.ProductId == q.ProductId.Value);
@@ -99,10 +104,23 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
         return await query.ToListAsync();
     }
 
+  
+
     public async Task<List<Product>> GetProductsForCarsAsync(int carId)
     {
        return await database.Products
            .Where(p => p.CarId == carId)
            .ToListAsync();
+    }
+
+    public async Task SellProductsAsync(OrderPosition orderPosition)
+    {
+        var product = await database.Products
+            .FirstOrDefaultAsync(p => p.ArticleNumber == orderPosition.ArticleNumber);
+        
+
+        product.Quantity -= orderPosition.Quantity;
+
+        await database.SaveChangesAsync();
     }
 }

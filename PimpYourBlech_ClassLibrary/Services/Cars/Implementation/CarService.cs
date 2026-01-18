@@ -8,7 +8,7 @@ using PimpYourBlech_Data.Models;
 
 namespace PimpYourBlech_ClassLibrary.Services.Cars.Implementation;
 
-public class CarService:ICarService
+public class CarService : ICarService
 {
     private readonly ICarInventory _carInventory;
     private readonly IProductInventory _productInventory;
@@ -21,6 +21,7 @@ public class CarService:ICarService
         _logger = logger;
     }
 
+    // Getter für alle Produkte, die auf ein Fahrzeug registriert sind
     public async Task<List<ProductDto>> GetRegisteredProductsAsync(int carId)
     {
         var products = await _productInventory.GetProductsForCarsAsync(carId);
@@ -38,37 +39,38 @@ public class CarService:ICarService
             ProductType = p.ProductType,
         });
     }
-    
-     public async Task<List<CarDto>> GetCarsAsync()
+
+    // Getter für alle registrierten Fahrzeuge
+    public async Task<List<CarDto>> GetCarsAsync()
     {
-        
-      var cars = await _carInventory.ListCarsAsync();
-      return cars.ConvertAll(c => new CarDto
-      {
-          Brand = c.Brand,
-          DatePermit = c.DatePermit,
-          DateProduction = c.DateProduction,
-          Price = c.Price,
-          PS = c.PS,
-          Model = c.Model,
-          Id = c.Id,
-          Name = c.Name,
-          Quantity = c.Quantity,
-      });
+        var cars = await _carInventory.ListCarsAsync();
+        return cars.ConvertAll(c => new CarDto
+        {
+            Brand = c.Brand,
+            DatePermit = c.DatePermit,
+            DateProduction = c.DateProduction,
+            Price = c.Price,
+            PS = c.PS,
+            Model = c.Model,
+            Id = c.Id,
+            Name = c.Name,
+            Quantity = c.Quantity,
+        });
     }
 
+    // Validiert + registriert ein neues Fahrzeug
     public async Task<CarDto> RegisterCarAsync(string name, string dateProduction, string datePermit, string brand,
-        string model, string ps, string quantity,string price)
+        string model, string ps, string quantity, string price)
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(model) || string.IsNullOrWhiteSpace(brand))
             throw new WrongInputException("Name, Hersteller und Modell dürfen nicht leer sein.");
-        
+
         if (string.IsNullOrWhiteSpace(dateProduction) || string.IsNullOrWhiteSpace(datePermit))
             throw new WrongInputException("Zulassungsdatum und Produktionsdatum dürfen nicht leer sein.");
-        
+
         if (!int.TryParse(quantity, out var quantityValue) || quantityValue < 0)
             throw new WrongInputException("Bestand muss eine positive Ganzzahl sein.");
-        
+
         if (!decimal.TryParse(price, out var priceValue) || priceValue < 0)
             throw new WrongInputException("Preis muss eine positive Zahl sein.");
 
@@ -100,34 +102,44 @@ public class CarService:ICarService
         return carDto;
     }
 
+    // Getter für ein Fahrzeug über seine ID
     public async Task<CarDto> GetCarByIdAsync(int id)
     {
         var car = await _carInventory.GetCarByIdAsync(id);
-        return car != null ? new CarDto
-        {
-            Id = car.Id,
-            Brand = car.Brand,
-            DatePermit = car.DatePermit,
-            DateProduction = car.DateProduction,
-            Price = car.Price,
-            PS = car.PS,
-            Model = car.Model,
-            Name = car.Name,
-            Quantity = car.Quantity,
-        } : null;
+        return car != null
+            ? new CarDto
+            {
+                Id = car.Id,
+                Brand = car.Brand,
+                DatePermit = car.DatePermit,
+                DateProduction = car.DateProduction,
+                Price = car.Price,
+                PS = car.PS,
+                Model = car.Model,
+                Name = car.Name,
+                Quantity = car.Quantity,
+            }
+            : null;
     }
 
+    // Löscht ein registriertes Fahrzeug
     public async Task DeleteCarAsync(CarDto car)
     {
+        // Validierung, ob für dieses Fahrzeug Produkte registriert sind (löschen nicht erlaubt)
         var productsCount = (await _productInventory.GetProductsForCarsAsync(car.Id)).Count;
-        if (productsCount > 0){
-            throw new ForbiddenActionException("Fahrzeug besitzt "  + productsCount + " registrierte Produkte und darf nicht gelöscht werden.");
+        if (productsCount > 0)
+        {
+            throw new ForbiddenActionException("Fahrzeug besitzt " + productsCount +
+                                               " registrierte Produkte und darf nicht gelöscht werden.");
         }
+
+        // Fahrzeug per ID aus der DB holen und löschen
         var carToDelete = await _carInventory.GetCarByIdAsync(car.Id);
         await _carInventory.DeleteCarAsync(carToDelete);
         _logger.LogInformation("Car deleted");
     }
 
+    // Updatet ein registriertes Fahrzeug
     public async Task UpdateCarAsync(CarDto car)
     {
         var carToUpdate = await _carInventory.GetCarByIdAsync(car.Id);
@@ -139,7 +151,7 @@ public class CarService:ICarService
         carToUpdate.Quantity = car.Quantity;
         carToUpdate.PS = car.PS;
         carToUpdate.Name = car.Name;
-        
+
         await _carInventory.UpdateCarAsync(carToUpdate);
         _logger.LogInformation(
             "Car updated. CarId={CarId}, Name={Name}",
@@ -148,13 +160,15 @@ public class CarService:ICarService
         );
     }
 
+    // Getter für alle verfügbaren Felgen eines Fahrzeugs
     public async Task<List<ProductDto>> GetAvailableRims(int carId)
     {
-        var query = new ProductListQuery
-        {
-            CarId = carId,
-            Type = ProductType.Felge,
-        };
+        var query = new ProductListQuery // Query befüllen mit Anforderungen an die gelieferten
+            // Produkte aus der DB (Für dieses Auto, Typ Felge)
+            {
+                CarId = carId,
+                Type = ProductType.Felge,
+            };
         var rims = await _productInventory.QueryAsync(query);
         return rims.ConvertAll(p => new ProductDto
         {
@@ -170,15 +184,16 @@ public class CarService:ICarService
             ProductType = p.ProductType,
         });
     }
-    
 
-    public async Task<List<ProductDto>> GetAvailableColors(int carId)
+    // Getter für alle verfügbaren Farben eines Fahrzeugs
+    public async Task<List<ProductDto>> GetAvailableColorsAsync(int carId)
     {
-        var query = new ProductListQuery
-        {
-            CarId = carId,
-            Type = ProductType.Lack,
-        };
+        var query = new ProductListQuery // Query befüllen mit Anforderungen an die gelieferten
+            // Produkte aus der DB (Für dieses Auto, Typ Lack)
+            {
+                CarId = carId,
+                Type = ProductType.Lack,
+            };
         var colors = await _productInventory.QueryAsync(query);
         return colors.ConvertAll(p => new ProductDto
         {
@@ -195,21 +210,21 @@ public class CarService:ICarService
         });
     }
 
+    // Query für Fahrzeuglisten (sortiert + gefiltert)
     public async Task<List<CarDto>> CarListQueryAsync(CarListQuery q)
     {
-        
-      var cars = await _carInventory.QueryAsync(q);
-      return cars.ConvertAll(p => new CarDto
-      {
-          Id = p.Id,
-          Brand = p.Brand,
-          DatePermit = p.DatePermit,
-          DateProduction = p.DateProduction,
-          Price = p.Price,
-          PS = p.PS,
-          Model = p.Model,
-          Name = p.Name,
-          Quantity = p.Quantity,
-      });
+        var cars = await _carInventory.QueryAsync(q);
+        return cars.ConvertAll(p => new CarDto
+        {
+            Id = p.Id,
+            Brand = p.Brand,
+            DatePermit = p.DatePermit,
+            DateProduction = p.DateProduction,
+            Price = p.Price,
+            PS = p.PS,
+            Model = p.Model,
+            Name = p.Name,
+            Quantity = p.Quantity,
+        });
     }
 }

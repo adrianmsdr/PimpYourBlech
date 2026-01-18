@@ -15,26 +15,26 @@ namespace PimpYourBlech_ClassLibrary.Services.Orders;
 public class OrderService : IOrderService
 {
     private readonly ICustomerInventory _customerInventory;
+    private readonly IProductInventory _productInventory;
     private readonly IOrderInventory _orderInventory;
     private readonly ILogger<OrderService> _logger;
 
     public OrderService(ICustomerInventory customerInventory, ILogger<OrderService> logger,
-        IOrderInventory orderInventory)
+        IOrderInventory orderInventory, IProductInventory productInventory)
     {
         _customerInventory = customerInventory;
         _logger = logger;
         _orderInventory = orderInventory;
+        _productInventory = productInventory;
     }
 
-    public async Task<OrderDto> CreateOrderFromCart(Cart cart, CustomerDto customer, DeliveryAddressDto address,
+    public async Task<int> CreateOrderFromCart(Cart cart, CustomerDto customer, DeliveryAddressDto address,
         PaymentValueDto pv)
     {
         _logger.LogInformation(
             "Creating order from cart for CustomerId={CustomerId}",
             customer.Id
         );
-
-        await Task.Delay(1);
         if (cart.Products.Count == 0)
         {
             _logger.LogWarning(
@@ -42,7 +42,7 @@ public class OrderService : IOrderService
                 customer.Id
             );
 
-            throw new InvalidOperationException("Cart is empty");
+            throw new ForbiddenActionException("Cart is empty");
         }
 
         var order = new Order
@@ -57,15 +57,25 @@ public class OrderService : IOrderService
 
         foreach (var p in cart.Products)
         {
-            order.Items.Add(new OrderPosition
+            var product = await _productInventory.GetProductByIdAsync(p.ProductId);
+            if (product.Quantity < p.Quantity)
+            {
+                throw new ProductNotAvailableException("Nicht genügend Bestand");
+
+            }
+            var op = new OrderPosition
             {
                 Name = p.Product.Name,
                 ArticleNumber = p.Product.ArticleNumber,
                 Brand = p.Product.Brand,
                 Type = p.Product.ProductType,
                 Quantity = p.Quantity,
-                UnitPrice = (decimal)p.Price,
-            });
+                UnitPrice = p.Price,
+            };
+            
+                await _productInventory.SellProductsAsync(op);
+                order.Items.Add(op);
+          
         }
 
         _logger.LogInformation(
@@ -82,17 +92,7 @@ public class OrderService : IOrderService
         );
         var orderDto = await _customerInventory.GetOrderByIdAsync(order.OrderId);
 
-        return orderDto != null
-            ? new OrderDto
-            {
-                OrderId = orderDto.OrderId,
-                CustomerId = orderDto.CustomerId,
-                OrderDate = orderDto.OrderDate,
-                TotalPrice = orderDto.TotalPrice,
-                DeliveryAddressId = orderDto.DeliveryAddressId,
-                PaymentValueId = orderDto.PaymentValueId,
-            }
-            : null;
+        return orderDto.OrderId;
     }
 
     public async Task<CustomerDto?> GetCustomerByIdAsync(int id)
@@ -245,6 +245,19 @@ public class OrderService : IOrderService
             TotalPrice = o.TotalPrice,
             DeliveryAddressId = o.DeliveryAddressId,
             PaymentValueId = o.PaymentValueId,
+        });
+    }
+
+    public async Task<List<OrderCustomerDto>> GetUserOrdersDetailsAsync(int customerId)
+    {
+        var orders = await _orderInventory.GetOrdersForCustomerIncludeCustomerAsync(customerId);
+        return orders.ConvertAll(o => new OrderCustomerDto
+        {
+            Created = o.OrderDate,
+            CustomerFirstName = o.Customer.FirstName,
+            CustomerLastName = o.Customer.LastName,
+            Id = o.OrderId,
+            TotalPrice = o.TotalPrice,
         });
     }
 

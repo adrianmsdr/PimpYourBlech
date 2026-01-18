@@ -7,7 +7,7 @@ namespace PimpYourBlech_ClassLibrary.Services.Orders;
 public interface IOrderService
 {
 
-    Task<OrderDto> CreateOrderFromCart(Cart cart, CustomerDto customer, DeliveryAddressDto address, PaymentValueDto pv);
+    Task<int> CreateOrderFromCart(Cart cart, CustomerDto customer, DeliveryAddressDto address, PaymentValueDto pv);
     
     Task<CustomerDto?> GetCustomerByIdAsync(int id);
 
@@ -28,6 +28,7 @@ public interface IOrderService
    // public Task<List<OrderTotalDto>> GetOrdersTotalAsync();
 
    public Task<List<OrderDto>> GetUserOrdersAsync(int customerId);
+   public Task<List<OrderCustomerDto>> GetUserOrdersDetailsAsync(int customerId);
    
    public Task<DeliveryAddressDto?> GetDeliveryAddressForOrderAsync(int orderId);
    

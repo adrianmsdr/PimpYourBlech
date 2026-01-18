@@ -23,4 +23,6 @@ public interface IProductInventory
 
    Task<List<Product>> GetProductsForCarsAsync(int carId);
    
+   Task SellProductsAsync(OrderPosition orderPosition);
+   
 }
