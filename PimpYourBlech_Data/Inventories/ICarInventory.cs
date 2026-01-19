@@ -16,6 +16,8 @@ public interface ICarInventory
     Task DeleteCarAsync(Car c);
     
     public Task<List<Product>> GetAvailableColorsAsync(int Id);
+    
+    public Task<List<Product>> GetAvailableLightsAsync(int Id);
     public Task<List<Product>> GetAvailableProductsAsync(int Id, ProductType type);
     
     public Task UpdateCarAsync(Car car);

@@ -43,6 +43,14 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
 
     }
 
+    public async Task<List<Product>> GetAvailableLightsAsync(int Id)
+    {
+        return await database.Products
+            .Where(p => p.CarId == Id && p.LightsDetail != null)
+            .Include(p => p.LightsDetail)
+            .ToListAsync();
+    }
+
     public async Task<List<Product>> GetAvailableProductsAsync(int Id, ProductType type)
     {
 
@@ -98,7 +106,7 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
     {
        
             return await database.Products.Where(p => p.CarId == carId)
-                .Where(p=>p.ProductType!=ProductType.Lack&&p.ProductType!=ProductType.Motor&&p.ProductType!=ProductType.Felge).ToListAsync();
+                .Where(p=>p.ProductType!=ProductType.Lack&&p.ProductType!=ProductType.Motor&&p.ProductType!=ProductType.Felge&&p.ProductType!=ProductType.Lichter).ToListAsync();
         
     }
 

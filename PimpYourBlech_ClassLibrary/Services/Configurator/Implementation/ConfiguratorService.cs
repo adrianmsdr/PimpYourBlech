@@ -107,10 +107,10 @@ public class ConfiguratorService : IConfiguratorService
         var configuration = await GetConfigurationByIdAsync(configurationId);
         if (configuration == null)
         {
-
             return;
         }
-
+        
+        // produkt frisch aus der DB holen
         var product = await _productInventory.GetProductByIdAsync(productId);
         if (product == null)
         {
@@ -129,16 +129,18 @@ public class ConfiguratorService : IConfiguratorService
                 Quantity = product.Quantity,
             };
         }
+        // alle Produkte der aktuellen Konfiguration holen
+
         var products = await GetRegisteredProductsAsync(configurationId);
         var existingProduct = products.FirstOrDefault(p => p.ProductType == product.ProductType);
 
         // Lack/Felge/Motor -> vorhandenes Produkt gleichen Typs ersetzen
-        if (product.ProductType == ProductType.Lack
+       if (product.ProductType == ProductType.Lack
             || product.ProductType == ProductType.Felge
             || product.ProductType == ProductType.Motor
-            || product.ProductType == ProductType.Lichter)
+            )
         {
-            if (existingProduct?.ProductId == product.ProductId)
+            /*if (existingProduct?.ProductId == product.ProductId)
             {
                 if (product.ProductType == ProductType.Lichter)
                 {
@@ -146,7 +148,7 @@ public class ConfiguratorService : IConfiguratorService
                 }
 
                 return;
-            }
+            }*/
 
             if (existingProduct != null)
             {
@@ -158,10 +160,15 @@ public class ConfiguratorService : IConfiguratorService
         // sonstige Produkte -> gleiches Produkt togglen (hinzufügen/entfernen)
         else
         {
-            if (existingProduct?.ProductId == product.ProductId)
+           if (existingProduct?.ProductId == product.ProductId)
             {
                 await RemoveProduct(configurationId, product.ProductId);
                 return;
+            }
+            if (existingProduct != null)
+            {
+                await RemoveProduct(configurationId, existingProduct.ProductId);
+
             }
         }
         await _configurationInventory.AddProduct(configurationId, product.ProductId);
@@ -306,8 +313,26 @@ public class ConfiguratorService : IConfiguratorService
             }
         );
     }
-    
-    
+
+    public async Task<List<ProductDto>> GetAvailableLightsAsync(int carId)
+    {
+        var lights = await _carInventory.GetAvailableLightsAsync(carId);
+        return lights.ConvertAll(p => new ProductDto
+        {
+            ArticleNumber = p.ArticleNumber,
+            Name = p.Name,
+            CarId = p.CarId,
+            Brand = p.Brand,
+            Description = p.Description,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            ProductId = p.ProductId,
+            ProductType = p.ProductType,
+            Quantity = p.Quantity,
+        });
+    }
+
+
     // Getter für den Anzeigenamen des Getriebes
     public string GetGearDisplayName(Gear gear)
     {

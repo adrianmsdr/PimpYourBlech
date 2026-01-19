@@ -30,6 +30,8 @@ public interface IConfiguratorService
 
     // Getter für verfügbare Motoren für ein Auto (Extra - Informationen in der Vorschau)
     public Task<List<ProductDto>> GetAvailableEnginesAsync(int carId);
+    
+    public Task<List<ProductDto>> GetAvailableLightsAsync(int carId);
 
 
     // Getter für den Anzeigenamen des Getriebes

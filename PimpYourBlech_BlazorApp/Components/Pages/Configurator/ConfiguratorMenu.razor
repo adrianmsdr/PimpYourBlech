@@ -236,7 +236,9 @@ else
         </div>
     }
 
-    <div class="config-strip">Felgen wählen:</div>
+
+
+<div class="config-strip">Felgen wählen:</div>
 
     @if (availableRims.Count == 0)
     {
@@ -251,6 +253,45 @@ else
 
         <div class="row">
             @foreach (var product in availableRims)
+            {
+                var isSelected = registeredProducts?.Any(p => p.ProductId == product.ProductId) == true;
+                <div class="col-4">
+                    <div class="combo-card-admin configurator-card @(isSelected ? "selected" : "")"
+                         role="button"
+                         tabindex="0"
+                         @onclick="() => HandleProduct(product)">
+
+                        <div class="card-media">
+                            <img class="product-img"
+                                 src="@ImageService.GetProductImageUrl(product.ProductId)"
+                                 alt="@product.Name"/>
+                        </div>
+                        <div class="selected-item">
+                            <div class="selected-item__text">
+                                <div class="selected-item__name">@product.Name</div>
+                                <div class="selected-item__price">@product.Price</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+<div class="config-strip">Lichtanlage wählen:</div>
+
+    @if (availableLights.Count == 0)
+    {
+        <div class="col-4">
+            <div class="combo-card-admin configurator-card">
+                <p>Keine Produkte verfügbar.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+
+        <div class="row">
+            @foreach (var product in availableLights)
             {
                 var isSelected = registeredProducts?.Any(p => p.ProductId == product.ProductId) == true;
                 <div class="col-4">
