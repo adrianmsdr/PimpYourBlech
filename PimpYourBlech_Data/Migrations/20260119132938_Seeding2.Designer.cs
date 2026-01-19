@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PimpYourBlech_Data.Persistence.EFDatabase;
@@ -11,9 +12,11 @@ using PimpYourBlech_Data.Persistence.EFDatabase;
 namespace PimpYourBlech_Data.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    partial class ConfiguratorContextModelSnapshot : ModelSnapshot
+    [Migration("20260119132938_Seeding2")]
+    partial class Seeding2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
