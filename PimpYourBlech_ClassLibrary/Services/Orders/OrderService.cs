@@ -385,15 +385,18 @@ public class OrderService : IOrderService
     
     private static bool IsValidIban(string iban)
     {
+        // Eine IBAN ist immer zwischen 15 und 34 Zeichen lang
         if (iban.Length < 15 || iban.Length > 34)
             return false;
 
+        // Eine IBAN darf nur aus Buchstaben und Ziffern bestehen
         if (!iban.All(char.IsLetterOrDigit))
             return false;
 
+        // Ersten 2 Zeichen sind Ländercode(iban[..4] = Index 0 bis 1)
         var countryCode = iban[..2];
 
-        // Längenprüfung pro Land (DE/AT/CH + Reserve)
+        // Längenprüfung pro Land (DE/AT/CH bei uns)
         var expectedLength = countryCode switch
         {
             "DE" => 22,
@@ -402,22 +405,33 @@ public class OrderService : IOrderService
             _ => -1
         };
 
+        // IBAN muss eine exakte Länge für das jeweilige Land haben
         if (expectedLength != -1 && iban.Length != expectedLength)
             return false;
 
+        // IBAN-Algorithmus:
+        // Die ersten 4 Zeichen (Ländercode + Prüfziffer) werden ans Ende verschoben
+        
         // Umbauen:
-        // iban[..4] = Alles ab Index 4 bis Ende
-        // iban[..a] = Index0 bis 3
-        var rearranged = iban[4..] + iban[..4];
+        // iban[4..] = Alles ab Index 4 bis Ende
+        // iban[..4] = Index 0 bis 3
+        var sorted = iban[4..] + iban[..4];
 
+        // Alles wird in eine Zahl umgewandelt
+        // - Ziffern bleiben gleich
+        // - Buchstaben werden ersetzt: A = 10, B = 11, ..., Z = 35
         var sb = new StringBuilder();
 
-        foreach (char c in rearranged)
+        foreach (char c in sorted)
         {
+            // Wenn es eine Ziffer ist, direkt anhängen
             if (char.IsDigit(c))
             {
                 sb.Append(c);
             }
+            // Wenn es ein Buchstabe ist:
+            // 'A' hat Wert 65 (ASCII)
+            //  65 - 65 + 10 = 10
             else if (char.IsLetter(c))
             {
                 int value = char.ToUpperInvariant(c) - 'A' + 10;
@@ -428,28 +442,37 @@ public class OrderService : IOrderService
                 throw new WrongInputException("IBAN enthält ungültige Zeichen");
             }
         }
-
+        
+        // Mathematische Prüfung: Die riesige Zahl MOD 97 muss genau 1 ergeben
         return Mod97(sb.ToString()) == 1;
     }
 
     private static int Mod97(string input)
     {
+        // BigInteger wird verwendet, weil die Zahl extrem groß werden kann
         return (int)(BigInteger.Parse(input) % 97);
     }
     
     private static bool IsValidBic(string bic)
     {
+        // Ein BIC hat entweder 8 oder 11 Zeichen
         if (bic.Length != 8 && bic.Length != 11)
             return false;
 
-        // Bankcode (4 Buchstaben)
+        // 2. Bankcode:
+        // Die ersten 4 Zeichen müssen Buchstaben sein
         if (!bic[..4].All(char.IsLetter))
             return false;
-        // Ländercode (2 Buchstaben)
+       
+        // Ländercode:
+        // Zeichen 5 und 6
+        // Müssen genau 2 Buchstaben sein
         if (!bic.Substring(4, 2).All(char.IsLetter))
             return false;
 
-        // Ortscode (2 Alphanum)
+        // Ortscode:
+        // Zeichen 7 und 8
+        // Darf Buchstaben oder Ziffern enthalten
         if (!bic.Substring(6, 2).All(char.IsLetterOrDigit))
             return false;
         

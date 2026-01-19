@@ -7,22 +7,25 @@ namespace PimpYourBlech_ClassLibrary.Services.Products;
 public interface IProductService
 {
     List<ProductDto> GetProducts();
-    Task<int> CreateProduct(CarDto car, string name, string brand, int quantity, decimal price, ProductType productType,
+    Task<ProductDto> CreateProduct(CarDto car, string name, string brand, string quantity, string price,
+        ProductType productType,
         string description);
 
 
 
 
-    public Task RegisterEngine(int productId, int ps, int kw, string displacement, Gear gear, Fuel fuel);
+    public Task<int> RegisterEngine(ProductDto p, string ps,string  kw, string displacement, Gear gear, Fuel fuel);
 
 
-    public Task RegisterRim(int productId, decimal diameter, decimal width);
+    public Task<int> RegisterRim(ProductDto p, string diameter, string width);
 
 
-    public Task RegisterLights(int productId, int lumen, bool isLED);
+    public Task<int> RegisterLights(ProductDto p, string lumen, bool isLED);
 
 
-    public Task RegisterColor(int productId, string colorName);
+    public Task<int> RegisterColor(ProductDto p, string colorName);
+    
+    
 
 
    

@@ -5,7 +5,7 @@ namespace PimpYourBlech_Data.Inventories;
 
 public interface IProductInventory
 {
-    public Task InsertProductAsync(Product product);
+    public Task<int> InsertProductAsync(Product product);
 
     public List<Product> ListProducts();
 

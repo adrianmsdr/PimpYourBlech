@@ -3,13 +3,14 @@
 @using System.Runtime.CompilerServices
 @using PimpYourBlech_BlazorApp.Services
 @using PimpYourBlech_BlazorApp.Services.Images
+@using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Cars
 @using PimpYourBlech_ClassLibrary.Services.Products
 @using PimpYourBlech_Contracts.EntityDTOs
 @using PimpYourBlech_Contracts.Enums
 @inject IProductService ProductService
 @inject ICarService CarService
-
+@inject IToastExecutor ToastExecutor
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject ILogger<AdminProductRegister> Logger
@@ -231,147 +232,87 @@
             _selectedCarId
         );
 
-        if (string.IsNullOrWhiteSpace(_name))
-        {
-            _errorMessage = "Name darf nicht leer sein.";
-            return;
-        }
 
-        if (!int.TryParse(_quantity, out var quantityValue) || quantityValue < 0)
-        {
-            _errorMessage = "Bestand muss eine positive Ganzzahl sein.";
-            return;
-        }
-
-        if (!decimal.TryParse(_price, out var priceValue) || priceValue < 0)
-        {
-            _errorMessage = "Preis muss eine positive Zahl sein.";
-            return;
-        }
-
+        CarDto c = await CarService.GetCarByIdAsync(_selectedCarId);
         
-        int productId = await ProductService.CreateProduct(
-            await CarService.GetCarByIdAsync(_selectedCarId),
+        ProductDto productDto = await ToastExecutor.RunReturnAsync(()=>ProductService.CreateProduct(
+            c,
             _name,
             _brand,
-            quantityValue,
-            priceValue,
+            _quantity,
+            _price,
             _selectedProductType,
             _description
-        );
-
-        switch (_selectedProductType)
+        ));
+        int productId = 0;
+        if (productDto != null)
         {
-            case ProductType.Motor:
-                Fuel fuel = Fuel.Benzin;
-                Gear gear = Gear.Manuell6Gang;
+            switch (_selectedProductType)
+            {
+                case ProductType.Motor:
+                    Fuel fuel = Fuel.Benzin;
+                    Gear gear = Gear.Manuell6Gang;
+                    switch (_selectedGear)
+                    {
+                        case "5-Gang Manuell": gear = Gear.Manuell5Gang; break;
+                        case "6-Gang Manuell": gear = Gear.Manuell6Gang; break;
+                        case "6-Gang Automatik": gear = Gear.Automatik6Gang; break;
+                        case "8-Gang Automatik": gear = Gear.Automatik8Gang; break;
+                    }
+                    switch (_selectedFuel)
+                    {
+                        case "Benzin": fuel = Fuel.Benzin; break;
+                        case "Diesel": fuel = Fuel.Diesel; break;
+                        case "Hybrid": fuel = Fuel.Hybrid; break;
+                        case "Gas": fuel = Fuel.Gas; break;
+                        case "Elektro": fuel = Fuel.Elektro; break;
+                    }
 
-                if (string.IsNullOrWhiteSpace(_ps) || string.IsNullOrWhiteSpace(_kw) || string.IsNullOrWhiteSpace(_selectedGear))
-                {
-                    _errorMessage = "Bitte alle Motor-Details ausfüllen (PS, kW, Getriebeart).";
-                    return;
-                }
+                  productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterEngine(productDto, _ps, _kw, _displacement, gear, fuel), successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    break;
 
-                if (!int.TryParse(_ps, out var psValue) || psValue < 0)
-                {
-                    _errorMessage = "PS muss eine positive Ganzzahl sein.";
-                    return;
-                }
+                case ProductType.Felge:
+                    
 
-                if (!int.TryParse(_kw, out var kwValue) || kwValue < 0)
-                {
-                    _errorMessage = "KW muss eine positive Ganzzahl sein.";
-                    return;
-                }
+                    productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterRim(productDto, _diameter, _width) ,successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    break;
 
-                switch (_selectedGear)
-                {
-                    case "5-Gang Manuell": gear = Gear.Manuell5Gang; break;
-                    case "6-Gang Manuell": gear = Gear.Manuell6Gang; break;
-                    case "6-Gang Automatik": gear = Gear.Automatik6Gang; break;
-                    case "8-Gang Automatik": gear = Gear.Automatik8Gang; break;
-                }
+                case ProductType.Lichter:
 
-                switch (_selectedFuel)
-                {
-                    case "Benzin": fuel = Fuel.Benzin; break;
-                    case "Diesel": fuel = Fuel.Diesel; break;
-                    case "Hybrid": fuel = Fuel.Hybrid; break;
-                    case "Gas": fuel = Fuel.Gas; break;
-                    case "Elektro": fuel = Fuel.Elektro; break;
-                }
+                    bool isLed = _isLed == "True";
+                    productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterLights(productDto, _lumen, isLed),successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    break;
 
-                await ProductService.RegisterEngine(productId, psValue, kwValue, _displacement, gear, fuel);
-                break;
-
-            case ProductType.Felge:
-                if (string.IsNullOrEmpty(_diameter) || string.IsNullOrEmpty(_width))
-                {
-                    _errorMessage = "Bitte Durchmesser und Breite der Felge ausfüllen.";
-                    return;
-                }
-
-                if (!decimal.TryParse(_diameter, out var diameterValue) || diameterValue < 0)
-                {
-                    _errorMessage = "Durchmesser muss eine positive Zahl sein.";
-                    return;
-                }
-
-                if (!decimal.TryParse(_width, out var widthValue) || widthValue < 0)
-                {
-                    _errorMessage = "Breite muss eine positive Zahl sein.";
-                    return;
-                }
-
-                await ProductService.RegisterRim(productId, diameterValue, widthValue);
-                break;
-
-            case ProductType.Lichter:
-                if (string.IsNullOrEmpty(_lumen))
-                {
-                    _errorMessage = "Bitte die Lumen-Anzahl für die Lichtanlage ausfüllen.";
-                    return;
-                }
-
-                if (!int.TryParse(_lumen, out var lumenValue) || lumenValue < 0)
-                {
-                    _errorMessage = "Lumen muss eine positive Ganzzahl sein.";
-                    return;
-                }
-
-                bool isLed = _isLed == "True";
-             await  ProductService.RegisterLights(productId, lumenValue, isLed);
-                break;
-
-            case ProductType.Lack:
-               await ProductService.RegisterColor(productId, _displayName);
-                break;
-        }
+                case ProductType.Lack:
+                    productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterColor(productDto, _displayName),successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    break;
+            }
 
 
-        if (productId == 0)
-        {
-            _errorMessage = "Produkt konnte nicht gespeichert werden (keine gültige ID).";
-            return;
-        }
-        
-        Logger.LogInformation(
-            "Admin successfully registered product with ProductId={ProductId}, Type={ProductType}",
-            productId,
-            _selectedProductType
-        );
+            if (productDto == null)
+            {
+                _errorMessage = "Produkt konnte nicht gespeichert werden (keine gültige ID).";
+                return;
+            }
 
-        if (_uploadedProductImage != null)
-        {
-            await ImageService.SaveProductImageAsync(productId, _uploadedProductImage);
-            
             Logger.LogInformation(
-                "Admin uploaded product image for ProductId={ProductId}",
-                productId
+                "Admin successfully registered product with ProductId={ProductId}, Type={ProductType}",
+                productId,
+                _selectedProductType
             );
-        }
 
-        _successMessage = "Fahrzeugteil erfolgreich registriert.";
+            if (_uploadedProductImage != null)
+            {
+                await ImageService.SaveProductImageAsync(productId, _uploadedProductImage);
+
+                Logger.LogInformation(
+                    "Admin uploaded product image for ProductId={ProductId}",
+                    productId
+                );
+            }
+
+            _successMessage = "Fahrzeugteil erfolgreich registriert.";
+        }
     }
 
     private void Cancel()
