@@ -17,7 +17,20 @@
 @inject ICustomerService CustomerService
 @inject IToastExecutor ToastExecutor
 
+@if (showDeleteModal)
+{
+    <div class="pyb-backdrop" @onclick="CloseDeleteModal">
+        <div class="pyb-modal" @onclick:stopPropagation="true">
+            <h3 class="pyb-modal-title">Möchtest du die Konfiguration wirklich löschen?</h3>
+            <p class="pyb-modal-text">Diese Aktion kann nicht rückgängig gemacht werden.</p>
 
+            <div class="pyb-modal-actions">
+                <button class="buttons danger" @onclick="ConfirmDelete">Löschen</button>
+                <button class="buttons" @onclick="CloseDeleteModal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+}
 
 @if (configuration == null)
 {
@@ -322,7 +335,7 @@ else
 
     <div class="config-strip">Extras wählen:</div>
     
-    @if (availableRims.Count == 0)
+    @if (availableExtras.Count == 0)
     {
         <div class="col-4">
             <div class="combo-card-admin configurator-card">
@@ -363,6 +376,5 @@ else
     <div class="button-column">
         <button class="buttons" @onclick="SaveConfiguration">Speichern</button>
         <button class="buttons" @onclick="DeleteConfiguration">Löschen</button>
-        <button class="buttons" @onclick="GoToOrderConfiguration">Anfragen</button>
     </div>
 }

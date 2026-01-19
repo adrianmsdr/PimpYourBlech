@@ -50,13 +50,9 @@ else
     <div class="alert alert-danger mt-3">@ErrorMessage</div>
 }
 
-<input class="text-inputPYB"
-       placeholder="Order suchen..."
-       @bind="searchValue" />
+
 <div class="button-column">
-    <button class="buttons" @onclick="Cancel">
-        Suche nach Bestellung ...<MagnifyingGlassIcon></MagnifyingGlassIcon>
-    </button>
+    
     <button class="buttons" @onclick="Cancel">Zurück</button>
 
 </div>
@@ -71,33 +67,10 @@ else
         orders = await OrderService.GetOrdersBasicsAsync();
     }
 
-    private string searchValue = string.Empty;
     private CustomerDto FoundOrder;
     private string ErrorMessage = "";
 
-  /*  private void SearchUsername()
-    {
-        if (orders == null || orders.Count == 0)
-        {
-            return;
-        }
-        FoundOrder = null;
-        ErrorMessage = "";
-
-        foreach (var o in orders)
-        {
-            if ( == searchValue)
-            {
-                FoundOrder = c;
-                ErrorMessage = "";
-                return;
-            }
-        }
-
-        ErrorMessage = "Kein Benutzer mit diesem Username gefunden.";
-        StateHasChanged();
-    }*/
-
+  
     private void Cancel()
     {
         Nav.NavigateTo("/administrator/");

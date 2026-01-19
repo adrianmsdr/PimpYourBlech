@@ -91,6 +91,16 @@ public partial class ConfiguratorMenu : ComponentBase
         {
             configuration = await ConfiguratorService.GetConfigurationByIdAsync(configId);
             name = configuration?.Name;
+
+            if (configuration != null)
+            {
+                await ApplyLoadedConfigurationAsync(configuration.Id);
+            }
+        }
+        else
+        {
+            // Keine bestehende Konfiguration -> Defaults (für 360°-Preview)
+            LoadFrames();
         }
 
         // 5) Preis einmal am Ende
@@ -207,8 +217,7 @@ public partial class ConfiguratorMenu : ComponentBase
 
     private async Task DeleteConfiguration()
     {
-        await ConfiguratorService.DeleteConfiguration(configuration);
-        Nav.NavigateTo("/mainMenu");
+        OpenDeleteModal();
     }
 
     private void GoToOrderConfiguration()
@@ -240,5 +249,44 @@ public partial class ConfiguratorMenu : ComponentBase
         {
             CurrentImageUrl = ImageService.GetCarImageUrl(Car.Id);
         }
+    }
+    
+    private async Task ApplyLoadedConfigurationAsync(int configurationId)
+    {
+        // Produkte der bestehenden Konfiguration laden 
+        registeredProducts = await ConfiguratorService.GetRegisteredProductsAsync(configurationId) 
+                             ?? new List<ProductDto>();
+
+        // Auswahl-IDs aus den gespeicherten Produkten ableiten
+        var savedColor  = registeredProducts.FirstOrDefault(p => p.ProductType == ProductType.Lack);
+        var savedRim    = registeredProducts.FirstOrDefault(p => p.ProductType == ProductType.Felge);
+        var savedLight  = registeredProducts.FirstOrDefault(p => p.ProductType == ProductType.Lichter);
+        var savedEngine = registeredProducts.FirstOrDefault(p => p.ProductType == ProductType.Motor);
+
+        selectedColorId = savedColor?.ProductId ?? (availableColors.FirstOrDefault()?.ProductId ?? 0);
+        selectedRimId   = savedRim?.ProductId   ?? (availableRims.FirstOrDefault()?.ProductId ?? 0);
+        selectedLightId = savedLight?.ProductId ?? (availableLights.FirstOrDefault()?.ProductId ?? 0);
+
+        
+        selectedEngine  = savedEngine ?? availableEngines.FirstOrDefault() ?? new ProductDto();
+
+        // 360° Frames + Preis aktualisieren
+        LoadFrames();
+        await UpdatePrice();
+
+        
+    }
+    
+    private bool showDeleteModal;
+
+    void OpenDeleteModal() => showDeleteModal = true;
+    void CloseDeleteModal() => showDeleteModal = false;
+
+    async Task ConfirmDelete()
+    {
+        await ConfiguratorService.DeleteConfiguration(configuration);
+        showDeleteModal = false;
+        Nav.NavigateTo("/mainMenu");
+
     }
 }
