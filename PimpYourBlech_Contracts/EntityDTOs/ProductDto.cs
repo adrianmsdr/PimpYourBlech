@@ -27,7 +27,7 @@ public class ProductDto
     public Gear Gear {get; set;}
     public string? Displacement {get; set;}
     // Felge
-    public decimal DiameterInInch { get; set; }
+    public decimal? DiameterInInch { get; set; }
     public decimal WidthInInch { get; set; }
     
     public String DisplayName { get; set; }

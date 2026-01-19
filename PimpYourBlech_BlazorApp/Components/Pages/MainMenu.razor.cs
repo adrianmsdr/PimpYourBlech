@@ -19,15 +19,7 @@ public partial class MainMenu : ComponentBase
     private void GoAboutUs() => Nav.NavigateTo("/aboutUs");
 
     private void GoToUserSettings() => Nav.NavigateTo("/user");
-
-    private void Logout()
-    {
-        UserSession.LogOut();
-        LoginState.CurrentUserId = 0;
-        UserSession.IsAdmin = false;
-        Nav.NavigateTo("/");
-    }
-
+    
     private void GoToAdmin() => Nav.NavigateTo("/administrator");
     
     private CustomerDto? c;

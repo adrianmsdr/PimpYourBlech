@@ -5,6 +5,7 @@
 @using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.State
+@using PimpYourBlech_ClassLibrary.ValueObjects
 @using PimpYourBlech_Contracts.EntityDTOs
 @inject IUserSession UserSession
 @inject ICustomerService CustomerService
@@ -115,6 +116,8 @@
         showDeleteModal = false;
         UserSession.LogOut();
         LoginState.CurrentUserId = 0;
+        UserSession.CurrentCart = new Cart();
+
         UserSession.IsAdmin = false;
         Nav.NavigateTo("/");
 

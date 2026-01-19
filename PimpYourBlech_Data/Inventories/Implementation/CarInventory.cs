@@ -98,8 +98,10 @@ public sealed class CarInventory(IDatabase database) : ICarInventory
 
     public async Task<List<Product>> GetAvailableRimsAsync(int carId)
     {
-        return await database.Products.Where(p => p.CarId == carId
-                                                  && p.ProductType == ProductType.Felge).ToListAsync();
+        return await database.Products
+            .Include(p => p.RimDetail)
+            .Where(p => p.CarId == carId
+                        && p.ProductType == ProductType.Felge).ToListAsync();
     }
 
     public async Task<List<Product>> GetAvailableExtrasAsync(int carId)

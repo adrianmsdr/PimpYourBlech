@@ -47,6 +47,8 @@ public interface IConfiguratorService
     
     // Getter für alle aktuell verfügbaren Fahrzeuge
     public Task<List<CarDto>> GetAvailableCarsAsync();
+    
+    public Task<List<ProductDto>> GetAvailableRims(int carId);
 
     // Liefert die Basis-Konfigurationsdaten für alle Fahrzeuge
 

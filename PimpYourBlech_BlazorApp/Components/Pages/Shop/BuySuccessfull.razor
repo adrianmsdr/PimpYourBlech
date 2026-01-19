@@ -63,6 +63,7 @@
         );
 
         c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        UserSession.CurrentCart = new Cart();
     }
 
     private void GoBackToHomepage()
@@ -71,7 +72,7 @@
             "User {UserId} navigated back to MainMenu after successful purchase",
             UserSession.CurrentUserId
         );
-        UserSession.CurrentCart = new Cart();
+        
         Nav.NavigateTo("/MainMenu");
     }
 }
