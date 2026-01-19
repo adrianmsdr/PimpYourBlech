@@ -25,7 +25,7 @@ public interface IProductService
 
     public Task<int> RegisterColor(ProductDto p, string colorName);
     
-    public Task<int> InsertProduct(ProductDto p);
+    public Task<int> InsertProductAsync(ProductDto p);
 
 
    

@@ -230,7 +230,7 @@ public class ProductService:IProductService
         return id;
     }
 
-    public async Task<int> InsertProduct(ProductDto productDto)
+    public async Task<int> InsertProductAsync(ProductDto productDto)
     {
         Product p = new Product
         {
@@ -246,13 +246,7 @@ public class ProductService:IProductService
         return id;
     }
 
-
-    public async Task InsertProduct(Product p)
-    {
-        await _productInventory.InsertProductAsync(p); // muss SaveChangesAsync machen
-        _logger.LogInformation($"Inserted product {p.ProductId}");
-        
-    }
+    
 
     public List<ProductDto> GetProducts()
     {
