@@ -419,19 +419,35 @@ public class ConfiguratorService : IConfiguratorService
     // Liefert alle registrierten Produkte einer Konfiguration
     public async Task<List<ProductDto>> GetRegisteredProductsAsync(int configId)
     {
-        var config = await _configurationInventory.GetAllProductsAsync(configId);
-        return config.ConvertAll(p => new ProductDto
+        var products = await _configurationInventory.GetAllProductsAsync(configId);
+
+        return products.ConvertAll(p =>
         {
-            ArticleNumber = p.ArticleNumber,
-            Name = p.Name,
-            CarId = p.CarId,
-            Brand = p.Brand,
-            Description = p.Description,
-            ImageUrl = p.ImageUrl,
-            Price = p.Price,
-            ProductId = p.ProductId,
-            ProductType = p.ProductType,
-            Quantity = p.Quantity,
+            var dto = new ProductDto
+            {
+                ArticleNumber = p.ArticleNumber,
+                Name = p.Name,
+                CarId = p.CarId,
+                Brand = p.Brand,
+                Description = p.Description,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                ProductId = p.ProductId,
+                ProductType = p.ProductType,
+                Quantity = p.Quantity
+            };
+
+            // NUR setzen, wenn es wirklich ein Motor ist
+            if (p.EngineDetail != null)
+            {
+                dto.Ps           = p.EngineDetail.Ps;
+                dto.Displacement = p.EngineDetail.Displacement;
+                dto.Gear         = p.EngineDetail.Gear;
+                dto.Fuel         = p.EngineDetail.Fuel;
+                dto.Kw           = p.EngineDetail.Kw;
+            }
+
+            return dto;
         });
     }
 }
