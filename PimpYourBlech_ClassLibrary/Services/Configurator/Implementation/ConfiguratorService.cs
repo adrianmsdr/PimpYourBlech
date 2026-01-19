@@ -135,10 +135,19 @@ public class ConfiguratorService : IConfiguratorService
         // Lack/Felge/Motor -> vorhandenes Produkt gleichen Typs ersetzen
         if (product.ProductType == ProductType.Lack
             || product.ProductType == ProductType.Felge
-            || product.ProductType == ProductType.Motor)
+            || product.ProductType == ProductType.Motor
+            || product.ProductType == ProductType.Lichter)
         {
             if (existingProduct?.ProductId == product.ProductId)
+            {
+                if (product.ProductType == ProductType.Lichter)
+                {
+                    await RemoveProduct(configurationId, product.ProductId);
+                }
+
                 return;
+            }
+
             if (existingProduct != null)
             {
                 await RemoveProduct(configurationId, existingProduct.ProductId);
