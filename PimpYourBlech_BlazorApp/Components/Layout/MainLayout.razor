@@ -2,9 +2,12 @@
 @using PimpYourBlech_BlazorApp.Components.Icons
 @using Blazored.Toast
 @using Blazored.Toast.Configuration
+@using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Session
 @using PimpYourBlech_ClassLibrary.Session.State
+@using PimpYourBlech_Contracts.EntityDTOs
 @inject IUserSession UserSession
+@inject ICustomerService CustomerService
 @inject NavigationManager Nav
 <BlazoredToasts Position="ToastPosition.BottomRight"/>
 
@@ -62,7 +65,11 @@
         <NavLink class="buttons dd-btn" href="/configurator/ChooseCar" @onclick="CloseMenu">Konfigurator</NavLink>
         <NavLink class="buttons dd-btn" href="/shop"   @onclick="CloseMenu">Shop</NavLink>
         <NavLink class="buttons dd-btn" href="/user"  @onclick="CloseMenu">Profil</NavLink>
-        <NavLink class="buttons dd-btn" href="/administrator"  @onclick="CloseMenu">Administrator</NavLink>
+       
+        @if (c is not null && c.AdminRights)
+        {
+            <NavLink class="buttons dd-btn" href="/administrator" @onclick="CloseMenu">Administrator</NavLink>
+        }       
         <button class="buttons dd-btn" @onclick="OpenDeleteModal">Ausloggen</button>
     </div>
     </div>
@@ -95,11 +102,19 @@
     private void ToggleMenu() => menuOpen = !menuOpen;
     private void CloseMenu() => menuOpen = false;
 
-
+    private CustomerDto c;
     private bool showDeleteModal;
 
     void OpenDeleteModal() => showDeleteModal = true;
     void CloseDeleteModal() => showDeleteModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserSession.CurrentUserId != 0)
+        {
+            c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
+        }
+    }
 
     void ConfirmDelete()
     {
