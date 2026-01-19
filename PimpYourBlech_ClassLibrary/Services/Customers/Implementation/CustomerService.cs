@@ -70,7 +70,7 @@ public class CustomerService:ICustomerService
         customer.MailAddress = mailAddress;
         customer.ImagePath = ImagePath;
         await _customerInventory.InsertCustomerAsync(customer); 
-       // await _emailService.SendRegistrationEmailAsync(customer);
+       await _emailService.SendRegistrationEmailAsync(firstName,mailAddress);
 
         _logger.LogInformation(
             "Registering new customer with Username={Username}",

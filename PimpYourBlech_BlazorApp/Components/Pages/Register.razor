@@ -14,6 +14,7 @@
 @inject IUserSession UserSession
 
 @inject ICustomerService CustomerService
+
 @inject NavigationManager Nav
 @inject IImageService ImageService
 @inject IToastExecutor Executor
@@ -143,35 +144,7 @@
         }
 
         isRegistering = false;
-        @* try
-        {
-            await AdminService.RegisterCustomerAsync(firstName, lastName, username, password, passwordConfirm, phone, email, emailConfirm, SelectedAvatar);
-            
-            Logger.LogInformation(
-                "Registration successful for username {Username}",
-                username
-            );
-            
-            SuccessMessage = "Registrierung erfolgreich. Bitte melde dich an.";
-        }
-        catch (Exception ex) when (
-            ex is WrongInputException ||  
-            ex is WrongPasswordException ||
-            ex is UsernameNotAvailableException
-        )
-        {
-            Logger.LogWarning(
-                ex,
-              "  Registration failed for username {Username}",
-                username
-            );
-            
-            ErrorMessage = ex.Message;
-        }
-        finally
-        {
-            isRegistering = false;
-        }*@
+      
     }
 
     // Kehrt zurück zum Start - Screen

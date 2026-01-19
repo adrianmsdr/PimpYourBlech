@@ -6,7 +6,7 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication;
 public interface IEmailService
 {
     // Versendet die Registrierungsbestätigung an einen Kunden
-    Task SendRegistrationEmailAsync(CustomerDto customer);
+    Task SendRegistrationEmailAsync(string firstName, string mailAddress);
     
     // Prüft, ob E-Mail-Adresse und Bestätigung übereinstimmen und gültig sind
     bool MailAdressChecker(string mailAddress, String confirm);

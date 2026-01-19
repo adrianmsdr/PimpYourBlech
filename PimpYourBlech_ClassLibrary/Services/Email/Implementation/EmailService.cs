@@ -12,11 +12,11 @@ namespace PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementati
 public class EmailService : IEmailService
 {
     // Versendet die Registrierungsbestätigung an einen Kunden
-    public async Task SendRegistrationEmailAsync(CustomerDto customer)
+    public async Task SendRegistrationEmailAsync(string firstName, string mailAddress)
     {
         // Betreff + Inhalt der Registrierungs-Mail bauen
         string subject = "Deine Registrierung bei PimpYourBlech";
-        string message = "Hallo " + customer.FirstName + ",\n\n" +
+        string message = "Hallo " + firstName + ",\n\n" +
             "dein Account bei PimpYourBlech wurde erfolgreich erstellt.\n" +
             "Du kannst dich jetzt einloggen und direkt loslegen.\n\n" +
             "Falls du dich nicht registriert hast: Dann war vermutlich jemand besonders begeistert von unserem System.\n" +
@@ -33,7 +33,7 @@ public class EmailService : IEmailService
 
         // Mail erstellen und senden
         using var mail = new MailMessage(from: "pimpyourblech@gmail.com",
-            to: customer.MailAddress, subject,message);
+            to: mailAddress, subject,message);
        await client.SendMailAsync(mail);
     }
     
