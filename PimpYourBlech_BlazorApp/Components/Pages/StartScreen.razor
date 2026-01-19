@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using System.Text.Json
 @using PimpYourBlech_BlazorApp.Components.Icons
+@using PimpYourBlech_ClassLibrary.Session
+@inject IUserSession UserSession
 @inject NavigationManager Nav
 @attribute [Routes.AllowAnonymous]
 
@@ -52,97 +54,19 @@
 
 @code
 {
-    // Wichtig: Wikipedia REST API blockt gerne Requests ohne User-Agent -> sonst immer Fallback
-    private static readonly HttpClient http = CreateHttp();
+ 
 
     private bool isLoading = true;
-    private string factText = "";
-    private string factUrl = "";
-    private int yearsAgo;
 
-    private static HttpClient CreateHttp()
+
+    protected override void OnParametersSet()
     {
-        var c = new HttpClient();
-        c.DefaultRequestHeaders.UserAgent.ParseAdd("PimpYourBlech/1.0 (Blazor; localhost)");
-        c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-        return c;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadOnThisDay();
-    }
-
-    private async Task LoadOnThisDay()
-    {
-        isLoading = true;
-        factText = "Lade…";
-        factUrl = "";
-        yearsAgo = 0;
-        StateHasChanged();
-
-        var today = DateTime.Today;
-        var url = $"https://de.wikipedia.org/api/rest_v1/feed/onthisday/events/{today:MM}/{today:dd}";
-
-        try
+        if (UserSession.CurrentUserId != 0)
         {
-            using var resp = await http.GetAsync(url);
-            var body = await resp.Content.ReadAsStringAsync();
-
-            if (!resp.IsSuccessStatusCode)
-            {
-                factText = $"Wikipedia API Fehler: {(int)resp.StatusCode} {resp.ReasonPhrase}";
-                factUrl = "";
-                yearsAgo = 0;
-                isLoading = false;
-                return;
-            }
-
-            using var doc = JsonDocument.Parse(body);
-            var events = doc.RootElement.GetProperty("events");
-
-            var count = events.GetArrayLength();
-            if (count == 0)
-            {
-                factText = "Keine Ereignisse für heute gefunden.";
-                factUrl = "";
-                yearsAgo = 0;
-                isLoading = false;
-                return;
-            }
-
-            // Random Event picken
-            var idx = Random.Shared.Next(count);
-            var ev = events[idx];
-
-            var text = ev.GetProperty("text").GetString() ?? "";
-            var year = ev.GetProperty("year").GetInt32();
-
-            yearsAgo = today.Year - year;
-            factText = $"{year}: {text}";
-
-            // Optional Link (wenn vorhanden)
-            if (ev.TryGetProperty("pages", out var pages) && pages.GetArrayLength() > 0)
-            {
-                var p0 = pages[0];
-                if (p0.TryGetProperty("content_urls", out var cu) &&
-                    cu.TryGetProperty("desktop", out var desk) &&
-                    desk.TryGetProperty("page", out var page))
-                {
-                    factUrl = page.GetString() ?? "";
-                }
-            }
-
-            isLoading = false;
-        }
-        catch (Exception ex)
-        {
-            yearsAgo = 0;
-            factText = $"Exception: {ex.GetType().Name} – {ex.Message}";
-            factUrl = "";
-            isLoading = false;
+            Nav.NavigateTo("/mainMenu", replace: true);
         }
     }
+   
     
     private string[] images =
     {

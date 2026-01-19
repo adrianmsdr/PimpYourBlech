@@ -11,7 +11,7 @@ public interface IUserSession
 
     bool IsLoggedIn { get; }
 
-    bool IsAdmin { get; }
+    bool IsAdmin { get; set; }
 
     ConfigurationDto? CurrentConfigurationDto { get; set; }
     

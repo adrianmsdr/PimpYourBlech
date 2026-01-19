@@ -10,7 +10,7 @@ public class UserSession : IUserSession
 
     public bool IsLoggedIn => CurrentUserId != 0;
 
-    public bool IsAdmin { get; }
+    public bool IsAdmin { get; set; }
 
     public ConfigurationDto? CurrentConfigurationDto { get; set; }
 

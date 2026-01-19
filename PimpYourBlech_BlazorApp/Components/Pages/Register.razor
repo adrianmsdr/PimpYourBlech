@@ -10,6 +10,9 @@
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication
 @using PimpYourBlech_ClassLibrary.Services.CustomerCommunication.Implementation
 @using PimpYourBlech_ClassLibrary.Services.Customers
+@using PimpYourBlech_ClassLibrary.Session
+@inject IUserSession UserSession
+
 @inject ICustomerService CustomerService
 @inject NavigationManager Nav
 @inject IImageService ImageService
@@ -109,6 +112,13 @@
     private string SuccessMessage = "";
     private bool isRegistering;
 
+    protected override void OnParametersSet()
+    {
+        if (UserSession.CurrentUserId != 0)
+        {
+            Nav.NavigateTo("/mainMenu", replace: true);
+        }
+    }
     // Registrieren eines Kunden
     private async Task RegisterCustomer()
     {

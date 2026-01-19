@@ -29,11 +29,11 @@
         <div class="user-image" @onclick="GoToUserSettings">
             @if (c.ImagePath != null)
             {
-                <img src="@c.ImagePath" class="user-photo" />
+                <img src="@c.ImagePath" class="user-photo"/>
             }
             else
             {
-                <img src="user.png" class="user-photo" />
+                <img src="user.png" class="user-photo"/>
             }
         </div>
     }
@@ -67,24 +67,25 @@
         </div>
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoToShop">
-                <ShoppingCartIcon />
+                <ShoppingCartIcon/>
             </button>
 
             <button class="btn-label" @onclick="GoToShop">
                 Ersatzteile Shop
             </button>
         </div>
+        @if (UserSession.IsAdmin)
+        {
+            <div class="button-row-menu">
+                <button class="btn-icon" @onclick="GoToAdmin">
+                    <AdminIcon/>
+                </button>
 
-        <div class="button-row-menu">
-            <button class="btn-icon" @onclick="GoToAdmin">
-                <AdminIcon />
-            </button>
-
-            <button class="btn-label" @onclick="GoToAdmin">
-                Administrator
-            </button>
-        </div>
-        
+                <button class="btn-label" @onclick="GoToAdmin">
+                    Administrator
+                </button>
+            </div>
+        }
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoToFAQ">
                 <QAndAIcon></QAndAIcon>
@@ -92,13 +93,13 @@
             <button class="btn-label" @onclick="GoToFAQ">
                 Q&A
             </button>
-            </div>
-        
+        </div>
+
         <div class="button-row-menu">
             <button class="btn-icon" @onclick="GoAboutUs">
                 <AboutUsIcon></AboutUsIcon>
             </button>
-            
+
             <button class="btn-label" @onclick="GoAboutUs">
                 Über uns
             </button>

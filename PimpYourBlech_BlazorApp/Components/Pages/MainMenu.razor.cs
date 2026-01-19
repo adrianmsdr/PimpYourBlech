@@ -24,6 +24,7 @@ public partial class MainMenu : ComponentBase
     {
         UserSession.LogOut();
         LoginState.CurrentUserId = 0;
+        UserSession.IsAdmin = false;
         Nav.NavigateTo("/");
     }
 

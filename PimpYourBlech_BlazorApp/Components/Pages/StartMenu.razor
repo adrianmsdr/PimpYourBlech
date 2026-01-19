@@ -1,6 +1,8 @@
 @page "/startMenu"
+@using PimpYourBlech_ClassLibrary.Session
 @inject NavigationManager Nav
 @attribute [Routes.AllowAnonymous]
+@inject IUserSession UserSession
 <PageTitle>Pimp Your Blech</PageTitle>
 
 
@@ -18,6 +20,14 @@
 
 
 @code {
+    
+    protected override void OnParametersSet()
+    {
+        if (UserSession.CurrentUserId != 0)
+        {
+            Nav.NavigateTo("/mainMenu", replace: true);
+        }
+    }
 
     // Führt zur Login - Maske
     public void GoToLogin()

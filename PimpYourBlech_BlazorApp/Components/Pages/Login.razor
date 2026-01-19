@@ -1,8 +1,5 @@
 @page "/login"
 
-@using System.Diagnostics.Metrics
-@using System.Security.Cryptography
-@using System.Text
 @using PimpYourBlech_BlazorApp.Services.Toasts
 @using PimpYourBlech_ClassLibrary.Services.Customers
 @using PimpYourBlech_ClassLibrary.Session
@@ -78,6 +75,14 @@
     private string ErrorMessage = "";
     private bool isLoggingIn;
 
+    protected override void OnParametersSet()
+    {
+        if (UserSession.CurrentUserId != 0)
+        {
+            Nav.NavigateTo("/mainMenu", replace: true);
+        }
+    }
+
     private async Task LoginCustomer()
     {
         if (isLoggingIn) return;
@@ -98,6 +103,7 @@
             return;
         }
         UserSession.LogIn(c);
+        UserSession.IsAdmin = c.AdminRights;
         LoginState.CurrentUserId = c.Id;
         Logger.LogInformation(
             "Login successful for user {UserId}",
