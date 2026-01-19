@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
+using PimpYourBlech_BlazorApp.Services.Toasts.Implementation;
 using PimpYourBlech_Contracts.EntityDTOs;
 using PimpYourBlech_Contracts.Enums;
 
@@ -155,6 +156,14 @@ public partial class ConfiguratorMenu : ComponentBase
 
     private async Task StartConfiguration()
     {
+        if (string.IsNullOrWhiteSpace(configurationName))
+        {
+            ToastService.ShowError(
+                "Bitte gib einen gültigen Konfigurationsnamen ein."
+            );
+            return;
+
+        }
         name = configurationName;
         configuration =
             await ConfiguratorService.StartNewConfiguration(
