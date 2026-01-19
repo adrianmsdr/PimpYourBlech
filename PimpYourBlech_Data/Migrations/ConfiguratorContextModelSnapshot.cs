@@ -23,7 +23,7 @@ namespace PimpYourBlech_Data.Migrations
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.HasSequence<int>("ArticleNumberSeq")
-                .StartsAt(100000L);
+                .StartsAt(100026L);
 
             modelBuilder.Entity("ConfigurationProduct", b =>
                 {
@@ -86,24 +86,24 @@ namespace PimpYourBlech_Data.Migrations
                         {
                             Id = 1,
                             Brand = "Volkswagen",
-                            DatePermit = "2026",
-                            DateProduction = "2025",
+                            DatePermit = "01/2026",
+                            DateProduction = "10/2025",
                             Model = "GTI 2025",
                             Name = "Golf",
                             PS = 325,
-                            Price = 45000m,
+                            Price = 44999.99m,
                             Quantity = 20
                         },
                         new
                         {
                             Id = 2,
                             Brand = "Volkswagen",
-                            DatePermit = "2021",
-                            DateProduction = "2020",
+                            DatePermit = "01/2021",
+                            DateProduction = "11/2020",
                             Model = "Polo 2020",
                             Name = "Polo",
                             PS = 225,
-                            Price = 25000m,
+                            Price = 24999.99m,
                             Quantity = 15
                         });
                 });
@@ -677,7 +677,7 @@ namespace PimpYourBlech_Data.Migrations
                             OrderId = 1,
                             Quantity = 2,
                             Type = 1,
-                            UnitPrice = 1000m
+                            UnitPrice = 999.99m
                         });
                 });
 
@@ -774,298 +774,298 @@ namespace PimpYourBlech_Data.Migrations
                         new
                         {
                             ProductId = 1,
-                            ArticleNumber = "100000",
+                            ArticleNumber = "0100000",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Sportliche Alufelge mit roten Akzenten.",
+                            Description = "Die Queenstown Felge steht für sportliches Design und solide Verarbeitung. Mit einem Durchmesser von 19 Zoll und einer Breite von 8 Zoll verleiht sie dem Fahrzeug eine kraftvolle, moderne Optik, ohne dabei übertrieben zu wirken. Das markante Mehrspeichen-Design sorgt für einen dynamischen Auftritt und lässt die Bremsanlage optisch größer und präsenter erscheinen.\n\nGefertigt für Volkswagen-Fahrzeuge, verbindet diese Felge Alltagstauglichkeit mit einem klaren Performance-Look. Sie eignet sich sowohl für den täglichen Einsatz als auch für Fahrer, die ihrem Fahrzeug eine deutlich aufgewertete Erscheinung verleihen wollen, ohne ins Extreme zu gehen.\n\nDank der ausgewogenen Dimensionen bietet die Queenstown Felge ein gutes Verhältnis aus Stabilität, Fahrkomfort und sportlicher Straßenlage. Eine ideale Wahl für alle, die Wert auf Qualität, saubere Optik und eine stimmige Gesamtwirkung legen.",
                             Name = "Queenstown Felge",
-                            Price = 1000m,
+                            Price = 999.99m,
                             ProductType = 1,
                             Quantity = 10
                         },
                         new
                         {
                             ProductId = 2,
-                            ArticleNumber = "100001",
+                            ArticleNumber = "0100001",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Aerodynamische Premium-Felge für sportliche Fahrweise.",
+                            Description = "Die Warmenau Performance Felge richtet sich klar an Fahrer, die keine Kompromisse wollen. Mit einem großzügigen Durchmesser von 20 Zoll und einer Breite von 8,5 Zoll setzt sie ein deutlich sportliches Statement und unterstreicht den Performance-Charakter des Fahrzeugs schon im Stand. Das präzise, kantige Speichendesign wirkt technisch, aggressiv und hochwertig zugleich.\n\nEntwickelt für Volkswagen-Fahrzeuge, verbindet diese Felge modernes Motorsport-Design mit hoher Alltagstauglichkeit. Die klare Linienführung sorgt für eine starke Tiefenwirkung und bringt besonders bei dunklen Fahrzeugfarben ihre volle Wirkung zur Geltung.\n\nDurch die breitere Auslegung bietet die Warmenau Performance Felge eine verbesserte Straßenlage und ein direkteres Fahrgefühl. Sie ist die richtige Wahl für alle, die Optik und Fahrdynamik gezielt aufwerten wollen und ihrem Fahrzeug einen kompromisslosen Performance-Look verleihen möchten.",
                             Name = "Warmenau Performance Felge",
-                            Price = 1200m,
+                            Price = 1199.99m,
                             ProductType = 1,
                             Quantity = 10
                         },
                         new
                         {
                             ProductId = 21,
-                            ArticleNumber = "100011",
+                            ArticleNumber = "0100020",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Leichte Schmiedefelge mit hoher Stabilität.",
+                            Description = "Die Pretoria Sport Felge kombiniert ein reduziertes, sportliches Design mit hoher Alltagstauglichkeit. Mit einem Durchmesser von 18 Zoll und einer Breite von 7,5 Zoll ist sie bewusst ausgewogen dimensioniert und eignet sich ideal für Fahrer, die sportliche Optik wollen, ohne Komfort und Effizienz zu opfern. Das klare Speichendesign wirkt leicht, modern und zeitlos.\n\nAls Volkswagen Original-Design fügt sich die Pretoria Sport Felge harmonisch in die Linienführung des Fahrzeugs ein. Sie verleiht dem Auto eine dezente, aber spürbare Aufwertung und passt sowohl zu sportlichen als auch zu eleganten Fahrzeugkonfigurationen.\n\nDank der moderaten Größe bietet diese Felge ein angenehmes Fahrverhalten, gute Alltagseigenschaften und eine zuverlässige Straßenlage. Die Pretoria Sport Felge ist damit die perfekte Wahl für Fahrer, die eine sportliche, aber vernünftige Lösung suchen.",
                             Name = "Pretoria Sport Felge",
-                            Price = 1350m,
+                            Price = 1349.99m,
                             ProductType = 1,
                             Quantity = 8
                         },
                         new
                         {
                             ProductId = 3,
-                            ArticleNumber = "100002",
+                            ArticleNumber = "0100002",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "325 PS Turbo-Benzinmotor.",
+                            Description = "Der GTI 2.0 TFSI Performance Motor steht für kompromisslose Leistung und moderne Volkswagen-Performance-Technologie. Mit 325 PS (239 kW) aus 2,0 Litern Hubraum liefert dieser Benzinmotor eine beeindruckende Kombination aus Durchzugskraft, Effizienz und sportlichem Charakter. Entwickelt für Fahrer, die maximale Performance erwarten – ohne Alltags­tauglichkeit einzubüßen.\n\nIn Verbindung mit dem 6-Gang-Automatikgetriebe sorgt der Motor für schnelle, präzise Gangwechsel und eine direkte Kraftentfaltung. Das Ergebnis ist ein dynamisches Fahrerlebnis mit souveräner Beschleunigung, hoher Laufruhe und klarer Kontrolle in jeder Fahrsituation.\n\nDer GTI 2.0 TFSI Performance Motor ist die ideale Wahl für sportlich ambitionierte Fahrer, die ein kraftvolles Upgrade suchen. Ob auf der Straße oder bei engagierter Fahrweise – dieser Motor liefert genau das, was der Name verspricht: echte GTI-Performance auf hohem technischen Niveau.",
                             Name = "GTI 2.0 TFSI Performance Motor",
-                            Price = 2500m,
+                            Price = 2499.99m,
                             ProductType = 0,
                             Quantity = 5
                         },
                         new
                         {
                             ProductId = 4,
-                            ArticleNumber = "100003",
+                            ArticleNumber = "0100003",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Hochleistungsmotor mit Rennsportabstimmung.",
+                            Description = "Der GTI Clubsport RS Motor markiert die Spitze der Volkswagen-Performanceklasse. Mit 360 PS (265 kW) aus 2,0 Litern Hubraum liefert dieser Benzinmotor eine kompromisslose Leistungsentfaltung, die klar auf sportliche Höchstansprüche ausgelegt ist. Dieses Aggregat richtet sich an Fahrer, die maximale Dynamik und ein spürbar aggressiveres Fahrgefühl suchen.\n\nDas 6-Gang-Automatikgetriebe sorgt für extrem schnelle Schaltvorgänge und eine direkte Umsetzung der Motorleistung auf die Straße. Die Kraftentfaltung erfolgt explosiv, gleichzeitig kontrolliert und präzise – ideal für ambitionierte Fahrweise und performanceorientierte Fahrzeugkonzepte.\n\nDer GTI Clubsport RS Motor ist kein Komfort-Upgrade, sondern ein echtes Performance-Statement. Entwickelt für Enthusiasten, die das Maximum aus ihrem Fahrzeug herausholen wollen und bewusst auf kompromisslose Leistung setzen.",
                             Name = "GTI Clubsport RS Motor",
-                            Price = 3400m,
+                            Price = 3399.99m,
                             ProductType = 0,
                             Quantity = 3
                         },
                         new
                         {
                             ProductId = 15,
-                            ArticleNumber = "100008",
+                            ArticleNumber = "0100014",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Effizienter Hybridmotor mit ruhigem Lauf.",
+                            Description = "Der GTI EcoBoost Hybrid Motor verbindet sportliche GTI-DNA mit moderner Hybridtechnologie. Mit 280 PS (210 kW) aus 1,8 Litern Hubraum bietet dieses Aggregat eine ausgewogene Kombination aus Leistung, Effizienz und zukunftsorientierter Antriebstechnik. Der Hybridantrieb sorgt für kraftvollen Durchzug bei gleichzeitig reduzierten Emissionen und verbessertem Verbrauch.\n\nIn Verbindung mit dem 6-Gang-Automatikgetriebe wird die Leistung gleichmäßig, direkt und komfortabel auf die Straße übertragen. Der elektrische Anteil unterstützt den Verbrennungsmotor besonders beim Anfahren und Beschleunigen, was zu einem spontanen, dynamischen Fahrgefühl führt – ohne die typische GTI-Sportlichkeit zu verlieren.\n\nDer GTI EcoBoost Hybrid Motor richtet sich an Fahrer, die Performance genießen wollen, dabei aber Wert auf Effizienz und moderne Technologie legen. Ein intelligentes Performance-Upgrade für alle, die sportliches Fahren mit einem Blick in die Zukunft verbinden möchten.",
                             Name = "GTI EcoBoost Hybrid Motor",
-                            Price = 3900m,
+                            Price = 3899.99m,
                             ProductType = 0,
                             Quantity = 4
                         },
                         new
                         {
                             ProductId = 5,
-                            ArticleNumber = "100004",
+                            ArticleNumber = "0100004",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Adaptive Matrix-LED-Scheinwerfer.",
+                            Description = "Das IQ.Light LED Matrix Pro steht für modernste Lichttechnologie und maximale Sicherheit bei jeder Fahrbedingung. Mit einer Lichtleistung von 3.200 Lumen sorgt dieses LED-System für eine außergewöhnlich helle und gleichmäßige Ausleuchtung der Fahrbahn – ohne andere Verkehrsteilnehmer zu blenden. Die präzise Matrix-Technik passt den Lichtkegel intelligent an die Umgebung an.\n\nDank der vollwertigen LED-Technologie überzeugt das System durch schnelle Reaktionszeiten, hohe Energieeffizienz und eine deutlich längere Lebensdauer gegenüber herkömmlichen Scheinwerfern. Besonders bei Nachtfahrten, auf Landstraßen oder bei schlechten Sichtverhältnissen bietet IQ.Light einen spürbaren Sicherheitsgewinn.\n\nDas IQ.Light LED Matrix Pro ist die ideale Wahl für Fahrer, die höchsten Wert auf Sicht, Sicherheit und moderne Fahrzeugtechnik legen. Ein Premium-Upgrade, das Funktionalität und Hightech-Design perfekt miteinander verbindet.",
                             Name = "IQ.Light LED Matrix Pro",
-                            Price = 1450m,
+                            Price = 1449.99m,
                             ProductType = 2,
                             Quantity = 10
                         },
                         new
                         {
                             ProductId = 6,
-                            ArticleNumber = "100007",
+                            ArticleNumber = "0100005",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Sportlicher LED-Scheinwerfer mit dunklem Gehäuse.",
+                            Description = "Das Dynamic Vision LED Blackline vereint moderne LED-Lichttechnik mit einer markant sportlichen Optik. Mit einer Lichtleistung von 3.000 Lumen sorgt dieses System für eine klare, gleichmäßige Ausleuchtung der Fahrbahn und verbessert die Sicht bei Nacht sowie bei schlechten Wetterbedingungen deutlich. Gleichzeitig verleiht das dunkle Blackline-Design dem Fahrzeug einen kraftvollen, hochwertigen Look.\n\nDie LED-Technologie bietet schnelle Reaktionszeiten, hohe Energieeffizienz und eine lange Lebensdauer. Das Lichtbild ist präzise abgestimmt und unterstützt sicheres Fahren, ohne andere Verkehrsteilnehmer unnötig zu blenden. Besonders auf Landstraßen und im Stadtverkehr zeigt sich der Vorteil der gleichmäßigen Ausleuchtung.\n\nDas Dynamic Vision LED Blackline ist die richtige Wahl für Fahrer, die Funktionalität und sportliches Design kombinieren möchten. Ein stilvolles Upgrade, das Sicherheit, moderne Technik und eine ausdrucksstarke Optik miteinander verbindet.",
                             Name = "Dynamic Vision LED Blackline",
-                            Price = 1580m,
+                            Price = 1579.99m,
                             ProductType = 2,
                             Quantity = 8
                         },
                         new
                         {
                             ProductId = 16,
-                            ArticleNumber = "100009",
+                            ArticleNumber = "0100015",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Extrem helle LED-Scheinwerfer für maximale Sicht.",
+                            Description = "Das NightDrive LED UltraBeam ist auf maximale Sichtleistung und höchste Sicherheit bei Nachtfahrten ausgelegt. Mit einer beeindruckenden Lichtleistung von 3.800 Lumen sorgt dieses LED-System für eine extrem helle, weitreichende Ausleuchtung der Fahrbahn und ermöglicht frühzeitiges Erkennen von Hindernissen, Fahrbahnmarkierungen und Verkehrszeichen.\n\nDank moderner LED-Technologie überzeugt das NightDrive UltraBeam durch ein präzises, klares Lichtbild, hohe Energieeffizienz und eine lange Lebensdauer. Besonders auf dunklen Landstraßen und bei schlechten Sichtverhältnissen spielt dieses System seine Stärken aus und bietet ein deutliches Plus an Sicherheit und Fahrkomfort.\n\nDas NightDrive LED UltraBeam richtet sich an Fahrer, die keine Kompromisse bei Sicht und Sicherheit eingehen möchten. Ein leistungsstarkes Premium-Upgrade für maximale Kontrolle und Vertrauen bei jeder Nachtfahrt.",
                             Name = "NightDrive LED UltraBeam",
-                            Price = 1750m,
+                            Price = 1749.99m,
                             ProductType = 2,
                             Quantity = 6
                         },
                         new
                         {
                             ProductId = 7,
-                            ArticleNumber = "100005",
+                            ArticleNumber = "0100006",
                             Brand = "Volkswagen",
                             CarId = 1,
                             Description = "Kräftige Sportlackierung.",
                             Name = "Tornadorot",
-                            Price = 1800m,
+                            Price = 1799.99m,
                             ProductType = 4,
                             Quantity = 20
                         },
                         new
                         {
                             ProductId = 8,
-                            ArticleNumber = "100006",
+                            ArticleNumber = "0100007",
                             Brand = "Volkswagen",
                             CarId = 1,
                             Description = "Eleganter Perlglanz.",
                             Name = "Metallic Weiß Perleffekt",
-                            Price = 1900m,
+                            Price = 1899.99m,
                             ProductType = 4,
                             Quantity = 20
                         },
                         new
                         {
                             ProductId = 17,
-                            ArticleNumber = "100010",
+                            ArticleNumber = "0100016",
                             Brand = "Volkswagen",
                             CarId = 1,
                             Description = "Tiefschwarze Premium-Lackierung.",
                             Name = "Deep Black Pearl",
-                            Price = 2100m,
+                            Price = 2099.99m,
                             ProductType = 4,
                             Quantity = 15
                         },
                         new
                         {
                             ProductId = 22,
-                            ArticleNumber = "200010",
+                            ArticleNumber = "0100021",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Klassische Alufelge für Alltag und Komfort.",
+                            Description = "Die Astana Felge ist auf maximale Alltagstauglichkeit und zeitloses Design ausgelegt. Mit einem Durchmesser von 16 Zoll und einer Breite von 6,5 Zoll bietet sie eine komfortorientierte Lösung für den täglichen Einsatz. Das geschlossene, aerodynamisch wirkende Design sorgt für eine ruhige, saubere Optik und fügt sich unauffällig in das Gesamtbild des Fahrzeugs ein.\n\nAls Volkswagen Originalfelge wurde die Astana speziell für Effizienz, Langlebigkeit und Fahrkomfort entwickelt. Sie eignet sich ideal für Stadtverkehr, Langstrecken und den ganzjährigen Einsatz. Die ausgewogene Größe unterstützt ein angenehmes Abrollverhalten und reduziert den Verschleiß von Reifen und Fahrwerk.\n\nDie Astana Felge ist die richtige Wahl für Fahrer, die Wert auf Zuverlässigkeit, Komfort und ein dezentes Erscheinungsbild legen – funktional, unaufdringlich und konsequent alltagstauglich.",
                             Name = "Astana Felge",
-                            Price = 850m,
+                            Price = 849.99m,
                             ProductType = 1,
                             Quantity = 12
                         },
                         new
                         {
                             ProductId = 23,
-                            ArticleNumber = "200011",
+                            ArticleNumber = "0100022",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Sportliche Mehrspeichenfelge.",
+                            Description = "Die Bergamo Sport Felge verbindet sportliche Eleganz mit hoher Alltagstauglichkeit. Mit einem Durchmesser von 17 Zoll und einer Breite von 7,0 Zoll bietet sie einen ausgewogenen Kompromiss zwischen dynamischer Optik und komfortablem Fahrverhalten. Das geschwungene, kontrastreiche Speichendesign verleiht dem Fahrzeug eine moderne und hochwertige Ausstrahlung.\n\nAls Volkswagen Originalfelge ist die Bergamo Sport Felge perfekt auf die Fahrzeuge des Herstellers abgestimmt. Sie fügt sich harmonisch in das Gesamtbild ein und wertet sowohl kompakte Modelle als auch Mittelklassefahrzeuge sichtbar auf, ohne dabei aufdringlich zu wirken.\n\nDurch ihre moderate Dimension sorgt die Felge für ein stabiles Fahrgefühl, gute Effizienz und angenehmen Komfort im Alltag. Die Bergamo Sport Felge ist ideal für Fahrer, die sportliche Akzente setzen möchten, dabei aber nicht auf Alltagstkomfort verzichten wollen.",
                             Name = "Bergamo Sport Felge",
-                            Price = 980m,
+                            Price = 979.99m,
                             ProductType = 1,
                             Quantity = 10
                         },
                         new
                         {
                             ProductId = 24,
-                            ArticleNumber = "200012",
+                            ArticleNumber = "0100023",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Schwarze Performance-Felge.",
+                            Description = "Die Verona Black Performance Felge steht für einen kompromisslos sportlichen Auftritt mit klarer, kraftvoller Linienführung. Mit einem Durchmesser von 18 Zoll und einer Breite von 7,5 Zoll bietet sie eine ideale Balance aus Performance, Stabilität und Alltagstauglichkeit. Das kontrastreiche Schwarz-Design mit markanten Speichen sorgt für eine aggressive, moderne Optik und unterstreicht den sportlichen Charakter des Fahrzeugs.\n\nAls Volkswagen Performance Felge ist die Verona Black perfekt auf die technischen Anforderungen des Herstellers abgestimmt. Sie fügt sich nahtlos in sportliche Fahrzeugkonzepte ein und wirkt besonders stark bei dunklen Lackierungen, wo sie einen klaren Performance-Akzent setzt.\n\nDie ausgewogene Dimensionierung sorgt für präzises Lenkverhalten, gute Straßenlage und zuverlässigen Fahrkomfort. Die Verona Black Performance Felge ist die richtige Wahl für Fahrer, die ein sportliches Erscheinungsbild mit funktionaler Alltagstauglichkeit verbinden möchten.",
                             Name = "Verona Black Performance Felge",
-                            Price = 1100m,
+                            Price = 1099.99m,
                             ProductType = 1,
                             Quantity = 6
                         },
                         new
                         {
                             ProductId = 11,
-                            ArticleNumber = "200003",
+                            ArticleNumber = "0100010",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Effizienter Stadtturbomotor.",
+                            Description = "Der Polo 1.0 TSI BlueMotion Motor ist auf Effizienz, Zuverlässigkeit und Alltagstauglichkeit ausgelegt. Mit 110 PS (81 kW) aus 1,0 Liter Hubraum bietet dieser Benzinmotor eine überraschend agile Leistungsentfaltung bei gleichzeitig niedrigem Verbrauch. Die BlueMotion-Technologie steht dabei für optimierte Effizienz und reduzierte Emissionen im täglichen Fahrbetrieb.\n\nIn Kombination mit dem 6-Gang-Schaltgetriebe ermöglicht der Motor eine direkte, kontrollierte Kraftübertragung und ein bewusst aktives Fahrerlebnis. Besonders im Stadt- und Pendelverkehr überzeugt das Aggregat durch seine Laufruhe, gute Elastizität und wirtschaftliche Charakteristik.\n\nDer Polo 1.0 TSI BlueMotion Motor ist die ideale Wahl für Fahrer, die ein zuverlässiges und sparsames Antriebskonzept suchen, ohne auf moderne Technik und solide Fahrleistungen verzichten zu wollen. Funktional, effizient und perfekt für den Alltag.",
                             Name = "Polo 1.0 TSI BlueMotion Motor",
-                            Price = 1800m,
+                            Price = 1799.99m,
                             ProductType = 0,
                             Quantity = 8
                         },
                         new
                         {
                             ProductId = 12,
-                            ArticleNumber = "200004",
+                            ArticleNumber = "0100011",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Sportlicher Turbomotor.",
+                            Description = "Der Polo 1.5 TSI GT-Line Motor bietet eine sportlich abgestimmte Leistungsreserve bei gleichzeitig hoher Effizienz. Mit 150 PS (110 kW) aus 1,5 Litern Hubraum positioniert sich dieser Benzinmotor deutlich über den klassischen Alltagsaggregaten und verleiht dem Polo ein spürbar dynamischeres Fahrverhalten.\n\nIn Kombination mit dem 6-Gang-Automatikgetriebe überzeugt der Motor durch schnelle, saubere Gangwechsel und eine gleichmäßige Kraftentfaltung. Beschleunigung, Durchzug und Laufruhe sind ausgewogen abgestimmt und machen den Polo sowohl im Stadtverkehr als auch auf der Autobahn souverän und agil.\n\nDer Polo 1.5 TSI GT-Line Motor richtet sich an Fahrer, die mehr Leistung und Sportlichkeit erwarten, ohne auf Komfort und Alltagstauglichkeit zu verzichten. Ein ideales Upgrade für alle, die den Polo deutlich dynamischer erleben möchten..",
                             Name = "Polo 1.5 TSI GT-Line Motor",
-                            Price = 2400m,
+                            Price = 2399.99m,
                             ProductType = 0,
                             Quantity = 6
                         },
                         new
                         {
                             ProductId = 19,
-                            ArticleNumber = "200008",
+                            ArticleNumber = "0100018",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Hybridantrieb mit niedrigem Verbrauch.",
+                            Description = "Der Polo 1.2 Hybrid Drive Motor ist konsequent auf Effizienz, Alltagstauglichkeit und moderne Antriebstechnologie ausgelegt. Mit 130 PS (96 kW) aus 1,2 Litern Hubraum kombiniert dieses Aggregat einen Benzinmotor mit Hybridunterstützung und bietet damit ein ausgewogenes Verhältnis aus Leistung, Verbrauch und Komfort.\n\nDas 6-Gang-Automatikgetriebe sorgt für sanfte, nahezu unmerkliche Gangwechsel und eine gleichmäßige Kraftentfaltung. Der Hybridantrieb unterstützt den Verbrennungsmotor besonders bei niedrigen Drehzahlen und im Stadtverkehr, was zu einem ruhigen Fahrgefühl, besserer Effizienz und reduziertem Verbrauch führt.\n\nDer Polo 1.2 Hybrid Drive Motor richtet sich an Fahrer, die ein modernes, sparsames Antriebskonzept suchen, ohne auf ausreichende Leistungsreserven zu verzichten. Eine clevere Wahl für den täglichen Einsatz mit Fokus auf Wirtschaftlichkeit und zeitgemäße Technik.",
                             Name = "Polo 1.2 Hybrid Drive",
-                            Price = 2600m,
+                            Price = 2599.99m,
                             ProductType = 0,
                             Quantity = 5
                         },
                         new
                         {
                             ProductId = 13,
-                            ArticleNumber = "200005",
+                            ArticleNumber = "0100012",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Gleichmäßige LED-Ausleuchtung.",
+                            Description = "Das Polo LED Comfort Beam ist auf angenehme Ausleuchtung und zuverlässige Alltagstauglichkeit ausgelegt. Mit einer Lichtleistung von 2.600 Lumen bietet dieses LED-System ein ausgewogenes, gleichmäßiges Lichtbild, das für gute Sicht bei Nacht und in der Dämmerung sorgt, ohne dabei zu blenden oder zu ermüden.\n\nDie moderne LED-Technologie garantiert eine hohe Energieeffizienz, lange Lebensdauer und sofortige Helligkeit beim Einschalten. Besonders im Stadtverkehr und auf täglichen Pendelstrecken überzeugt das Polo LED Comfort Beam durch seine ruhige Lichtcharakteristik und den spürbaren Komfortgewinn.\n\nDas Polo LED Comfort Beam ist die ideale Wahl für Fahrer, die ein zuverlässiges, komfortorientiertes Lichtsystem suchen. Funktional, effizient und perfekt auf den Alltag abgestimmt.",
                             Name = "Polo LED Comfort Beam",
-                            Price = 980m,
+                            Price = 979.99m,
                             ProductType = 2,
                             Quantity = 10
                         },
                         new
                         {
                             ProductId = 14,
-                            ArticleNumber = "200006",
+                            ArticleNumber = "0100013",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Erweiterte Reichweite bei Nacht.",
+                            Description = "Das Polo LED NightVision Plus wurde für verbesserte Sicht und erhöhte Sicherheit bei Dunkelheit entwickelt. Mit einer Lichtleistung von 3.100 Lumen bietet dieses LED-System eine starke, gleichmäßige Ausleuchtung der Fahrbahn und erleichtert das Erkennen von Hindernissen, Fußgängern und Verkehrszeichen bei Nacht.\n\nDie moderne LED-Technologie sorgt für eine hohe Energieeffizienz, sofortige volle Helligkeit und eine lange Lebensdauer. Das präzise abgestimmte Lichtbild reduziert Ermüdung bei längeren Nachtfahrten und bietet ein spürbares Plus an Fahrkomfort, besonders auf schlecht beleuchteten Straßen.\n\nDas Polo LED NightVision Plus ist die ideale Wahl für Fahrer, die Wert auf Sicherheit, klare Sicht und moderne Lichttechnik legen. Ein hochwertiges Upgrade für souveränes und entspanntes Fahren bei Nacht.",
                             Name = "Polo LED NightVision Plus",
-                            Price = 1150m,
+                            Price = 1149.99m,
                             ProductType = 2,
                             Quantity = 8
                         },
                         new
                         {
                             ProductId = 20,
-                            ArticleNumber = "200009",
+                            ArticleNumber = "0100019",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Blendfreies Fernlicht mit Pixel-Technologie.",
+                            Description = "Das Polo Adaptive Pixel Light repräsentiert die fortschrittlichste Lichttechnologie in der Polo-Klasse. Mit einer Lichtleistung von 3.400 Lumen und adaptiver Pixelsteuerung passt dieses LED-System den Lichtkegel präzise an Fahrbahn, Verkehr und Umgebung an. Das Ergebnis ist maximale Sicht bei gleichzeitig minimaler Blendung anderer Verkehrsteilnehmer.\n\nDie intelligente Pixel-LED-Technologie ermöglicht eine dynamische Ausleuchtung, die sich in Echtzeit an Geschwindigkeit, Lenkwinkel und Verkehrssituation anpasst. Besonders bei Nachtfahrten, auf kurvigen Strecken oder bei schlechten Wetterbedingungen bietet dieses System einen deutlichen Sicherheits- und Komfortgewinn.\n\nDas Polo Adaptive Pixel Light ist die ideale Wahl für Fahrer, die modernste Lichttechnik, höchste Sicherheit und Premium-Komfort erwarten. Ein High-End-Upgrade für souveränes Fahren bei jeder Lichtsituation.",
                             Name = "Polo Adaptive Pixel Light",
-                            Price = 1350m,
+                            Price = 1349.99m,
                             ProductType = 2,
                             Quantity = 6
                         },
                         new
                         {
                             ProductId = 9,
-                            ArticleNumber = "200001",
+                            ArticleNumber = "0100008",
                             Brand = "Volkswagen",
                             CarId = 2,
                             Description = "Kühle Metallic-Lackierung.",
                             Name = "Crystal Ice Blue Metallic",
-                            Price = 1600m,
+                            Price = 1599.99m,
                             ProductType = 4,
                             Quantity = 20
                         },
                         new
                         {
                             ProductId = 10,
-                            ArticleNumber = "200002",
+                            ArticleNumber = "0100009",
                             Brand = "Volkswagen",
                             CarId = 2,
                             Description = "Edler Rotton mit Tiefenglanz.",
                             Name = "Kings Red Velvet",
-                            Price = 1700m,
+                            Price = 1699.99m,
                             ProductType = 4,
                             Quantity = 20
                         },
                         new
                         {
                             ProductId = 18,
-                            ArticleNumber = "200007",
+                            ArticleNumber = "0100017",
                             Brand = "Volkswagen",
                             CarId = 2,
                             Description = "Moderne urbane Graulackierung.",
                             Name = "Urban Grey Metallic",
-                            Price = 1650m,
+                            Price = 1649.99m,
                             ProductType = 4,
                             Quantity = 18
                         },
                         new
                         {
-                            ProductId = 30,
-                            ArticleNumber = "300001",
+                            ProductId = 25,
+                            ArticleNumber = "0100024",
                             Brand = "Volkswagen",
                             CarId = 1,
-                            Description = "Sportlicher Carbon-Heckspoiler für verbesserte Aerodynamik.",
+                            Description = "Der GTI Carbon Heckspoiler setzt ein klares sportliches Statement und unterstreicht den Performance-Charakter des Fahrzeugs bereits auf den ersten Blick. Gefertigt aus hochwertigem Carbon, überzeugt der Spoiler durch sein geringes Gewicht, hohe Stabilität und eine edle, motorsportnahe Optik.\n\nNeben der visuellen Aufwertung trägt der Heckspoiler zu einer verbesserten Aerodynamik bei, indem er den Abtrieb an der Hinterachse optimiert und das Fahrzeug bei höheren Geschwindigkeiten stabiler auf der Straße hält. Die präzise Formgebung fügt sich harmonisch in das Fahrzeugdesign ein und ergänzt die typische GTI-Linie perfekt.\n\nDer GTI Carbon Heckspoiler ist die ideale Wahl für Fahrer, die sportliche Optik und funktionalen Nutzen kombinieren möchten. Ein hochwertiges Performance-Upgrade, das Design, Technik und Fahrdynamik gekonnt miteinander verbindet.",
                             Name = "GTI Carbon Heckspoiler",
                             Price = 950m,
                             ProductType = 17,
@@ -1073,11 +1073,11 @@ namespace PimpYourBlech_Data.Migrations
                         },
                         new
                         {
-                            ProductId = 31,
-                            ArticleNumber = "300002",
+                            ProductId = 26,
+                            ArticleNumber = "0100025",
                             Brand = "Volkswagen",
                             CarId = 2,
-                            Description = "Kompakter Sportspoiler für den Polo.",
+                            Description = "Der Polo Sport Heckspoiler verleiht dem Polo eine dynamische, sportliche Optik und setzt gezielte Akzente am Heck des Fahrzeugs. Mit seiner kompakten, klaren Form fügt sich der Spoiler harmonisch in das Gesamtbild ein und unterstreicht den sportlichen Charakter, ohne überladen zu wirken.\n\nNeben der optischen Aufwertung unterstützt der Heckspoiler die Aerodynamik, indem er den Luftstrom am Fahrzeugheck sauberer führt und bei höheren Geschwindigkeiten für zusätzliche Stabilität sorgt. Die passgenaue Ausführung gewährleistet eine perfekte Integration in das originale Fahrzeugdesign.\n\nDer Polo Sport Heckspoiler ist ideal für Fahrer, die ihrem Fahrzeug einen sportlichen Look verleihen möchten, dabei aber Wert auf Alltagstauglichkeit und dezentes Design legen. Ein ausgewogenes Upgrade für Stil und Funktion.",
                             Name = "Polo Sport Heckspoiler",
                             Price = 720m,
                             ProductType = 17,
