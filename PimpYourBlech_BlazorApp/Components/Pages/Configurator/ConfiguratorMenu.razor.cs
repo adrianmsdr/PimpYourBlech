@@ -61,8 +61,7 @@ public partial class ConfiguratorMenu : ComponentBase
 
         // 3) Produkte laden
         availableEngines = await ConfiguratorService.GetAvailableEnginesAsync(Id) ?? new List<ProductDto>();
-        availableRims = await ConfiguratorService.GetAvailableProductsAsync(Id, ProductType.Felge) ??
-                        new List<ProductDto>();
+        availableRims = await ConfiguratorService.GetAvailableRims(Id) ?? new List<ProductDto>();
         availableExtras = await ConfiguratorService.GetAvailableExtras(Id) ?? new List<ProductDto>();
         availableLights = await ConfiguratorService.GetAvailableLightsAsync(Id) ?? new List<ProductDto>();
 

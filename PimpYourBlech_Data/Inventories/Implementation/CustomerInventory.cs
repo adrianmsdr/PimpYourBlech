@@ -56,7 +56,6 @@ public sealed class CustomerInventory(IDatabase database) : ICustomerInventory
         tracked.PasswordHash = c.PasswordHash;
         tracked.ImagePath = c.ImagePath; 
         tracked.AdminRights = c.AdminRights;
-        tracked.DeliveryAddresses = c.DeliveryAddresses;
         await database.SaveChangesAsync();
     }
     public void UpdateCustomers()

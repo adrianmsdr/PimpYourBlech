@@ -140,15 +140,6 @@ public class ConfiguratorService : IConfiguratorService
             || product.ProductType == ProductType.Motor
             )
         {
-            /*if (existingProduct?.ProductId == product.ProductId)
-            {
-                if (product.ProductType == ProductType.Lichter)
-                {
-                    await RemoveProduct(configurationId, product.ProductId);
-                }
-
-                return;
-            }*/
 
             if (existingProduct != null)
             {
@@ -400,7 +391,27 @@ public class ConfiguratorService : IConfiguratorService
             Id = c.Id,
         });
     }
-    
+
+    public async Task<List<ProductDto>> GetAvailableRims(int carId)
+    {
+        var rims = await _carInventory.GetAvailableRimsAsync(carId);
+        return rims.ConvertAll(p => new ProductDto
+            {
+                ArticleNumber = p.ArticleNumber,
+                Name = p.Name,
+                CarId = p.CarId,
+                Brand = p.Brand,
+                Description = p.Description,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                ProductId = p.ProductId,
+                ProductType = p.ProductType,
+                Quantity = p.Quantity,
+                DiameterInInch = p.RimDetail.DiameterInInch
+            }
+        );
+    }
+
     // Liefert die Basis-Konfigurationsdaten eines Kunden
     public async Task<List<ConfigurationCarItemsDto>> GetConfigurationsBasicsCustomerAsync(int customerId)
     {
