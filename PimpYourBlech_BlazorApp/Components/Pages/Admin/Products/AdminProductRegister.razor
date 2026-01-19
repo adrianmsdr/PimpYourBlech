@@ -286,6 +286,9 @@
                 case ProductType.Lack:
                     productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterColor(productDto, _displayName),successMessage:"Fahrzeugteil erfolgreich registriert.");
                     break;
+                    
+                    default:
+                  productId =  await ProductService.InsertProductAsync(productDto);
             }
 
 
