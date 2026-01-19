@@ -224,7 +224,7 @@
     {
         _errorMessage = "";
         _successMessage = "";
-        
+
         Logger.LogInformation(
             "Admin started product registration: Name={Name}, Type={ProductType}, CarId={CarId}",
             _name,
@@ -234,8 +234,8 @@
 
 
         CarDto c = await CarService.GetCarByIdAsync(_selectedCarId);
-        
-        ProductDto productDto = await ToastExecutor.RunReturnAsync(()=>ProductService.CreateProduct(
+
+        ProductDto productDto = await ToastExecutor.RunReturnAsync(() => ProductService.CreateProduct(
             c,
             _name,
             _brand,
@@ -259,6 +259,7 @@
                         case "6-Gang Automatik": gear = Gear.Automatik6Gang; break;
                         case "8-Gang Automatik": gear = Gear.Automatik8Gang; break;
                     }
+
                     switch (_selectedFuel)
                     {
                         case "Benzin": fuel = Fuel.Benzin; break;
@@ -268,27 +269,28 @@
                         case "Elektro": fuel = Fuel.Elektro; break;
                     }
 
-                  productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterEngine(productDto, _ps, _kw, _displacement, gear, fuel), successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    productId = await ToastExecutor.RunReturnAsync(() => ProductService.RegisterEngine(productDto, _ps, _kw, _displacement, gear, fuel), successMessage: "Fahrzeugteil erfolgreich registriert.");
                     break;
 
                 case ProductType.Felge:
-                    
 
-                    productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterRim(productDto, _diameter, _width) ,successMessage:"Fahrzeugteil erfolgreich registriert.");
+
+                    productId = await ToastExecutor.RunReturnAsync(() => ProductService.RegisterRim(productDto, _diameter, _width), successMessage: "Fahrzeugteil erfolgreich registriert.");
                     break;
 
                 case ProductType.Lichter:
 
                     bool isLed = _isLed == "True";
-                    productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterLights(productDto, _lumen, isLed),successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    productId = await ToastExecutor.RunReturnAsync(() => ProductService.RegisterLights(productDto, _lumen, isLed), successMessage: "Fahrzeugteil erfolgreich registriert.");
                     break;
 
                 case ProductType.Lack:
-                    productId =  await ToastExecutor.RunReturnAsync(()=>ProductService.RegisterColor(productDto, _displayName),successMessage:"Fahrzeugteil erfolgreich registriert.");
+                    productId = await ToastExecutor.RunReturnAsync(() => ProductService.RegisterColor(productDto, _displayName), successMessage: "Fahrzeugteil erfolgreich registriert.");
                     break;
-                    
-                    default:
-                  productId =  await ProductService.InsertProductAsync(productDto);
+
+                default:
+                    productId = await ProductService.InsertProductAsync(productDto);
+                    break;
             }
 
 
@@ -304,17 +306,18 @@
                 _selectedProductType
             );
 
-            if (_uploadedProductImage != null)
+            if (productId != 0)
             {
-                await ImageService.SaveProductImageAsync(productId, _uploadedProductImage);
+                if (_uploadedProductImage != null)
+                {
+                    await ImageService.SaveProductImageAsync(productId, _uploadedProductImage);
 
-                Logger.LogInformation(
-                    "Admin uploaded product image for ProductId={ProductId}",
-                    productId
-                );
+                    Logger.LogInformation(
+                        "Admin uploaded product image for ProductId={ProductId}",
+                        productId
+                    );
+                }
             }
-
-            _successMessage = "Fahrzeugteil erfolgreich registriert.";
         }
     }
 

@@ -94,7 +94,7 @@ public partial class ConfiguratorMenu : ComponentBase
         }
 
         // 5) Preis einmal am Ende
-        UpdatePrice();
+       await UpdatePrice();
     }
 
 
