@@ -1,5 +1,4 @@
 using PimpYourBlech_Contracts.EntityDTOs;
-using PimpYourBlech_Data.Inventories.Implementation;
 
 namespace PimpYourBlech_ClassLibrary.Services.Comparator.Implementation;
 
@@ -7,6 +6,8 @@ using PimpYourBlech_ClassLibrary.Services.Comparator.Models;
 
 public class ComparatorService : IComparatorService
 {
+    
+    // Vergleicht mehrere Fahrzeuge anhand ihrer Eigenschaften und gibt eine Liste dieser aus
     public ComparisonResult CompareCars(List<CarDto> cars)
     {
         return new ComparisonResult
@@ -27,6 +28,7 @@ public class ComparatorService : IComparatorService
         };
     }
 
+    // Vergleicht gespeicherte Konfigurationen miteinander
     public ConfigurationComparisonResult CompareConfigurations(
         List<ConfigurationDto> configurations)
     {
@@ -40,7 +42,9 @@ public class ComparatorService : IComparatorService
                 Row("Modell", configurations, c => c.Car.Model),
                 Row("Baujahr", configurations, c => c.Car.DateProduction),
                 Row("Erstzulassung", configurations, c => c.Car.DatePermit),
+                // Gesamtleistung der Konfiguration
                 Row("Leistung", configurations, c => $"{c.TotalPs} PS"),
+                // Gesamtpreis inklusive aller gewählten Produkte
                 Row("Preis", configurations, c => $"{c.TotalPrice:N0} €"),
                 Row("Verfügbarkeit", configurations,
                     c => c.Car.Quantity > 0 ? "Verfügbar" : "Nicht verfügbar")
@@ -48,6 +52,9 @@ public class ComparatorService : IComparatorService
         };
     }
 
+    // Zentrale Hilfsmethode zum Erzeugen einer Vergleichszeile.
+    // Sie kapselt die Mapping-Logik und vermeidet Code-Duplikate
+    // zwischen Fahrzeug- und Konfigurationsvergleich.
     private ComparisonRow Row<T>(
         string label,
         List<T> items,
@@ -56,6 +63,11 @@ public class ComparatorService : IComparatorService
         return new ComparisonRow
         {
             Label = label,
+            
+            
+            // Für jedes Objekt wird genau ein Wert erzeugt.
+            // Null-Werte werden bewusst abgefangen,
+            // um Darstellungsfehler in der UI zu vermeiden.
             Values = items.Select(i => selector(i) ?? "-").ToList()
         };
     }
