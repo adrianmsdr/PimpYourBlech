@@ -12,8 +12,8 @@ using PimpYourBlech_Data.Persistence.EFDatabase;
 namespace PimpYourBlech_Data.Migrations
 {
     [DbContext(typeof(ConfiguratorContext))]
-    [Migration("20260119142604_PYB_Database")]
-    partial class PYB_Database
+    [Migration("20260119153748_SeededDB")]
+    partial class SeededDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,6 +197,22 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("CommunityAnswers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Die Lieferzeit beträgt in der Regel 4–6 Wochen.",
+                            CreatedAt = new DateTime(2025, 1, 1, 6, 3, 0, 0, DateTimeKind.Utc),
+                            QuestionId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Ja, gespeicherte Konfigurationen können jederzeit weiterbearbeitet werden.",
+                            CreatedAt = new DateTime(2025, 1, 3, 5, 0, 0, 0, DateTimeKind.Utc),
+                            QuestionId = 2
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.CommunityQuestion", b =>
@@ -219,6 +235,20 @@ namespace PimpYourBlech_Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CommunityQuestions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Wie lange dauert die Lieferung eines Fahrzeugs?",
+                            CreatedAt = new DateTime(2025, 1, 1, 4, 3, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Kann ich meine Konfiguration später ändern?",
+                            CreatedAt = new DateTime(2025, 1, 1, 5, 3, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("PimpYourBlech_Data.Models.Configuration", b =>
