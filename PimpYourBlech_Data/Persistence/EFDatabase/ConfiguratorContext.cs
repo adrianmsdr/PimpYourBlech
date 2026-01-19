@@ -545,10 +545,9 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
                 UnitPrice = 999.99m
             }
         );
-
-        /*=====================================================
-    CONFIGURATIONS
-  =====================================================*/
+/*=====================================================
+CONFIGURATIONS
+=====================================================*/
         modelBuilder.Entity<Configuration>().HasData(
 
             // ===== User 1 =====
@@ -614,6 +613,44 @@ public sealed class ConfiguratorContext : DbContext, IDatabase
                 Quantity = 7,
                 Price = 720,
                 ProductType = ProductType.Spoiler
+            } 
+        );
+        
+/*=====================================================
+    FAQ
+=====================================================*/
+        modelBuilder.Entity<CommunityQuestion>().HasData(
+            new CommunityQuestion
+            {
+                Id = 1,
+                Content = "Wie lange dauert die Lieferung eines Fahrzeugs?",
+                CreatedAt = new DateTime(2025, 01, 01, 4, 3, 0, DateTimeKind.Utc)
+            },
+            new CommunityQuestion
+            {
+                Id = 2,
+                Content = "Kann ich meine Konfiguration später ändern?",
+                CreatedAt = new DateTime(2025, 01, 01, 5, 3, 0, DateTimeKind.Utc)
+            }
+        );
+
+        // ================= Answers =================
+        modelBuilder.Entity<CommunityAnswer>().HasData(
+            new CommunityAnswer
+            {
+                Id = 1,
+                QuestionId = 1,
+                Content = "Die Lieferzeit beträgt in der Regel 4–6 Wochen.",
+                CreatedAt = new DateTime(2025, 01, 01, 6, 3, 0, DateTimeKind.Utc)
+
+            },
+            new CommunityAnswer
+            {
+                Id = 2,
+                QuestionId = 2,
+                Content = "Ja, gespeicherte Konfigurationen können jederzeit weiterbearbeitet werden.",
+                CreatedAt = new DateTime(2025, 01, 03, 5, 0, 0, DateTimeKind.Utc)
+
             }
         );
     }
