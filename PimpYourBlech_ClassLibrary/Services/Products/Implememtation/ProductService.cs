@@ -229,7 +229,23 @@ public class ProductService:IProductService
         _logger.LogInformation("Color registered for product {ProductId}.",id);
         return id;
     }
-    
+
+    public async Task<int> InsertProduct(ProductDto productDto)
+    {
+        Product p = new Product
+        {
+            CarId = productDto.CarId,
+            Name = productDto.Name,
+            Brand = productDto.Brand,
+            Quantity = productDto.Quantity,
+            Price = productDto.Price,
+            ProductType = productDto.ProductType,
+            Description = productDto.Description
+        };
+        int id = await _productInventory.InsertProductAsync(p);
+        return id;
+    }
+
 
     public async Task InsertProduct(Product p)
     {
