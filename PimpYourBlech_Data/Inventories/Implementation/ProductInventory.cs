@@ -11,12 +11,13 @@ public sealed class ProductInventory(IDatabase database):IProductInventory
 {
     
     
-    public async Task InsertProductAsync(Product p)
+    public async Task<int> InsertProductAsync(Product p)
     {
         int counter = await database.GetNextArticleNumberAsync();
         p.ArticleNumber = counter.ToString("D7");
         database.Products.Add(p);
          await database.SaveChangesAsync();
+         return p.ProductId;
     }
 
     public List<Product> ListProducts()

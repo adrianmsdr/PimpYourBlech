@@ -106,6 +106,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\Combos\17\2\frame_09.webp" />
       <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\Combos\17\2\frame_10.webp" />
       <_ContentIncludedByDefault Remove="wwwroot\CarImages\1\Combos\17\2\frame_11.webp" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\31\Product.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\ProductImages\33\Product.png" />
     </ItemGroup>
 
 
