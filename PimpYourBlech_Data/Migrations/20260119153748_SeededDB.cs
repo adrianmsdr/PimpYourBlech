@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PimpYourBlech_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class PYB_Database : Migration
+    public partial class SeededDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -376,12 +376,30 @@ namespace PimpYourBlech_Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "CommunityQuestions",
+                columns: new[] { "Id", "Content", "CreatedAt" },
+                values: new object[,]
+                {
+                    { 1, "Wie lange dauert die Lieferung eines Fahrzeugs?", new DateTime(2025, 1, 1, 4, 3, 0, 0, DateTimeKind.Utc) },
+                    { 2, "Kann ich meine Konfiguration später ändern?", new DateTime(2025, 1, 1, 5, 3, 0, 0, DateTimeKind.Utc) }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Customers",
                 columns: new[] { "Id", "AdminRights", "FirstName", "ImagePath", "LastName", "MailAddress", "PasswordHash", "Telefon", "Username" },
                 values: new object[,]
                 {
                     { 1, true, "Max", "/CustomerImages/Car1.png", "Mustermann", "mustermail-admin.adresse@mustermail.de", "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=", "0123456789", "MusterAdmin" },
                     { 2, false, "Max", "/CustomerImages/Car1.png", "Mustermann", "mustermail.adresse@mustermail.de", "P6zbHsZ98YHkhf6yoM/EMMjAOt31qqUEdCRYJrKpKqs=", "0123456789", "MusterMax" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CommunityAnswers",
+                columns: new[] { "Id", "Content", "CreatedAt", "QuestionId" },
+                values: new object[,]
+                {
+                    { 1, "Die Lieferzeit beträgt in der Regel 4–6 Wochen.", new DateTime(2025, 1, 1, 6, 3, 0, 0, DateTimeKind.Utc), 1 },
+                    { 2, "Ja, gespeicherte Konfigurationen können jederzeit weiterbearbeitet werden.", new DateTime(2025, 1, 3, 5, 0, 0, 0, DateTimeKind.Utc), 2 }
                 });
 
             migrationBuilder.InsertData(
