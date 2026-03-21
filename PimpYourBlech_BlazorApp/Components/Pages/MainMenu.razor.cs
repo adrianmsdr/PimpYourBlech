@@ -21,6 +21,8 @@ public partial class MainMenu : ComponentBase
     private void GoToUserSettings() => Nav.NavigateTo("/user");
     
     private void GoToAdmin() => Nav.NavigateTo("/administrator");
+
+    private void GoToFindCars() => Nav.NavigateTo("FindCars");
     
     private CustomerDto? c;
     private bool _loading;
@@ -30,7 +32,6 @@ public partial class MainMenu : ComponentBase
         _loading = true;
         try
         {
-
             c = await CustomerService.GetCustomerByIdAsync(UserSession.CurrentUserId);
         }
         finally
