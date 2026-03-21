@@ -1,5 +1,7 @@
 # 🚗 PimpYourBlech – Fahrzeugkonfigurator
 
+Dieses Projekt diente ursprünglich als praktische Studienarbeit (PstA) für das Modul "Web-Entwicklung" im 3. Semester des Studiengangs Wirtschaftsinformatik an der Technischen Hochschule Rosenheim. Dieses Projekt wurde urpsrünglich zu dritt entwickelt und wird nun als Hobbyprojekt von mir (Adrian Mäscheder) in dieser Form weitergeführt.
+
 PimpYourBlech ist eine webbasierte Anwendung zur individuellen Fahrzeugkonfiguration.  
 Nutzerinnen und Nutzer können Fahrzeuge konfigurieren, Konfigurationen speichern, später fortsetzen und verschiedene Fahrzeuge oder Konfigurationen miteinander vergleichen.
 
@@ -99,6 +101,6 @@ Passwort: pimpyourblech123!
 
 **FERTIG!**
 
-Viel Pimp- und Fahrspaß wünscht dir dein Team **JungBrutalÜberfordert**
+**Wir wünschen dir viel Pimp- & Fahrspaß!**
 
 ![PimpYourBlech](PimpYourBlech_BlazorApp/wwwroot/Logo.png)
