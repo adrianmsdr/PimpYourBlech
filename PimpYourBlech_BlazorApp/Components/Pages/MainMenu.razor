@@ -74,6 +74,15 @@
                 Ersatzteile Shop
             </button>
         </div>
+        <div class="button-row-menu">
+            <button class="btn-icon" @onclick="GoToFindCars">
+                <MagnifyingGlassIcon/>
+            </button>
+
+            <button class="btn-label" @onclick="GoToFindCars">
+                Fahrzeuge finden
+            </button>
+        </div>
         @if (UserSession.IsAdmin)
         {
             <div class="button-row-menu">
